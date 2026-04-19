@@ -137,14 +137,17 @@ do_unpack() {
   local USB_DIR="$1"
   local RESOURCES_ROOT
 
-  # 读 deploy.yaml 获取 resources.root
-  RESOURCES_ROOT="$(python3 - -c "
-import sys; sys.path.insert(0, '${REPO_ROOT}/src')
+  # 读 deploy.yaml 获取 resources.root（heredoc 会展开 ${REPO_ROOT}）
+  RESOURCES_ROOT="$(python3 <<PY 2>/dev/null || true
+import sys
+sys.path.insert(0, '${REPO_ROOT}/src')
 from config_loader import load_deploy_config
 d = load_deploy_config() or {}
 print(d.get('resources', {}).get('root', '${REPO_ROOT}/resources'))
-" 2>/dev/null || echo "${REPO_ROOT}/resources")"
-
+PY
+)"
+  RESOURCES_ROOT="${RESOURCES_ROOT:-${REPO_ROOT}/resources}"
+  # 允许通过函数第二参数覆盖（当前 main 不会传，但为未来 CLI 扩展保留）
   RESOURCES_ROOT="${2:-${RESOURCES_ROOT}}"
   mkdir -p "${RESOURCES_ROOT}"
 

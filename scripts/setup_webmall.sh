@@ -84,7 +84,7 @@ for SHOP_ID in 1 2 3 4; do
     -v "${WP_VOL}":/volume \
     -v "${REPO_ROOT}/${BACKUP_DIR}":/backup \
     busybox \
-    tar xzf "/backup/wordpress_data_shop${SHOP_ID}.tar.gz -C /volume"
+    tar xzf "/backup/wordpress_data_shop${SHOP_ID}.tar.gz" -C /volume
 
   echo "  Shop ${SHOP_ID}: 注入 wp-config.php ..."
   SHOP_PORT_VAR="SHOP${SHOP_ID}_PORT"
@@ -107,7 +107,7 @@ for SHOP_ID in 1 2 3 4; do
     -v "${DB_VOL}":/volume \
     -v "${REPO_ROOT}/${BACKUP_DIR}":/backup \
     busybox \
-    tar xzf "/backup/mariadb_data_shop${SHOP_ID}.tar.gz -C /volume"
+    tar xzf "/backup/mariadb_data_shop${SHOP_ID}.tar.gz" -C /volume
 
   echo "  ✓ Shop ${SHOP_ID} 恢复完成"
 done

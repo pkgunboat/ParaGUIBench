@@ -107,14 +107,14 @@ services:
     ports:
       - "${WEBMALL_PORT_1:-9081}:8080"
     environment:
-      - WORDPRESS_DATABASE_HOST=mariadb-shop1
-      - WORDPRESS_DATABASE_USER=bn_wordpress
-      - WORDPRESS_DATABASE_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
-      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
-      - WORDPRESS_USERNAME=${WEBMALL_ADMIN_USER:-admin}
-      - WORDPRESS_PASSWORD=${WEBMALL_ADMIN_PASSWORD:-admin}
-      - WORDPRESS_EMAIL=user@example.com
-      - WORDPRESS_CONFIG_EXTRA=|
+      WORDPRESS_DATABASE_HOST: mariadb-shop1
+      WORDPRESS_DATABASE_USER: bn_wordpress
+      WORDPRESS_DATABASE_PASSWORD: ${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      WORDPRESS_DATABASE_NAME: bitnami_wordpress
+      WORDPRESS_USERNAME: ${WEBMALL_ADMIN_USER:-admin}
+      WORDPRESS_PASSWORD: ${WEBMALL_ADMIN_PASSWORD:-admin}
+      WORDPRESS_EMAIL: user@example.com
+      WORDPRESS_CONFIG_EXTRA: |
         define('EP_HOST','http://elasticsearch:9200');
         define('EP_INDEX_PREFIX','shop1_');
     volumes:
@@ -151,14 +151,14 @@ services:
     ports:
       - "${WEBMALL_PORT_2:-9082}:8080"
     environment:
-      - WORDPRESS_DATABASE_HOST=mariadb-shop2
-      - WORDPRESS_DATABASE_USER=bn_wordpress
-      - WORDPRESS_DATABASE_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
-      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
-      - WORDPRESS_USERNAME=${WEBMALL_ADMIN_USER:-admin}
-      - WORDPRESS_PASSWORD=${WEBMALL_ADMIN_PASSWORD:-admin}
-      - WORDPRESS_EMAIL=user@example.com
-      - WORDPRESS_CONFIG_EXTRA=|
+      WORDPRESS_DATABASE_HOST: mariadb-shop2
+      WORDPRESS_DATABASE_USER: bn_wordpress
+      WORDPRESS_DATABASE_PASSWORD: ${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      WORDPRESS_DATABASE_NAME: bitnami_wordpress
+      WORDPRESS_USERNAME: ${WEBMALL_ADMIN_USER:-admin}
+      WORDPRESS_PASSWORD: ${WEBMALL_ADMIN_PASSWORD:-admin}
+      WORDPRESS_EMAIL: user@example.com
+      WORDPRESS_CONFIG_EXTRA: |
         define('EP_HOST','http://elasticsearch:9200');
         define('EP_INDEX_PREFIX','shop2_');
     volumes:
@@ -195,14 +195,14 @@ services:
     ports:
       - "${WEBMALL_PORT_3:-9083}:8080"
     environment:
-      - WORDPRESS_DATABASE_HOST=mariadb-shop3
-      - WORDPRESS_DATABASE_USER=bn_wordpress
-      - WORDPRESS_DATABASE_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
-      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
-      - WORDPRESS_USERNAME=${WEBMALL_ADMIN_USER:-admin}
-      - WORDPRESS_PASSWORD=${WEBMALL_ADMIN_PASSWORD:-admin}
-      - WORDPRESS_EMAIL=user@example.com
-      - WORDPRESS_CONFIG_EXTRA=|
+      WORDPRESS_DATABASE_HOST: mariadb-shop3
+      WORDPRESS_DATABASE_USER: bn_wordpress
+      WORDPRESS_DATABASE_PASSWORD: ${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      WORDPRESS_DATABASE_NAME: bitnami_wordpress
+      WORDPRESS_USERNAME: ${WEBMALL_ADMIN_USER:-admin}
+      WORDPRESS_PASSWORD: ${WEBMALL_ADMIN_PASSWORD:-admin}
+      WORDPRESS_EMAIL: user@example.com
+      WORDPRESS_CONFIG_EXTRA: |
         define('EP_HOST','http://elasticsearch:9200');
         define('EP_INDEX_PREFIX','shop3_');
     volumes:
@@ -239,14 +239,14 @@ services:
     ports:
       - "${WEBMALL_PORT_4:-9084}:8080"
     environment:
-      - WORDPRESS_DATABASE_HOST=mariadb-shop4
-      - WORDPRESS_DATABASE_USER=bn_wordpress
-      - WORDPRESS_DATABASE_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
-      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
-      - WORDPRESS_USERNAME=${WEBMALL_ADMIN_USER:-admin}
-      - WORDPRESS_PASSWORD=${WEBMALL_ADMIN_PASSWORD:-admin}
-      - WORDPRESS_EMAIL=user@example.com
-      - WORDPRESS_CONFIG_EXTRA=|
+      WORDPRESS_DATABASE_HOST: mariadb-shop4
+      WORDPRESS_DATABASE_USER: bn_wordpress
+      WORDPRESS_DATABASE_PASSWORD: ${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      WORDPRESS_DATABASE_NAME: bitnami_wordpress
+      WORDPRESS_USERNAME: ${WEBMALL_ADMIN_USER:-admin}
+      WORDPRESS_PASSWORD: ${WEBMALL_ADMIN_PASSWORD:-admin}
+      WORDPRESS_EMAIL: user@example.com
+      WORDPRESS_CONFIG_EXTRA: |
         define('EP_HOST','http://elasticsearch:9200');
         define('EP_INDEX_PREFIX','shop4_');
     volumes:
