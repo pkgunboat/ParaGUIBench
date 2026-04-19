@@ -1,0 +1,42 @@
+# ─────────────────────────────────────────────────────────────
+# LLM API 配置模板。使用前请复制为 api.yaml：
+#   cp configs/api.example.yaml configs/api.yaml
+# 然后按下面说明填入真实 key，或导出对应环境变量。
+# 所有 ${VAR_NAME} 占位符会在运行时通过 os.path.expandvars() 替换。
+# ─────────────────────────────────────────────────────────────
+
+# Azure-style OpenAI 网关（示例；可替换成任何 OpenAI 兼容服务）
+tonggpt:
+  api_key:   "${TONGGPT_API_KEY}"           # export TONGGPT_API_KEY=sk-xxx
+  api_version: "2024-02-01"
+  api_base:  "${TONGGPT_API_BASE}"          # e.g. https://your-gateway/openai
+  region:    "westus"
+  model_name: "gpt-4o-2024-08-06"
+
+# 官方 OpenAI（GPT-5.4 / GPT-4o 等）
+openai:
+  api_key:   "${OPENAI_API_KEY}"
+  base_url:  "https://api.openai.com/v1"
+
+# DashScope / Qwen（可选）
+dashscope:
+  api_key:   "${DASHSCOPE_API_KEY}"
+
+# Anthropic Claude（可选）
+anthropic:
+  api_key:   "${ANTHROPIC_API_KEY}"
+
+# Kimi / Moonshot（可选）
+moonshot:
+  api_key:   "${MOONSHOT_API_KEY}"
+  base_url:  "https://api.moonshot.cn/v1"
+
+# Volcano Doubao / Seed-1.8（可选，GUI Agent baseline）
+doubao:
+  api_key:   "${DOUBAO_API_KEY}"
+  endpoint:  "${DOUBAO_ENDPOINT}"
+
+# 远端 Docker 服务端（仅在使用远程 Docker 宿主机时填写，本机部署可留默认）
+remote_docker_server:
+  ip:   "${DOCKER_HOST_IP:-127.0.0.1}"
+  port: 50003

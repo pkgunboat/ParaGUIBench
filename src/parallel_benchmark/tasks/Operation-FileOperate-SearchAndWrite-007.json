@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-SearchAndWrite-007",
+    "task_uid": "6f137b26-6efd-45e7-bd3c-034c81ddc790",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "I now want to count the host cities of these three machine learning conferences over the past decade, from 2013 to 2019 (including 2013 and 2019). I have already listed the conference names and years in Excel. Please fill in the blank locations.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/6f4073b8-d8ea-4ade-8a18-c5d1d5d5aa9a/Conference.xlsx",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Search&write-004",
+    "eval_rules": [
+        {
+            "check": "check_cells_filled",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "start_cell": "A4",
+                "end_cell": "C6"
+            },
+            "weight": 1.0,
+            "description": "A4:C6区域填充"
+        }
+    ]
+}

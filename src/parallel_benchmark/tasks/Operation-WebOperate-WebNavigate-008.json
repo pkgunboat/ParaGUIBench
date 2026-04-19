@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-008",
+    "task_uid": "eb1ad6e6-b3cc-49e6-a633-a012ae38f56e",
+    "task_type": "self",
+    "task_tag": "WebOperate",
+    "instruction": "Open all platforms where Battlefield 5 can be purchased on PC, and navigate to the Battlefield 5 purchase page. After opening each target page, bookmark it in Chrome.",
+    "task_source": "",
+    "answer": "https://store.steampowered.com/app/1238810/_5/ ",
+    "prepare_script_path": "",
+    "evaluator_path": "eval/webnavigate_bookmark_evaluator.py",
+    "original_task_id": "Operation-WebOperate-Webnavigate-008"
+}

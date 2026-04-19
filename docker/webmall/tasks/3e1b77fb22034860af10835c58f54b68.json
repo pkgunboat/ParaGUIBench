@@ -1,0 +1,27 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-3e1b77fb22034860af10835c58f54b68",
+    "task_uid": "3e1b77fb22034860af10835c58f54b68",
+    "source_task_id": "products_fulfilling_specific_requirements_task_8",
+    "task_type": "QA",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for GPUs with over 2500 MHz clocking speed and at least 16GB VRAM\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9084/product/asus-rog-strix-rtx4080-super-pcie4-16gb-ddr6x-2-hdmi-3-dp-2580mhz-clock-rgb-lighting###http://10.1.110.114:9081/product/asus-rog-strix-rtx4080-super-pcie4-16gb-ddr6x-2-hdmi-3-dp-2580mhz-clock-rgb-lighting###http://10.1.110.114:9083/product/palit-rtx4070-ti-super-gamingpro-oc-16gb-ddr6x-hdmi-3-dp-2610mhz-clock-rgb-lighting-overclocked###http://10.1.110.114:9081/product/palit-rtx4070-ti-super-gamingpro-white-oc-16gb-ddr6x-hdmi-3-dp-2655mhz-clock-rgb-lighting-overclocked###http://10.1.110.114:9084/product/asus-proart-rtx4070-ti-super-oc-16gb-ddr6x-hdmi-3-dp-2670mhz-clock-overlocked-compact-2-5-slot###http://10.1.110.114:9083/product/palit-rtx4080-super-jetstream-oc-pcie4-16gb-ddr6x-hdmi-3-dp-2580mhz-clock-overclocked###http://10.1.110.114:9084/product/palit-rtx4080-super-gamingpro-oc-pcie4-16gb-ddr6x-hdmi-3-dp-2610mhz-clock-rgb-lighting-overclocked###http://10.1.110.114:9081/product/palit-rtx4080-super-gamingpro-pcie4-16gb-ddr6x-hdmi-3-dp-2550mhz-clock-rgb-lighting###http://10.1.110.114:9081/product/nvidia-asus-geforce-rtx-4080-republic-of-gamers-strix-graphics-card###http://10.1.110.114:9081/product/nvidia-asus-geforce-rtx-4080-republic-of-gamers-strix-oc-graphics-card###http://10.1.110.114:9082/product/zotac-gaming-geforce-rtx-4080-16gb-amp-extreme-airo-zt-d40810b-10p###http://10.1.110.114:9084/product/asus-geforce-rtx4080-super-tuf-gaming-16gb-gddr6x",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9084/product/asus-rog-strix-rtx4080-super-pcie4-16gb-ddr6x-2-hdmi-3-dp-2580mhz-clock-rgb-lighting",
+        "http://10.1.110.114:9081/product/asus-rog-strix-rtx4080-super-pcie4-16gb-ddr6x-2-hdmi-3-dp-2580mhz-clock-rgb-lighting",
+        "http://10.1.110.114:9083/product/palit-rtx4070-ti-super-gamingpro-oc-16gb-ddr6x-hdmi-3-dp-2610mhz-clock-rgb-lighting-overclocked",
+        "http://10.1.110.114:9081/product/palit-rtx4070-ti-super-gamingpro-white-oc-16gb-ddr6x-hdmi-3-dp-2655mhz-clock-rgb-lighting-overclocked",
+        "http://10.1.110.114:9084/product/asus-proart-rtx4070-ti-super-oc-16gb-ddr6x-hdmi-3-dp-2670mhz-clock-overlocked-compact-2-5-slot",
+        "http://10.1.110.114:9083/product/palit-rtx4080-super-jetstream-oc-pcie4-16gb-ddr6x-hdmi-3-dp-2580mhz-clock-overclocked",
+        "http://10.1.110.114:9084/product/palit-rtx4080-super-gamingpro-oc-pcie4-16gb-ddr6x-hdmi-3-dp-2610mhz-clock-rgb-lighting-overclocked",
+        "http://10.1.110.114:9081/product/palit-rtx4080-super-gamingpro-pcie4-16gb-ddr6x-hdmi-3-dp-2550mhz-clock-rgb-lighting",
+        "http://10.1.110.114:9081/product/nvidia-asus-geforce-rtx-4080-republic-of-gamers-strix-graphics-card",
+        "http://10.1.110.114:9081/product/nvidia-asus-geforce-rtx-4080-republic-of-gamers-strix-oc-graphics-card",
+        "http://10.1.110.114:9082/product/zotac-gaming-geforce-rtx-4080-16gb-amp-extreme-airo-zt-d40810b-10p",
+        "http://10.1.110.114:9084/product/asus-geforce-rtx4080-super-tuf-gaming-16gb-gddr6x"
+    ]
+}

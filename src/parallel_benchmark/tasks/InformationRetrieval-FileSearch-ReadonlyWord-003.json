@@ -1,0 +1,17 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-003",
+    "task_uid": "b568284e-3675-4352-a2ff-4a8305c99388",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "There are conference agendas in the folder. Help me see which conference starts first. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "meeting1",
+    "accepted_answers": [
+        "meeting1.docx",
+        "CVPR 2026 Program Committee Kickoff",
+        "Agentic Workflow Optimization"
+    ],
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/b568284e-3675-4352-a2ff-4a8305c99388",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-ReadonlyWord-003"
+}

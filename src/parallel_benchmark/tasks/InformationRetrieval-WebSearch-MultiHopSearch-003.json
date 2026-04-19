@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-003",
+    "task_uid": "92ba2e82-f3e4-445b-9b69-cdcb110fc3f6",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Using the list of recognized International Sports Federations published on the International Olympic Committee (IOC) official website as the target set, identify federation combinations where there exists an official cooperation or joint event relationship between each other (explicitly mentioned on both parties' official websites), and count the number of federation pairs that meet this condition. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "4",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Multi-HopSearch-003"
+}

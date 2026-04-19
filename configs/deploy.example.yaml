@@ -1,0 +1,66 @@
+# ─────────────────────────────────────────────────────────────
+# 单服务器部署配置模板。使用前请复制：
+#   cp configs/deploy.example.yaml configs/deploy.yaml
+# 然后根据实际环境修改。加载优先级：
+#   CLI 参数 > 环境变量 > deploy.yaml > 默认值
+# ─────────────────────────────────────────────────────────────
+
+server:
+  # Docker 宿主机 IP；单机部署填 127.0.0.1
+  vm_host: "127.0.0.1"
+
+  # 宿主机上用于 SSH/SSHFS 的用户名（必须在该机有 sudo 权限）
+  vm_user: "benchmark"
+
+  # SSH 密码读取自环境变量（不要写明文）
+  #   export BENCH_SSH_PASSWORD='your-password'
+  ssh_password_env: "BENCH_SSH_PASSWORD"
+
+  # 容器与宿主机共享目录根路径
+  shared_base_dir: "/home/benchmark/shared"
+
+  # VM 磁盘镜像路径（download_resources.py 会落到 resources.root 下）
+  qcow2_path: "./resources/Ubuntu.qcow2"
+
+  # 远程 Docker daemon 端口（parallel_manager 默认值）
+  docker_daemon_port: 50003
+
+resources:
+  # 资源根目录。download_resources.py 会填充：
+  #   Ubuntu.qcow2 / operation_gt_cache/ / searchwrite_templates/ / webmall_assets/
+  root: "./resources"
+
+  # huggingface | local
+  #   huggingface: 自动从 HF Hub 拉取
+  #   local: 跳过下载，要求 root 下已有全部文件（例如从 U 盘拷贝）
+  source: "huggingface"
+
+  # HuggingFace dataset repo（仅 source=huggingface 时使用）
+  hf_repo: "your-org/ParaGUIBench-resources"
+
+services:
+  # OnlyOffice DocumentServer + Flask 共享服务（SearchWrite pipeline 依赖）
+  onlyoffice:
+    host_ip: "127.0.0.1"
+    flask_port: 5050          # document_sharing_server.py
+    doc_server_port: 8080     # OnlyOffice DocumentServer（docker-compose）
+
+  # WebMall 商城后端（WebMall pipeline 依赖；4 个商城对应 4 个端口）
+  webmall:
+    host_ip: "127.0.0.1"
+    ports: [9081, 9082, 9083, 9084]
+
+  # WebNavigate 书签服务（可选；WebNavigate pipeline 依赖）
+  webnavigate:
+    host_ip: "127.0.0.1"
+    port: 8091
+
+parallel:
+  # 单台 Docker 宿主机最大并发 VM 数量
+  max_concurrent_vms: 20
+
+  # 单 VM 内存上限（GiB）。MemoryGuard 会强制执行
+  per_vm_memory_gib: 4
+
+  # 单 VM CPU 核数
+  per_vm_cpus: 2

@@ -1,0 +1,21 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-003",
+    "task_uid": "2654f880-dd6b-4f8c-9f88-aebe2bfa51be",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Insert existing charts from Excel into corresponding slides in PPT, maintaining the style.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/2654f880-dd6b-4f8c-9f88-aebe2bfa51be",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-003",
+    "eval_rules": [
+        {
+            "check": "check_ppt_has_images_or_tables",
+            "file_pattern": "*.pptx",
+            "params": {"check_images": true, "check_tables": false, "threshold": 0.5},
+            "weight": 1.0,
+            "description": "PPT中包含从Excel插入的图表/图片"
+        }
+    ]
+}

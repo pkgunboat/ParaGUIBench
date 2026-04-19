@@ -1,0 +1,21 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-006",
+    "task_uid": "d5999c0f-ff61-476d-8e98-9c5f1b91fed9",
+    "task_type": "",
+    "task_tag": "FileOperate",
+    "instruction": "In Word, it is noted see a certain PPT page x. Please insert corresponding hyperlinks in the Word.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/d5999c0f-ff61-476d-8e98-9c5f1b91fed9",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-006",
+    "eval_rules": [
+        {
+            "check": "check_docx_has_hyperlink",
+            "file_pattern": "*.docx",
+            "params": {"threshold": 0.3},
+            "weight": 1.0,
+            "description": "Word文档中包含指向PPT页面的超链接"
+        }
+    ]
+}

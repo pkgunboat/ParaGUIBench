@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-001",
+    "task_uid": "a2476a0a-6317-4617-9126-0d331f32d44d",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "As of 2025, how many manga that have won the Sugoi Japan Award have been completed? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "2",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-001"
+}

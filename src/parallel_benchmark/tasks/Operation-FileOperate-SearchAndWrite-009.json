@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-SearchAndWrite-009",
+    "task_uid": "14b28a49-e101-4458-835e-2067823ddefb",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "I am a movie buff and have recorded all the movies I've watched. I want to know if there are any movies in the IMDB Top 30 list that were released before 2024 but I haven't seen yet. Please help me create a new worksheet named unseen_movies in the already opened Excel. This worksheet should use the same headers and sort the results by IMDB ranking from high to low.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/3e3fc409-bff3-4905-bf16-c968eee3f807/movies.xlsx",
+    "evaluator_path": "eval/osworld_scripts/14b28a49-e101-4458-835e-2067823ddefb.json",
+    "original_task_id": "Operation-FileOperate-Search&write-005"
+}

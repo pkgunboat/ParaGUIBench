@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-011",
+    "task_uid": "60ed834a-2f51-4e3b-9b0b-6ed9c24249a4",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "Cross-check invoices with bank statements to find any discrepancies. Then extract invoices that do not match the statements and place them in a “Problematic” folder",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/invoice%20TII-20220301-90.pdf , https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/Invoice%20%23%20GES-20220215-82.pdf , https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/Invoice%20%23%20243729.pdf , https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/Bank-Statement.pdf",
+    "evaluator_path": "eval/osworld_scripts/337d318b-aa07-4f4f-b763-89d9a2dd013f.json",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-011"
+}

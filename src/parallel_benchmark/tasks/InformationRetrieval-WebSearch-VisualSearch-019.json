@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-019",
+    "task_uid": "49d0bc86-2d30-4bbb-aa23-9994ed6b2d8f",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among the contributors of osworld, how many users avatars are real people? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "18",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Visualsearch-019"
+}

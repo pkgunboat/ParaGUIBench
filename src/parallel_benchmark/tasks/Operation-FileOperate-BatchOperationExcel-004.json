@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationExcel-004",
+    "task_uid": "086f42e6-d412-4a4b-9702-0ef374e38c2b",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Unify header semantics across all Excel files, replacing semantically identical terms like revenue, income, and sales with income.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/086f42e6-d412-4a4b-9702-0ef374e38c2b",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationexcel-004",
+    "eval_rules": [
+        {
+            "check": "check_cell_contains_string",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "cell": "B3",
+                "expected": "income"
+            },
+            "weight": 1.0,
+            "description": "B3单元格包含income"
+        }
+    ]
+}

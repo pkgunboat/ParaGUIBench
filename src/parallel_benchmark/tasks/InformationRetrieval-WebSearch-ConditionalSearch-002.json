@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-002",
+    "task_uid": "8fac924a-c33c-4f10-9892-c519f8b5a6fd",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "How many universities are among the top ten in the 2024 world university rankings provided by  British institutions? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "7",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-002"
+}

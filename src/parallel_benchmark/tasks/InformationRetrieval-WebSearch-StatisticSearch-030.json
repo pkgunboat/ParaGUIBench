@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-030",
+    "task_uid": "6c111e2a-8b42-4dd2-915f-b83f57dadb5d",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Identify the capital city with the fastest growth in global housing prices between 2018 and 2024, give the name of the city and the country. Format: city;country. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Ankara; Turkey",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-030"
+}

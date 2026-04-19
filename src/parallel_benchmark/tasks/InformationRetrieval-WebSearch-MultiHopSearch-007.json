@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-007",
+    "task_uid": "7a7f36d5-889f-4cc2-889b-c683065e9245",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Using the official list of Technical Societies published on the IEEE website as the target set, identify the pairs of societies in the field of signals and signal processing that mutually list each other as official partners or co-publishers of journals on their respective websites, and count the number of such society pairs. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "6",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Multi-HopSearch-007"
+}

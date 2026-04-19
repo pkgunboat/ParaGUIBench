@@ -1,0 +1,16 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-FindSubstitutes-bb4139a2ba6f4267ad69309e7bc40834",
+    "task_uid": "bb4139a2ba6f4267ad69309e7bc40834",
+    "source_task_id": "find_substitutes_task_3",
+    "task_type": "QA",
+    "task_tag": "FindSubstitutes",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind the cheapest alternative with at least the same capacity and speed for this product: http://10.1.110.114:9083/product/corsair-1tb-mp600-core-xt-m-2-nvme-ssd-m-2-2280-pcie4-3d-qlc-nand-r-w-5000-3500-mb-s-700k-900k-iops . If multiple offers share the lowest price, return all of them.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9084/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9084/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label"
+    ]
+}

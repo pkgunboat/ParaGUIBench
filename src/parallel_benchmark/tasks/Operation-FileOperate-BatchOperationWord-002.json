@@ -1,0 +1,22 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-002",
+    "task_uid": "f9d27527-85a2-4b64-99e9-7f3199cb1cd5",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Please properly indent these documents and remove consecutive blank lines exceeding one line.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/f9d27527-85a2-4b64-99e9-7f3199cb1cd5",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-002",
+    "eval_rules": [
+        {
+            "check": "check_batchword002_tab_indent",
+            "description": "每个段落首行缩进是否为一个\\t"
+        },
+        {
+            "check": "check_max_consecutive_blank_lines",
+            "description": "检查连续空行是否不超过1行"
+        }
+    ]
+}

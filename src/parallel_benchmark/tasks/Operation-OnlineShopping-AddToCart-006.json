@@ -1,0 +1,18 @@
+{
+    "task_id": "Operation-OnlineShopping-AddToCart-006",
+    "task_uid": "eb5f7cc68c2349a29a37d799f3bf65b0",
+    "source_task_id": "add_to_cart_task_1",
+    "task_type": "QA",
+    "task_tag": "AddToCart",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for the GameMax Iceburg 360mm ARGB Liquid CPU Cooler and add each of them to the respective shopping cart of the shop where you found the offer.\n\nAfter adding the products to the shopping cart, report the URLs of the products you added, separated by ### characters.",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9082/product/gamemax-iceburg-360mm-argb-liquid-cpu-cooler-12cm-argb-pwm-fans-infinity-mirror-rgb-rotatable-pump-head###http://10.1.110.114:9083/product/gamemax-iceburg-360mm-argb-liquid-cpu-cooler-12cm-argb-pwm-fans-infinity-mirror-rgb-rotatable-pump-head",
+    "evaluator_path": "evaluators/cart_evaluator.py",
+    "answer_type": "cart",
+    "expected_urls": [
+        "http://10.1.110.114:9082/product/gamemax-iceburg-360mm-argb-liquid-cpu-cooler-12cm-argb-pwm-fans-infinity-mirror-rgb-rotatable-pump-head",
+        "http://10.1.110.114:9083/product/gamemax-iceburg-360mm-argb-liquid-cpu-cooler-12cm-argb-pwm-fans-infinity-mirror-rgb-rotatable-pump-head"
+    ],
+    "original_task_id": "TaskExecution-MultiShopShopping-AddtoCart-eb5f7cc68c2349a29a37d799f3bf65b0"
+}

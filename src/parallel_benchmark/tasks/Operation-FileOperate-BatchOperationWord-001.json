@@ -1,0 +1,23 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-001",
+    "task_uid": "1dd4c724-6930-42ae-b9c6-d219083f3480",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "These Word documents have disordered heading hierarchy issues. Please fix them to: chapter headings → Heading 1, section headings → Heading 2.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/1dd4c724-6930-42ae-b9c6-d219083f3480",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-001",
+    "eval_rules": [
+        {
+            "check": "check_heading_style_exists",
+            "file_pattern": "*.docx",
+            "params": {
+                "style_name": "Heading 1"
+            },
+            "weight": 1.0,
+            "description": "检查是否存在 Heading 1 样式"
+        }
+    ]
+}

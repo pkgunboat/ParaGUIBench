@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-012",
+    "task_uid": "41663784-fa75-47ff-8457-e9208a7a4158",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among countries that announced and successfully eliminated Dracunculiasis after 2010, identify the country that took the longest time from discovering the last case to obtaining WHO elimination certification. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Democratic Republic of the Congo",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-012"
+}

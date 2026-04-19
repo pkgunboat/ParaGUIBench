@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-002",
+    "task_uid": "1eb91cee-905f-40a5-a6dd-ea87b7761c11",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "As of 2025, according to Chinese Wikipedia, what color and color tone are used for the background of the poster for each movie in the Wandering Earth movie series? Choose colors from: red, orange, yellow, green, white, blue, purple. Choose color tone from: warm, cold. For each movie, list the dominant color(s) and the color tone, separated by semicolons. For The Wandering Earth: color is white/blue, tone is cold. For The Wandering Earth 2: color is orange/red, tone is warm. Answer in the format: <answer>PART1; PART2; ...</answer>. Separate multiple items with semicolons (;). Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "The Wandering Earth: white/blue; cold; The Wandering Earth 2: orange/red; warm",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-002"
+}

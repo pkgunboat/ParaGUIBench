@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-026",
+    "task_uid": "ae58ad02-582d-4933-b0d3-873f0c52802e",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among all TGA (The Game Awards) Best Independent Game winners, which game covers feature no human characters? Answer in the format: <answer>PART1; PART2; ...</answer>. Separate multiple items with semicolons (;). Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "Rocket League; Balatro",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-026"
+}

@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-009",
+    "task_uid": "6af0b589-eec2-4b76-a0dd-b18a06ff705b",
+    "task_type": "OSWorld脚本改造",
+    "task_tag": "FileOperate",
+    "instruction": "Change all Word documents to double line spacing.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/6af0b589-eec2-4b76-a0dd-b18a06ff705b",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-009",
+    "eval_rules": [
+        {
+            "check": "check_line_spacing",
+            "file_pattern": "*.docx",
+            "params": {
+                "spacing": 2.0,
+                "threshold": 0.9
+            },
+            "weight": 1.0,
+            "description": "双倍行距"
+        }
+    ]
+}

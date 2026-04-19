@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationPPT-001",
+    "task_uid": "a7ba9165-a65f-45a3-8449-ac2f358d3a9d",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Set the transition effect of the first page of all PPTs in the folder to Dissolve.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/a7ba9165-a65f-45a3-8449-ac2f358d3a9d",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationppt-001",
+    "eval_rules": [
+        {
+            "check": "check_slide_transition",
+            "file_pattern": "*.pptx",
+            "params": {
+                "slide_indices": [0],
+                "transition_type": "Dissolve"
+            },
+            "weight": 1.0,
+            "description": "第一张幻灯片 Dissolve 切换效果"
+        }
+    ]
+}

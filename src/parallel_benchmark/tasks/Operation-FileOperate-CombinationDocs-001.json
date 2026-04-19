@@ -1,0 +1,21 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-001",
+    "task_uid": "c2ec79c0-bb7c-4f45-b5e5-437d15d518cb",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "Please convert these .xlsx files in LibreOffice Calc to .html files and open them all in Chrome.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/c2ec79c0-bb7c-4f45-b5e5-437d15d518cb",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-001",
+    "eval_rules": [
+        {
+            "check": "check_html_files_for_xlsx",
+            "file_pattern": "*.xlsx",
+            "params": {},
+            "weight": 1.0,
+            "description": "每个xlsx文件都有对应的同名html文件"
+        }
+    ]
+}

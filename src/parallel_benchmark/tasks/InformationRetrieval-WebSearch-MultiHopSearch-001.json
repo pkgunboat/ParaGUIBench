@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-001",
+    "task_uid": "ca7b6d03-0c78-4547-ab05-4f01d6ed8461",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among the cities that are sister cities with Beijing, which cities are also sister cities with each other, and how many such combinations are there? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "7",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Multi-HopSearch-001"
+}

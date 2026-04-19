@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-001",
+    "task_uid": "ab73b290-25dc-40fb-882e-dc4ac7cabaf4",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "From the consumer smartphones released globally in 2023, identify models with an IP69K water resistance rating, and then select the model with the largest battery capacity. List the brand and model. Format: brand:a;model:b. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "brand:Doogee;model:Doogee V Max",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-001"
+}

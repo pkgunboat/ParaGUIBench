@@ -1,0 +1,18 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-005",
+    "task_uid": "0ae169d8-aeb9-4c78-ab11-a182444c8eed",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "There are several Word documents  in the folder. Please add a table of contents at the beginning of each document.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/0ae169d8-aeb9-4c78-ab11-a182444c8eed",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-005",
+    "eval_rules": [
+        {
+            "check": "check_has_toc",
+            "description": "检查文档是否包含目录"
+        }
+    ]
+}

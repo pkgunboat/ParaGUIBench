@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-020",
+    "task_uid": "a134bfaf-37e2-4c5c-8d27-76c6fc7a37b1",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among all Turing Award recipients from 2018 to 2024, identify the third oldest recipient by age. Provide their full name. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Edwin E. Catmull",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-020"
+}

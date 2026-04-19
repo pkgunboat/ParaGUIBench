@@ -1,0 +1,18 @@
+{
+    "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-004",
+    "task_uid": "85a721caec6e45ff877fc5a58451d600",
+    "source_task_id": "products_fulfilling_specific_requirements_task_3",
+    "task_type": "QA",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for Samsung Tablets which support 5G and come with an S-Pen stylus.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9084/product/tablet-samsung-galaxy-tab-s9-ultra-14-6-5g-12gb-256gb-gray-sm-x916bzaaeue-s-pen-stylus###http://10.1.110.114:9084/product/tablet-samsung-galaxy-tab-s9-11-5g-12gb-256gb-gray-sm-x716bzaeeue-s-pen-stylus",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9084/product/tablet-samsung-galaxy-tab-s9-ultra-14-6-5g-12gb-256gb-gray-sm-x916bzaaeue-s-pen-stylus",
+        "http://10.1.110.114:9084/product/tablet-samsung-galaxy-tab-s9-11-5g-12gb-256gb-gray-sm-x716bzaeeue-s-pen-stylus"
+    ],
+    "original_task_id": "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-85a721caec6e45ff877fc5a58451d600"
+}

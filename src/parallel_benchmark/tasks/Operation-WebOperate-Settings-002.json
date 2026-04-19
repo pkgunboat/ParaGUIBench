@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-Settings-002",
+    "task_uid": "ef47625b-cd1b-46ca-a16c-b0ac0c99c2cc",
+    "task_type": "self",
+    "task_tag": "WebOperate",
+    "instruction": "Find the official websites of the top ten schools in the 2024 QS rankings, and add them to Chrome bookmarks for quick access to these websites.",
+    "task_source": "",
+    "answer": "https://www.mit.edu/, https://www.cam.ac.uk/, https://www.ox.ac.uk/, https://www.harvard.edu/, https://www.stanford.edu/, https://www.imperial.ac.uk/, https://ethz.ch/, https://www.nus.edu.sg/, https://www.ucl.ac.uk/, https://www.berkeley.edu/",
+    "prepare_script_path": "",
+    "evaluator_path": "eval/webnavigate_bookmark_evaluator.py",
+    "original_task_id": "Operation-WebOperate-settings-002"
+}

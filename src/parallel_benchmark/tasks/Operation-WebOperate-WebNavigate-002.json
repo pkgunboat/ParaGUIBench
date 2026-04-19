@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-002",
+    "task_uid": "9bc31d45-a51c-45c9-95de-b30d8bc67f79",
+    "task_type": "self",
+    "task_tag": "WebOperate",
+    "instruction": "Navigate to Amazon's Common Questions About Shipping, Refund and Return Policy pages, and open these two tabs. After opening each target page, bookmark it in Chrome.",
+    "task_source": "",
+    "answer": "https://shipping.amazon.com/help , https://www.amazon.com/gp/help/customer/display.html?nodeId=GKM69DUUYKQWKWX7 ",
+    "prepare_script_path": "",
+    "evaluator_path": "eval/webnavigate_bookmark_evaluator.py",
+    "original_task_id": "Operation-WebOperate-Webnavigate-002"
+}

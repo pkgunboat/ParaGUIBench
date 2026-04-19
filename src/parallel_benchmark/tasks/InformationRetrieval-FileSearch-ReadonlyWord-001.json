@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-001",
+    "task_uid": "4f870c1f-b01c-4a10-90c3-1e3f0eab0373",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "These Word documents contain detailed information about many events. Please help me determine how many events can be scheduled between 8:00 AM and 3:00 PM on January 30, 2026. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "3",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/4f870c1f-b01c-4a10-90c3-1e3f0eab0373",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-ReadonlyWord-001"
+}

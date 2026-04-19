@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-008",
+    "task_uid": "730b5e1e-746a-4598-8464-53a8bbb376b9",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "For the voice actors of the three main characters in the anime Attack on Titan, how many works have all three appeared in together besides this anime? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "2",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Multi-HopSearch-008"
+}

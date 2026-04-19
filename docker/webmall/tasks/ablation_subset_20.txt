@@ -1,0 +1,49 @@
+# 消融实验任务子集（20/91）
+# 生成时间: 2026-02-25
+# 选择策略: 11类别全覆盖, 按搜索/推理/操作三维度分层, 难度均衡分布
+#
+# === 搜索类 (8) ===
+# [Easy]  SingleProductSearch: AMD Ryzen 9 5900X (2 answers)
+78007b2751bd408991d3e4ca935924d1.json
+# [Easy+] SingleProductSearch: Galaxy A25 AND A35 (4 answers, 双型号)
+f1fd2bb33f9a40e994bdda1272a463c2.json
+# [Easy]  CheapestProductSearch: Bose 耳机 (2 answers)
+d75216bdee0043639d36848bda29fc05.json
+# [Medium] CheapestProductSearch: Samsung 870 Evo 每种容量 (4 answers, 需识别变体)
+3d31169529ed4cd68b093c34816c6018.json
+# [Medium] CheapestOfferSpecificRequirements: Xbox ≥512GB 白色 (多约束)
+7b4c474028014cbe9f41c2ab707bb2f3.json
+# [Medium] CheapestOfferSpecificRequirements: Samsung S24 200MP 相机
+be2c11065a3c424e98c77568c5ce8275.json
+# [Medium] ProductsFulfillingSpecificRequirements: 显示器 >1080p, ≥27寸, <€600
+36251517df2b4fb780d7851f830b6547.json
+# [Hard]  ProductsFulfillingSpecificRequirements: ASUS AIO 水冷能显示GIF (11 answers)
+ba65d33f3b29492fb8cb30a14b915d66.json
+#
+# === 推理类 (6) ===
+# [Hard]  CheapestOfferVagueRequirements: Samsung "budget-friendly" 手机
+71fe4b7a4054459d97f10285deb5d0b1.json
+# [Hard]  CheapestOfferVagueRequirements: "competitive esports" 显示器
+fa7393e32d6e43b786f4251b512bcce2.json
+# [Hard]  ProductsSatisfyingVagueRequirements: 接口"看起来像HDMI"的转接器
+d7b2e5619bbf495989529a59f4fcaa34.json
+# [Hard]  ProductsSatisfyingVagueRequirements: 适合本地训练LLM的GPU
+1273cd377d0e4403a88ec4eb8b340eca.json
+# [Hard]  FindCompatibleProducts: 和白色机箱颜色匹配的键盘
+0d34c4e1863c4ddb832ec4eba10d5ef6.json
+# [Hard]  FindSubstitutes: 同尺寸最便宜的替代显示器
+33f0b28a99694aa28d4370bacf65cf11.json
+#
+# === 操作类 (6) ===
+# [Easy]  AddtoCart: Kingston DDR5 搜索+加购 (2 shops)
+30fdee8df9174a09b1a4ef89d483605c.json
+# [Easy]  AddtoCart: Asus RTX4070 搜索+加购 (1 shop)
+b6335f7661c943b8b205e010332deb96.json
+# [Medium] Checkout: 键盘直接结账 (shop 9083)
+232c21f186804b808fea91e18ccec092.json
+# [Medium] Checkout: 机箱直接结账 (shop 9082)
+e9623fc7fed44861b1d4dc10d2aec266.json
+# [Hard]  EndtoEnd: 2商品(机箱+电源) → 搜索+比价+合并加购+结账
+622832d524704bd9a5a2e0a4ed3efb15.json
+# [Medium] EndtoEnd: Netac SSD → 搜索+加购+结账
+cd38f9aaf2b448a48c7ff1306fe8684c.json

@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationPPT-003",
+    "task_uid": "e544ee0f-90e6-43a4-9958-6b74e88d94a6",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "The folder contains many PPTs explaining different sports, as well as an image asset library. Please categorize these image assets according to the content explained in each PPT, create a separate folder for each category, and put the images in them.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/e544ee0f-90e6-43a4-9958-6b74e88d94a6",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationppt-003"
+}

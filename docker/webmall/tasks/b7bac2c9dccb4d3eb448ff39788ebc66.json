@@ -1,0 +1,18 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-FindCompatibleProducts-b7bac2c9dccb4d3eb448ff39788ebc66",
+    "task_uid": "b7bac2c9dccb4d3eb448ff39788ebc66",
+    "source_task_id": "find_compatible_products_task_2",
+    "task_type": "QA",
+    "task_tag": "FindCompatibleProducts",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for compatible CPUs for this motherboard: http://10.1.110.114:9083/product/asus-pro-ws-wrx80e-sage-se-wifi-ii-workstation-amd-wrx80-swrx8-eatx-8-ddr4-sli-wi-fi-6e-dual-10g-lan-hyper-m-2-card-3x-m-2 .\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9083/product/amd-ryzen-threadripper-pro-5975wx-wrx8-3-6ghz-4-5-turbo-32-core-280w-146mb-cache-7nm-5th-gen-no-graphics-no-heatsink-fan###http://10.1.110.114:9084/product/amd-ryzen-threadripper-pro-5975wx-wrx8-3-6ghz-4-5-turbo-32-core-280w-146mb-cache-7nm-5th-gen-no-graphics-no-heatsink-fan###http://10.1.110.114:9084/product/amd-ryzen-threadripper-pro-5965wx-wrx8-3-8ghz-4-5-turbo-24-core-280w-140mb-cache-7nm-5th-gen-no-graphics-no-heatsink-fan",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9083/product/amd-ryzen-threadripper-pro-5975wx-wrx8-3-6ghz-4-5-turbo-32-core-280w-146mb-cache-7nm-5th-gen-no-graphics-no-heatsink-fan",
+        "http://10.1.110.114:9084/product/amd-ryzen-threadripper-pro-5975wx-wrx8-3-6ghz-4-5-turbo-32-core-280w-146mb-cache-7nm-5th-gen-no-graphics-no-heatsink-fan",
+        "http://10.1.110.114:9084/product/amd-ryzen-threadripper-pro-5965wx-wrx8-3-8ghz-4-5-turbo-24-core-280w-140mb-cache-7nm-5th-gen-no-graphics-no-heatsink-fan"
+    ]
+}

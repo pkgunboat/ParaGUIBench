@@ -1,0 +1,23 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-012",
+    "task_uid": "0857689f-8976-49a3-9314-d2b194f9d629",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Different documents in the folder use the same abbreviation to represent different concepts. Please expand these abbreviations where this situation occurs.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/0857689f-8976-49a3-9314-d2b194f9d629",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-012",
+    "eval_rules": [
+        {
+            "check": "check_uppercase_words_have_parentheses",
+            "file_pattern": "*.docx",
+            "params": {
+                "threshold": 0.9
+            },
+            "weight": 1.0,
+            "description": "大写词后是否有括号"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "task_id": "Operation-OnlineShopping-EndToEnd-003",
+    "task_uid": "7f3356a56e0446be84aff1bcbeae7bdc",
+    "source_task_id": "end_to_end_task_3",
+    "task_type": "QA",
+    "task_tag": "EndToEnd",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind the cheapest offer for a DDR4 2x16 GB RAM Kit with exactly 3000MHz, add it to the shopping cart and complete the checkout process. Pay via credit card using the following information: Address: Jessica Morgan, jessica.morgan@yahoo.com, Maple Avenue, 742, 60614, Chicago, IL, USA, Credit card number: 4242424242424242, CVV: 123, expiry date: 12/28.\n\nAfter completing the checkout, report the URLs of the products you purchased, separated by ### characters.",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9081/product/corsair-vengeance-lpx-32gb-kit-2-x-16gb-ddr4-3000mhz-pc4-24000-cl16-xmp-2-0-dimm-memory",
+    "evaluator_path": "evaluators/checkout_evaluator.py",
+    "answer_type": "checkout",
+    "expected_urls": [
+        "http://10.1.110.114:9081/product/corsair-vengeance-lpx-32gb-kit-2-x-16gb-ddr4-3000mhz-pc4-24000-cl16-xmp-2-0-dimm-memory"
+    ],
+    "user_details": {
+        "name": "Jessica Morgan",
+        "street": "Maple Avenue",
+        "house_number": "742",
+        "zip": "60614",
+        "city": "Chicago",
+        "state": "IL",
+        "country": "USA",
+        "email": "jessica.morgan@yahoo.com"
+    },
+    "payment_info": {
+        "card": "4242424242424242",
+        "cvv": "123",
+        "expiry_date": "12/28"
+    },
+    "original_task_id": "TaskExecution-MultiShopShopping-EndtoEnd-7f3356a56e0446be84aff1bcbeae7bdc"
+}

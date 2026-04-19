@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-Coding-003",
+    "task_uid": "73dc7e01-b715-45c0-99d1-2597e6ec918d",
+    "task_type": "",
+    "task_tag": "FileOperate",
+    "instruction": "My team has 5 date utility scripts (date_tools/), but other programs frequently fail when parsing their output because the date formats are inconsistent. Please examine all 5 scripts, determine which date format is used by the majority (3 out of 5 use YYYY-MM-DD), and modify the 2 minority scripts (month_days.py uses MM/DD/YYYY, add_days.py uses DD-Mon-YYYY) to match the majority format. Update both the strftime/strptime format strings and any hardcoded example dates in the code.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/73dc7e01-b715-45c0-99d1-2597e6ec918d",
+    "evaluator_path": "eval/coding_003_date_format_evaluator.py",
+    "original_task_id": "Operation-FileOperate-coding-003"
+}

@@ -1,0 +1,17 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-AddtoCart-30fdee8df9174a09b1a4ef89d483605c",
+    "task_uid": "30fdee8df9174a09b1a4ef89d483605c",
+    "source_task_id": "add_to_cart_task_3",
+    "task_type": "QA",
+    "task_tag": "AddtoCart",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for Kingston Fury Beast 16GB DDR5 and add each of them to the respective shopping cart of the shop where you found the offer.\n\nAfter adding the products to the shopping cart, report the URLs of the products you added, separated by ### characters.",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9083/product/kingston-fury-beast-16gb-ddr5-4800mhz-pc5-38400-cl38-1-1v-ecc-xmp-3-0-amd-expo-pmic-dimm-memory###http://10.1.110.114:9081/product/kingston-fury-beast-16gb-ddr5-5600mhz-pc5-44800-cl40-1-25v-ecc-xmp-3-0-pmic-dimm-memory",
+    "evaluator_path": "evaluators/cart_evaluator.py",
+    "answer_type": "cart",
+    "expected_urls": [
+        "http://10.1.110.114:9083/product/kingston-fury-beast-16gb-ddr5-4800mhz-pc5-38400-cl38-1-1v-ecc-xmp-3-0-amd-expo-pmic-dimm-memory",
+        "http://10.1.110.114:9081/product/kingston-fury-beast-16gb-ddr5-5600mhz-pc5-44800-cl40-1-25v-ecc-xmp-3-0-pmic-dimm-memory"
+    ]
+}

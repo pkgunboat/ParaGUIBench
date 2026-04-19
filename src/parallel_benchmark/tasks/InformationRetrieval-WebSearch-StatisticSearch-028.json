@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-028",
+    "task_uid": "da8a055c-e275-407c-bbe7-4359c983c8f5",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "As of March 2025, identify the commercial remote sensing satellite currently in operation that provides the highest spatial resolution (meters/pixel) for Earth observation.List the name of the satellite. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Pléiades Neo",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-028"
+}

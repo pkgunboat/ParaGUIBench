@@ -1,0 +1,20 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-fad4f2bbe3994256871f7a47bb0fd1f1",
+    "task_uid": "fad4f2bbe3994256871f7a47bb0fd1f1",
+    "source_task_id": "products_fulfilling_specific_requirements_task_2",
+    "task_type": "QA",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for Apple smart watches.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer_type": "string",
+    "answer": "http://10.1.110.114:9081/product/apple-watch-series-7-gps-41mm-green-with-trefoil-sport-strap###http://10.1.110.114:9082/product/apple-watch-series-8-gps-cellular-45mm-graphite-stainless-steel-case-with-midnight-sport-band-regular###http://10.1.110.114:9083/product/apple-watch-series-8-gps-41mm-silver-aluminium-case-with-white-sport-band-regular###http://10.1.110.114:9084/product/apple-watch-series-8-gps-41mm-smart-watch-w-starlight-aluminum-case-with-starlight-sport-band-s-m###http://10.1.110.114:9084/product/refurbished-apple-watch-series-8-gps-cellular-41mm-graphite-stainless-steel-case-with-s-m-midnight-sport-band",
+    "expected_urls": [
+        "http://10.1.110.114:9081/product/apple-watch-series-7-gps-41mm-green-with-trefoil-sport-strap",
+        "http://10.1.110.114:9082/product/apple-watch-series-8-gps-cellular-45mm-graphite-stainless-steel-case-with-midnight-sport-band-regular",
+        "http://10.1.110.114:9083/product/apple-watch-series-8-gps-41mm-silver-aluminium-case-with-white-sport-band-regular",
+        "http://10.1.110.114:9084/product/apple-watch-series-8-gps-41mm-smart-watch-w-starlight-aluminum-case-with-starlight-sport-band-s-m",
+        "http://10.1.110.114:9084/product/refurbished-apple-watch-series-8-gps-cellular-41mm-graphite-stainless-steel-case-with-s-m-midnight-sport-band"
+    ],
+    "evaluator_path": "evaluators/string_url_evaluator.py"
+}

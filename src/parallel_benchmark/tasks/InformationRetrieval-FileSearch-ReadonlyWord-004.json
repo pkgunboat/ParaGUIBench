@@ -1,0 +1,16 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-004",
+    "task_uid": "134a34d3-9f52-44f6-b7bd-12945c2479f2",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "There are some files in the folder. Which AI-related papers have cartoon-style illustrations? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "paper2",
+    "accepted_answers": [
+        "paper2.pdf",
+        "paper2.docx"
+    ],
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/134a34d3-9f52-44f6-b7bd-12945c2479f2",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-ReadonlyWord-004"
+}

@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-016",
+    "task_uid": "0e39dbd0-49b9-4c70-b174-f2fda04a4173",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Identify the Asian restaurant that received a Michelin three-star rating in 2009 and maintained that rating for the longest period until 2021. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Lung King Heen",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-016"
+}

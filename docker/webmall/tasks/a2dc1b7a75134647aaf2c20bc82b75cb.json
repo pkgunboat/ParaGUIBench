@@ -1,0 +1,19 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-a2dc1b7a75134647aaf2c20bc82b75cb",
+    "task_uid": "a2dc1b7a75134647aaf2c20bc82b75cb",
+    "source_task_id": "products_fulfilling_specific_requirements_task_5",
+    "task_type": "QA",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for NVMe SSDs from Team which support PCIe4.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9083/product/team-2tb-mp44l-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-4800-4400-mb-s-heat-dissipating-graphene-label###http://10.1.110.114:9084/product/team-2tb-mp44l-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-4800-4400-mb-s-heat-dissipating-graphene-label###http://10.1.110.114:9081/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label###http://10.1.110.114:9084/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9083/product/team-2tb-mp44l-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-4800-4400-mb-s-heat-dissipating-graphene-label",
+        "http://10.1.110.114:9084/product/team-2tb-mp44l-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-4800-4400-mb-s-heat-dissipating-graphene-label",
+        "http://10.1.110.114:9081/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label",
+        "http://10.1.110.114:9084/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label"
+    ]
+}

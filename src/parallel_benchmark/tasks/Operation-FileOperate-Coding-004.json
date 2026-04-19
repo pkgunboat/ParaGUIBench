@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-Coding-004",
+    "task_uid": "8553e1dc-2c4f-4a34-8094-bb2cb7c3583a",
+    "task_type": "",
+    "task_tag": "FileOperate",
+    "instruction": "I have 4 Python files with bugs. Each file contains exactly one logic bug (not a syntax error). Please find and fix the bug in each file. The 4 files are: binary_search.py (binary search with off-by-one boundary error), string_utils.py (longest common prefix with wrong length selection), math_utils.py (prime check with incorrect range boundary), list_utils.py (flatten with missing recursive call). You can run the unit tests in the tests/ directory to verify your fixes. The 4 files are independent so you can assign each to a separate agent for parallel processing.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/8553e1dc-2c4f-4a34-8094-bb2cb7c3583a",
+    "evaluator_path": "eval/coding_004_bugfix_evaluator.py",
+    "original_task_id": "Operation-FileOperate-coding-004"
+}

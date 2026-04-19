@@ -1,0 +1,21 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-Readonly-001",
+    "task_uid": "2b49d58c-521c-4e5a-963c-fc476c80534d",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "This system architecture diagram might have come from which paper in the ‘shared’ folder? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "paper3",
+    "accepted_answers": [
+        "paper3.pdf",
+        "Architectural Blueprints—The 4+1 View Model of Software Architecture",
+        "Architectural Blueprints The 4+1 View Model of Software Architecture",
+        "4+1 view model",
+        "4+1 view model of software architecture",
+        "view model of software architecture",
+        "architectural blueprints"
+    ],
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/2b49d58c-521c-4e5a-963c-fc476c80534d",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-Readonly-001"
+}

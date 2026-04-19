@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-003",
+    "task_uid": "5f69b47d-21d9-47db-ac80-9d1f1ebe737c",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "What is Beijing Normal University's ranking in the 2024 world university rankings provided by British institutions? Use abbreviated names for the ranking systems (e.g., THE, QS). Format: A:a;B:b. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "THE:177;QS:272",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-003"
+}

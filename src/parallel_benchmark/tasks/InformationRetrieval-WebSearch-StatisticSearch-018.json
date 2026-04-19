@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-018",
+    "task_uid": "b813337a-fa8b-442e-a51c-5920c273883c",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among all authors who won the International Booker Prize between 2016 (the first year of the new format) and 2024, identify the author whose winning novel has been officially translated into the most languages. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Han Kang",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-018"
+}

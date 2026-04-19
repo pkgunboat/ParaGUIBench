@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-012",
+    "task_uid": "a92f8e87-36b0-4da1-aa72-f7b753011488",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "Please take some time to review the case study file in the student work folder. I particularly want to ensure that the reference section at the end of the document complies with APA 7th edition format guidelines. If the current format does not meet APA 7th edition standards or has some errors, please make necessary adjustments.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/a92f8e87-36b0-4da1-aa72-f7b753011488",
+    "evaluator_path": "eval/osworld_scripts/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e.json",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-012"
+}

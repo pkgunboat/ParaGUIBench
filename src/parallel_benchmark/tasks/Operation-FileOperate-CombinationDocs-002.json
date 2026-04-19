@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-002",
+    "task_uid": "6bf5b1c9-a2a2-4901-bbe3-631a33da45e8",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Based on the data in Excel, check the corresponding data in PPT and Word documents, and correct any errors.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/6bf5b1c9-a2a2-4901-bbe3-631a33da45e8",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-002"
+}

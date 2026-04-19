@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-015",
+    "task_uid": "f732ca89-4b2d-4ff4-a34d-d56b5b510c9b",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among the top five countries in the World Happiness Index from 2020 to 2023, identify the three countries with the smallest populations. Answer in the format: <answer>PART1; PART2; ...</answer>. Separate multiple items with semicolons (;). Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Iceland; Finland; Denmark",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-015"
+}

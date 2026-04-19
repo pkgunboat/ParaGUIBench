@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-003",
+    "task_uid": "22e76d4d-0b1f-4c51-ab58-8ae41cbee9b7",
+    "task_type": "self",
+    "task_tag": "WebOperate",
+    "instruction": "Navigate to Tesla's official website and open the pages for Model Y, Model 3, and Model S respectively for comparison. After opening each target page, bookmark it in Chrome.",
+    "task_source": "",
+    "answer": "https://www.tesla.com/modely, https://www.tesla.com/model3, https://www.tesla.com/models",
+    "prepare_script_path": "",
+    "evaluator_path": "eval/webnavigate_bookmark_evaluator.py",
+    "original_task_id": "Operation-WebOperate-Webnavigate-003"
+}

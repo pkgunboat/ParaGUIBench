@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-004",
+    "task_uid": "6ed5298a-16d6-44fb-9c0c-35e87d3f13c0",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Highlight misspelled words in these documents in yellow.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/6ed5298a-16d6-44fb-9c0c-35e87d3f13c0",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-004",
+    "eval_rules": [
+        {
+            "check": "check_misspelled_words_highlighted",
+            "file_pattern": "*.docx",
+            "params": {
+                "expected_highlights": {},
+                "highlight_color": "FFFF00"
+            },
+            "weight": 1.0,
+            "description": "拼错词是否被黄色标记"
+        }
+    ]
+}

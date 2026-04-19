@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-Settings-003",
+    "task_uid": "bc69ee94-cf90-4cc4-a6ed-4266daa71706",
+    "task_type": "OSWorld脚本",
+    "task_tag": "WebOperate",
+    "instruction": "I really like this paper. Could you please find the personal webpages of the first author and the last three authors? Please add them to a bookmark folder named My Favorite Authors under the browser bookmarks bar.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/a82b78bb-7fde-4cb3-94a4-035baf10bcf0/2206.08853.pdf",
+    "evaluator_path": "eval/osworld_scripts/bc69ee94-cf90-4cc4-a6ed-4266daa71706.json",
+    "original_task_id": "Operation-WebOperate-settings-003"
+}

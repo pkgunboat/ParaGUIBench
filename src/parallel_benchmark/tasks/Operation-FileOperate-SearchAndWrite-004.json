@@ -1,0 +1,37 @@
+{
+    "task_id": "Operation-FileOperate-SearchAndWrite-004",
+    "task_uid": "19ed62a3-9df0-4879-a685-0681acc1c708",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Some data is missing in the table. Please search online to find and fill it in as much as possible. Use 'N/A' for data that cannot be found.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/19ed62a3-9df0-4879-a685-0681acc1c708",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-SearchAndWrite-002",
+    "eval_rules": [
+        {
+            "check": "check_multi_cell_values",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "cells": [
+                    {"cell": "B2", "expected": 1983},
+                    {"cell": "B3", "expected": 1987},
+                    {"cell": "B4", "expected": 1980},
+                    {"cell": "B5", "expected": 1990},
+                    {"cell": "C2", "contains": "Nashville"},
+                    {"cell": "C3", "contains_any": ["San Diego", "Mexico City"]},
+                    {"cell": "C4", "contains": "Vancouver"},
+                    {"cell": "C5", "expected": "N/A"},
+                    {"cell": "D2", "contains": "Generative Image"},
+                    {"cell": "D3", "contains": "Visual Autoregressive Modeling"},
+                    {"cell": "D4", "contains": "position"},
+                    {"cell": "D5", "contains": "Minimalist Vision"}
+                ],
+                "tolerance": 0.01
+            },
+            "weight": 1.0,
+            "description": "会议详细信息填充检查（12个单元格）"
+        }
+    ]
+}

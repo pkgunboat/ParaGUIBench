@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-007",
+    "task_uid": "1bf60141-62c1-4b65-83df-ac96bde8cb84",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among the recipients of the Crafoord Prize from 2020-2024, identify the individual who published the most international collaborative papers in the five years before receiving the award, and list their name. 2020–2024  Crafoord Prize “” Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Conny Aerts",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-007"
+}

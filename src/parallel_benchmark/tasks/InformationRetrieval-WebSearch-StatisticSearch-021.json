@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-021",
+    "task_uid": "1d377c61-a917-49e6-b190-bb94ec9cad05",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among all smartphones released globally from 2021 to 2024, identify the model with the highest pixel density (PPI), and list the model name. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Sony Xperia Pro-I",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-021"
+}

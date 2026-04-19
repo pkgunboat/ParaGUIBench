@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-009",
+    "task_uid": "be4584d8-b912-4069-b023-2daf118fb90d",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among skyscrapers completed globally between 2018 and 2024 with a height exceeding 350 meters, identify the one with the shortest construction period from groundbreaking to completion. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "The Exchange 106",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-009"
+}

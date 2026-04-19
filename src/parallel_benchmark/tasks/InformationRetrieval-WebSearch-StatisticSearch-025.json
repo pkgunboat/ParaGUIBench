@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-025",
+    "task_uid": "37f18438-a9e4-49da-8164-1fdafabfa2ae",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "In the history of Europe's top five football leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1), among players who scored more than 35 goals in a single league season, identify the one with the highest goal conversion rate (total goals/total shots). Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Robert Lewandowski",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-025"
+}

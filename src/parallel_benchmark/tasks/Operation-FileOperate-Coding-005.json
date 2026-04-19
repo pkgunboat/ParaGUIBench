@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-Coding-005",
+    "task_uid": "802b99fb-8a0f-4ae9-b0c4-575d46fb88af",
+    "task_type": "",
+    "task_tag": "FileOperate",
+    "instruction": "I have 4 Python files (math_ops.py, string_ops.py, list_ops.py, dict_ops.py) with 24 functions total, but none of them have type annotations. Please add correct type hints to all function parameters and return values using Python 3.10+ syntax. Use concrete generic types like list[int], dict[str, int] (not bare list or dict). For functions that may return None, use the union syntax int | None. Do NOT modify the function logic — only add type annotations. You can verify correctness with mypy --strict. The 4 files are independent so you can assign each to a separate agent for parallel processing.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/802b99fb-8a0f-4ae9-b0c4-575d46fb88af",
+    "evaluator_path": "eval/coding_005_typehint_evaluator.py",
+    "original_task_id": "Operation-FileOperate-coding-005"
+}

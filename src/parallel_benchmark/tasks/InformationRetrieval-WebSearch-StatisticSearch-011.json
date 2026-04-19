@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-011",
+    "task_uid": "42a1ebe0-7c9f-48d4-9cea-ae45415a8e41",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "As of March 2025, among all publicly available commercial products offering text-to-video generation services, identify the model/product that can generate the longest coherent video (in seconds, without obvious logical interruptions) at 1080p resolution. List only the model name (no version numbers). Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Kling",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-011"
+}

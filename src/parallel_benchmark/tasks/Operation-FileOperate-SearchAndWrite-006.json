@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-SearchAndWrite-006",
+    "task_uid": "d624fd2f-f184-4041-a33c-678f6fa10744",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "I want to record some information about the current AI field in this document. The document already contains some headings. Please help me complete the body text parts.",
+    "task_source": "self",
+    "answer": "",
+    "skip_eval": false,
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/d624fd2f-f184-4041-a33c-678f6fa10744",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-SearchAndWrite-003",
+    "eval_rules": [
+        {
+            "check": "check_docx_word_count",
+            "file_pattern": "*.docx",
+            "params": {
+                "min_words": 100
+            },
+            "weight": 1.0,
+            "description": "docx 正文字数 >100"
+        }
+    ]
+}

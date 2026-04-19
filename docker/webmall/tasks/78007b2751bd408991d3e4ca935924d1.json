@@ -1,0 +1,17 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-SingleProductSearch-78007b2751bd408991d3e4ca935924d1",
+    "task_uid": "78007b2751bd408991d3e4ca935924d1",
+    "source_task_id": "single_product_search_task_1",
+    "task_type": "QA",
+    "task_tag": "SingleProductSearch",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for the AMD Ryzen 9 5900X.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer_type": "string",
+    "answer": "http://10.1.110.114:9082/product/amd-ryzen-9-5900x-3-7-ghz-12-core###http://10.1.110.114:9081/product/amd-ryzen-9-5900x-3-7-ghz-12-cores-24-threads",
+    "expected_urls": [
+        "http://10.1.110.114:9082/product/amd-ryzen-9-5900x-3-7-ghz-12-core",
+        "http://10.1.110.114:9081/product/amd-ryzen-9-5900x-3-7-ghz-12-cores-24-threads"
+    ],
+    "evaluator_path": "evaluators/string_url_evaluator.py"
+}

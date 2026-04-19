@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-022",
+    "task_uid": "ce49c71c-4506-4937-a75b-5aadbf18983d",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "On the English Wikipedia page for 'Standard Model', visually identify the group of particles displayed with a purple background in the particle classification diagram. Find the rest mass (in MeV/c²) of each of these particles and list them. Format: xx:num; (e.g., up: 2.16; down: 4.7;). End with a semicolon. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "up: 2.16; down: 4.7; charm: 1.273; strange: 93.5; top: 172.57; bottom: 4.183;",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-022"
+}

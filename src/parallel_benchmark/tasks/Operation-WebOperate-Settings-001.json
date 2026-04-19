@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-Settings-001",
+    "task_uid": "b88b0015-1eb0-4f9e-be76-d1e96939f36c",
+    "task_type": "",
+    "task_tag": "WebOperate",
+    "instruction": "I recently changed my English name to Thomas. Please sync the username on all webpages in my bookmarks to Thomas.ThomasThomas",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "Operation-WebOperate-settings-001"
+}

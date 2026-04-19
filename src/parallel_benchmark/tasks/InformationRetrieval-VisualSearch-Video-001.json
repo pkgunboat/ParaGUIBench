@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-VisualSearch-Video-001",
+    "task_uid": "f184a09d-7f09-49f5-87ac-c9d1e87ae403",
+    "task_type": "QA",
+    "task_tag": "VisualSearch",
+    "instruction": "What color are the clothes worn by the anime girl appearing in the video at https://www.bilibili.com/video/BV1LX4y1j78y/?spm_id_from=333.337.search-card.all.click?https://www.bilibili.com/video/BV1LX4y1j78y/?spm_id_from=333.337.search-card.all.click. Choose from: red, yellow, blue, green, purple. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "",
+    "answer": "purple",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-VisualSearch-video-001"
+}

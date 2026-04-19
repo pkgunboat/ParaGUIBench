@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-025",
+    "task_uid": "285122b6-df09-4d42-992b-077e4cba312b",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among all games developed by Supercell, which game icons do not feature a human character? Answer in the format: <answer>PART1; PART2; ...</answer>. Separate multiple items with semicolons (;). Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "brawl stars; hay day",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-025"
+}

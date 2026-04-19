@@ -1,0 +1,17 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-bc0c902cc2cc4255ab02acabc282fb66",
+    "task_uid": "bc0c902cc2cc4255ab02acabc282fb66",
+    "source_task_id": "products_fulfilling_specific_requirements_task_1",
+    "task_type": "QA",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for orange straps that fit with the Apple Watch Series 6.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9081/product/uag-apple-watch-44mm-42mm-civilian-strap-slate-orange###http://10.1.110.114:9083/product/uag-civilian-strap-for-apple-watch-series-7-se-6-5-4-3-2-1-45mm-42mm-44mm-slate-orange-barcode-812451034912",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9081/product/uag-apple-watch-44mm-42mm-civilian-strap-slate-orange",
+        "http://10.1.110.114:9083/product/uag-civilian-strap-for-apple-watch-series-7-se-6-5-4-3-2-1-45mm-42mm-44mm-slate-orange-barcode-812451034912"
+    ]
+}

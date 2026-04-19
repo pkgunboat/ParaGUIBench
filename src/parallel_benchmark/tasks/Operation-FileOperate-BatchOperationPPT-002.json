@@ -1,0 +1,18 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationPPT-002",
+    "task_uid": "85da5285-4ba1-4550-8f5a-00ea07fca510",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Several PowerPoint presentations contain text that overflows the page boundaries. Please adjust the size and position of these text boxes in each presentation to ensure all text is fully displayed and does not overlap.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/85da5285-4ba1-4550-8f5a-00ea07fca510",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationppt-002",
+    "eval_rules": [
+        {
+            "check": "check_batchppt002_bounds_overlap",
+            "description": "检查每一张幻灯片中的文本框坐标是否超出边界，如果同一张幻灯片中有多个文本框，计算每个文本框的顶点坐标，判断是否存在重合"
+        }
+    ]
+}

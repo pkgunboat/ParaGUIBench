@@ -1,0 +1,11 @@
+# InformationRetrieval-WebSearch-ConditionalSearch (10 tasks)
+InformationRetrieval-WebSearch-ConditionalSearch-001
+InformationRetrieval-WebSearch-ConditionalSearch-002
+InformationRetrieval-WebSearch-ConditionalSearch-003
+InformationRetrieval-WebSearch-ConditionalSearch-004
+InformationRetrieval-WebSearch-ConditionalSearch-005
+InformationRetrieval-WebSearch-ConditionalSearch-006
+InformationRetrieval-WebSearch-ConditionalSearch-007
+InformationRetrieval-WebSearch-ConditionalSearch-008
+InformationRetrieval-WebSearch-ConditionalSearch-009
+InformationRetrieval-WebSearch-ConditionalSearch-010

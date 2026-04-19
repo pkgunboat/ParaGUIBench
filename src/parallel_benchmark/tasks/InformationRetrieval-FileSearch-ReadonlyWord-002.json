@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-002",
+    "task_uid": "d2783609-b215-457d-99bb-3e3153b286cb",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "There are several images in the directory. Please check the currencies displayed in these images, convert them to USD at the exchange rate on December 31, 2025, and determine which currency has the highest total value in the images. Currency codes: USD, EUR, GBP, JPY, CNY, CHF. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "EUR",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/d2783609-b215-457d-99bb-3e3153b286cb",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-ReadonlyWord-002"
+}

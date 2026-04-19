@@ -1,0 +1,13 @@
+{
+    "task_id": "Operation-FileOperate-SearchAndWrite-005",
+    "task_uid": "dce61462-cf48-42d9-9466-5a0171aa5d12",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "I am a natural language processing researcher. Please review the ACL Best Long Paper Awards from 2019 to 2022, and record the Title, Year, Author List, and PDF Link into the best_awards_acl.xlsx table on the desktop. Authors should be separated only by commas, use official aclanthology links rather than arxiv links, and sort rows by year in descending order.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "skip_eval": false,
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/dce61462-cf48-42d9-9466-5a0171aa5d12",
+    "evaluator_path": "eval/osworld_scripts/dce61462-cf48-42d9-9466-5a0171aa5d12.json",
+    "original_task_id": "Operation-FileOperate-Search&write-003"
+}

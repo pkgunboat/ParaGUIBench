@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-024",
+    "task_uid": "e55e97d6-6369-4e4d-bfdf-6009d8ffcbac",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Identify the male tennis player who won the most tie-breaks in Grand Slam tournaments between 2018 and 2024. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Novak Djokovic",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-024"
+}

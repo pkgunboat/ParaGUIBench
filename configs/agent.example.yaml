@@ -1,0 +1,137 @@
+# PlanAgent 配置文件
+
+# 基本配置
+platform: "ubuntu"
+model_type: "qwen25vl"
+
+# 运行时配置
+runtime_conf:
+  # 推理模式
+  infer_mode: "qwen25vl_normal"
+  prompt_style: "qwen25vl_normal"
+  
+  # 输入设置
+  input_swap: true
+  language: "English"
+  history_n: 5
+  
+  # 图像处理
+  max_pixels: 16384*28*28
+  min_pixels: 100*28*28
+  
+  # 模型参数
+  temperature: 0.0
+  top_k: -1
+  top_p: 0.9
+  max_tokens: 1000
+  
+  # 规划特定参数
+  planning_temperature: 0.1
+  callusr_tolerance: 3
+
+# 任务管理配置
+task_management:
+  max_retries: 3
+  timeout_seconds: 300
+  enable_parallel_execution: false
+  
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "plan_agent.log"
+
+# 错误处理配置
+error_handling:
+  continue_on_failure: true
+  retry_failed_tasks: true
+  max_consecutive_failures: 3
+
+# 规划提示模板配置
+planning_prompts:
+  # 中文提示模板
+  chinese_template: |
+    你是一个任务规划专家。请将用户的复杂任务分解为一系列可以按顺序执行的子任务。
+
+    用户任务: {user_instruction}
+
+    请将任务分解为以下格式的子任务列表：
+
+    ```json
+    [
+        {{
+            "task_id": "task_1",
+            "description": "子任务1的详细描述",
+            "instruction": "具体的操作指令",
+            "dependencies": []
+        }},
+        {{
+            "task_id": "task_2", 
+            "description": "子任务2的详细描述",
+            "instruction": "具体的操作指令",
+            "dependencies": ["task_1"]
+        }}
+    ]
+    ```
+
+    注意事项：
+    1. 每个子任务应该是具体的、可执行的操作
+    2. 子任务之间可以有依赖关系，用dependencies数组表示
+    3. 任务ID应该是唯一的，格式为task_1, task_2等
+    4. 指令应该足够详细，让执行代理能够理解具体要做什么
+    5. 如果任务很简单，可能只需要一个子任务
+    6. 考虑任务的逻辑顺序和依赖关系
+
+    请只返回JSON格式的任务列表，不要包含其他内容。
+
+  # 英文提示模板
+  english_template: |
+    You are a task planning expert. Please break down the user's complex task into a series of subtasks that can be executed sequentially.
+
+    User task: {user_instruction}
+
+    Please decompose the task into a list of subtasks in the following format:
+
+    ```json
+    [
+        {{
+            "task_id": "task_1",
+            "description": "Detailed description of subtask 1",
+            "instruction": "Specific operation instruction",
+            "dependencies": []
+        }},
+        {{
+            "task_id": "task_2", 
+            "description": "Detailed description of subtask 2",
+            "instruction": "Specific operation instruction",
+            "dependencies": ["task_1"]
+        }}
+    ]
+    ```
+
+    Notes:
+    1. Each subtask should be a specific, executable operation
+    2. Subtasks can have dependencies, indicated by the dependencies array
+    3. Task IDs should be unique, formatted as task_1, task_2, etc.
+    4. Instructions should be detailed enough for the execution agent to understand what to do
+    5. If the task is simple, only one subtask may be needed
+    6. Consider the logical order and dependencies of tasks
+
+    Please return only the JSON format task list, without any other content.
+
+# 示例任务配置
+example_tasks:
+  simple_tasks:
+    - "等待5秒钟"
+    - "点击屏幕中央"
+    - "打开计算器"
+  
+  complex_tasks:
+    - "打开Chrome浏览器，访问GitHub网站，搜索Python项目，下载一个项目到桌面"
+    - "创建一个新的文件夹，在其中创建三个文本文件，分别写入不同的内容"
+    - "打开终端，安装一个软件包，然后运行一个Python脚本"
+  
+  dependency_tasks:
+    - "创建文件夹，在其中创建文件并写入内容"
+    - "打开浏览器，访问网站，填写表单并提交"
+    - "下载文件，解压缩，然后运行程序" 

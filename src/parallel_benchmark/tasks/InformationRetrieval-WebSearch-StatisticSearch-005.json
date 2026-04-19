@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-005",
+    "task_uid": "63ea4f95-9f2c-4a97-b44f-d0116fe6e80a",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "As of January 1, 2026, among the games that have won the TGA Game of the Year award, which game has the highest price in the Stream China region? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "The last of us Part II",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-StatisticSearch-005"
+}

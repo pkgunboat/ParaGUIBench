@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-Coding-002",
+    "task_uid": "d3950c3d-504a-430f-b205-ac8a049fe9f8",
+    "task_type": "",
+    "task_tag": "FileOperate",
+    "instruction": "I have a DSL file (spec.dsl) containing 45 independent function definitions. Please translate all of them into a single Python file (output.py). The DSL uses LET/SET for variables, IF/ELSE_IF/ELSE/END_IF for conditionals, FOR...DO...END_FOR for loops, APPEND...WITH for list operations, and EMPTY_LIST[T] for typed empty lists. Each translated function must include Chinese docstrings (功能、输入参数、返回值) and Python 3.10+ type hints (e.g., list[int]). All 45 functions are independent so you can parallelize: e.g., 3 agents each translating 15 functions, then merge into one file.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/d3950c3d-504a-430f-b205-ac8a049fe9f8",
+    "evaluator_path": "eval/coding_002_dsl_translate_evaluator.py",
+    "original_task_id": "Operation-FileOperate-coding-002"
+}

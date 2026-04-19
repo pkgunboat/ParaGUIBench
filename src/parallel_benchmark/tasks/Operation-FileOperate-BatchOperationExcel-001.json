@@ -1,0 +1,18 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationExcel-001",
+    "task_uid": "5e573e33-135a-4b45-b398-f85c0f7fea0a",
+    "task_type": "",
+    "task_tag": "FileOperate",
+    "instruction": "Each Excel file in the folder corresponds to the revenue of one Mixue Ice Cream shop. For each Excel file, simply sum up the annual total for each column.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/5e573e33-135a-4b45-b398-f85c0f7fea0a",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationexcel-001",
+    "eval_rules": [
+        {
+            "check": "check_batchexcel001_annual_sum",
+            "description": "检查B16单元格的值是否为B4到B15的累加，C16单元格的值是否为C4到C15的累加"
+        }
+    ]
+}

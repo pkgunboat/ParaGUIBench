@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-001",
+    "task_uid": "06b65a9a-7fe5-4fa0-a8b7-27275d8c29e9",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "Check if the title of each PPT is centered. Answer yes or no. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "yes",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/06b65a9a-7fe5-4fa0-a8b7-27275d8c29e9",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-Readonlyppt-001"
+}

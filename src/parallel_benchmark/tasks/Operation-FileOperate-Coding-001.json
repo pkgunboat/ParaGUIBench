@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-Coding-001",
+    "task_uid": "87dba490-f1ad-4e4e-bc73-6d7aa2added1",
+    "task_type": "",
+    "task_tag": "FileOperate",
+    "instruction": "My project data_tool_medium has many redundant functions that are never used. Please analyze the call chain starting from main.py, identify all functions that are NOT reachable from main.py's execution, and delete them. Preserve the original code format and all used functions (including cross-module calls like processing.cleaners -> utils.validators). The project has 4 modules (io_module, processing, analysis, utils) with 11 Python files total. If a function is unused, delete the function definition and one trailing blank line.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/87dba490-f1ad-4e4e-bc73-6d7aa2added1",
+    "evaluator_path": "eval/coding_001_unused_func_evaluator.py",
+    "original_task_id": "Operation-FileOperate-coding-001"
+}

@@ -1,0 +1,16 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-FindCompatibleProducts-528e679576bc4462aeec4a0abae5c414",
+    "task_uid": "528e679576bc4462aeec4a0abae5c414",
+    "source_task_id": "find_compatible_products_task_5",
+    "task_type": "QA",
+    "task_tag": "FindCompatibleProducts",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind an HDMI cable to connect my monitor to this GPU: http://10.1.110.114:9081/product/pny-t1000-professional-graphics-card-4gb-ddr6-896-cores-4-minidp-1-4-low-profile-bracket-included-oem-brown-box .\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9082/product/spire-mini-displayport-male-to-hdmi-male-converter-1-metre",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9082/product/spire-mini-displayport-male-to-hdmi-male-converter-1-metre"
+    ]
+}

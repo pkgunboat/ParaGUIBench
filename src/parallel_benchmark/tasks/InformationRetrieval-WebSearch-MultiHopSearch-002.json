@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-002",
+    "task_uid": "4a3a3274-889d-4fab-bb3c-b3c1a8667098",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Using the list of Beijing's international sister cities published on the Beijing Municipal Government's official website as the target set, identify any two cities that are also mutually listed as sister cities through their respective official channels,  count how many such city pairs exist. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "9",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Multi-HopSearch-002"
+}

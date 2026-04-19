@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-010",
+    "task_uid": "37b2cb1b-0b02-4343-afd6-708a00f8f239",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "As of 2025, among all member airlines announced on the IATA official website, how many airlines have animal imagery in their official logos? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "3",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Visualsearch-010"
+}

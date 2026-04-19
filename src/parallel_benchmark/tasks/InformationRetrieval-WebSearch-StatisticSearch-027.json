@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-027",
+    "task_uid": "30a76b3f-da3a-4d0a-af5a-01c785649d27",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among Nobel Prize in Literature laureates from 2010 to 2024, identify the novelist whose first fictional work (novel or short story collection) published after winning the prize has the highest average rating on Goodreads. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Mo Yan",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-027"
+}

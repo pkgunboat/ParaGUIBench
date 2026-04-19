@@ -1,0 +1,17 @@
+{
+    "task_id": "InformationRetrieval-MultiShopShopping-CheapestProductSearch-08e367e75bb54b47901a5bc1bbf1de19",
+    "task_uid": "08e367e75bb54b47901a5bc1bbf1de19",
+    "source_task_id": "cheapest_product_search_task_6",
+    "task_type": "QA",
+    "task_tag": "CheapestProductSearch",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind the cheapest offer for a Corsair Vengeance LPX 16GB Kit (2 x 8GB). If multiple offers share the lowest price, return all of them.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9084/product/corsair-vengeance-lpx-16gb-2x8gb-ddr4-3200mhz-c16-desktop-gaming-memory-black###http://10.1.110.114:9084/product/corsair-vengeance-lpx-16gb-2x8gb-ddr4-3600mhz-c18-desktop-gaming-memory-black",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9084/product/corsair-vengeance-lpx-16gb-2x8gb-ddr4-3200mhz-c16-desktop-gaming-memory-black",
+        "http://10.1.110.114:9084/product/corsair-vengeance-lpx-16gb-2x8gb-ddr4-3600mhz-c18-desktop-gaming-memory-black"
+    ]
+}

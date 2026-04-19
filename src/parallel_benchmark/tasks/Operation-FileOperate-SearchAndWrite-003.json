@@ -1,0 +1,13 @@
+{
+    "task_id": "Operation-FileOperate-SearchAndWrite-003",
+    "task_uid": "51d7a7fe-e659-4de0-8345-c2c04da90373",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "Check the spreadsheet on the desktop, which contains records of books read in 2022. Using the website https://howlongtoread.com/ as a reference, find the book with the slowest reading speed (measured in words per day). There is an empty document named book_list_result.docx on the desktop; please open it and record the book title in it.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "skip_eval": false,
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/51d7a7fe-e659-4de0-8345-c2c04da90373",
+    "evaluator_path": "eval/osworld_scripts/51d7a7fe-e659-4de0-8345-c2c04da90373.json",
+    "original_task_id": "Operation-FileOperate-Search&write-002"
+}

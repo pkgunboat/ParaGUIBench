@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationExcel-006",
+    "task_uid": "ed04e7b5-a2c6-449a-a493-b22999919008",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Highlight rows with negative profits in all Excel files in red.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/ed04e7b5-a2c6-449a-a493-b22999919008",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationexcel-006",
+    "eval_rules": [
+        {
+            "check": "check_negative_values_colored",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "start_cell": "B4",
+                "end_cell": "B15"
+            },
+            "weight": 1.0,
+            "description": "负值单元格标记为红色"
+        }
+    ]
+}

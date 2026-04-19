@@ -1,0 +1,18 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-FindCompatibleProducts-0d34c4e1863c4ddb832ec4eba10d5ef6",
+    "task_uid": "0d34c4e1863c4ddb832ec4eba10d5ef6",
+    "source_task_id": "find_compatible_products_task_1",
+    "task_type": "QA",
+    "task_tag": "FindCompatibleProducts",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for keyboards with the best visual fit and same color to this case: http://10.1.110.114:9082/product/corsair-5000d-airflow-gaming-case-w-glass-window-e-atx-2-x-airguide-fans-high-airflow-front-panel-usb-c-white .\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9084/product/asus-rog-falchion-rx-low-profile-compact-65-mechanical-rgb-gaming-keyboard-wireless-usb-rog-rx-red-switches-per-key-rgb-lighting-touch-panel-430-hour-battery-life###http://10.1.110.114:9081/product/asus-rog-falchion-rx-low-profile-compact-65-mechanical-rgb-gaming-keyboard-wireless-usb-rog-rx-red-switches-per-key-rgb-lighting-touch-panel-430-hour-battery-life###http://10.1.110.114:9081/product/asus-rog-falchion-ace-compact-65-mechanical-rgb-gaming-keyboard-wired-dual-usb-c-rog-nx-red-switches-per-key-rgb-lighting-touch-panel-white-edition",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9084/product/asus-rog-falchion-rx-low-profile-compact-65-mechanical-rgb-gaming-keyboard-wireless-usb-rog-rx-red-switches-per-key-rgb-lighting-touch-panel-430-hour-battery-life",
+        "http://10.1.110.114:9081/product/asus-rog-falchion-rx-low-profile-compact-65-mechanical-rgb-gaming-keyboard-wireless-usb-rog-rx-red-switches-per-key-rgb-lighting-touch-panel-430-hour-battery-life",
+        "http://10.1.110.114:9081/product/asus-rog-falchion-ace-compact-65-mechanical-rgb-gaming-keyboard-wired-dual-usb-c-rog-nx-red-switches-per-key-rgb-lighting-touch-panel-white-edition"
+    ]
+}

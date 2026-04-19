@@ -1,0 +1,5 @@
+# SearchWrite 任务子集（3 个）
+# 来源: filted_tasks_english.txt 中 Search&write 类
+Operation-FileOperate-SearchAndWrite-001
+Operation-FileOperate-SearchAndWrite-004
+Operation-WebOperate-SearchAndWrite-001

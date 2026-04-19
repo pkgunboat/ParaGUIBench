@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-SearchAndWrite-001",
+    "task_uid": "d017201e-a098-46ab-86be-6c99d263ecff",
+    "task_type": "OSWorld脚本",
+    "task_tag": "WebOperate",
+    "instruction": "Hello! I am eagerly planning a Hong Kong food tour and have compiled a list of must-visit restaurants I have been longing to explore. However, I need some help organizing basic information about these restaurants. Can you help me with this favor? It would be great if you could search for these restaurants on Google Maps. I particularly want to obtain their addresses, any available websites, and contact phone numbers. I would be very grateful if you could collect this information and enter it into my form file. Thank you very much in advance!",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/d1acdb87-bb67-4f30-84aa-990e56a09c92/restaurants.txt , https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/d1acdb87-bb67-4f30-84aa-990e56a09c92/MUST_VISIT.xlsx",
+    "evaluator_path": "eval/osworld_scripts/d017201e-a098-46ab-86be-6c99d263ecff.json",
+    "original_task_id": "Operation-WebOperate-Search&write-001"
+}

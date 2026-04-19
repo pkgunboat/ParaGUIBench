@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-005",
+    "task_uid": "d7df3db6-58e0-411f-80e9-488691bb6e16",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among the songs released by Taylor Swift in 2024, how many songs' lyrics contain love? (excluding variants of love) Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "9",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-005"
+}

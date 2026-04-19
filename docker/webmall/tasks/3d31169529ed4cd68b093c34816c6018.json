@@ -1,0 +1,19 @@
+{
+    "task_id": "InformationRetrieval-MultiShopShopping-CheapestProductSearch-3d31169529ed4cd68b093c34816c6018",
+    "task_uid": "3d31169529ed4cd68b093c34816c6018",
+    "source_task_id": "cheapest_product_search_task_2",
+    "task_type": "QA",
+    "task_tag": "CheapestProductSearch",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind the cheapest offer for each storage size of the Samsung 870 Evo. If multiple offers share the lowest price, return all of them.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9081/product/samsung-870-evo-2-5-250-gb-sata-iii-v-nand###http://10.1.110.114:9081/product/samsung-1tb-870-evo-ssd-2-5-sata3-v-nand-r-w-560-530-mb-s-98k-88k-iops-7mm###http://10.1.110.114:9082/product/samsung-870-evo-2tb-2-5-sata-iii-6gb-s-ssd-560r-530w-mb-s-mz-77e2t0bw###http://10.1.110.114:9083/product/samsung-4tb-870-evo-ssd-2-5-sata3-v-nand-r-w-560-530-mb-s-98k-88k-iops-7mm",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9081/product/samsung-870-evo-2-5-250-gb-sata-iii-v-nand",
+        "http://10.1.110.114:9081/product/samsung-1tb-870-evo-ssd-2-5-sata3-v-nand-r-w-560-530-mb-s-98k-88k-iops-7mm",
+        "http://10.1.110.114:9082/product/samsung-870-evo-2tb-2-5-sata-iii-6gb-s-ssd-560r-530w-mb-s-mz-77e2t0bw",
+        "http://10.1.110.114:9083/product/samsung-4tb-870-evo-ssd-2-5-sata3-v-nand-r-w-560-530-mb-s-98k-88k-iops-7mm"
+    ]
+}

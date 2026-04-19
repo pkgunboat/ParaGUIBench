@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-021",
+    "task_uid": "d2f3d40d-a3b1-407b-90a1-dbeec1a3b2eb",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Visit the UNECE official website's GHS pictograms page. Visually identify the pictogram(s) that contain a skull and crossbones symbol. Find the official GHS hazard category number(s) corresponding to those pictogram(s). Answer in the format: <answer>PART1; PART2; ...</answer>. Separate multiple items with semicolons (;). Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "Division 2.3; Division 6.1",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-021"
+}

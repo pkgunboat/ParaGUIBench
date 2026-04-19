@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-003",
+    "task_uid": "a54e59ba-08f4-4941-907f-1383e603cc99",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Which Apple event icon from 2024 to 2025 features a black hand? Please answer the date in YYYY-MM-DD format. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "2024-05-07",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-003"
+}

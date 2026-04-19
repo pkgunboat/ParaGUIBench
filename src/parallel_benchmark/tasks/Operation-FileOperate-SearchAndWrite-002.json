@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-SearchAndWrite-002",
+    "task_uid": "31d84d8d-8c61-4181-b321-44b83adc03f9",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "There is a column of company names in the Excel document. Search online and fill in the founding year, headquarters city, official website domain, and other headers.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/67890eb6-6ce5-4c00-9e3d-fb4972699b06/best_awards_acl.xlsx",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-SearchAndWrite-001",
+    "eval_rules": [
+        {
+            "check": "check_cells_filled",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "start_cell": "B2",
+                "end_cell": "D5"
+            },
+            "weight": 1.0,
+            "description": "B2:D5区域填充"
+        }
+    ]
+}

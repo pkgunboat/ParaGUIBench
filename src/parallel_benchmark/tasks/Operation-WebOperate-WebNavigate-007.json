@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-007",
+    "task_uid": "1c100df8-4a3e-4680-be7e-3f5e2e26b22f",
+    "task_type": "self",
+    "task_tag": "WebOperate",
+    "instruction": "Navigate to Unitree's About Us and Humanoid Robot tabs. After opening each target page, bookmark it in Chrome.",
+    "task_source": "",
+    "answer": "https://www.unitree.com/cn/about , https://www.unitree.com/cn/g1 ",
+    "prepare_script_path": "",
+    "evaluator_path": "eval/webnavigate_bookmark_evaluator.py",
+    "original_task_id": "Operation-WebOperate-Webnavigate-007"
+}

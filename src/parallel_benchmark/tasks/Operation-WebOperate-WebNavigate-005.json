@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-005",
+    "task_uid": "0f931391-7dd0-46ea-a492-13f064056d99",
+    "task_type": "self",
+    "task_tag": "WebOperate",
+    "instruction": "Open the API pricing pages for deerAPI and Silicon Flow respectively. I want to see how their billing methods differ. After opening each target page, bookmark it in Chrome.",
+    "task_source": "",
+    "answer": "https://helpdoc.deerapi.com/about-price ,  https://www.siliconflow.com/pricing",
+    "prepare_script_path": "",
+    "evaluator_path": "eval/webnavigate_bookmark_evaluator.py",
+    "original_task_id": "Operation-WebOperate-Webnavigate-005"
+}

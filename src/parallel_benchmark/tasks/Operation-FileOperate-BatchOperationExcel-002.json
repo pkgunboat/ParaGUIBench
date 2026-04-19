@@ -1,0 +1,22 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationExcel-002",
+    "task_uid": "a1510a05-9fca-46ba-b95d-451dd5779194",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Bold all Excel headers and right-align numeric columns.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/a1510a05-9fca-46ba-b95d-451dd5779194",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationexcel-002",
+    "eval_rules": [
+        {
+            "check": "check_batchexcel002_header_bold",
+            "description": "检查单元格A3,B3,C3是否加粗"
+        },
+        {
+            "check": "check_batchexcel002_range_right_align",
+            "description": "检查B4到C15的值是否右侧对齐"
+        }
+    ]
+}

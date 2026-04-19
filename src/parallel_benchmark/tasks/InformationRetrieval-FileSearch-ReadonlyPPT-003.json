@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-003",
+    "task_uid": "163c86bd-de63-4311-8da5-ff750e8f7961",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "Which pages in this PPT are pure display pages (images only, no text)? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "4",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/163c86bd-de63-4311-8da5-ff750e8f7961",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-Readonlyppt-003"
+}

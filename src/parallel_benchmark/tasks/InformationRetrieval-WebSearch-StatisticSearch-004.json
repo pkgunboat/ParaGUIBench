@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-004",
+    "task_uid": "7e76cfd7-7256-42b5-9570-a7665e881c0f",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among all electric vehicle manufacturers that delivered more than 300,000 vehicles globally in 2023, identify the companies with the highest year-on-year growth rate in battery energy density (kWh/kg) between 2021 and 2023. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "BYD",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-StatisticSearch-004"
+}

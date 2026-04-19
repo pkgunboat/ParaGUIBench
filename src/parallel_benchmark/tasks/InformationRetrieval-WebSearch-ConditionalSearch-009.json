@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-009",
+    "task_uid": "345d0730-4a97-4b10-a371-1b8e96b1f239",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Identify the largest standalone Concentrating Solar Power (CSP) project globally between 2015 and 2024. List the project name. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Ouarzazate",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-009"
+}

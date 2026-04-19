@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-005",
+    "task_uid": "fa726b3a-c7bd-4242-882c-07c348ba2536",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "By 2025, how many of Beijing's 211 universities will have a school emblem that is primarily blue in color? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "11",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Visualsearch-005"
+}

@@ -1,0 +1,99 @@
+# ─────────────────────────────────────────────────────────────
+# ParaGUIBench 外部服务编排
+#   - OnlyOffice DocumentServer：SearchWrite pipeline 依赖
+#   - Flask 文档共享服务：封装 OnlyOffice 的任务级共享链接
+#   - WebMall 商城（4 个端口分别对应不同模板）：WebMall pipeline 依赖
+# ─────────────────────────────────────────────────────────────
+# 用法（启动/停止）：
+#     bash scripts/start_services.sh
+#     bash scripts/stop_services.sh
+#
+# 所有端口来自 configs/deploy.yaml 的 services.*，由 start_services.sh
+# 通过 envsubst 注入。直接 docker compose up 也可以，前提是先 source 好
+# 对应环境变量（ONLYOFFICE_DOC_PORT, WEBMALL_PORT_1 等）。
+# ─────────────────────────────────────────────────────────────
+
+services:
+  # OnlyOffice 文档编辑服务器（上游官方镜像）
+  onlyoffice:
+    image: onlyoffice/documentserver:8.1
+    container_name: bench-onlyoffice
+    restart: unless-stopped
+    ports:
+      - "${ONLYOFFICE_DOC_PORT:-8080}:80"
+    environment:
+      - JWT_ENABLED=false            # benchmark 运行时不使用 JWT
+    volumes:
+      - ./onlyoffice/data:/var/www/onlyoffice/Data
+      - ./onlyoffice/logs:/var/log/onlyoffice
+
+  # Flask 文档共享服务（仓库内代码，挂载为只读）
+  onlyoffice-share:
+    image: python:3.11-slim
+    container_name: bench-onlyoffice-share
+    restart: unless-stopped
+    depends_on:
+      - onlyoffice
+    ports:
+      - "${ONLYOFFICE_FLASK_PORT:-5050}:5050"
+    working_dir: /app
+    volumes:
+      - ./onlyoffice:/app:ro
+      - ./onlyoffice/shared_documents:/app/shared_documents
+    environment:
+      - HOST_IP=${ONLYOFFICE_HOST_IP:-127.0.0.1}
+      - DOC_SERVER_PORT=${ONLYOFFICE_DOC_PORT:-8080}
+      - FLASK_PORT=5050
+    command: >
+      sh -c "pip install --no-cache-dir flask requests python-docx openpyxl python-pptx
+             && python document_sharing_server.py"
+
+  # WebMall 商城 × 4（由 benchmark 维护者准备的镜像；未公开时请自行构建）
+  # 每个容器是一个独立的电商后端实例，对应任务 JSON 中的 9081~9084 端口
+  webmall-shop1:
+    image: ${WEBMALL_IMAGE:-benchmark/webmall:latest}
+    container_name: bench-webmall-1
+    restart: unless-stopped
+    ports: ["${WEBMALL_PORT_1:-9081}:80"]
+    environment:
+      - SHOP_ID=1
+    volumes:
+      - ./webmall/tasks:/opt/tasks:ro
+      - ./webmall/data/shop1:/var/lib/shop
+
+  webmall-shop2:
+    image: ${WEBMALL_IMAGE:-benchmark/webmall:latest}
+    container_name: bench-webmall-2
+    restart: unless-stopped
+    ports: ["${WEBMALL_PORT_2:-9082}:80"]
+    environment:
+      - SHOP_ID=2
+    volumes:
+      - ./webmall/tasks:/opt/tasks:ro
+      - ./webmall/data/shop2:/var/lib/shop
+
+  webmall-shop3:
+    image: ${WEBMALL_IMAGE:-benchmark/webmall:latest}
+    container_name: bench-webmall-3
+    restart: unless-stopped
+    ports: ["${WEBMALL_PORT_3:-9083}:80"]
+    environment:
+      - SHOP_ID=3
+    volumes:
+      - ./webmall/tasks:/opt/tasks:ro
+      - ./webmall/data/shop3:/var/lib/shop
+
+  webmall-shop4:
+    image: ${WEBMALL_IMAGE:-benchmark/webmall:latest}
+    container_name: bench-webmall-4
+    restart: unless-stopped
+    ports: ["${WEBMALL_PORT_4:-9084}:80"]
+    environment:
+      - SHOP_ID=4
+    volumes:
+      - ./webmall/tasks:/opt/tasks:ro
+      - ./webmall/data/shop4:/var/lib/shop
+
+networks:
+  default:
+    name: bench-net

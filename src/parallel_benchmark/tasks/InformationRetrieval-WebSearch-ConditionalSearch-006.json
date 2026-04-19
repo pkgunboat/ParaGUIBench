@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-006",
+    "task_uid": "023c25e5-322d-4d59-be6a-a38a61a833c7",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "As of 2025, how many directors who have won both the Oscar for Best Director and the Palme d'Or at Cannes for the same film? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "5",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-006"
+}

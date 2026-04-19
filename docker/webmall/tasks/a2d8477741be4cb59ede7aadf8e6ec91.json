@@ -1,0 +1,17 @@
+{
+    "task_id": "InformationRetrieval-MultiShopShopping-CheapestOfferVagueRequirements-a2d8477741be4cb59ede7aadf8e6ec91",
+    "task_uid": "a2d8477741be4cb59ede7aadf8e6ec91",
+    "source_task_id": "cheapest_offer_vague_requirements_task_3",
+    "task_type": "QA",
+    "task_tag": "CheapestOfferVagueRequirements",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind the cheapest offer for a motherboard designed for gamers with AM4 CPU socket. If multiple offers share the lowest price, return all of them.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9083/product/asrock-b550m-phantom-gaming-4-amd-b550-am4-micro-atx-4-ddr4-hdmi-dp-xfire-pcie4-m-2###http://10.1.110.114:9083/product/aorus-am4-a520-aorus-elite",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9083/product/asrock-b550m-phantom-gaming-4-amd-b550-am4-micro-atx-4-ddr4-hdmi-dp-xfire-pcie4-m-2",
+        "http://10.1.110.114:9083/product/aorus-am4-a520-aorus-elite"
+    ]
+}

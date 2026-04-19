@@ -1,0 +1,4 @@
+# WebNavigate 任务子集（2 个）
+# 来源: filted_tasks_english.txt 中 Webnavigate 类
+Operation-WebOperate-Webnavigate-001
+Operation-WebOperate-Webnavigate-002

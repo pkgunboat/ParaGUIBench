@@ -1,0 +1,32 @@
+{
+    "task_id": "TaskExecution-MultiShopShopping-EndtoEnd-622832d524704bd9a5a2e0a4ed3efb15",
+    "task_uid": "622832d524704bd9a5a2e0a4ed3efb15",
+    "source_task_id": "end_to_end_task_8",
+    "task_type": "QA",
+    "task_tag": "EndtoEnd",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind the cheapest offer for the Be Quiet! Pure Base 500 Gaming Case and the cheapest offer for a PC PSU with more than 550 W, add the respective cheapest offer to the shopping cart and complete the checkout process. If they are found in the same shop, put both in the shopping cart and checkout only once. Pay via credit card using the following information: Address: Jessica Morgan, jessica.morgan@yahoo.com, Maple Avenue, 742, 60614, Chicago, IL, USA, Credit card number: 4242424242424242, CVV: 123, expiry date: 12/28.\n\nAfter completing the checkout, report the URLs of the products you purchased, separated by ### characters.",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9082/product/be-quiet-pure-base-500-gaming-case-with-window-atx-2-x-pure-wings-2-fans-psu-shroud-black###http://10.1.110.114:9082/product/fractal-design-560w-ion-2-psu-fully-modular-fluid-dynamic-fan-80-platinum-ultraflex-wires-whisper-quiet-mode",
+    "evaluator_path": "evaluators/checkout_evaluator.py",
+    "answer_type": "checkout",
+    "expected_urls": [
+        "http://10.1.110.114:9082/product/be-quiet-pure-base-500-gaming-case-with-window-atx-2-x-pure-wings-2-fans-psu-shroud-black",
+        "http://10.1.110.114:9082/product/fractal-design-560w-ion-2-psu-fully-modular-fluid-dynamic-fan-80-platinum-ultraflex-wires-whisper-quiet-mode"
+    ],
+    "user_details": {
+        "name": "Jessica Morgan",
+        "street": "Maple Avenue",
+        "house_number": "742",
+        "zip": "60614",
+        "city": "Chicago",
+        "state": "IL",
+        "country": "USA",
+        "email": "jessica.morgan@yahoo.com"
+    },
+    "payment_info": {
+        "card": "4242424242424242",
+        "cvv": "123",
+        "expiry_date": "12/28"
+    }
+}
