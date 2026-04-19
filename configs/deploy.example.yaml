@@ -30,13 +30,17 @@ resources:
   #   Ubuntu.qcow2 / operation_gt_cache/ / searchwrite_templates/ / webmall_assets/
   root: "./resources"
 
-  # huggingface | local
+  # huggingface | usb | local
   #   huggingface: 自动从 HF Hub 拉取
+  #   usb: 从 U 盘解压（需先用 scripts/usb_transfer.sh pack 打包）
   #   local: 跳过下载，要求 root 下已有全部文件（例如从 U 盘拷贝）
   source: "huggingface"
 
   # HuggingFace dataset repo（仅 source=huggingface 时使用）
   hf_repo: "your-org/ParaGUIBench-resources"
+
+  # U 盘资源目录路径（仅 source=usb 时使用）
+  # usb_dir: "/media/yuzedong/u盘1/ParaGUIBench-resources"
 
 services:
   # OnlyOffice DocumentServer + Flask 共享服务（SearchWrite pipeline 依赖）
