@@ -13,10 +13,30 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-BACKUP_DIR="docker/webmall/backup"
+# 优先使用 configs/deploy.yaml 指定的 resources.root/webmall_assets/backup
+# （离线/U 盘部署场景）；没有时回落到 docker/webmall/backup 并从 Mannheim 下载。
+RES_ROOT="$(python3 - <<'PY' 2>/dev/null || true
+import sys
+sys.path.insert(0, "src")
+from config_loader import DeployConfig
+print(DeployConfig().resources_root)
+PY
+)"
+RES_ROOT="${RES_ROOT:-${REPO_ROOT}/resources}"
+
 CONFIG_DIR="docker/webmall/wp-config"
 COMPOSE_FILE="docker/docker-compose.yaml"
 BACKUP_URL="https://data.dws.informatik.uni-mannheim.de/webmall/backup"
+
+if [ -d "${RES_ROOT}/webmall_assets/backup" ]; then
+  BACKUP_DIR="${RES_ROOT}/webmall_assets/backup"
+  DOWNLOAD_BACKUPS=0
+  echo "使用 resources 目录下的 WebMall backup: ${BACKUP_DIR}"
+else
+  BACKUP_DIR="docker/webmall/backup"
+  DOWNLOAD_BACKUPS=1
+  echo "resources 目录无 webmall_assets/backup，将从 Mannheim 公网下载到 ${BACKUP_DIR}"
+fi
 
 FILES=(
   "mariadb_data_shop1.tar.gz"
@@ -29,16 +49,22 @@ FILES=(
   "wordpress_data_shop4.tar.gz"
 )
 
-# ── 1) 下载备份文件 ─────────────────────────────────────────
+# ── 1) 备份文件就绪（本地已有则跳过下载） ─────────────────────
 echo "=== [1/5] 检查备份文件 ==="
 mkdir -p "${BACKUP_DIR}"
 
 for file in "${FILES[@]}"; do
-  if [ ! -f "${BACKUP_DIR}/${file}" ]; then
-    echo "  下载 ${file} ..."
-    curl -L --progress-bar "${BACKUP_URL}/${file}" -o "${BACKUP_DIR}/${file}"
-  else
+  if [ -f "${BACKUP_DIR}/${file}" ]; then
     echo "  ✓ ${file} 已存在"
+    continue
+  fi
+  if [ "${DOWNLOAD_BACKUPS}" = "1" ]; then
+    echo "  下载 ${file} ..."
+    curl -fL --retry 3 --progress-bar "${BACKUP_URL}/${file}" -o "${BACKUP_DIR}/${file}.tmp"
+    mv "${BACKUP_DIR}/${file}.tmp" "${BACKUP_DIR}/${file}"
+  else
+    echo "  ✗ 缺少 ${file}（resources 目录不完整）"
+    exit 1
   fi
 done
 echo "=== 备份文件就绪 ==="

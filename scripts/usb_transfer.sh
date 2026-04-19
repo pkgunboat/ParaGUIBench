@@ -13,8 +13,8 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# 老项目路径（打包时使用）
-OLD_PROJECT="${OLD_PROJECT:-/home/yuzedong/code/parallel-efficient-benchmark}"
+# 老项目路径（打包时使用）；必须由调用者通过环境变量指定，避免绑定到特定用户家目录。
+OLD_PROJECT="${OLD_PROJECT:-}"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -31,7 +31,7 @@ usage() {
   echo "  $0 unpack <USB_DIR>         从 U 盘解包资源"
   echo ""
   echo "环境变量："
-  echo "  OLD_PROJECT  老项目路径（默认：/home/yuzedong/code/parallel-efficient-benchmark）"
+  echo "  OLD_PROJECT  原 parallel-efficient-benchmark 仓库的绝对路径（必填，pack 模式使用）"
   exit 1
 }
 
@@ -39,8 +39,13 @@ usage() {
 do_pack() {
   local USB_DIR="$1"
 
+  if [ -z "${OLD_PROJECT}" ]; then
+    error "请设置 OLD_PROJECT 环境变量指向原 parallel-efficient-benchmark 目录，例如：
+  OLD_PROJECT=/path/to/parallel-efficient-benchmark bash scripts/usb_transfer.sh pack <USB_DIR>"
+  fi
+
   if [ ! -d "${OLD_PROJECT}" ]; then
-    error "老项目路径不存在: ${OLD_PROJECT}"
+    error "OLD_PROJECT 指向的目录不存在: ${OLD_PROJECT}"
   fi
 
   mkdir -p "${USB_DIR}"

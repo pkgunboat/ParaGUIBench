@@ -264,14 +264,26 @@ networks:
   default:
     name: bench-net
 
+# 显式写 name: 固定卷名，避免 compose 根据 project dir 追加 `docker_` 前缀
+# （否则 setup_webmall.sh 预建的 webmall_* 卷会和 compose 实际用的 docker_webmall_*
+# 错位，数据"恢复成功"但实际没挂进服务）。
 volumes:
   webmall_esdata:
+    name: webmall_esdata
     driver: local
   webmall_mariadb_shop1:
+    name: webmall_mariadb_shop1
   webmall_mariadb_shop2:
+    name: webmall_mariadb_shop2
   webmall_mariadb_shop3:
+    name: webmall_mariadb_shop3
   webmall_mariadb_shop4:
+    name: webmall_mariadb_shop4
   webmall_wordpress_shop1:
+    name: webmall_wordpress_shop1
   webmall_wordpress_shop2:
+    name: webmall_wordpress_shop2
   webmall_wordpress_shop3:
+    name: webmall_wordpress_shop3
   webmall_wordpress_shop4:
+    name: webmall_wordpress_shop4

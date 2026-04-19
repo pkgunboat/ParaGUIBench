@@ -115,16 +115,17 @@ class GUIAgent:
             )
             self.model_name = runtime_conf.get("doubao_model_name", "doubao-seed-1-8-251228")
         else:
-            # Doubao/UI-TARS 模型配置(默认 - 保留旧版本兼容)
-            self.vlm = OpenAI(
-                api_key="sk-6YlehOHzB5xV5G-zNRtfFg",
-                base_url="https://litellm.mybigai.ac.cn/",
-            )
-            self.model_name = "doubao-1-5-ui-tars-250428"
-            # self.vlm = OpenAI(
-            #     api_key="${OPENAI_API_KEY}", 
-            #     base_url="https://api.deerapi.com/v1/",
-            # )
+            # Doubao/UI-TARS 模型配置（默认 - 保留旧版本兼容）
+            # 开源版：key / base_url 一律走 env；未设置时抛异常，避免静默走错 provider
+            _api_key = runtime_conf.get("doubao_api_key") or os.environ.get("BIGAI_API_KEY") or os.environ.get("OPENAI_API_KEY")
+            _base_url = runtime_conf.get("doubao_base_url") or os.environ.get("BIGAI_BASE_URL")
+            if not _api_key or not _base_url:
+                raise RuntimeError(
+                    "Default UI-TARS backend requires BIGAI_API_KEY + BIGAI_BASE_URL (or explicit "
+                    "runtime_conf.doubao_api_key / doubao_base_url). No hardcoded fallback in open-source build."
+                )
+            self.vlm = OpenAI(api_key=_api_key, base_url=_base_url)
+            self.model_name = runtime_conf.get("doubao_model_name", "doubao-1-5-ui-tars-250428")
         
         # 初始化模型适配器
         # 如果是 Qwen 模型，默认使用 Qwen VL adapter（1000x1000 坐标系统）
