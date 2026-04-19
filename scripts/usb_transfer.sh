@@ -61,7 +61,7 @@ do_pack() {
   else
     info "[1/4] 压缩 Ubuntu.qcow2 → Ubuntu.qcow2.zst（可能需要 10-20 分钟）..."
     if command -v zstd &>/dev/null; then
-      zstd -19 --progress "${QCOW2_SRC}" -o "${QCOW2_DST}"
+      zstd -3 --progress "${QCOW2_SRC}" -o "${QCOW2_DST}"
     else
       warn "zstd 未安装，直接复制（不压缩，占用更多空间）"
       cp --progress= "${QCOW2_SRC}" "${USB_DIR}/Ubuntu.qcow2"
@@ -128,7 +128,7 @@ do_pack() {
 
   # 生成 checksum
   info "生成 sha256sum ..."
-  (cd "${USB_DIR}" && sha256sum Ubuntu.qcow2* operation_gt_cache.tar.gz searchwrite_templates.tar.gz webmall_assets.tar.gz > sha256sum.txt 2>/dev/null || true)
+  (cd "${USB_DIR}" && sha256sum Ubuntu.qcow2.zst operation_gt_cache.tar.gz searchwrite_templates.tar.gz webmall_assets.tar.gz > sha256sum.txt)
   info "校验和已写入 ${USB_DIR}/sha256sum.txt"
 }
 
