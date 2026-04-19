@@ -2,19 +2,25 @@
 # ParaGUIBench 外部服务编排
 #   - OnlyOffice DocumentServer：SearchWrite pipeline 依赖
 #   - Flask 文档共享服务：封装 OnlyOffice 的任务级共享链接
-#   - WebMall 商城（4 个端口分别对应不同模板）：WebMall pipeline 依赖
+#   - WebMall 商城（4 个 WordPress+WooCommerce 店铺）：WebMall pipeline 依赖
 # ─────────────────────────────────────────────────────────────
-# 用法（启动/停止）：
+# 用法（首次部署）：
+#     bash scripts/setup_webmall.sh          # 恢复备份数据 + 初始化
+#     bash scripts/start_services.sh         # 启动所有服务
+#
+# 用法（后续启动）：
 #     bash scripts/start_services.sh
 #     bash scripts/stop_services.sh
 #
 # 所有端口来自 configs/deploy.yaml 的 services.*，由 start_services.sh
-# 通过 envsubst 注入。直接 docker compose up 也可以，前提是先 source 好
-# 对应环境变量（ONLYOFFICE_DOC_PORT, WEBMALL_PORT_1 等）。
+# 通过 Python 解析后导出为环境变量。
 # ─────────────────────────────────────────────────────────────
 
 services:
-  # OnlyOffice 文档编辑服务器（上游官方镜像）
+  # ═══════════════════════════════════════════════════════════
+  # OnlyOffice 文档编辑服务
+  # ═══════════════════════════════════════════════════════════
+
   onlyoffice:
     image: onlyoffice/documentserver:8.1
     container_name: bench-onlyoffice
@@ -22,12 +28,11 @@ services:
     ports:
       - "${ONLYOFFICE_DOC_PORT:-8080}:80"
     environment:
-      - JWT_ENABLED=false            # benchmark 运行时不使用 JWT
+      - JWT_ENABLED=false
     volumes:
       - ./onlyoffice/data:/var/www/onlyoffice/Data
       - ./onlyoffice/logs:/var/log/onlyoffice
 
-  # Flask 文档共享服务（仓库内代码，挂载为只读）
   onlyoffice-share:
     image: python:3.11-slim
     container_name: bench-onlyoffice-share
@@ -48,52 +53,225 @@ services:
       sh -c "pip install --no-cache-dir flask requests python-docx openpyxl python-pptx
              && python document_sharing_server.py"
 
-  # WebMall 商城 × 4（由 benchmark 维护者准备的镜像；未公开时请自行构建）
-  # 每个容器是一个独立的电商后端实例，对应任务 JSON 中的 9081~9084 端口
-  webmall-shop1:
-    image: ${WEBMALL_IMAGE:-benchmark/webmall:latest}
-    container_name: bench-webmall-1
-    restart: unless-stopped
-    ports: ["${WEBMALL_PORT_1:-9081}:80"]
-    environment:
-      - SHOP_ID=1
-    volumes:
-      - ./webmall/tasks:/opt/tasks:ro
-      - ./webmall/data/shop1:/var/lib/shop
+  # ═══════════════════════════════════════════════════════════
+  # WebMall 商城服务
+  # 每个店铺 = MariaDB + WordPress(WooCommerce)，共享 Elasticsearch
+  # 端口 9081-9084 分别对应 shop 1-4
+  # ═══════════════════════════════════════════════════════════
 
-  webmall-shop2:
-    image: ${WEBMALL_IMAGE:-benchmark/webmall:latest}
-    container_name: bench-webmall-2
+  webmall-frontend:
+    image: nginx:latest
+    container_name: bench-webmall-frontend
     restart: unless-stopped
-    ports: ["${WEBMALL_PORT_2:-9082}:80"]
-    environment:
-      - SHOP_ID=2
+    ports:
+      - "${WEBMALL_FRONTEND_PORT:-80}:80"
     volumes:
-      - ./webmall/tasks:/opt/tasks:ro
-      - ./webmall/data/shop2:/var/lib/shop
+      - ./webmall/index.html:/usr/share/nginx/html/index.html:ro
 
-  webmall-shop3:
-    image: ${WEBMALL_IMAGE:-benchmark/webmall:latest}
-    container_name: bench-webmall-3
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    container_name: bench-webmall-es
     restart: unless-stopped
-    ports: ["${WEBMALL_PORT_3:-9083}:80"]
     environment:
-      - SHOP_ID=3
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
     volumes:
-      - ./webmall/tasks:/opt/tasks:ro
-      - ./webmall/data/shop3:/var/lib/shop
+      - webmall_esdata:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  webmall-shop4:
-    image: ${WEBMALL_IMAGE:-benchmark/webmall:latest}
-    container_name: bench-webmall-4
+  # ── Shop 1 ──────────────────────────────────────────────
+  mariadb-shop1:
+    image: bitnami/mariadb:latest
+    container_name: bench-mariadb-1
     restart: unless-stopped
-    ports: ["${WEBMALL_PORT_4:-9084}:80"]
     environment:
-      - SHOP_ID=4
+      - MARIADB_ROOT_PASSWORD=${WEBMALL_DB_ROOT_PASSWORD:-rootpassword}
+      - MARIADB_USER=bn_wordpress
+      - MARIADB_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      - MARIADB_DATABASE=bitnami_wordpress
     volumes:
-      - ./webmall/tasks:/opt/tasks:ro
-      - ./webmall/data/shop4:/var/lib/shop
+      - webmall_mariadb_shop1:/bitnami/mariadb
+
+  wordpress-shop1:
+    image: bitnami/wordpress:latest
+    container_name: bench-wordpress-1
+    restart: unless-stopped
+    depends_on:
+      - mariadb-shop1
+      - elasticsearch
+    ports:
+      - "${WEBMALL_PORT_1:-9081}:8080"
+    environment:
+      - WORDPRESS_DATABASE_HOST=mariadb-shop1
+      - WORDPRESS_DATABASE_USER=bn_wordpress
+      - WORDPRESS_DATABASE_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - WORDPRESS_USERNAME=${WEBMALL_ADMIN_USER:-admin}
+      - WORDPRESS_PASSWORD=${WEBMALL_ADMIN_PASSWORD:-admin}
+      - WORDPRESS_EMAIL=user@example.com
+      - WORDPRESS_CONFIG_EXTRA=|
+        define('EP_HOST','http://elasticsearch:9200');
+        define('EP_INDEX_PREFIX','shop1_');
+    volumes:
+      - webmall_wordpress_shop1:/bitnami/wordpress
+      - ./webmall/fix_urls.sh:/usr/local/bin/fix_urls.sh:ro
+      - ./webmall/fix_urls_deploy.sh:/usr/local/bin/fix_urls_deploy.sh:ro
+    healthcheck:
+      test: ["CMD", "wp", "core", "is-installed", "--path=/opt/bitnami/wordpress"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # ── Shop 2 ──────────────────────────────────────────────
+  mariadb-shop2:
+    image: bitnami/mariadb:latest
+    container_name: bench-mariadb-2
+    restart: unless-stopped
+    environment:
+      - MARIADB_ROOT_PASSWORD=${WEBMALL_DB_ROOT_PASSWORD:-rootpassword}
+      - MARIADB_USER=bn_wordpress
+      - MARIADB_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      - MARIADB_DATABASE=bitnami_wordpress
+    volumes:
+      - webmall_mariadb_shop2:/bitnami/mariadb
+
+  wordpress-shop2:
+    image: bitnami/wordpress:latest
+    container_name: bench-wordpress-2
+    restart: unless-stopped
+    depends_on:
+      - mariadb-shop2
+      - elasticsearch
+    ports:
+      - "${WEBMALL_PORT_2:-9082}:8080"
+    environment:
+      - WORDPRESS_DATABASE_HOST=mariadb-shop2
+      - WORDPRESS_DATABASE_USER=bn_wordpress
+      - WORDPRESS_DATABASE_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - WORDPRESS_USERNAME=${WEBMALL_ADMIN_USER:-admin}
+      - WORDPRESS_PASSWORD=${WEBMALL_ADMIN_PASSWORD:-admin}
+      - WORDPRESS_EMAIL=user@example.com
+      - WORDPRESS_CONFIG_EXTRA=|
+        define('EP_HOST','http://elasticsearch:9200');
+        define('EP_INDEX_PREFIX','shop2_');
+    volumes:
+      - webmall_wordpress_shop2:/bitnami/wordpress
+      - ./webmall/fix_urls.sh:/usr/local/bin/fix_urls.sh:ro
+      - ./webmall/fix_urls_deploy.sh:/usr/local/bin/fix_urls_deploy.sh:ro
+    healthcheck:
+      test: ["CMD", "wp", "core", "is-installed", "--path=/opt/bitnami/wordpress"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # ── Shop 3 ──────────────────────────────────────────────
+  mariadb-shop3:
+    image: bitnami/mariadb:latest
+    container_name: bench-mariadb-3
+    restart: unless-stopped
+    environment:
+      - MARIADB_ROOT_PASSWORD=${WEBMALL_DB_ROOT_PASSWORD:-rootpassword}
+      - MARIADB_USER=bn_wordpress
+      - MARIADB_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      - MARIADB_DATABASE=bitnami_wordpress
+    volumes:
+      - webmall_mariadb_shop3:/bitnami/mariadb
+
+  wordpress-shop3:
+    image: bitnami/wordpress:latest
+    container_name: bench-wordpress-3
+    restart: unless-stopped
+    depends_on:
+      - mariadb-shop3
+      - elasticsearch
+    ports:
+      - "${WEBMALL_PORT_3:-9083}:8080"
+    environment:
+      - WORDPRESS_DATABASE_HOST=mariadb-shop3
+      - WORDPRESS_DATABASE_USER=bn_wordpress
+      - WORDPRESS_DATABASE_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - WORDPRESS_USERNAME=${WEBMALL_ADMIN_USER:-admin}
+      - WORDPRESS_PASSWORD=${WEBMALL_ADMIN_PASSWORD:-admin}
+      - WORDPRESS_EMAIL=user@example.com
+      - WORDPRESS_CONFIG_EXTRA=|
+        define('EP_HOST','http://elasticsearch:9200');
+        define('EP_INDEX_PREFIX','shop3_');
+    volumes:
+      - webmall_wordpress_shop3:/bitnami/wordpress
+      - ./webmall/fix_urls.sh:/usr/local/bin/fix_urls.sh:ro
+      - ./webmall/fix_urls_deploy.sh:/usr/local/bin/fix_urls_deploy.sh:ro
+    healthcheck:
+      test: ["CMD", "wp", "core", "is-installed", "--path=/opt/bitnami/wordpress"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # ── Shop 4 ──────────────────────────────────────────────
+  mariadb-shop4:
+    image: bitnami/mariadb:latest
+    container_name: bench-mariadb-4
+    restart: unless-stopped
+    environment:
+      - MARIADB_ROOT_PASSWORD=${WEBMALL_DB_ROOT_PASSWORD:-rootpassword}
+      - MARIADB_USER=bn_wordpress
+      - MARIADB_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      - MARIADB_DATABASE=bitnami_wordpress
+    volumes:
+      - webmall_mariadb_shop4:/bitnami/mariadb
+
+  wordpress-shop4:
+    image: bitnami/wordpress:latest
+    container_name: bench-wordpress-4
+    restart: unless-stopped
+    depends_on:
+      - mariadb-shop4
+      - elasticsearch
+    ports:
+      - "${WEBMALL_PORT_4:-9084}:8080"
+    environment:
+      - WORDPRESS_DATABASE_HOST=mariadb-shop4
+      - WORDPRESS_DATABASE_USER=bn_wordpress
+      - WORDPRESS_DATABASE_PASSWORD=${WEBMALL_DB_PASSWORD:-wordpress_db_password}
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - WORDPRESS_USERNAME=${WEBMALL_ADMIN_USER:-admin}
+      - WORDPRESS_PASSWORD=${WEBMALL_ADMIN_PASSWORD:-admin}
+      - WORDPRESS_EMAIL=user@example.com
+      - WORDPRESS_CONFIG_EXTRA=|
+        define('EP_HOST','http://elasticsearch:9200');
+        define('EP_INDEX_PREFIX','shop4_');
+    volumes:
+      - webmall_wordpress_shop4:/bitnami/wordpress
+      - ./webmall/fix_urls.sh:/usr/local/bin/fix_urls.sh:ro
+      - ./webmall/fix_urls_deploy.sh:/usr/local/bin/fix_urls_deploy.sh:ro
+    healthcheck:
+      test: ["CMD", "wp", "core", "is-installed", "--path=/opt/bitnami/wordpress"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
 networks:
   default:
     name: bench-net
+
+volumes:
+  webmall_esdata:
+    driver: local
+  webmall_mariadb_shop1:
+  webmall_mariadb_shop2:
+  webmall_mariadb_shop3:
+  webmall_mariadb_shop4:
+  webmall_wordpress_shop1:
+  webmall_wordpress_shop2:
+  webmall_wordpress_shop3:
+  webmall_wordpress_shop4:

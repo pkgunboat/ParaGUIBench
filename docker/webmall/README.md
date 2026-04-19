@@ -1,42 +1,92 @@
 # WebMall 商城服务
 
-WebMall pipeline 需要 4 个独立的商城后端实例（模拟不同店铺），对应端口 `9081-9084`。
+WebMall pipeline 需要 4 个独立的 WordPress + WooCommerce 商城后端实例，
+模拟不同店铺，对应端口 `9081-9084`。
 
-## 镜像
+## 架构
 
-`docker-compose.yaml` 中引用的镜像名为 `benchmark/webmall:latest`，这是占位名。
-首次部署前请按下述任一方式准备真实镜像：
+每个店铺由以下服务组成：
 
-### 选项 A：自行构建
+| 服务 | 镜像 | 说明 |
+|------|------|------|
+| `webmall-frontend` | nginx | 前端入口页 |
+| `elasticsearch` | elasticsearch:8.10.2 | 商品搜索引擎（4 店铺共享） |
+| `mariadb-shopN` | bitnami/mariadb | 店铺 N 的数据库 |
+| `wordpress-shopN` | bitnami/wordpress | 店铺 N 的 WooCommerce 前端 |
 
-基于 [WebShop](https://github.com/princeton-nlp/WebShop) 或类似的 mock 电商项目，
-按 `SHOP_ID` env var 加载不同商品 seed 数据，监听 80 端口。构建镜像后：
+共 14 个容器（1 nginx + 1 es + 4 mariadb + 4 wordpress + 4 from OnlyOffice）。
+
+## 首次部署
+
+### 1. 初始化数据
 
 ```bash
-docker build -t benchmark/webmall:latest ./your-webmall-source
+# 从公开备份恢复 4 个店铺的 MariaDB + WordPress 数据
+# 备份文件会自动从 data.dws.informatik.uni-mannheim.de 下载（约 3.5 GB）
+bash scripts/setup_webmall.sh              # 自动检测 IP
+bash scripts/setup_webmall.sh 10.0.0.1    # 或指定 IP
 ```
 
-### 选项 B：使用上游镜像
+该脚本会：
+- 下载备份 tarball 到 `docker/webmall/backup/`
+- 创建并恢复 8 个 Docker 卷（4×mariadb + 4×wordpress）
+- 注入 `wp-config.php`（含正确端口号）
+- 启动容器并执行 URL 修复
 
-若有公开的 WebMall 镜像，修改 `docker-compose.yaml` 的 `image:` 行即可。
+### 2. 启动服务
+
+```bash
+bash scripts/start_services.sh
+```
+
+### 3. 验证
+
+```bash
+docker compose -f docker/docker-compose.yaml ps
+curl http://127.0.0.1:9081/   # Shop 1
+curl http://127.0.0.1:9082/   # Shop 2
+curl http://127.0.0.1:9083/   # Shop 3
+curl http://127.0.0.1:9084/   # Shop 4
+```
+
+### 4. 停止服务
+
+```bash
+bash scripts/stop_services.sh
+```
+
+数据保留在 Docker 卷中，下次 `start_services.sh` 直接恢复。
 
 ## 任务素材
 
-每个店铺挂载 `./webmall/tasks/` 目录作为任务配置来源，`webmall_assets/` 作为商品数据卷，由
-`scripts/download_resources.py` 拉取到 `resources/webmall_assets/`。`docker-compose.yaml`
-使用绝对路径 `./webmall/data/shop<N>` 挂载数据卷；首次启动前创建空目录即可，服务会
-在卷内自动初始化。
+每个店铺挂载 `./webmall/tasks/` 目录作为任务配置来源（93 个 JSON 文件）。
 
 ## 任务 JSON 里的 URL
 
-任务 JSON 文件（例如 `Operation-OnlineShopping-Checkout-002.json`）中的
-`answer` 字段包含形如 `http://10.1.110.114:9082/product/...` 的 URL，这是
-benchmark 维护者环境下的原始 host。部署到自有环境后，运行：
+任务 JSON 文件中的 `answer` 字段包含形如 `http://10.1.110.114:9082/product/...` 的 URL，
+这是原始开发环境的 host。部署到自有环境后，运行：
 
 ```bash
 python scripts/rewrite_task_urls.py \
     --from http://10.1.110.114 --to http://<your-host>
 ```
 
-或在 `configs/deploy.yaml.services.webmall.host_ip` 改成 `10.1.110.114` 并通过
-DNS/hosts 把该 IP 映射到本机。推荐前者。
+或在 `configs/deploy.yaml` 的 `services.webmall.host_ip` 设为 `10.1.110.114`
+并通过 DNS/hosts 把该 IP 映射到本机。推荐前者。
+
+## 文件结构
+
+```
+docker/webmall/
+├── README.md              # 本文件
+├── index.html             # WebMall 前端入口页
+├── backup/                # 备份 tarball（setup_webmall.sh 自动下载）
+├── wp-config/             # WordPress 配置模板
+│   ├── shop_1.php
+│   ├── shop_2.php
+│   ├── shop_3.php
+│   └── shop_4.php
+├── fix_urls.sh            # WordPress URL 修复脚本（容器内使用）
+├── fix_urls_deploy.sh     # 远程部署 URL 修复脚本
+└── tasks/                 # 任务 JSON（93 个）
+```

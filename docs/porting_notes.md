@@ -33,8 +33,9 @@
 
 ## 5. 外部服务
 
-- `docker/docker-compose.yaml` 一把起 OnlyOffice DocumentServer + Flask 共享 + 4 个 WebMall 商城。
-- `docker/webmall/README.md` 明确说明 `benchmark/webmall:latest` 是占位镜像，需要部署者自行准备。
+- `docker/docker-compose.yaml` 一把起 OnlyOffice DocumentServer + Flask 共享 + WebMall 商城（多服务架构：4× MariaDB + 4× WordPress/WooCommerce + Elasticsearch + Nginx）。
+- WebMall 不再使用占位镜像 `benchmark/webmall:latest`，改为直接引用上游镜像（bitnami/mariadb、bitnami/wordpress、elasticsearch、nginx），首次部署通过 `scripts/setup_webmall.sh` 从备份恢复数据。
+- `docker/webmall/` 包含 wp-config 模板、URL 修复脚本、前端入口页。
 - `docker/onlyoffice/onlyoffice_benchmark_utils.py` 同步拷贝到 `src/stages/`（pipeline 作为 Python 模块 import）。
 
 ## 6. 资源
@@ -44,8 +45,8 @@
 
 ## 7. 已知待办 / 风险
 
-- **WebMall 商城镜像未开源**：需要 maintainer 构建并推送镜像后，在 `docker-compose.yaml` 改 `WEBMALL_IMAGE`。
-- **`scripts/rewrite_task_urls.py` 尚未实现**：docs/troubleshooting.md 引用了这个脚本（用于把 WebMall 任务 JSON 中的 `10.1.110.114:908X` 替换成部署者自己的 host）。实现起来只需一个简单的 find-replace 脚本，留给第一次实际部署时补上即可。
+- ~~**WebMall 商城镜像未开源**~~：已改为多服务架构，直接使用上游镜像 + 备份数据恢复。见 `scripts/setup_webmall.sh`。
+- ~~**`scripts/rewrite_task_urls.py` 尚未实现**~~：已实现（187 行），支持 `--from` / `--to` 参数替换任务 JSON 中的 URL。
 - **部分 pip 包较重**（formulas、schedula、opencv-python 等），requirements.txt 未精简。
 - **`coding_00N_*_evaluator.py` 已排除**：这些 evaluator 不在 run_ablation 路径内，如后续要支持 coding pipeline 需要单独补回。
 - **运行期 smoke test 未跑通**：开发机无 Docker/LLM Key，仅做了 import-level 验证（4/5 pipeline 导入成功；operation 需 `pip install formulas`）。建议在目标 Linux 机器上完成首个任务 smoke run。

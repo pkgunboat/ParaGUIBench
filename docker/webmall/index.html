@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WebMall - Submit Final Result</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text: #1f2937;
+      --text-light: #6b7280;
+      --background: #ffffff;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: var(--text-light);
+      margin-bottom: 3rem;
+      font-size: 1.1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      resize: vertical;
+      min-height: 200px;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+
+    #submittedResult {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      textarea {
+        font-size: 0.95rem;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Welcome to WebMall</h1>
+    <p>When you are done, type your final results into the text field below and click the "Submit Final Result" button. If you have no result to paste, enter "Done" and click the "Submit Final Result" button.</p>
+    
+    <div class="form-group">
+      <textarea id="finalInput" placeholder="Type your final answer here..."></textarea>
+      <button id="submitBtn">Submit Final Result</button>
+    </div>
+
+    <div id="submittedResult" aria-live="polite"></div>
+  </main>
+
+  <script>
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const text = document.getElementById('finalInput').value.trim();
+      if (text) {
+        document.getElementById('submittedResult').textContent = text;
+        document.getElementById('finalInput').disabled = true;
+        document.getElementById('submitBtn').disabled = true;
+      }
+    });
+  </script>
+</body>
+</html>
