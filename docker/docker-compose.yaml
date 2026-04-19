@@ -64,7 +64,7 @@ services:
     container_name: bench-webmall-frontend
     restart: unless-stopped
     ports:
-      - "${WEBMALL_FRONTEND_PORT:-80}:80"
+      - "${WEBMALL_FRONTEND_PORT:-8090}:80"
     volumes:
       - ./webmall/index.html:/usr/share/nginx/html/index.html:ro
 
@@ -96,14 +96,22 @@ services:
       - MARIADB_DATABASE=bitnami_wordpress
     volumes:
       - webmall_mariadb_shop1:/bitnami/mariadb
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bn_wordpress", "-p${WEBMALL_DB_PASSWORD:-wordpress_db_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   wordpress-shop1:
     image: bitnami/wordpress:latest
     container_name: bench-wordpress-1
     restart: unless-stopped
     depends_on:
-      - mariadb-shop1
-      - elasticsearch
+      mariadb-shop1:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     ports:
       - "${WEBMALL_PORT_1:-9081}:8080"
     environment:
@@ -140,14 +148,22 @@ services:
       - MARIADB_DATABASE=bitnami_wordpress
     volumes:
       - webmall_mariadb_shop2:/bitnami/mariadb
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bn_wordpress", "-p${WEBMALL_DB_PASSWORD:-wordpress_db_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   wordpress-shop2:
     image: bitnami/wordpress:latest
     container_name: bench-wordpress-2
     restart: unless-stopped
     depends_on:
-      - mariadb-shop2
-      - elasticsearch
+      mariadb-shop2:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     ports:
       - "${WEBMALL_PORT_2:-9082}:8080"
     environment:
@@ -184,14 +200,22 @@ services:
       - MARIADB_DATABASE=bitnami_wordpress
     volumes:
       - webmall_mariadb_shop3:/bitnami/mariadb
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bn_wordpress", "-p${WEBMALL_DB_PASSWORD:-wordpress_db_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   wordpress-shop3:
     image: bitnami/wordpress:latest
     container_name: bench-wordpress-3
     restart: unless-stopped
     depends_on:
-      - mariadb-shop3
-      - elasticsearch
+      mariadb-shop3:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     ports:
       - "${WEBMALL_PORT_3:-9083}:8080"
     environment:
@@ -228,14 +252,22 @@ services:
       - MARIADB_DATABASE=bitnami_wordpress
     volumes:
       - webmall_mariadb_shop4:/bitnami/mariadb
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bn_wordpress", "-p${WEBMALL_DB_PASSWORD:-wordpress_db_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   wordpress-shop4:
     image: bitnami/wordpress:latest
     container_name: bench-wordpress-4
     restart: unless-stopped
     depends_on:
-      - mariadb-shop4
-      - elasticsearch
+      mariadb-shop4:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     ports:
       - "${WEBMALL_PORT_4:-9084}:8080"
     environment:

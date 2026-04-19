@@ -7,11 +7,44 @@
 # 用法：
 #   bash scripts/setup_webmall.sh                 # 自动检测 IP
 #   bash scripts/setup_webmall.sh 10.1.110.114    # 使用指定 IP
+#   bash scripts/setup_webmall.sh --force         # 强制重新初始化
 # ─────────────────────────────────────────────────────────────
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
+
+MARKER_FILE="${REPO_ROOT}/.webmall_setup_done"
+
+# 解析 --force 参数
+FORCE_SETUP=0
+POSITIONAL_ARGS=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --force) FORCE_SETUP=1; shift ;;
+    *) POSITIONAL_ARGS+=("$1"); shift ;;
+  esac
+done
+set -- "${POSITIONAL_ARGS[@]}"
+
+# 幂等检查：已初始化则提示
+if [ -f "${MARKER_FILE}" ] && [ "${FORCE_SETUP}" = "0" ]; then
+  echo "WebMall 已初始化（标记文件: ${MARKER_FILE}）。"
+  echo "如需重新初始化，请运行: bash scripts/setup_webmall.sh --force"
+  exit 0
+fi
+
+# 校验 tarball 不包含路径穿越成员
+_safe_tar_check() {
+  local tarball="$1"
+  local bad
+  bad="$(tar tzf "${tarball}" 2>/dev/null | grep -E '^(/|\.\./)' || true)"
+  if [ -n "${bad}" ]; then
+    echo "安全错误：${tarball} 包含路径穿越成员："
+    echo "${bad}"
+    exit 1
+  fi
+}
 
 # 优先使用 configs/deploy.yaml 指定的 resources.root/webmall_assets/backup
 # （离线/U 盘部署场景）；没有时回落到 docker/webmall/backup 并从 Mannheim 下载。
@@ -79,9 +112,9 @@ from config_loader import DeployConfig
 d = DeployConfig()
 ports = d.webmall_ports
 for i, p in enumerate(ports[:4], start=1):
-    print(f"export SHOP{i}_PORT={p}")
-raw = d.raw()
-host = raw.get('server', {}).get('vm_host', '127.0.0.1')
+    print(f"export SHOP{i}_PORT={shlex.quote(str(p))}")
+# 使用 services.webmall.host_ip（与 rewrite_task_urls.py 一致），回退到 server.vm_host
+host = d.webmall_host or d.vm_host
 print(f"export DEPLOY_HOST={shlex.quote(host)}")
 PY
 )"
@@ -106,6 +139,7 @@ for SHOP_ID in 1 2 3 4; do
   docker volume create "${DB_VOL}" 2>/dev/null || true
 
   echo "  Shop ${SHOP_ID}: 恢复 WordPress 数据 ..."
+  _safe_tar_check "${REPO_ROOT}/${BACKUP_DIR}/wordpress_data_shop${SHOP_ID}.tar.gz"
   docker run --rm \
     -v "${WP_VOL}":/volume \
     -v "${REPO_ROOT}/${BACKUP_DIR}":/backup \
@@ -117,7 +151,30 @@ for SHOP_ID in 1 2 3 4; do
   SHOP_PORT_VALUE="${!SHOP_PORT_VAR}"
   TEMP_CONFIG="/tmp/webmall_shop_${SHOP_ID}_wpconfig.php"
 
-  sed "s/SHOP${SHOP_ID}_PORT_PLACEHOLDER/${SHOP_PORT_VALUE}/g" \
+  # 使用 compose 默认值或环境变量中的 DB 密码
+  DB_PASS="${WEBMALL_DB_PASSWORD:-wordpress_db_password}"
+
+  # 为每个 shop 生成唯一的 SALT 值（hex 避免sed 元字符问题）
+  AUTH_KEY_VAL="$(openssl rand -hex 32)"
+  SECURE_AUTH_KEY_VAL="$(openssl rand -hex 32)"
+  LOGGED_IN_KEY_VAL="$(openssl rand -hex 32)"
+  NONCE_KEY_VAL="$(openssl rand -hex 32)"
+  AUTH_SALT_VAL="$(openssl rand -hex 32)"
+  SECURE_AUTH_SALT_VAL="$(openssl rand -hex 32)"
+  LOGGED_IN_SALT_VAL="$(openssl rand -hex 32)"
+  NONCE_SALT_VAL="$(openssl rand -hex 32)"
+
+  sed \
+    -e "s/SHOP${SHOP_ID}_PORT_PLACEHOLDER/${SHOP_PORT_VALUE}/g" \
+    -e "s/DB_PASSWORD_PLACEHOLDER/${DB_PASS}/g" \
+    -e "s/AUTH_KEY_PLACEHOLDER/${AUTH_KEY_VAL}/g" \
+    -e "s/SECURE_AUTH_KEY_PLACEHOLDER/${SECURE_AUTH_KEY_VAL}/g" \
+    -e "s/LOGGED_IN_KEY_PLACEHOLDER/${LOGGED_IN_KEY_VAL}/g" \
+    -e "s/NONCE_KEY_PLACEHOLDER/${NONCE_KEY_VAL}/g" \
+    -e "s/AUTH_SALT_PLACEHOLDER/${AUTH_SALT_VAL}/g" \
+    -e "s/SECURE_AUTH_SALT_PLACEHOLDER/${SECURE_AUTH_SALT_VAL}/g" \
+    -e "s/LOGGED_IN_SALT_PLACEHOLDER/${LOGGED_IN_SALT_VAL}/g" \
+    -e "s/NONCE_SALT_PLACEHOLDER/${NONCE_SALT_VAL}/g" \
     "${REPO_ROOT}/${CONFIG_DIR}/shop_${SHOP_ID}.php" > "${TEMP_CONFIG}"
 
   docker run --rm \
@@ -129,6 +186,7 @@ for SHOP_ID in 1 2 3 4; do
   rm -f "${TEMP_CONFIG}"
 
   echo "  Shop ${SHOP_ID}: 恢复 MariaDB 数据 ..."
+  _safe_tar_check "${REPO_ROOT}/${BACKUP_DIR}/mariadb_data_shop${SHOP_ID}.tar.gz"
   docker run --rm \
     -v "${DB_VOL}":/volume \
     -v "${REPO_ROOT}/${BACKUP_DIR}":/backup \
@@ -141,16 +199,25 @@ done
 # ── 4) 启动容器 ──────────────────────────────────────────────
 echo ""
 echo "=== [4/5] 启动 Docker Compose ==="
+
+# Elasticsearch 8.x requires vm.max_map_count >= 262144
+MAX_MAP_COUNT="$(cat /proc/sys/vm/max_map_count 2>/dev/null || echo 0)"
+if [ "${MAX_MAP_COUNT}" -lt 262144 ]; then
+  echo "  ⚠ Elasticsearch 需要 vm.max_map_count >= 262144（当前: ${MAX_MAP_COUNT}）"
+  echo "  请运行: sudo sysctl -w vm.max_map_count=262144"
+  echo "  或添加到 /etc/sysctl.conf 永久生效"
+  exit 1
+fi
+
 # 导出端口变量供 docker compose 使用
 export WEBMALL_PORT_1="${SHOP1_PORT}"
 export WEBMALL_PORT_2="${SHOP2_PORT}"
 export WEBMALL_PORT_3="${SHOP3_PORT}"
 export WEBMALL_PORT_4="${SHOP4_PORT}"
 
-docker compose -f "${COMPOSE_FILE}" up -d
+docker compose -f "${COMPOSE_FILE}" up -d --wait
 
-echo "  等待容器就绪 ..."
-sleep 15
+echo "  容器已就绪"
 
 # ── 5) 修复 URL ──────────────────────────────────────────────
 echo ""
@@ -159,13 +226,8 @@ echo "=== [5/5] 修复 WordPress URL ==="
 for SHOP_ID in 1 2 3 4; do
   SHOP_PORT_VAR="SHOP${SHOP_ID}_PORT"
   SHOP_PORT="${!SHOP_PORT_VAR}"
-  LOCALHOST_URL="http://localhost:${SHOP_PORT}"
   ACTUAL_URL="http://${DEPLOY_HOST}:${SHOP_PORT}"
   CONTAINER_NAME="bench-wordpress-${SHOP_ID}"
-
-  # 备份中的原始端口（8081-8084）
-  ORIGINAL_PORT=$((8080 + SHOP_ID))
-  DOUBLE_PORT_URL="http://localhost:${ORIGINAL_PORT}:${ORIGINAL_PORT}"
 
   echo "  Shop ${SHOP_ID}: ${ACTUAL_URL}"
 
@@ -176,18 +238,18 @@ for SHOP_ID in 1 2 3 4; do
 
   # 修复 wp-config.php
   docker exec "${CONTAINER_NAME}" \
-    sed -i "s|http://localhost:[0-9]*|${ACTUAL_URL}|g" \
-    /bitnami/wordpress/wp-config.php 2>/dev/null || true
+    sed -i "s|http://localhost[:0-9]*|${ACTUAL_URL}|g" \
+    /bitnami/wordpress/wp-config.php 2>/dev/null || {
+      echo "    ⚠ wp-config.php 修改失败"
+    }
 
-  # 修复数据库中的双端口格式 URL
+  # 使用 regex 匹配 http://localhost 可选带端口，替换为目标 URL
+  # 避免 http://localhost:XXXX → http://localhost:XXXX:XXXX 双端口问题
   docker exec "${CONTAINER_NAME}" \
-    wp search-replace "${DOUBLE_PORT_URL}" "${ACTUAL_URL}" \
-    --all-tables --path=/opt/bitnami/wordpress > /dev/null 2>&1 || true
-
-  # 修复数据库中的 localhost URL
-  docker exec "${CONTAINER_NAME}" \
-    wp search-replace "${LOCALHOST_URL}" "${ACTUAL_URL}" \
-    --all-tables --path=/opt/bitnami/wordpress > /dev/null 2>&1 || true
+    wp search-replace 'http://localhost[:0-9]*' "${ACTUAL_URL}" \
+    --regex --all-tables --path=/opt/bitnami/wordpress > /dev/null 2>&1 || {
+      echo "    ⚠ wp search-replace 失败（数据库可能尚未就绪）"
+    }
 
   # 清除缓存
   docker exec "${CONTAINER_NAME}" \
@@ -204,6 +266,10 @@ docker compose -f "${COMPOSE_FILE}" restart
 echo ""
 echo "=== WebMall 初始化完成！==="
 echo ""
+
+# 写入标记文件
+date -Iseconds > "${MARKER_FILE}"
+
 echo "访问地址："
 for SHOP_ID in 1 2 3 4; do
   SHOP_PORT_VAR="SHOP${SHOP_ID}_PORT"

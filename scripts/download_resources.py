@@ -22,6 +22,7 @@ import argparse
 import hashlib
 import os
 import sys
+import tarfile
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -77,15 +78,27 @@ def download_from_huggingface(hf_repo: str, root: Path, files: List[Dict[str, st
         _extract_or_move(Path(local_path), root, item)
 
 
+def _safe_extract(tf: tarfile.TarFile, target: Path) -> None:
+    """Safely extract tarfile, rejecting path-traversal members."""
+    target = target.resolve()
+    for member in tf.getmembers():
+        member_path = (target / member.name).resolve()
+        if not str(member_path).startswith(str(target) + os.sep) and member_path != target:
+            raise SystemExit(
+                f"安全错误：tarball 成员 '{member.name}' 试图解压到目标目录之外。"
+            )
+    tf.extractall(target)
+
+
 def _extract_or_move(src: Path, root: Path, item: Dict[str, str]) -> None:
     """按文件后缀决定解压或直接拷贝/链接。"""
     target = root / item["local"]
     if item["hf"].endswith(".tar.gz"):
-        import tarfile
         print(f"  解压到 {target} ...")
         target.mkdir(parents=True, exist_ok=True)
         with tarfile.open(src, "r:gz") as tf:
-            tf.extractall(target)
+            # 解压到 target 目录内（tarball 内容是相对路径）
+            _safe_extract(tf, target)
     elif item["hf"].endswith(".zst"):
         try:
             import zstandard as zstd
@@ -135,10 +148,23 @@ def _du(path: Path) -> str:
 def _unpack_from_usb(usb_dir: Path, root: Path) -> None:
     """从 U 盘目录解压资源到 root。"""
     import shutil
-    import tarfile
 
     root.mkdir(parents=True, exist_ok=True)
     print(f"U 盘目录:   {usb_dir}")
+
+    # sha256 校验在解压之前执行，失败则中止
+    sumfile = usb_dir / "sha256sum.txt"
+    if sumfile.exists():
+        print("\n校验 sha256sum（解压前） ...")
+        import subprocess
+        result = subprocess.run(["sha256sum", "-c", str(sumfile)],
+                                cwd=str(usb_dir), capture_output=True, text=True)
+        if result.returncode != 0:
+            raise SystemExit(
+                f"✗ 校验失败，中止解压。请确认 U 盘数据完整：\n"
+                f"{result.stdout}{result.stderr}"
+            )
+        print("  ✓ 校验通过")
 
     for item in REQUIRED_FILES:
         hf_rel = item["hf"]
@@ -158,29 +184,20 @@ def _unpack_from_usb(usb_dir: Path, root: Path) -> None:
         if hf_rel.endswith(".tar.gz"):
             target.mkdir(parents=True, exist_ok=True)
             with tarfile.open(src, "r:gz") as tf:
-                tf.extractall(target)
+                _safe_extract(tf, target)
         elif hf_rel.endswith(".zst"):
             try:
                 import zstandard as zstd
             except ImportError:
                 raise SystemExit("缺少 zstandard 包；请 pip install zstandard")
-            with src.open("rb") as s, target.open("wb") as d:
+            # Atomic write: decompress to .tmp then rename
+            tmp_target = target.with_suffix(target.suffix + ".tmp")
+            with src.open("rb") as s, tmp_target.open("wb") as d:
                 dctx = zstd.ZstdDecompressor()
                 dctx.copy_stream(s, d)
+            tmp_target.rename(target)
         else:
             shutil.copy2(src, target)
-
-    # sha256 校验（如果 U 盘上有）
-    sumfile = usb_dir / "sha256sum.txt"
-    if sumfile.exists():
-        print("\n校验 sha256sum ...")
-        import subprocess
-        result = subprocess.run(["sha256sum", "-c", str(sumfile)],
-                                cwd=str(usb_dir), capture_output=True, text=True)
-        if result.returncode != 0:
-            print(f"  ⚠ 部分文件校验失败:\n{result.stdout}{result.stderr}")
-        else:
-            print("  ✓ 校验通过")
 
 
 def main() -> int:

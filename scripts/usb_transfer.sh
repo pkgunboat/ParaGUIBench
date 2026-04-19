@@ -25,6 +25,16 @@ info()  { echo -e "${GREEN}[INFO]${NC} $*"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $*"; }
 error() { echo -e "${RED}[ERROR]${NC} $*"; exit 1; }
 
+# 校验 tarball 不包含路径穿越成员（.. 或绝对路径）
+_safe_tar_check() {
+  local tarball="$1"
+  local bad
+  bad="$(tar tzf "${tarball}" 2>/dev/null | grep -E '^(/|\.\./)' || true)"
+  if [ -n "${bad}" ]; then
+    error "安全错误：${tarball} 包含路径穿越成员：\n${bad}"
+  fi
+}
+
 usage() {
   echo "用法："
   echo "  $0 pack <USB_DIR>           打包资源到 U 盘"
@@ -69,7 +79,7 @@ do_pack() {
       zstd -3 --progress "${QCOW2_SRC}" -o "${QCOW2_DST}"
     else
       warn "zstd 未安装，直接复制（不压缩，占用更多空间）"
-      cp --progress= "${QCOW2_SRC}" "${USB_DIR}/Ubuntu.qcow2"
+      cp "${QCOW2_SRC}" "${USB_DIR}/Ubuntu.qcow2"
     fi
   fi
 
@@ -81,7 +91,7 @@ do_pack() {
     info "[2/4] operation_gt_cache.tar.gz 已存在，跳过"
   elif [ -d "${GT_SRC}" ]; then
     info "[2/4] 打包 operation_gt_cache ..."
-    tar czf "${GT_DST}" -C "$(dirname "${GT_SRC}")" "$(basename "${GT_SRC}")"
+    tar czf "${GT_DST}" -C "${GT_SRC}" .
   else
     warn "[2/4] 找不到 gt_cache 目录 (${GT_SRC})，创建空 tar"
     mkdir -p /tmp/empty_gt_cache
@@ -97,7 +107,7 @@ do_pack() {
     info "[3/4] searchwrite_templates.tar.gz 已存在，跳过"
   elif [ -d "${TPL_SRC}" ]; then
     info "[3/4] 打包 searchwrite_templates ..."
-    tar czf "${TPL_DST}" -C "$(dirname "${TPL_SRC}")" "$(basename "${TPL_SRC}")"
+    tar czf "${TPL_DST}" -C "${TPL_SRC}" .
   else
     warn "[3/4] 找不到 templates 目录，创建空 tar"
     mkdir -p /tmp/empty_templates
@@ -115,10 +125,9 @@ do_pack() {
   else
     info "[4/4] 打包 webmall_assets（backup + product_data，约 3.4 GB）..."
     local WM_TMP="$(mktemp -d)"
-    mkdir -p "${WM_TMP}/webmall_assets"
-    [ -d "${WM_BACKUP}" ] && cp -r "${WM_BACKUP}" "${WM_TMP}/webmall_assets/backup"
-    [ -d "${WM_PRODUCTS}" ] && cp -r "${WM_PRODUCTS}" "${WM_TMP}/webmall_assets/product_data"
-    tar czf "${WM_DST}" -C "${WM_TMP}" webmall_assets
+    [ -d "${WM_BACKUP}" ] && cp -r "${WM_BACKUP}" "${WM_TMP}/backup"
+    [ -d "${WM_PRODUCTS}" ] && cp -r "${WM_PRODUCTS}" "${WM_TMP}/product_data"
+    tar czf "${WM_DST}" -C "${WM_TMP}" .
     rm -rf "${WM_TMP}"
   fi
 
@@ -163,7 +172,7 @@ PY
     warn "未找到 sha256sum.txt，跳过完整性校验"
   else
     info "校验文件完整性 ..."
-    (cd "${USB_DIR}" && sha256sum -c sha256sum.txt 2>/dev/null) || warn "部分文件校验失败，请确认 U 盘数据完整"
+    (cd "${USB_DIR}" && sha256sum -c sha256sum.txt 2>/dev/null) || error "校验失败，中止解压。请确认 U 盘数据完整"
   fi
 
   # 1) Ubuntu.qcow2
@@ -177,7 +186,7 @@ PY
     fi
   elif [ -f "${USB_DIR}/Ubuntu.qcow2" ]; then
     info "[1/4] 复制 Ubuntu.qcow2（未压缩）..."
-    cp --progress= "${USB_DIR}/Ubuntu.qcow2" "${RESOURCES_ROOT}/Ubuntu.qcow2"
+    cp "${USB_DIR}/Ubuntu.qcow2" "${RESOURCES_ROOT}/Ubuntu.qcow2"
   else
     warn "[1/4] U 盘上未找到 Ubuntu.qcow2 或 Ubuntu.qcow2.zst"
   fi
@@ -185,7 +194,9 @@ PY
   # 2) operation_gt_cache
   if [ -f "${USB_DIR}/operation_gt_cache.tar.gz" ]; then
     info "[2/4] 解压 operation_gt_cache ..."
-    tar xzf "${USB_DIR}/operation_gt_cache.tar.gz" -C "${RESOURCES_ROOT}"
+    _safe_tar_check "${USB_DIR}/operation_gt_cache.tar.gz"
+    mkdir -p "${RESOURCES_ROOT}/operation_gt_cache"
+    tar xzf "${USB_DIR}/operation_gt_cache.tar.gz" -C "${RESOURCES_ROOT}/operation_gt_cache"
   else
     warn "[2/4] U 盘上未找到 operation_gt_cache.tar.gz"
   fi
@@ -193,7 +204,9 @@ PY
   # 3) searchwrite_templates
   if [ -f "${USB_DIR}/searchwrite_templates.tar.gz" ]; then
     info "[3/4] 解压 searchwrite_templates ..."
-    tar xzf "${USB_DIR}/searchwrite_templates.tar.gz" -C "${RESOURCES_ROOT}"
+    _safe_tar_check "${USB_DIR}/searchwrite_templates.tar.gz"
+    mkdir -p "${RESOURCES_ROOT}/searchwrite_templates"
+    tar xzf "${USB_DIR}/searchwrite_templates.tar.gz" -C "${RESOURCES_ROOT}/searchwrite_templates"
   else
     warn "[3/4] U 盘上未找到 searchwrite_templates.tar.gz"
   fi
@@ -201,7 +214,9 @@ PY
   # 4) webmall_assets
   if [ -f "${USB_DIR}/webmall_assets.tar.gz" ]; then
     info "[4/4] 解压 webmall_assets ..."
-    tar xzf "${USB_DIR}/webmall_assets.tar.gz" -C "${RESOURCES_ROOT}"
+    _safe_tar_check "${USB_DIR}/webmall_assets.tar.gz"
+    mkdir -p "${RESOURCES_ROOT}/webmall_assets"
+    tar xzf "${USB_DIR}/webmall_assets.tar.gz" -C "${RESOURCES_ROOT}/webmall_assets"
   else
     warn "[4/4] U 盘上未找到 webmall_assets.tar.gz"
   fi
@@ -209,7 +224,7 @@ PY
   # 验证
   echo ""
   info "验证资源完整性 ..."
-  python3 "${REPO_ROOT}/scripts/download_resources.py" --source local --root "${RESOURCES_ROOT}" || true
+  python3 "${REPO_ROOT}/scripts/download_resources.py" --source local --root "${RESOURCES_ROOT}"
 
   echo ""
   info "完成！接下来："
