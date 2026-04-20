@@ -24,7 +24,6 @@ _MOCK_MODULES = [
     "self_operation_pipeline",
     "self_operation_pipeline.run_self_operation_pipeline_parallel",
     "self_operation_pipeline.run_searchwrite_pipeline_parallel",
-    "task_scanner",
 ]
 for _mod_name in _MOCK_MODULES:
     if _mod_name not in sys.modules:
@@ -47,10 +46,6 @@ _qa_par.disable_screensaver_parallel = MagicMock()
 _qa_par.stage1_initialize_parallel = MagicMock(return_value=True)
 _qa_par.stage2_execute_agent_parallel = MagicMock(return_value=({}, None))
 _qa_par.stage2_execute_gui_only = MagicMock(return_value=({}, None))
-
-# mock task_scanner（所有子类共用）
-_ts = sys.modules["task_scanner"]
-_ts.scan_unified_tasks = MagicMock(return_value=[])
 
 _qa = sys.modules["run_QA_pipeline"]
 _qa.ensure_conda_env = MagicMock()
