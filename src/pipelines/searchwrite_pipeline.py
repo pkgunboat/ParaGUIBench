@@ -16,7 +16,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 if SCRIPT_DIR not in sys.path:
     sys.path.insert(0, SCRIPT_DIR)
 
-from pipeline_base import BasePipeline, TaskItem, UNIFIED_TASKS_DIR
+from pipeline_base import BasePipeline, TaskItem, UNIFIED_TASKS_DIR, SRC_DIR
 from task_scanner import scan_unified_tasks
 
 from self_operation_pipeline.run_searchwrite_pipeline_parallel import (
