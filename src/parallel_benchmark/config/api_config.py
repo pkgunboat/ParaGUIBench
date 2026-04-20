@@ -23,7 +23,10 @@ DEERAPI_CONFIG = {
     "base_url": "https://api.deerapi.com/v1/",
 }
 
-# Anthropic Claude API
+# Anthropic Claude API（Computer Use 原生 endpoint）
+# 开源版安全基线：api_key 不得写入仓库；通过环境变量注入：
+#   - ANTHROPIC_API_KEY 或 CLAUDE_API_KEY
+#   - CLAUDE_BASE_URL（如需切到代理端点）
 CLAUDE_CONFIG = {
     "api_key": "",
     "base_url": "https://api.anthropic.com/v1/",
