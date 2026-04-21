@@ -24,6 +24,8 @@ import requests
 
 import os
 
+GUEST_SHARED_SSH_HOST = os.environ.get("BENCH_GUEST_SHARED_SSH_HOST", "host.lan")
+
 
 def run_ssh_command(ssh_password: str, ssh_opts: list, ssh_host: str, cmd: str, timeout: int = 30, env: dict = None) -> subprocess.CompletedProcess:
     """
@@ -52,6 +54,45 @@ def popen_ssh_command(ssh_password: str, ssh_opts: list, ssh_host: str, cmd: str
         ["sshpass", "-e", "ssh"] + ssh_opts + [ssh_host, cmd],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=ssh_env
     )
+
+
+def get_guest_shared_ssh_target(vm_user: str) -> str:
+    """
+    Return the SSH target that a guest VM can use to reach the host shared dir.
+
+    In the nested Docker+QEMU setup, the guest cannot directly reach the physical
+    host IP from deploy.yaml. The container's dnsmasq publishes `host.lan` to the
+    guest gateway, so we proxy that gateway's port 22 back to the physical host's
+    SSH daemon.
+    """
+    return f"{vm_user}@{GUEST_SHARED_SSH_HOST}"
+
+
+def ensure_container_host_ssh_proxy(
+    ssh_password: str,
+    ssh_opts: list[str],
+    ssh_host: str,
+    conda_activate: str,
+    container_name: str,
+) -> bool:
+    """
+    Expose port 22 inside the outer Docker container and forward it back to the
+    physical host so guest-side sshfs mounts to `host.lan` work reliably.
+    """
+    proxy_cmd = (
+        f"{conda_activate} && echo '{ssh_password}' | sudo -S docker exec {container_name} "
+        "bash -lc '"
+        "set -e; "
+        "export DEBIAN_FRONTEND=noninteractive; "
+        "if ! command -v socat >/dev/null 2>&1; then apt-get update -qq && apt-get install -y -qq socat; fi; "
+        "pkill -x socat 2>/dev/null || true; "
+        "HOST_GATEWAY=$(ip route show default | head -1 | cut -d\" \" -f3); "
+        "nohup socat TCP-LISTEN:22,fork,reuseaddr TCP:${HOST_GATEWAY}:22 >/tmp/host-ssh-proxy.log 2>&1 & "
+        "for i in 1 2 3 4 5; do ss -ltn | grep -q \":22 \" && break; sleep 1; done; "
+        "ss -ltn | grep -q \":22 \"'"
+    )
+    result = run_ssh_command(ssh_password, ssh_opts, ssh_host, proxy_cmd, timeout=120)
+    return result.returncode == 0
 
 
 # 添加 parallel_benchmark 到路径
