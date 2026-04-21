@@ -443,6 +443,8 @@ def main():
     parser.add_argument("--no-dashboard", dest="no_dashboard", action="store_true",
                         help="禁用 Rich 仪表板，保留 stdout 日志（方便 debug init 阶段）")
     parser.add_argument("--dry-run", action="store_true", help="仅打印配置不执行")
+    parser.add_argument("-n", "--vms-per-task", type=int, default=0,
+                        help="覆盖条件配置中的 vms_per_task（0=使用条件默认值）")
     args = parser.parse_args()
 
     # 日志
@@ -484,7 +486,10 @@ def main():
 
         report = run_one_condition(
             condition_name=cond_name,
-            condition_config=cond_config,
+            condition_config={
+                **cond_config,
+                **({"vms_per_task": args.vms_per_task} if args.vms_per_task > 0 else {}),
+            },
             pipelines=args.pipelines,
             mode=args.mode,
             output_dir=cond_output_dir,
