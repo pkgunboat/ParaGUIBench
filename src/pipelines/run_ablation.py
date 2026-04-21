@@ -131,7 +131,7 @@ ABLATION_CONDITIONS = {
     "plan_claude_opus47": {
         "description": "Plan Agent 消融：Claude Opus 4.7",
         "env": {
-            "ABLATION_PLAN_MODEL": "claude-opus-4.7",
+            "ABLATION_PLAN_MODEL": "claude-opus-4-7",
             "ABLATION_GUI_AGENT": "seed18",
         },
         "vms_per_task": 5,
