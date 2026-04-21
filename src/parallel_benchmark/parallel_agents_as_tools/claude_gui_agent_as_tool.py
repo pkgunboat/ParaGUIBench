@@ -11,6 +11,7 @@ from typing import Dict
 import time
 from .base_agent_tool import BaseAgentTool
 from parallel_agents.claude_computer_use_agent import ClaudeComputerUseAgent
+from config.api_config import get_api_config
 
 
 class ClaudeGUIAgentTool(BaseAgentTool):
@@ -37,14 +38,25 @@ class ClaudeGUIAgentTool(BaseAgentTool):
         # 从 http_server 提取端口 (格式: "http://10.1.110.114:5001")
         http_server = self.controller.http_server
         vm_port = int(http_server.split(":")[-1])
+
+        deerapi_config = get_api_config("deerapi")
+        api_key = deerapi_config.get("api_key", "")
+        base_url = deerapi_config.get("base_url", "https://api.deerapi.com/v1/")
+        if not api_key:
+            return self.format_result(
+                success=False,
+                result="",
+                steps=[],
+                error="Missing DeerAPI/OpenAI API key. Set DEERAPI_API_KEY or OPENAI_API_KEY."
+            )
         
         # 2. 创建 ClaudeComputerUseAgent 实例
         try:
             agent = ClaudeComputerUseAgent(
                 vm_ip=vm_ip,
                 vm_port=vm_port,
-                api_key="${OPENAI_API_KEY}",
-                base_url="https://api.deerapi.com/v1/",
+                api_key=api_key,
+                base_url=base_url,
                 model_name="claude-sonnet-4-5-20250929",
                 max_trajectory_length=max_rounds,
                 screenshot_compression=True,
@@ -61,8 +73,8 @@ class ClaudeGUIAgentTool(BaseAgentTool):
         # 创建反思总结用的 OpenAI 兼容客户端（复用 DeerAPI 配置）
         from openai import OpenAI as _OpenAI
         _reflection_client = _OpenAI(
-            api_key="${OPENAI_API_KEY}",
-            base_url="https://api.deerapi.com/v1/"
+            api_key=api_key,
+            base_url=base_url
         )
         _reflection_model = "claude-sonnet-4-5-20250929"
 
@@ -240,4 +252,3 @@ class ClaudeGUIAgentTool(BaseAgentTool):
                 rounds_timing=rounds_timing,
                 gui_token_usage=agent.token_usage if agent else None
             )
-
