@@ -281,7 +281,9 @@ def _list_hf_files(repo_id: str, revision: str, subdir: str) -> Tuple[str, ...]:
     response = requests.get(api_url, timeout=30)
     response.raise_for_status()
     payload = response.json()
-    file_paths = [item["path"] for item in payload if item.get("type") == "file"]
+    file_paths = [item["path"] for item in payload
+                  if item.get("type") == "file"
+                  and not os.path.basename(item["path"]).startswith("~$")]
     return tuple(file_paths)
 
 
