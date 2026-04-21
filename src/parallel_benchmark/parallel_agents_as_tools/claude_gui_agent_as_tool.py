@@ -11,7 +11,7 @@ from typing import Dict
 import time
 from .base_agent_tool import BaseAgentTool
 from parallel_agents.claude_computer_use_agent import ClaudeComputerUseAgent
-from config.api_config import get_api_config
+from config.api_config import get_api_config, get_model_name
 
 
 class ClaudeGUIAgentTool(BaseAgentTool):
@@ -38,12 +38,24 @@ class ClaudeGUIAgentTool(BaseAgentTool):
         # 从 http_server 提取端口 (格式: "http://10.1.110.114:5001")
         http_server = self.controller.http_server
         vm_port = int(http_server.split(":")[-1])
+        model_name = (
+            os.environ.get("ABLATION_CLAUDE_GUI_MODEL", "").strip()
+            or get_model_name("claude_gui_agent")
+            or "claude-sonnet-4-5-20250929"
+        )
 
         deerapi_config = get_api_config("deerapi")
         api_key = deerapi_config.get("api_key", "")
         base_url = deerapi_config.get("base_url", "https://api.deerapi.com/v1/")
+        agent = None
+
+        def _result(**kwargs) -> Dict:
+            result_dict = self.format_result(**kwargs)
+            result_dict["model_name"] = model_name
+            return result_dict
+
         if not api_key:
-            return self.format_result(
+            return _result(
                 success=False,
                 result="",
                 steps=[],
@@ -57,13 +69,13 @@ class ClaudeGUIAgentTool(BaseAgentTool):
                 vm_port=vm_port,
                 api_key=api_key,
                 base_url=base_url,
-                model_name="claude-sonnet-4-5-20250929",
+                model_name=model_name,
                 max_trajectory_length=max_rounds,
                 screenshot_compression=True,
                 max_screenshot_size=1280
             )
         except Exception as e:
-            return self.format_result(
+            return _result(
                 success=False,
                 result="",
                 steps=[],
@@ -76,7 +88,7 @@ class ClaudeGUIAgentTool(BaseAgentTool):
             api_key=api_key,
             base_url=base_url
         )
-        _reflection_model = "claude-sonnet-4-5-20250929"
+        _reflection_model = model_name
 
         # 3. 执行任务循环（参考 ClaudeComputerUseAgent.run() 方法）
         steps = []
@@ -89,7 +101,7 @@ class ClaudeGUIAgentTool(BaseAgentTool):
                 round_start = time.time()  # 记录本轮开始时间
                 # 检查超时（timeout=0 表示不限制）
                 if timeout > 0 and time.time() - start_time > timeout:
-                    return self.format_result(
+                    return _result(
                         success=False,
                         result=f"Task timeout after {timeout} seconds",
                         steps=steps,
@@ -103,7 +115,7 @@ class ClaudeGUIAgentTool(BaseAgentTool):
                 try:
                     screenshot_base64 = agent.take_screenshot()
                 except Exception as e:
-                    return self.format_result(
+                    return _result(
                         success=False,
                         result=f"Failed to get screenshot at round {round_num}",
                         steps=steps,
@@ -134,7 +146,7 @@ class ClaudeGUIAgentTool(BaseAgentTool):
                     print(f"{'='*60}\n")
                     
                 except Exception as e:
-                    return self.format_result(
+                    return _result(
                         success=False,
                         result=f"Error in round {round_num + 1}",
                         steps=steps,
@@ -196,7 +208,7 @@ class ClaudeGUIAgentTool(BaseAgentTool):
                         task, steps, thoughts, "success",
                         client=_reflection_client, model_name=_reflection_model,
                     )
-                    return self.format_result(
+                    return _result(
                         success=True,
                         result=reflection,
                         steps=steps,
@@ -213,7 +225,7 @@ class ClaudeGUIAgentTool(BaseAgentTool):
                 if "FAIL" in actions or code == "FAIL":
                     if steps and isinstance(steps[-1], dict):
                         steps[-1]["status"] = "failed"
-                    return self.format_result(
+                    return _result(
                         success=False,
                         result=f"Task failed at round {round_num + 1}: {thought}",
                         steps=steps,
@@ -234,7 +246,7 @@ class ClaudeGUIAgentTool(BaseAgentTool):
                 task, steps, thoughts, "max_rounds",
                 client=_reflection_client, model_name=_reflection_model,
             )
-            return self.format_result(
+            return _result(
                 success=False,
                 result=reflection,
                 steps=steps,
@@ -244,7 +256,7 @@ class ClaudeGUIAgentTool(BaseAgentTool):
             )
             
         except Exception as e:
-            return self.format_result(
+            return _result(
                 success=False,
                 result="Unexpected error during execution",
                 steps=steps,

@@ -61,6 +61,7 @@ DEFAULT_MODELS = {
     "plan_agent":       os.environ.get("BENCH_DEFAULT_PLAN_AGENT",        "gpt-5.4"),
     "code_agent":       os.environ.get("BENCH_DEFAULT_CODE_AGENT",        "gpt-5.2"),
     "gui_agent":        os.environ.get("BENCH_DEFAULT_GUI_AGENT",         "claude-opus-4-5"),
+    "claude_gui_agent": os.environ.get("BENCH_DEFAULT_CLAUDE_GUI_AGENT", "claude-sonnet-4-5-20250929"),
     "seed18_gui_agent": os.environ.get("BENCH_DEFAULT_SEED18_GUI_AGENT",  "doubao-seed-1-8-251228"),
     "doubao_plan_agent":os.environ.get("BENCH_DEFAULT_DOUBAO_PLAN_AGENT", "doubao-seed-1-8-251228"),
     "doubao_gui_agent": os.environ.get("BENCH_DEFAULT_DOUBAO_GUI_AGENT",  "doubao-seed-1-8-251228"),
