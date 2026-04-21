@@ -128,10 +128,10 @@ ABLATION_CONDITIONS = {
         "vms_per_task": 5,
         "agent_mode": None,
     },
-    "plan_claude_opus46": {
-        "description": "Plan Agent 消融：Claude Opus 4.6",
+    "plan_claude_opus47": {
+        "description": "Plan Agent 消融：Claude Opus 4.7",
         "env": {
-            "ABLATION_PLAN_MODEL": "claude-opus-4.6",
+            "ABLATION_PLAN_MODEL": "claude-opus-4.7",
             "ABLATION_GUI_AGENT": "seed18",
         },
         "vms_per_task": 5,
@@ -142,6 +142,15 @@ ABLATION_CONDITIONS = {
         "env": {
             "ABLATION_PLAN_MODEL": "gpt-5.4",
             "ABLATION_GUI_AGENT": "kimi",
+        },
+        "vms_per_task": 5,
+        "agent_mode": None,
+    },
+    "gui_claude": {
+        "description": "GUI Agent 消融：Claude Computer Use（Plan=gpt-5.4）",
+        "env": {
+            "ABLATION_PLAN_MODEL": "gpt-5.4",
+            "ABLATION_GUI_AGENT": "claude",
         },
         "vms_per_task": 5,
         "agent_mode": None,
@@ -159,6 +168,15 @@ ABLATION_CONDITIONS = {
         "description": "GUI-Only 消融：GPT-5.4",
         "env": {
             "ABLATION_GUI_AGENT": "gpt54",
+            "ABLATION_AGENT_MODE": "gui_only",
+        },
+        "vms_per_task": 1,
+        "agent_mode": "gui_only",
+    },
+    "gui_only_claude": {
+        "description": "GUI-Only 消融：Claude Computer Use",
+        "env": {
+            "ABLATION_GUI_AGENT": "claude",
             "ABLATION_AGENT_MODE": "gui_only",
         },
         "vms_per_task": 1,
