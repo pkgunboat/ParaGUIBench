@@ -749,6 +749,7 @@ def setup_env_webmall_parallel(
         use_qwen_gui=(gui_agent_override == "qwen"),
         use_doubao_gui=(gui_agent_override == "doubao"),
         use_gpt54_gui=(gui_agent_override == "gpt54"),
+        use_claude_gui=(gui_agent_override == "claude"),
         gpt54_use_response_id=gpt54_use_rid,
         gpt54_max_images=gpt54_max_img,
     )
