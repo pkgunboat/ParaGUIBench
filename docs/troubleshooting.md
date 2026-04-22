@@ -44,12 +44,17 @@ PasswordAuthentication yes
 - `configs/deploy.yaml.services.onlyoffice.host_ip` 是否对 VM 可达
 
 ### WebMall 任务 answer URL 仍是内部 IP
-开源版任务 JSON 里保留了原始的 `10.1.110.114:908X` URL 作为答案模板。
+开源版任务 JSON 里保留了打包者环境的原始 host（例如 `10.1.110.X:908X`）作为答案模板。
 部署时请先决定你的 WebMall host，然后在评估前运行：
 
 ```bash
+# 最简：在 configs/deploy.yaml 中把 services.webmall.host_ip 设为 "auto"
+# （或具体 IP），然后：
+python scripts/rewrite_task_urls.py
+
+# 或显式指定：
 python scripts/rewrite_task_urls.py \
-    --from http://10.1.110.114 --to http://<your-host>
+    --from http://<ORIGIN_HOST> --to http://<YOUR_HOST>
 ```
 
 （如果你的 WebMall 也暴露在 `127.0.0.1:9081-9084`，无需改。）

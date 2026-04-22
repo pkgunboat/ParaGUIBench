@@ -35,7 +35,7 @@ class ClaudeGUIAgentTool(BaseAgentTool):
         
         # 1. 从 controller 获取 VM 信息
         vm_ip = self.controller.vm_ip
-        # 从 http_server 提取端口 (格式: "http://10.1.110.114:5001")
+        # 从 http_server 提取端口 (格式: "http://<HOST_IP>:5001")
         http_server = self.controller.http_server
         vm_port = int(http_server.split(":")[-1])
         model_name = (

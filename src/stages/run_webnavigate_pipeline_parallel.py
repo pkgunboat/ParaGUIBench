@@ -56,6 +56,7 @@ for _p in [parallel_benchmark_dir, ubuntu_env_dir, webmall_eval_assets_dir]:
 # 从 QA 并行 pipeline 导入容器管理函数
 # ============================================================
 
+from config_loader import resolve_host_ip  # noqa: E402
 from run_QA_pipeline_parallel import (  # noqa: E402
     rebuild_containers_parallel,
     cleanup_group_containers,
@@ -1361,19 +1362,19 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--vm-ip",
-        type=str, default="10.1.110.114",
-        help="Docker 宿主机 IP（默认 10.1.110.114）",
+        type=str, default=resolve_host_ip("auto"),
+        help="Docker 宿主机 IP（默认自动探测当前设备的默认出口 IP）",
     )
     parser.add_argument(
         "--shared-base-dir",
-        type=str, default="/home/yuzedong/shared",
-        help="共享目录根路径（默认 /home/yuzedong/shared）",
+        type=str, default="/home/benchmark/shared",
+        help="共享目录根路径（默认 /home/benchmark/shared）",
     )
     parser.add_argument(
         "--qcow2-path",
         type=str,
-        default="/home/yuzedong/code/parallel-efficient-benchmark/ubuntu_env/docker_vm_data/Ubuntu.qcow2",
-        help="VM 磁盘镜像路径",
+        default="./resources/Ubuntu.qcow2",
+        help="VM 磁盘镜像路径（默认 ./resources/Ubuntu.qcow2）",
     )
     parser.add_argument(
         "--docker-image",

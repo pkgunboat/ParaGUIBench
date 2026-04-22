@@ -9,7 +9,7 @@ Seed 1.8 GUI Agent 交互测试脚本
     cd ubuntu_env
     python parallel_benchmark/parallel_agents/seed_1_8_gui_test.py \
         --task "打开Firefox浏览器并访问百度" \
-        --vm-ip 10.1.110.114 \
+        --vm-ip <HOST_IP> \
         --server-port 5000 \
         --max-steps 20
 
@@ -518,7 +518,7 @@ class Seed18GUITester:
     
     def __init__(
         self,
-        vm_ip: str = "10.1.110.114",
+        vm_ip: str = "127.0.0.1",
         server_port: int = 5000,
         model: str = "doubao-seed-1-8-251228",
         api_key: str = "",
@@ -1043,7 +1043,7 @@ def main():
   python seed_1_8_gui_test.py --task "打开Firefox浏览器并访问百度"
   
   # 指定 VM 和步数
-  python seed_1_8_gui_test.py --task "在桌面创建一个文本文件" --vm-ip 10.1.110.114 --server-port 5000 --max-steps 10
+  python seed_1_8_gui_test.py --task "在桌面创建一个文本文件" --vm-ip <HOST_IP> --server-port 5000 --max-steps 10
   
   # 不保存截图（只打印日志）
   python seed_1_8_gui_test.py --task "打开终端" --no-save
@@ -1055,8 +1055,8 @@ def main():
                         help="任务指令（如果不指定则进入交互模式输入）")
     
     # VM 参数
-    parser.add_argument("--vm-ip", type=str, default="10.1.110.114",
-                        help="虚拟机 IP 地址 (默认: 10.1.110.114)")
+    parser.add_argument("--vm-ip", type=str, default="127.0.0.1",
+                        help="虚拟机 IP 地址 (默认: 127.0.0.1；跨机部署时显式传入)")
     parser.add_argument("--server-port", type=int, default=5000,
                         help="VM Python Server 端口 (默认: 5000)")
     

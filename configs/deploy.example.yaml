@@ -6,7 +6,9 @@
 # ─────────────────────────────────────────────────────────────
 
 server:
-  # Docker 宿主机 IP；单机部署填 127.0.0.1
+  # Docker 宿主机 IP；单机部署填 127.0.0.1。
+  # 也可写 "auto" —— 运行时自动探测当前设备的默认出口 IPv4 地址，
+  # 适用于"Agent 与 VM 跨机通信但部署 IP 不固定"的场景。
   vm_host: "127.0.0.1"
 
   # 宿主机上用于 SSH/SSHFS 的用户名（必须在该机有 sudo 权限）
@@ -44,12 +46,14 @@ resources:
 
 services:
   # OnlyOffice DocumentServer + Flask 共享服务（SearchWrite pipeline 依赖）
+  # host_ip 可填具体 IP 或 "auto"（自动探测当前设备的默认出口 IP）
   onlyoffice:
     host_ip: "127.0.0.1"
     flask_port: 5050          # document_sharing_server.py
     doc_server_port: 8080     # OnlyOffice DocumentServer（docker-compose）
 
   # WebMall 商城后端（WebMall pipeline 依赖；4 个商城对应 4 个端口）
+  # host_ip 可填具体 IP 或 "auto"（自动探测）
   webmall:
     host_ip: "127.0.0.1"
     ports: [9081, 9082, 9083, 9084]

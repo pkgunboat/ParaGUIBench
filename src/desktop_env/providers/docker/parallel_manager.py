@@ -103,7 +103,7 @@ class ContainerSetConfig:
     vm_cpu_cores: str = "1"
     containers: List[Dict[str, object]] = field(default_factory=list)
     shared_host_dir: str = ""
-    vm_ip: str = "10.1.110.114"
+    vm_ip: str = "127.0.0.1"
     docker_image: str = "happysixd/osworld-docker-sshfs"
     qcow2_path: str = ""
 
@@ -433,7 +433,7 @@ def scan_remote_docker_ports(
     输入:
         ssh_password: SSH 密码
         ssh_opts: SSH 选项列表（如 ["-o", "StrictHostKeyChecking=no", ...]）
-        ssh_host: SSH 主机地址（如 "user@10.1.110.114"）
+        ssh_host: SSH 主机地址（如 "user@<HOST_IP>"）
         conda_activate: conda 激活命令前缀（可为空）
 
     输出:
@@ -485,8 +485,8 @@ def build_container_set_config(
     num_vms: int,
     vm_memory: str = "1G",
     vm_cpu_cores: str = "1",
-    vm_ip: str = "10.1.110.114",
-    shared_base_dir: str = "/home/yuzedong/shared",
+    vm_ip: str = "127.0.0.1",
+    shared_base_dir: str = "/home/benchmark/shared",
     docker_image: str = "happysixd/osworld-docker-sshfs",
     qcow2_path: str = "",
     extra_used_ports: Optional[Set[int]] = None,
