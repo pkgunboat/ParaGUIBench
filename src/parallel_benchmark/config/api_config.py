@@ -50,6 +50,13 @@ BIGAI_CONFIG = {
     "base_url": "",
 }
 
+# Pincc v2 网关（OpenAI 兼容，用于不支持原生 Responses API computer-use 的中转场景）
+# 通过 function-calling 自定义 computer_use 工具调用 GPT-5.x；key 仅从环境变量读取。
+PINCC_CONFIG = {
+    "api_key": "",
+    "base_url": "https://v2.pincc.ai/v1",
+}
+
 # DashScope / Qwen
 DASHSCOPE_CONFIG = {
     "api_key": "",
@@ -68,6 +75,7 @@ DEFAULT_MODELS = {
     "kimi_gui_agent":   os.environ.get("BENCH_DEFAULT_KIMI_GUI_AGENT",    "kimi-k2.5"),
     "qwen_gui_agent":   os.environ.get("BENCH_DEFAULT_QWEN_GUI_AGENT",    "qwen3-vl"),
     "gpt54_gui_agent":  os.environ.get("BENCH_DEFAULT_GPT54_GUI_AGENT",   "gpt-5.4-mini"),
+    "gpt54_fc_gui_agent": os.environ.get("BENCH_DEFAULT_GPT54_FC_GUI_AGENT", "gpt-5.4-mini"),
 }
 
 
@@ -109,6 +117,11 @@ def get_api_config(provider: str = "deerapi") -> dict:
         return {
             "api_key":  _env("BIGAI_API_KEY", BIGAI_CONFIG["api_key"]),
             "base_url": _env("BIGAI_BASE_URL", BIGAI_CONFIG["base_url"]),
+        }
+    if provider == "pincc":
+        return {
+            "api_key":  _env("PINCC_API_KEY", PINCC_CONFIG["api_key"]),
+            "base_url": _env("PINCC_BASE_URL", PINCC_CONFIG["base_url"]),
         }
     if provider == "dashscope":
         return {

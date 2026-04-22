@@ -1431,6 +1431,13 @@ def stage2_execute_gui_only(
     elif gui_agent == "gpt54":
         from parallel_agents_as_tools.gpt54_gui_agent_as_tool import GPT54GUIAgentTool
         gui_tool = GPT54GUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")
+    elif gui_agent == "gpt54_fc":
+        from parallel_agents_as_tools.gpt_gui_agent_as_tool import GPTGUIAgentTool
+        gui_tool = GPTGUIAgentTool(
+            controller=controller_vm1,
+            model_name="gpt-5.4-mini",
+            api_config_key="pincc",
+        )
     else:
         log.warning("未知的 gui_agent: %s，fallback 到 seed18", gui_agent)
         gui_tool = Seed18GUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")

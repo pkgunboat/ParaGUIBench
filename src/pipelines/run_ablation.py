@@ -165,9 +165,18 @@ ABLATION_CONDITIONS = {
         "agent_mode": "gui_only",
     },
     "gui_only_gpt54": {
-        "description": "GUI-Only 消融：GPT-5.4",
+        "description": "GUI-Only 消融：GPT-5.4（Responses API + 原生 computer-use）",
         "env": {
             "ABLATION_GUI_AGENT": "gpt54",
+            "ABLATION_AGENT_MODE": "gui_only",
+        },
+        "vms_per_task": 1,
+        "agent_mode": "gui_only",
+    },
+    "gui_only_gpt54_fc": {
+        "description": "GUI-Only 消融：GPT-5.4（Function Calling 路径，走 pincc 中转）",
+        "env": {
+            "ABLATION_GUI_AGENT": "gpt54_fc",
             "ABLATION_AGENT_MODE": "gui_only",
         },
         "vms_per_task": 1,
