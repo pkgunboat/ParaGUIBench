@@ -26,7 +26,8 @@ from dataclasses import dataclass, field
 
 
 # ===== 配置 =====
-DEFAULT_VM_IP = "10.1.110.114"
+# 默认 VM IP；运行时一般由上游 pipeline 或 CLI --vm-ip 传入具体值。
+DEFAULT_VM_IP = "127.0.0.1"
 
 # task_sets.json 的默认路径
 _module_dir = Path(__file__).resolve().parent
@@ -439,7 +440,7 @@ def main():
   
   # 评价单个任务
   python string_evaluator.py --task-id 9203328311c7430aaedb899a4496b6e9 \\
-    --submitted-urls "http://10.1.110.114:9083/product/asus-rog-falchion-ace..."
+    --submitted-urls "http://<HOST_IP>:9083/product/asus-rog-falchion-ace..."
   
   # 使用占位符格式的URL
   python string_evaluator.py --task-id 0d34c4e1863c4ddb832ec4eba10d5ef6 \\

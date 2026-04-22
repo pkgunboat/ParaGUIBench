@@ -10,11 +10,11 @@
 
 使用方法:
     # 基本用法：指定虚拟机和期望的产品 URL
-    python cart_evaluator_from_at.py --vm-ip 10.1.110.114 --server-port 5000 \
-        --expected "http://10.1.110.114:9082/product/gamemax-iceburg-360mm-argb-liquid-cpu-cooler"
-    
+    python cart_evaluator_from_at.py --vm-ip <HOST_IP> --server-port 5000 \
+        --expected "http://<HOST_IP>:9082/product/gamemax-iceburg-360mm-argb-liquid-cpu-cooler"
+
     # 多虚拟机、多产品
-    python cart_evaluator_from_at.py --vm-ip 10.1.110.114 --server-port 5000 5001 \
+    python cart_evaluator_from_at.py --vm-ip <HOST_IP> --server-port 5000 5001 \
         --expected "http://shop1/product/product-a" "http://shop2/product/product-b"
     
     # 从配置文件读取
@@ -736,11 +736,11 @@ def main():
         epilog="""
 示例:
   # 基本用法
-  python cart_evaluator_from_at.py --vm-ip 10.1.110.114 --server-port 5000 \\
-      --expected "http://10.1.110.114:9082/product/gamemax-iceburg-360mm"
-  
+  python cart_evaluator_from_at.py --vm-ip <HOST_IP> --server-port 5000 \\
+      --expected "http://<HOST_IP>:9082/product/gamemax-iceburg-360mm"
+
   # 多虚拟机
-  python cart_evaluator_from_at.py --vm-ip 10.1.110.114 --server-port 5000 5001 \\
+  python cart_evaluator_from_at.py --vm-ip <HOST_IP> --server-port 5000 5001 \\
       --expected "http://shop/product/product-a" "http://shop/product/product-b"
   
   # 从配置文件
@@ -748,7 +748,8 @@ def main():
         """
     )
     
-    parser.add_argument("--vm-ip", default="10.1.110.114", help="虚拟机 IP")
+    parser.add_argument("--vm-ip", default="127.0.0.1",
+                        help="虚拟机 IP（默认 127.0.0.1；跨机部署时显式传入）")
     parser.add_argument("--server-port", type=int, nargs="+", default=[5000], 
                         help="Python server 端口列表")
     parser.add_argument("--shop-ip", default=None, 

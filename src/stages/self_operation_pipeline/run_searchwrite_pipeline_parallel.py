@@ -19,7 +19,7 @@ Agent 通过 OnlyOffice 共享链接在浏览器中协作编辑 xlsx 文档。
     python run_searchwrite_pipeline_parallel.py -p 2 -n 3
 
     # 指定 VM IP，OnlyOffice 文档共享服务地址会自动检测
-    python run_searchwrite_pipeline_parallel.py --vm-ip 10.1.110.114
+    python run_searchwrite_pipeline_parallel.py --vm-ip <HOST_IP>
 """
 
 from __future__ import annotations
@@ -65,6 +65,7 @@ if onlyoffice_dir not in sys.path:
 # 从原始 pipeline 导入可复用函数（不修改原文件）
 # ============================================================
 
+from config_loader import resolve_host_ip  # noqa: E402
 from run_QA_pipeline import (  # noqa: E402
     ensure_conda_env,
     load_task_config,
@@ -448,7 +449,7 @@ def stage0_prepare_documents(
 
     输入:
         task_items: [(task_uid, task_path, task_config), ...]
-        onlyoffice_base_url: OnlyOffice 文档共享服务 base URL（如 http://10.1.110.114:5000）
+        onlyoffice_base_url: OnlyOffice 文档共享服务 base URL（如 http://<HOST_IP>:5050）
         onlyoffice_host_ip: OnlyOffice 宿主机 IP（用于 SCP）
         log: logger
 
@@ -1471,8 +1472,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--onlyoffice-host-ip",
-        type=str, default="10.1.110.114",
-        help="OnlyOffice 宿主机 IP，用于 SCP（默认 10.1.110.114）",
+        type=str, default=resolve_host_ip("auto"),
+        help="OnlyOffice 宿主机 IP，用于 SCP（默认自动探测当前设备的默认出口 IP）",
     )
     parser.add_argument(
         "--save-result-dir",

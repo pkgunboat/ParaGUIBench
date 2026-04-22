@@ -7,10 +7,10 @@
 - 验证商品、账单地址、邮箱是否与预期一致
 
 使用方法:
-    python checkout_evaluator_from_at.py --vm-ip 10.1.110.114 --server-port 5000
-    
+    python checkout_evaluator_from_at.py --vm-ip <HOST_IP> --server-port 5000
+
     # 指定期望的商品和用户信息
-    python checkout_evaluator_from_at.py --vm-ip 10.1.110.114 --server-port 5000 \
+    python checkout_evaluator_from_at.py --vm-ip <HOST_IP> --server-port 5000 \
         --product-slug "trust-tk-350-wireless-membrane-keyboard" \
         --name "Jessica Morgan" --email "jessica.morgan@yahoo.com" \
         --street "Maple Avenue" --house-number "742" --zip "60614" \
@@ -445,16 +445,17 @@ def main():
         epilog="""
 示例:
   # 使用默认任务 (Webmall_Checkout_Task1)
-  python checkout_evaluator_from_at.py --vm-ip 10.1.110.114 --server-port 5000
-  
+  python checkout_evaluator_from_at.py --vm-ip <HOST_IP> --server-port 5000
+
   # 自定义商品和用户信息
-  python checkout_evaluator_from_at.py --vm-ip 10.1.110.114 --server-port 5000 \\
+  python checkout_evaluator_from_at.py --vm-ip <HOST_IP> --server-port 5000 \\
       --product-slug "my-product-slug" \\
       --name "John Doe" --email "john@example.com"
         """
     )
     
-    parser.add_argument("--vm-ip", default="10.1.110.114", help="虚拟机 IP")
+    parser.add_argument("--vm-ip", default="127.0.0.1",
+                        help="虚拟机 IP（默认 127.0.0.1；跨机部署时显式传入）")
     parser.add_argument("--server-port", type=int, default=5000, help="服务端口")
     
     # 商品信息

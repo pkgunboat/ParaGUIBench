@@ -6,7 +6,7 @@
 #
 # 用法：
 #   bash scripts/setup_webmall.sh                 # 自动检测 IP
-#   bash scripts/setup_webmall.sh 10.1.110.114    # 使用指定 IP
+#   bash scripts/setup_webmall.sh 192.168.1.10    # 使用指定 IP
 #   bash scripts/setup_webmall.sh --force         # 强制重新初始化
 # ─────────────────────────────────────────────────────────────
 set -euo pipefail
@@ -276,5 +276,6 @@ for SHOP_ID in 1 2 3 4; do
   echo "  Shop ${SHOP_ID}: http://${DEPLOY_HOST}:${!SHOP_PORT_VAR}"
 done
 echo ""
-echo "注意：任务 JSON 中的 answer URL 可能仍包含旧 IP，请运行："
-echo "  python scripts/rewrite_task_urls.py --from http://10.1.110.114 --to http://${DEPLOY_HOST}"
+echo "注意：任务 JSON 中的 answer URL 可能仍包含打包者环境的旧 IP，请运行："
+echo "  python scripts/rewrite_task_urls.py        # 自动从 configs/deploy.yaml.services.webmall.host_ip 读取目标 host"
+echo "  或显式指定：python scripts/rewrite_task_urls.py --from http://<ORIGIN_IP> --to http://${DEPLOY_HOST}"

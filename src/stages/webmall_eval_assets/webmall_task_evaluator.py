@@ -13,7 +13,7 @@ WebMall 单任务评价器（整合 String / Cart / Checkout）
         --task-id MY_TASK_001 \
         --mapping-json mapping.json \
         --answers-json answers.json \
-        --vm-ip 10.1.110.114 \
+        --vm-ip <HOST_IP> \
         --server-ports 5000 5001
 """
 

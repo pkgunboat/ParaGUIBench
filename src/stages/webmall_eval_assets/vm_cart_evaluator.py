@@ -6,7 +6,7 @@
 然后使用 CartEvaluator 逻辑判断是否成功添加购物车。
 
 使用方法:
-    python vm_cart_evaluator.py --vm-ip 10.1.110.114 --cart-url http://localhost:8081/cart
+    python vm_cart_evaluator.py --vm-ip <HOST_IP> --cart-url http://localhost:8081/cart
 
 依赖:
     - 虚拟机上 Chrome 已启动并开启远程调试端口
@@ -583,7 +583,7 @@ def main():
 
   1. 单虚拟机测试:
      python vm_cart_evaluator.py \\
-         --vm-ip 10.1.110.114 \\
+         --vm-ip <HOST_IP> \\
          --cart-url http://localhost:8081/cart \\
          --expected http://localhost:8081/product/amd-ryzen-9-5900x
 
@@ -591,7 +591,7 @@ def main():
      python vm_cart_evaluator.py --config vm_config.json
 
   3. 获取当前页面内容（测试连接）:
-     python vm_cart_evaluator.py --vm-ip 10.1.110.114 --test-connection
+     python vm_cart_evaluator.py --vm-ip <HOST_IP> --test-connection
         """
     )
     
