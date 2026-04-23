@@ -99,6 +99,8 @@ def _download_task_files_on_vm_with_ip(
     prepare_url: str,
     timeout: int = 300,
     host_shared_dir: str = "",
+    task_uid: str = "",
+    flatten_tree_dirs: bool = False,
 ) -> bool:
     """
     下载任务数据到 VM 的 /home/user/shared 目录。
@@ -120,11 +122,25 @@ def _download_task_files_on_vm_with_ip(
         prepare_url: 任务 prepare_script_path URL（可逗号分隔多个）
         timeout: 超时时间（秒）
         host_shared_dir: 宿主机共享目录路径（可选，用于 VM 下载失败时的 fallback）
+        task_uid: 任务 UID（可选，用于本地缓存命中）
+        flatten_tree_dirs: tree URL 下载后是否扁平化到 shared 根目录
     输出:
         bool（是否下载成功）
     """
     import requests as _requests
     from urllib.parse import unquote
+
+    def _infer_task_uid_from_prepare_url(raw_prepare_url: str) -> str:
+        if task_uid:
+            return task_uid
+        for item in [u.strip() for u in raw_prepare_url.split(",") if u.strip()]:
+            try:
+                _, _, subdir = parse_prepare_script_path(item)
+            except ValueError:
+                continue
+            if subdir:
+                return os.path.basename(subdir.rstrip("/"))
+        return ""
 
     def _host_download(dl_url: str, filename: str) -> bool:
         """宿主机侧 fallback 下载：用 requests 下载文件到 host_shared_dir。"""
@@ -147,6 +163,29 @@ def _download_task_files_on_vm_with_ip(
                 os.remove(dest)
             return False
 
+    def _flatten_shared_dir_with_ip(subdir: str) -> bool:
+        if not subdir:
+            return True
+        parent_dir = os.path.dirname(subdir)
+        if not parent_dir:
+            return True
+        src_root = f"/home/user/shared/{subdir}"
+        parent_root = f"/home/user/shared/{parent_dir}"
+        cmd = (
+            "bash -c "
+            f"\"if [ -d '{src_root}' ]; then "
+            f"find '{src_root}' -type f -print0 | "
+            "xargs -0 -I{} mv -f {} /home/user/shared/ && "
+            f"rm -rf '{parent_root}'; "
+            "fi\""
+        )
+        result = execute_on_vm_with_ip(vm_ip, vm_port, cmd, timeout=60)
+        if result.get("status") != "success":
+            print(f"✗ 扁平化 shared 目录失败: {subdir}")
+            print(result.get("error", "Unknown error"))
+            return False
+        return True
+
     # 清理 shared 目录
     print("清理 shared 目录，避免残留文件干扰当前任务...")
     clean_cmd = "bash -c \"find /home/user/shared -mindepth 1 -maxdepth 1 -exec rm -rf {} +\""
@@ -167,6 +206,16 @@ def _download_task_files_on_vm_with_ip(
                     shutil.rmtree(item)
             except Exception:
                 pass
+
+    resolved_task_uid = _infer_task_uid_from_prepare_url(prepare_url)
+    if host_shared_dir and resolved_task_uid:
+        if ensure_task_data_cached(resolved_task_uid, prepare_url, timeout=min(timeout, 180)):
+            if copy_cached_task_data(resolved_task_uid, host_shared_dir, clear_dest=False):
+                print(f"✓ 已从本地缓存准备任务文件: {resolved_task_uid}")
+                return True
+            print(f"⚠️ 本地缓存存在，但复制到 shared 失败: {resolved_task_uid}")
+        else:
+            print(f"⚠️ 本地缓存准备失败，回退到运行时下载: {resolved_task_uid}")
 
     # 拆分逗号分隔的多 URL
     urls = [u.strip() for u in prepare_url.split(",") if u.strip()]
@@ -193,12 +242,15 @@ def _download_task_files_on_vm_with_ip(
                         print(r.get("error", "Unknown error"))
                         return False
                 downloaded += 1
+            if flatten_tree_dirs and not _flatten_shared_dir_with_ip(subdir):
+                return False
             continue  # 成功处理，继续下一个 URL
         except ValueError:
             pass  # 不是 HF tree 格式，尝试直接下载
         except Exception as exc:
-            # HF tree 格式解析成功但 API 调用失败（如 404），也尝试直接下载
-            print(f"[HF tree] API 调用失败: {exc}，尝试直接下载...")
+            # tree URL 失败时不能回退成 HTML 页面，否则 Agent 会拿到错误文件。
+            print(f"[HF tree] API 调用失败: {exc}，停止回退 HTML 页面下载")
+            return False
 
         # 直接下载模式：适用于 HF resolve URL 和外部 URL
         filename = unquote(url.rstrip("/").split("/")[-1])
@@ -356,6 +408,11 @@ from run_QA_pipeline import (  # noqa: E402
     _flatten_shared_dir,
     TASKS_LIST_DIR,
     DEFAULT_QA_EVALUATOR_PATH,
+)
+
+from stages.task_data_cache import (  # noqa: E402
+    copy_cached_task_data,
+    ensure_task_data_cached,
 )
 
 # ============================================================
@@ -992,7 +1049,14 @@ def init_vm_parallel(
         if prepare_url:
             log.info("[5/5] 下载任务数据到 shared...")
             # 使用本地版本的下载函数（带 vm_ip）
-            if not _download_task_files_on_vm_with_ip(vm_ip, vm_port, prepare_url):
+            if not _download_task_files_on_vm_with_ip(
+                vm_ip,
+                vm_port,
+                prepare_url,
+                host_shared_dir=shared_host_dir,
+                task_uid=task_config.get("task_uid", ""),
+                flatten_tree_dirs=True,
+            ):
                 return False
         else:
             log.info("[5/5] 任务未提供 prepare_script_path，跳过下载")

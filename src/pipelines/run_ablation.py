@@ -119,8 +119,26 @@ ABLATION_CONDITIONS = {
         "vms_per_task": 5,
         "agent_mode": None,
     },
+    "plan_seed18_n5": {
+        "description": "Plan Agent 消融：seed-1.8（兼容迁移 condition 名）",
+        "env": {
+            "ABLATION_PLAN_MODEL": "doubao-seed-1-8-251228",
+            "ABLATION_GUI_AGENT": "seed18",
+        },
+        "vms_per_task": 5,
+        "agent_mode": None,
+    },
     "plan_kimi": {
         "description": "Plan Agent 消融：Kimi K2.5",
+        "env": {
+            "ABLATION_PLAN_MODEL": "kimi-k2.5",
+            "ABLATION_GUI_AGENT": "seed18",
+        },
+        "vms_per_task": 5,
+        "agent_mode": None,
+    },
+    "plan_kimi_n5": {
+        "description": "Plan Agent 消融：Kimi K2.5（兼容迁移 condition 名）",
         "env": {
             "ABLATION_PLAN_MODEL": "kimi-k2.5",
             "ABLATION_GUI_AGENT": "seed18",

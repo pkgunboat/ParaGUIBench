@@ -22,12 +22,16 @@ from task_scanner import scan_unified_tasks
 from self_operation_pipeline.run_searchwrite_pipeline_parallel import (
     resolve_document_sharing_url,
     stage0_prepare_documents,
+    stage1_initialize as sw_stage1_initialize,
+    _build_instruction_with_share_urls,
     stage2_execute_gui_only as sw_stage2_gui_only,
     stage2_5_trigger_save,
     stage3_evaluate,
 )
+from self_operation_pipeline.run_self_operation_pipeline_parallel import (
+    stage1_initialize_with_flatten as op_stage1_initialize_with_flatten,
+)
 from run_QA_pipeline_parallel import (
-    stage1_initialize_parallel,
     stage2_execute_agent_parallel,
 )
 from parallel_benchmark.eval.operation_evaluator import evaluate as operation_evaluate
@@ -116,12 +120,26 @@ class SearchWritePipeline(BasePipeline):
         输入:
             tasks: 待执行的任务列表
         """
+        def _is_osworld_task(task):
+            cfg = task.task_config
+            return (
+                cfg.get("task_type") == "OSWorld脚本"
+                or cfg.get("evaluator_path", "").endswith(".json")
+            )
+
+        onlyoffice_tasks = [t for t in tasks if not _is_osworld_task(t)]
+        if not onlyoffice_tasks:
+            self.log.info("未检测到 OnlyOffice 类型 SearchWrite 任务，跳过 Stage0")
+            for task in tasks:
+                task.extra["share_urls"] = {}
+            return
+
         self.args.onlyoffice_url = resolve_document_sharing_url(
             self.args.onlyoffice_url,
             self.args.onlyoffice_host_ip,
             log=self.log,
         )
-        task_items_raw = [(t.task_uid, t.task_path, t.task_config) for t in tasks]
+        task_items_raw = [(t.task_uid, t.task_path, t.task_config) for t in onlyoffice_tasks]
         self._task_share_urls = stage0_prepare_documents(
             task_items_raw,
             self.args.onlyoffice_url,
@@ -134,7 +152,7 @@ class SearchWritePipeline(BasePipeline):
 
     def stage_init(self, task, config, log):
         """
-        标准容器重建 + VM 初始化。
+        SearchWrite 专用初始化。
 
         输入:
             task: TaskItem
@@ -143,7 +161,13 @@ class SearchWritePipeline(BasePipeline):
         输出:
             bool
         """
-        return stage1_initialize_parallel(task.task_config, config, log)
+        evaluator_path = task.task_config.get("evaluator_path", "")
+        if (
+            task.task_config.get("task_type") == "OSWorld脚本"
+            or evaluator_path.endswith(".json")
+        ):
+            return op_stage1_initialize_with_flatten(task.task_config, config, log)
+        return sw_stage1_initialize(config, log)
 
     def stage_execute(self, task, config, log):
         """
@@ -158,10 +182,20 @@ class SearchWritePipeline(BasePipeline):
         """
         output_dir = self.get_output_dir()
         share_urls = task.extra.get("share_urls", {})
+        instruction = task.task_config.get("instruction", "")
+
+        if share_urls:
+            augmented_instruction = _build_instruction_with_share_urls(
+                instruction, share_urls,
+            )
+            modified_config = dict(task.task_config)
+            modified_config["instruction"] = augmented_instruction
+        else:
+            modified_config = task.task_config
 
         if self.args.agent_mode == "gui_only":
             result, ctrl = sw_stage2_gui_only(
-                task.task_config, task.task_uid, config, log,
+                modified_config, task.task_uid, config, log,
                 gui_agent=self.args.gui_agent,
                 max_rounds=self.args.gui_max_rounds,
                 gui_timeout=self.args.gui_timeout,
@@ -169,7 +203,7 @@ class SearchWritePipeline(BasePipeline):
             )
         else:
             result, ctrl = stage2_execute_agent_parallel(
-                task.task_config, task.task_uid, config, log,
+                modified_config, task.task_uid, config, log,
             )
 
         # Stage 2.5: 触发 OnlyOffice 保存
