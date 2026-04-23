@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import os
 import re
+import socket
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -30,6 +31,61 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_DEPLOY_PATH = REPO_ROOT / "configs" / "deploy.yaml"
 DEFAULT_API_PATH    = REPO_ROOT / "configs" / "api.yaml"
 DEFAULT_AGENT_PATH  = REPO_ROOT / "configs" / "agent.yaml"
+
+# host_ip 配置为这些值时，触发自动探测本机 IP
+_AUTO_HOST_TOKENS = {"auto", "autodetect", ""}
+
+# 自动探测结果缓存，避免重复创建 socket
+_detected_local_ip: Optional[str] = None
+
+
+def detect_local_ip(fallback: str = "127.0.0.1") -> str:
+    """
+    自动探测当前设备在默认路由上使用的 IPv4 地址。
+
+    原理:
+        创建一条到公网地址的 UDP "连接"（不真正发包），读取 socket
+        本端地址即得到出口网卡的 IP。无网络时回退到 fallback。
+
+    输入:
+        fallback: 探测失败时返回的地址，默认 127.0.0.1
+    输出:
+        探测到的本机 IP 字符串；首次结果会缓存到进程生命周期结束
+    """
+    global _detected_local_ip
+    if _detected_local_ip is not None:
+        return _detected_local_ip
+    ip = fallback
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.settimeout(0.5)
+            # 8.8.8.8 仅用于确定默认路由，不会发出任何数据包
+            s.connect(("8.8.8.8", 80))
+            ip = s.getsockname()[0] or fallback
+    except OSError:
+        ip = fallback
+    _detected_local_ip = ip
+    return ip
+
+
+def resolve_host_ip(value: Optional[str], fallback: str = "127.0.0.1") -> str:
+    """
+    把 host_ip 配置值解析为真实 IP。
+
+    输入:
+        value: 配置里的原始值（可能是 None、"auto"、空串或具体 IP/域名）
+        fallback: 无法探测时兜底
+    输出:
+        具体的 host 字符串：
+          - None/""/"auto"/"autodetect"  → detect_local_ip(fallback)
+          - 其它值                        → 原样返回
+    """
+    if value is None:
+        return detect_local_ip(fallback)
+    v = str(value).strip()
+    if v.lower() in _AUTO_HOST_TOKENS:
+        return detect_local_ip(fallback)
+    return v
 
 # ${VAR} 或 ${VAR:-default}
 _ENV_PLACEHOLDER = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-([^}]*))?\}")
@@ -205,7 +261,8 @@ class DeployConfig:
 
     @property
     def vm_host(self) -> str:
-        return get_path(self._data, "server.vm_host", "127.0.0.1")
+        raw = get_path(self._data, "server.vm_host", "127.0.0.1")
+        return resolve_host_ip(raw, fallback="127.0.0.1")
 
     @property
     def vm_user(self) -> str:
@@ -227,7 +284,8 @@ class DeployConfig:
 
     @property
     def onlyoffice_host(self) -> str:
-        return get_path(self._data, "services.onlyoffice.host_ip", "127.0.0.1")
+        raw = get_path(self._data, "services.onlyoffice.host_ip", "127.0.0.1")
+        return resolve_host_ip(raw, fallback="127.0.0.1")
 
     @property
     def onlyoffice_flask_port(self) -> int:
@@ -235,7 +293,8 @@ class DeployConfig:
 
     @property
     def webmall_host(self) -> str:
-        return get_path(self._data, "services.webmall.host_ip", "127.0.0.1")
+        raw = get_path(self._data, "services.webmall.host_ip", "127.0.0.1")
+        return resolve_host_ip(raw, fallback="127.0.0.1")
 
     @property
     def webmall_ports(self) -> list:

@@ -4,10 +4,10 @@
 #
 # 用法：
 #   # 打包：在服务器上将老项目的资源复制到 U 盘
-#   bash scripts/usb_transfer.sh pack /media/yuzedong/u盘1/ParaGUIBench-resources
+#   bash scripts/usb_transfer.sh pack /media/$USER/<usb-label>/ParaGUIBench-resources
 #
 #   # 解包：在目标机器上将 U 盘资源复制到 resources/
-#   bash scripts/usb_transfer.sh unpack /media/yuzedong/u盘1/ParaGUIBench-resources
+#   bash scripts/usb_transfer.sh unpack /media/$USER/<usb-label>/ParaGUIBench-resources
 # ─────────────────────────────────────────────────────────────
 set -euo pipefail
 

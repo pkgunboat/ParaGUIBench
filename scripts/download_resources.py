@@ -12,7 +12,7 @@ OnlyOffice 模板 + WebMall 素材，落到 configs/deploy.yaml 指定的 resour
 用法:
     python scripts/download_resources.py                      # 读 deploy.yaml
     python scripts/download_resources.py --source local       # 强制本地模式
-    python scripts/download_resources.py --source usb --usb-dir /media/yuzedong/u盘1/ParaGUIBench-resources
+    python scripts/download_resources.py --source usb --usb-dir /media/$USER/<usb-label>/ParaGUIBench-resources
     python scripts/download_resources.py --root /mnt/usb/bench  # 覆盖 root
 """
 

@@ -19,7 +19,7 @@ Agent 通过 OnlyOffice 共享链接在浏览器中协作编辑 xlsx 文档。
     python run_searchwrite_pipeline_parallel.py -p 2 -n 3
 
     # 指定 VM IP，OnlyOffice 文档共享服务地址会自动检测
-    python run_searchwrite_pipeline_parallel.py --vm-ip 10.1.110.114
+    python run_searchwrite_pipeline_parallel.py --vm-ip <HOST_IP>
 """
 
 from __future__ import annotations
@@ -65,6 +65,7 @@ if onlyoffice_dir not in sys.path:
 # 从原始 pipeline 导入可复用函数（不修改原文件）
 # ============================================================
 
+from config_loader import resolve_host_ip  # noqa: E402
 from run_QA_pipeline import (  # noqa: E402
     ensure_conda_env,
     load_task_config,
@@ -129,11 +130,12 @@ OUTPUT_JSON_PATH = os.path.join(
 # 本地 HuggingFace 缓存根目录
 HF_DATA_DIR = os.path.join(parallel_benchmark_dir, "hf_data")
 
-# OnlyOffice 服务器上的文档存储路径（SCP 目标）
-# 注意：OnlyOffice document_sharing_server 实际运行在 webmall 项目下，
-# 因此上传目标必须指向该服务器的 shared_documents 目录，而非本项目的副本。
-ONLYOFFICE_SHARED_DOCS_DIR = (
-    "/home/yuzedong/code/webmall/onlyoffice/shared_documents"
+# OnlyOffice 服务器上的文档存储路径（SCP 目标）。
+# 单机部署时默认指向 repo 内 docker/onlyoffice/shared_documents；跨机部署
+# 或自定义路径时通过环境变量 ONLYOFFICE_SHARED_DOCS_DIR 覆盖。
+ONLYOFFICE_SHARED_DOCS_DIR = os.environ.get(
+    "ONLYOFFICE_SHARED_DOCS_DIR",
+    os.path.join(ubuntu_env_dir, "..", "docker", "onlyoffice", "shared_documents"),
 )
 
 # 全局追踪：记录所有已启动的容器组（用于 atexit 清理）
@@ -448,7 +450,7 @@ def stage0_prepare_documents(
 
     输入:
         task_items: [(task_uid, task_path, task_config), ...]
-        onlyoffice_base_url: OnlyOffice 文档共享服务 base URL（如 http://10.1.110.114:5000）
+        onlyoffice_base_url: OnlyOffice 文档共享服务 base URL（如 http://<HOST_IP>:5050）
         onlyoffice_host_ip: OnlyOffice 宿主机 IP（用于 SCP）
         log: logger
 
@@ -1027,6 +1029,13 @@ def stage2_execute_gui_only(
     elif gui_agent == "gpt54":
         from parallel_agents_as_tools.gpt54_gui_agent_as_tool import GPT54GUIAgentTool
         gui_tool = GPT54GUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")
+    elif gui_agent == "gpt54_fc":
+        from parallel_agents_as_tools.gpt_gui_agent_as_tool import GPTGUIAgentTool
+        gui_tool = GPTGUIAgentTool(
+            controller=controller_vm1,
+            model_name="gpt-5.4-mini",
+            api_config_key="pincc",
+        )
     else:
         log.warning("未知的 gui_agent: %s，fallback 到 seed18", gui_agent)
         gui_tool = Seed18GUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")
@@ -1464,8 +1473,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--onlyoffice-host-ip",
-        type=str, default="10.1.110.114",
-        help="OnlyOffice 宿主机 IP，用于 SCP（默认 10.1.110.114）",
+        type=str, default=resolve_host_ip("auto"),
+        help="OnlyOffice 宿主机 IP，用于 SCP（默认自动探测当前设备的默认出口 IP）",
     )
     parser.add_argument(
         "--save-result-dir",

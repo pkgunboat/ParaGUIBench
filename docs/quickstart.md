@@ -85,5 +85,5 @@ logs/ablation_2026MMDD_HHMMSS/ablation_summary.json
 ## 下一步
 
 - 跑全量 baseline：`python src/pipelines/run_ablation.py --conditions baseline --mode full`
-- 对比多个模型：`--conditions baseline plan_claude_opus46 gui_kimi ...`
+- 对比多个模型：`--conditions baseline plan_claude_opus47 gui_kimi gui_claude ...`
 - 查 [docs/deployment.md](deployment.md) 了解完整配置

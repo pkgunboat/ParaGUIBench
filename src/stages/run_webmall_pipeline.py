@@ -50,6 +50,7 @@ if webmall_eval_assets_dir not in sys.path:
 from desktop_env.controllers.python import PythonController
 from parallel_agents.plan_agent_thought_action import PlanAgentThoughtAction, calculate_cost
 from config.api_config import get_api_config, get_model_name
+from config_loader import resolve_host_ip
 
 # WebMall: 基于收藏夹(Bookmarks)的 string 任务评测辅助工具（外层仓库副本）
 from webmall_eval_assets.bookmark_utils import close_chrome_and_clear_bookmarks, read_bookmark_urls
@@ -70,7 +71,9 @@ from webmall_eval_assets.checkout_evaluator_from_at import (
 
 
 # ===== 全局配置 =====
-VM_IP = "10.1.110.114"
+# VM_IP 自动探测当前设备默认路由出口 IP；通过 configs/deploy.yaml
+# 的 services.webmall.host_ip 可覆盖（见 DeployConfig.webmall_host）。
+VM_IP = resolve_host_ip("auto")
 WEBMALL_TASKS_DIR = os.path.join(extra_docker_env_dir, "tasks")
 OUTPUT_JSON_PATH = os.path.join(ubuntu_env_dir, "logs", "run_webmall_pipeline_all.json")
 

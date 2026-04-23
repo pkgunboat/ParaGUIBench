@@ -65,16 +65,18 @@ MariaDB + WP 卷数据）。
 
 ## 任务 JSON 里的 URL
 
-任务 JSON 文件中的 `answer` 字段包含形如 `http://10.1.110.114:9082/product/...` 的 URL，
-这是原始开发环境的 host。部署到自有环境后，运行：
+任务 JSON 文件中的 `answer` 字段包含形如 `http://<ORIGIN_HOST>:9082/product/...` 的 URL，
+这是打包者原始环境的 host。部署到自有环境后，运行：
 
 ```bash
-python scripts/rewrite_task_urls.py \
-    --from http://10.1.110.114 --to http://<your-host>
-```
+# 自动从 configs/deploy.yaml.services.webmall.host_ip 读取目标 host
+# （该字段支持 "auto"，将自动探测当前设备默认出口 IP）
+python scripts/rewrite_task_urls.py
 
-或在 `configs/deploy.yaml` 的 `services.webmall.host_ip` 设为 `10.1.110.114`
-并通过 DNS/hosts 把该 IP 映射到本机。推荐前者。
+# 或显式指定
+python scripts/rewrite_task_urls.py \
+    --from http://<ORIGIN_HOST> --to http://<YOUR_HOST>
+```
 
 ## 文件结构
 

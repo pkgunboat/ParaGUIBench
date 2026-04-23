@@ -40,6 +40,7 @@ class AgentToolRegistry:
         use_kimi_gui: bool = False,
         use_seed18_gui: bool = False,
         use_gpt54_gui: bool = False,
+        use_claude_gui: bool = False,
         vm_controllers: Optional[List[PythonController]] = None,
         gpt54_use_response_id: bool = True,
         gpt54_max_images: Optional[int] = None,
@@ -55,6 +56,7 @@ class AgentToolRegistry:
             use_kimi_gui: 是否使用 Kimi GUI Agent (默认False)
             use_seed18_gui: 是否使用 Seed 1.8 GUI Agent (默认False)
             use_gpt54_gui: 是否使用 GPT-5.4 GUI Agent (默认False)
+            use_claude_gui: 是否显式使用 Claude Computer Use GUI Agent (默认False)
             vm_controllers: 多个VM控制器列表 [VM1, VM2, ...] (可选)
             gpt54_use_response_id: GPT-5.4 是否使用 previous_response_id 有状态模式 (默认True)
             gpt54_max_images: GPT-5.4 保留的历史截图数量 (None=全部，N=最近N张)
@@ -67,6 +69,7 @@ class AgentToolRegistry:
         self.use_kimi_gui = use_kimi_gui  # 保存Kimi设置
         self.use_seed18_gui = use_seed18_gui  # 保存Seed18设置
         self.use_gpt54_gui = use_gpt54_gui  # 保存GPT54设置
+        self.use_claude_gui = use_claude_gui  # 保存Claude设置（显式选择）
         self.gpt54_use_response_id = gpt54_use_response_id  # GPT-5.4 有状态模式
         self.gpt54_max_images = gpt54_max_images  # GPT-5.4 历史截图数量
 
@@ -78,7 +81,8 @@ class AgentToolRegistry:
             f"use_doubao_gui={use_doubao_gui}, "
             f"use_kimi_gui={use_kimi_gui}, "
             f"use_seed18_gui={use_seed18_gui}, "
-            f"use_gpt54_gui={use_gpt54_gui}"
+            f"use_gpt54_gui={use_gpt54_gui}, "
+            f"use_claude_gui={use_claude_gui}"
         )
         
         # 初始化所有 GUI Agent Tools (VM1)
@@ -132,8 +136,11 @@ class AgentToolRegistry:
             self.gpt54_gui_agent_tool = None
 
         # 选择使用哪个 GUI Agent 实现
-        # 优先级: GPT54 > Seed18 > Kimi > Doubao > Qwen > GPT > Claude
-        if use_gpt54_gui:
+        # 优先级: Claude(显式) > GPT54 > Seed18 > Kimi > Doubao > Qwen > GPT > Claude(fallback)
+        if use_claude_gui:
+            active_gui_agent = self.claude_gui_agent_tool
+            print(f"[AgentToolRegistry] Using Claude Computer Use GUI Agent (显式选择)")
+        elif use_gpt54_gui:
             active_gui_agent = self.gpt54_gui_agent_tool
             print(f"[AgentToolRegistry] Using GPT-5.4 GUI Agent (gpt-5.4-mini, Responses API)")
         elif use_seed18_gui:
