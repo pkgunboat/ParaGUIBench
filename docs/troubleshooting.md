@@ -43,6 +43,29 @@ PasswordAuthentication yes
 - 宿主机防火墙是否放行 `ONLYOFFICE_DOC_PORT`（默认 8080）
 - `configs/deploy.yaml.services.onlyoffice.host_ip` 是否对 VM 可达
 
+### WebMall 某个店铺显示维护页，但端口是通的
+如果 `9081-9084` 返回 HTTP `200`，但页面正文包含 `Pardon our dust! We're working on something amazing`，
+这通常不是店铺真的可用，而是：
+
+- 命中了 WooCommerce `coming soon` / 维护页
+- 或者宿主机还跑着旧的 WebMall 栈，卷数据已经漂移成默认 WordPress 站点
+
+排查：
+- 看页面标题是否与预期店铺一致（如 `E-Store Athletes` / `TechTalk` / `CamelCases` / `Hardware Cafe`）
+- 查 `docker compose -f docker/docker-compose.yaml ps`
+- 如果当前仓库 compose 为空，但 `docker ps` 里还有 `WebMall_wordpress_shop*`，说明实际跑的是旧 `docker_all` 栈
+
+恢复旧 `docker_all` 的单店数据时，推荐只处理坏掉的 shop：
+```bash
+cd /path/to/WebMall/docker_all
+docker compose --env-file ../.env stop wordpress_shop1 mariadb_shop1
+docker compose --env-file ../.env rm -sf wordpress_shop1 mariadb_shop1
+docker volume rm woocommerce_wordpress_data_shop1 woocommerce_mariadb_data_shop1
+# 然后用 backup/ 下的 shop1 tarball 重新恢复，再启动 shop1
+```
+
+当前仓库里的 `check_webmall_shops()` 已经不再把这种维护页当作“正常”。
+
 ### WebMall 任务 answer URL 仍是内部 IP
 开源版任务 JSON 里保留了原始的 `10.1.110.114:908X` URL 作为答案模板。
 部署时请先决定你的 WebMall host，然后在评估前运行：
