@@ -66,11 +66,6 @@ class SearchWritePipeline(BasePipeline):
         输入:
             parser: ArgumentParser 实例
         """
-        parser.add_argument(
-            "--onlyoffice-url", type=str,
-            default=os.environ.get("ONLYOFFICE_URL", ""),
-            help="OnlyOffice 文档共享服务 URL（默认自动检测；也可用 ONLYOFFICE_URL 覆盖）",
-        )
         # 默认从 deploy.yaml 的 services.onlyoffice.host_ip 读取；若未配置则退化到
         # server.vm_host（单机场景下两者相同）。环境变量 ONLYOFFICE_HOST_IP 亦可覆盖。
         from config_loader import DeployConfig
@@ -78,6 +73,15 @@ class SearchWritePipeline(BasePipeline):
         _default_oo_host = os.environ.get(
             "ONLYOFFICE_HOST_IP",
             _deploy.onlyoffice_host or _deploy.vm_host,
+        )
+        _default_oo_url = os.environ.get(
+            "ONLYOFFICE_URL",
+            f"http://{_default_oo_host}:{_deploy.onlyoffice_flask_port}",
+        )
+        parser.add_argument(
+            "--onlyoffice-url", type=str,
+            default=_default_oo_url,
+            help="OnlyOffice 文档共享服务 URL（默认读 deploy.yaml/ONLYOFFICE_HOST_IP；也可用 ONLYOFFICE_URL 覆盖）",
         )
         parser.add_argument(
             "--onlyoffice-host-ip", type=str,

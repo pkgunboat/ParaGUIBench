@@ -33,3 +33,6 @@ configs/agent.yaml
 
 # --- Docker 运行时产物 ---
 docker/onlyoffice/data/
+docker/onlyoffice/document_keys.json
+docker/onlyoffice/shared_links.json
+docker/onlyoffice/shared_documents/
