@@ -227,17 +227,18 @@ for SHOP_ID in 1 2 3 4; do
   SHOP_PORT_VAR="SHOP${SHOP_ID}_PORT"
   SHOP_PORT="${!SHOP_PORT_VAR}"
   ACTUAL_URL="http://${DEPLOY_HOST}:${SHOP_PORT}"
-  CONTAINER_NAME="bench-wordpress-${SHOP_ID}"
+  SERVICE_NAME="wordpress-shop${SHOP_ID}"
+  CONTAINER_ID="$(docker compose -f "${COMPOSE_FILE}" ps -q "${SERVICE_NAME}" 2>/dev/null || true)"
 
   echo "  Shop ${SHOP_ID}: ${ACTUAL_URL}"
 
-  if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
-    echo "    ⚠ 容器 ${CONTAINER_NAME} 未运行，跳过"
+  if [ -z "${CONTAINER_ID}" ]; then
+    echo "    ⚠ 服务 ${SERVICE_NAME} 未运行，跳过"
     continue
   fi
 
   # 修复 wp-config.php
-  docker exec "${CONTAINER_NAME}" \
+  docker exec "${CONTAINER_ID}" \
     sed -i "s|http://localhost[:0-9]*|${ACTUAL_URL}|g" \
     /bitnami/wordpress/wp-config.php 2>/dev/null || {
       echo "    ⚠ wp-config.php 修改失败"
@@ -245,14 +246,14 @@ for SHOP_ID in 1 2 3 4; do
 
   # 使用 regex 匹配 http://localhost 可选带端口，替换为目标 URL
   # 避免 http://localhost:XXXX → http://localhost:XXXX:XXXX 双端口问题
-  docker exec "${CONTAINER_NAME}" \
+  docker exec "${CONTAINER_ID}" \
     wp search-replace 'http://localhost[:0-9]*' "${ACTUAL_URL}" \
     --regex --all-tables --path=/opt/bitnami/wordpress > /dev/null 2>&1 || {
       echo "    ⚠ wp search-replace 失败（数据库可能尚未就绪）"
     }
 
   # 清除缓存
-  docker exec "${CONTAINER_NAME}" \
+  docker exec "${CONTAINER_ID}" \
     wp cache flush --path=/opt/bitnami/wordpress > /dev/null 2>&1 || true
 
   echo "    ✓ URL 已更新"

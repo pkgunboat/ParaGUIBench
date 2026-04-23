@@ -24,6 +24,7 @@ import subprocess
 import sys
 import time
 from datetime import datetime
+from html import unescape
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -1612,7 +1613,18 @@ def check_webmall_shops() -> bool:
         try:
             resp = requests.get(f"http://{VM_IP}:{port}", timeout=10, allow_redirects=True)
             if resp.status_code == 200:
-                print(f"  ✓ {name} (:{port}) - 正常")
+                body = resp.text or ""
+                body_lower = body.lower()
+                title_match = re.search(r"<title>(.*?)</title>", body, flags=re.IGNORECASE | re.DOTALL)
+                title = unescape(title_match.group(1)).strip() if title_match else ""
+                if "pardon our dust" in body_lower or "working on something amazing" in body_lower:
+                    print(f"  ✗ {name} (:{port}) - 命中维护页，title={title or '<empty>'}")
+                    all_ok = False
+                elif title and name.lower() not in title.lower():
+                    print(f"  ✗ {name} (:{port}) - 站点标题异常: {title}")
+                    all_ok = False
+                else:
+                    print(f"  ✓ {name} (:{port}) - 正常")
             else:
                 print(f"  ✗ {name} (:{port}) - HTTP {resp.status_code}")
                 all_ok = False

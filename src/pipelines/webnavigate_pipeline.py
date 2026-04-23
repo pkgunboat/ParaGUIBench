@@ -26,6 +26,7 @@ from task_scanner import scan_unified_tasks
 from run_webnavigate_pipeline_parallel import (
     reinitialize_vms,
     clear_bookmarks_parallel,
+    open_browser_parallel,
     stage2_execute_plan,
     stage2_execute_gui_only,
     stage3_evaluate,
@@ -115,6 +116,7 @@ class WebNavigatePipeline(BasePipeline):
             return False
         vm_ports = config.get_server_ports()
         clear_bookmarks_parallel(config.vm_ip, vm_ports, log)
+        open_browser_parallel(config.vm_ip, vm_ports, log)
         return True
 
     def stage_execute(self, task, config, log):

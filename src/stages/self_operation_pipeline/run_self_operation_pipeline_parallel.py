@@ -932,6 +932,8 @@ def init_vm_with_flatten(
     vm_port: int,
     vnc_port: int,
     prepare_url: str,
+    task_uid: str,
+    evaluator_path: str,
     shared_host_dir: str,
     vm_ip: str,
     is_first_vm: bool,
@@ -949,6 +951,8 @@ def init_vm_with_flatten(
         vm_port: VM server 端口
         vnc_port: VNC 端口
         prepare_url: 任务数据 URL
+        task_uid: 任务 UID（用于本地缓存命中）
+        evaluator_path: 评测器路径（.json 表示 OSWorld 任务）
         shared_host_dir: 宿主机共享目录路径（该组专用）
         vm_ip: 宿主机 IP
         is_first_vm: 是否为该组的第一个 VM（仅第一个 VM 下载数据）
@@ -1043,13 +1047,32 @@ def init_vm_with_flatten(
         log.error("shared 挂载验证失败: %s", result.get("error", "Unknown"))
         return False
 
+    is_osworld_task = bool(evaluator_path and evaluator_path.endswith(".json"))
+
     # [5/6] 仅第一个 VM 下载任务数据 + 扁平化
     if is_first_vm:
-        if prepare_url:
+        if is_osworld_task:
+            log.info("[5/6] 按 OSWorld config 准备任务环境...")
+            try:
+                from eval.osworld_evaluator import prepare_osworld_task
+                json_path = os.path.join(parallel_benchmark_dir, evaluator_path)
+                if not prepare_osworld_task(
+                    evaluator_json_path=json_path,
+                    vm_ip=vm_ip,
+                    vm_port=vm_port,
+                    shared_host_dir=shared_host_dir,
+                    log=log,
+                ):
+                    return False
+            except Exception as exc:
+                log.error("OSWorld config 初始化失败: %s", exc, exc_info=True)
+                return False
+        elif prepare_url:
             log.info("[5/6] 下载任务数据到 shared...")
             if not _download_task_files_on_vm_with_ip(
                 vm_ip, vm_port, prepare_url,
                 host_shared_dir=shared_host_dir,
+                task_uid=task_uid,
             ):
                 return False
 
@@ -1069,18 +1092,21 @@ def init_vm_with_flatten(
         log.info("[5/6] 跳过下载（使用 shared 中的文件）")
 
     # [6/6] 启动 Chrome 并打开 Bing
-    log.info("[6/6] 启动 Chrome 并打开 Bing...")
-    cmd = (
-        'bash -c "nohup python3 -c \\"import subprocess, time, os; '
-        'env = os.environ.copy(); '
-        "env['DISPLAY'] = ':0'; "
-        "subprocess.Popen(['google-chrome', '--no-first-run', '--no-default-browser-check', "
-        "'https://www.bing.com'], env=env); "
-        'time.sleep(2)\\" '
-        '> /tmp/bootstrap_chrome.log 2>&1 &"'
-    )
-    _ = execute_on_vm_with_ip(vm_ip, vm_port, cmd)
-    log.info("  Chrome 已启动并打开 Bing（异步执行）")
+    if is_osworld_task:
+        log.info("[6/6] 跳过默认 Bing 启动（OSWorld 任务由脚本控制初始界面）")
+    else:
+        log.info("[6/6] 启动 Chrome 并打开 Bing...")
+        cmd = (
+            'bash -c "nohup python3 -c \\"import subprocess, time, os; '
+            'env = os.environ.copy(); '
+            "env['DISPLAY'] = ':0'; "
+            "subprocess.Popen(['google-chrome', '--no-first-run', '--no-default-browser-check', "
+            "'https://www.bing.com'], env=env); "
+            'time.sleep(2)\\" '
+            '> /tmp/bootstrap_chrome.log 2>&1 &"'
+        )
+        _ = execute_on_vm_with_ip(vm_ip, vm_port, cmd)
+        log.info("  Chrome 已启动并打开 Bing（异步执行）")
 
     log.info("VM %d 初始化成功", vm_port)
     return True
@@ -1142,6 +1168,8 @@ def stage1_initialize_with_flatten(
             vm_port=vm_port,
             vnc_port=vnc_port,
             prepare_url=prepare_url,
+            task_uid=task_config.get("task_uid", ""),
+            evaluator_path=task_config.get("evaluator_path", ""),
             shared_host_dir=config.shared_host_dir,
             vm_ip=config.vm_ip,
             is_first_vm=(idx == 0),

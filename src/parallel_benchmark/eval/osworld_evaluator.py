@@ -302,6 +302,38 @@ def _run_postconfig(
             log.warning("    未知 postconfig 类型 '%s'，跳过", stype)
 
 
+def _ensure_vm_link(
+    vm_ip: str,
+    vm_port: int,
+    original_path: str,
+    mapped_vm_path: str,
+    log: logging.Logger,
+) -> None:
+    """
+    在 VM 中创建原始 OSWorld 路径到 shared 路径的符号链接。
+    """
+    link_path = original_path.rstrip("/")
+    target_path = mapped_vm_path.rstrip("/")
+    if not link_path or link_path == target_path:
+        return
+
+    parent_dir = os.path.dirname(link_path)
+    cmd = (
+        "bash -c "
+        f"\"mkdir -p {shlex.quote(parent_dir)} && "
+        f"rm -rf {shlex.quote(link_path)} && "
+        f"ln -s {shlex.quote(target_path)} {shlex.quote(link_path)}\""
+    )
+    result = _exec_on_vm(vm_ip, vm_port, cmd, timeout=60)
+    if result.get("returncode", -1) != 0:
+        log.warning(
+            "    创建链接失败: %s -> %s (%s)",
+            link_path,
+            target_path,
+            (result.get("error") or result.get("output", ""))[:200],
+        )
+
+
 def _pc_download(
     params: Dict[str, Any],
     vm_ip: str,
@@ -355,6 +387,44 @@ def _pc_download(
                 os.unlink(tmp_path)
 
 
+def _cfg_download(
+    params: Dict[str, Any],
+    vm_ip: str,
+    vm_port: int,
+    shared_host_dir: str,
+    log: logging.Logger,
+) -> None:
+    """
+    config download: 下载任务输入文件到 shared，并在原始路径创建符号链接。
+    """
+    for f_spec in params.get("files", []):
+        url = f_spec.get("url", "")
+        original_path = f_spec.get("path", "")
+        if not url or not original_path:
+            continue
+
+        mapped_vm_path = adapt_result_path(original_path)
+        host_path = _vm_path_to_host_path(mapped_vm_path, shared_host_dir)
+
+        log.info("    下载输入文件: %s", os.path.basename(url.split("?")[0]))
+        log.info("      → 宿主机: %s", host_path)
+
+        ext = os.path.splitext(original_path)[1]
+        fd, tmp_path = tempfile.mkstemp(suffix=ext)
+        os.close(fd)
+
+        try:
+            if not _download_url_to_local(url, tmp_path, log):
+                continue
+            with open(tmp_path, "rb") as f_in:
+                content = f_in.read()
+            if _ssh_upload_bytes(vm_ip, content, host_path, log):
+                _ensure_vm_link(vm_ip, vm_port, original_path, mapped_vm_path, log)
+        finally:
+            if os.path.exists(tmp_path):
+                os.unlink(tmp_path)
+
+
 def _build_vm_command(command: List[str]) -> str:
     """
     将 OSWorld 命令列表转换为可在 VM 上执行的 shell 命令字符串。
@@ -392,6 +462,28 @@ def _build_vm_command(command: List[str]) -> str:
     return " ".join(shlex.quote(p) for p in mapped)
 
 
+def _build_vm_command_raw(command: List[str]) -> str:
+    """
+    将命令列表按原始路径拼成 VM shell 命令，不做 shared 路径映射。
+    """
+    if not command:
+        return ""
+
+    prog = command[0]
+
+    if prog in ("/bin/bash", "bash") and len(command) >= 3 and command[1] == "-c":
+        return command[2]
+
+    if prog in ("python", "python3") and len(command) >= 3 and command[1] == "-c":
+        code = command[2]
+        return (
+            "DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus "
+            f"python3 -c {shlex.quote(code)}"
+        )
+
+    return " ".join(shlex.quote(str(part)) for part in command)
+
+
 def _pc_execute(
     params: Dict[str, Any],
     vm_ip: str,
@@ -423,6 +515,105 @@ def _pc_execute(
                     rc, (result.get("error") or result.get("output", ""))[:200])
 
 
+def _cfg_command(
+    params: Dict[str, Any],
+    vm_ip: str,
+    vm_port: int,
+    log: logging.Logger,
+) -> None:
+    """
+    config command: 主要用于任务前置目录准备。
+    """
+    command = params.get("command", [])
+    if not command:
+        return
+
+    if isinstance(command, list):
+        cmd_str = _build_vm_command_raw(command)
+    else:
+        cmd_str = str(command)
+
+    log.info("    准备目录/命令: %s", cmd_str[:200])
+    result = _exec_on_vm(vm_ip, vm_port, cmd_str, timeout=120)
+    if result.get("returncode", -1) != 0:
+        log.warning(
+            "    command 执行失败: %s",
+            (result.get("error") or result.get("output", ""))[:200],
+        )
+
+
+def _cfg_open(
+    params: Dict[str, Any],
+    vm_ip: str,
+    vm_port: int,
+    log: logging.Logger,
+) -> None:
+    """
+    config open: 打开指定文件。
+    """
+    original_path = params.get("path", "")
+    if not original_path:
+        return
+
+    cmd = (
+        "bash -c "
+        f"\"DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus "
+        f"xdg-open {shlex.quote(original_path)} >/tmp/osw_open.log 2>&1 &\""
+    )
+    log.info("    打开文件: %s", original_path)
+    _exec_on_vm(vm_ip, vm_port, cmd, timeout=30)
+
+
+def _cfg_launch(
+    params: Dict[str, Any],
+    vm_ip: str,
+    vm_port: int,
+    log: logging.Logger,
+) -> None:
+    """
+    config launch: 后台启动一个应用或服务。
+    """
+    command = params.get("command", [])
+    if not command:
+        return
+
+    if isinstance(command, list):
+        cmd_body = " ".join(shlex.quote(str(part)) for part in command)
+    else:
+        cmd_body = str(command)
+
+    cmd = (
+        'bash -c "'
+        "DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus "
+        f"nohup {cmd_body} >/tmp/osw_launch.log 2>&1 &\""
+    )
+    log.info("    启动进程: %s", cmd_body[:200])
+    _exec_on_vm(vm_ip, vm_port, cmd, timeout=30)
+
+
+def _cfg_chrome_open_tabs(
+    params: Dict[str, Any],
+    vm_ip: str,
+    vm_port: int,
+    log: logging.Logger,
+) -> None:
+    """
+    config chrome_open_tabs: 打开若干 Chrome 标签页。
+    """
+    urls = params.get("urls_to_open", [])
+    if not urls:
+        return
+
+    quoted_urls = " ".join(shlex.quote(url) for url in urls)
+    cmd = (
+        'bash -c "'
+        "DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus "
+        f"nohup google-chrome --new-tab {quoted_urls} >/tmp/osw_chrome_tabs.log 2>&1 &\""
+    )
+    log.info("    打开 Chrome 标签页: %s", ", ".join(urls[:3]))
+    _exec_on_vm(vm_ip, vm_port, cmd, timeout=30)
+
+
 def _pc_activate_window(
     params: Dict[str, Any],
     vm_ip: str,
@@ -440,6 +631,77 @@ def _pc_activate_window(
     log.info("    尝试激活窗口: %s", window_name)
     cmd = f"DISPLAY=:0 wmctrl -a {shlex.quote(window_name)} 2>/dev/null || true"
     _exec_on_vm(vm_ip, vm_port, cmd, timeout=15)
+
+
+def _run_config(
+    config_steps: List[Dict[str, Any]],
+    vm_ip: str,
+    vm_port: int,
+    shared_host_dir: str,
+    log: logging.Logger,
+) -> None:
+    """
+    执行 OSWorld 任务前置 config。
+    """
+    if not config_steps:
+        return
+
+    for idx, step in enumerate(config_steps):
+        stype = step.get("type", "")
+        params = step.get("parameters", {})
+        log.info("  config [%d/%d] type=%s", idx + 1, len(config_steps), stype)
+
+        if stype == "download":
+            _cfg_download(params, vm_ip, vm_port, shared_host_dir, log)
+        elif stype == "command":
+            _cfg_command(params, vm_ip, vm_port, log)
+        elif stype == "execute":
+            _pc_execute(params, vm_ip, vm_port, log)
+        elif stype == "open":
+            _cfg_open(params, vm_ip, vm_port, log)
+        elif stype == "launch":
+            _cfg_launch(params, vm_ip, vm_port, log)
+        elif stype == "chrome_open_tabs":
+            _cfg_chrome_open_tabs(params, vm_ip, vm_port, log)
+        elif stype == "activate_window":
+            _pc_activate_window(params, vm_ip, vm_port, log)
+        elif stype == "sleep":
+            secs = params.get("seconds", 1)
+            log.info("    sleep %.1f s", secs)
+            time.sleep(secs)
+        else:
+            log.warning("    未知 config 类型 '%s'，跳过", stype)
+
+
+def prepare_osworld_task(
+    evaluator_json_path: str,
+    vm_ip: str,
+    vm_port: int,
+    shared_host_dir: str,
+    log: logging.Logger,
+) -> bool:
+    """
+    使用 OSWorld JSON 的 config 字段准备任务输入文件和初始窗口。
+    """
+    try:
+        with open(evaluator_json_path, "r", encoding="utf-8") as f:
+            osw_config = json.load(f)
+    except Exception as exc:
+        log.error("加载 OSWorld JSON 失败: %s → %s", evaluator_json_path, exc)
+        return False
+
+    config_steps = osw_config.get("config", [])
+    if not config_steps:
+        log.info("OSWorld config 为空，跳过前置初始化")
+        return True
+
+    try:
+        log.info("执行 OSWorld config (%d 步)...", len(config_steps))
+        _run_config(config_steps, vm_ip, vm_port, shared_host_dir, log)
+        return True
+    except Exception as exc:
+        log.error("执行 OSWorld config 失败: %s", exc, exc_info=True)
+        return False
 
 
 # ============================================================
