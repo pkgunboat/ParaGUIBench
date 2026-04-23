@@ -36,9 +36,19 @@ from checkout_evaluator_from_at import (
     verify_checkout,
 )
 
-TASK_SET_PATH = (
-    "/home/yuzedong/code/parallel-efficient-benchmark/ubuntu_env/extra_docker_env/"
-    "WebMall/Browsergym/browsergym/webmall/src/browsergym/webmall/task_sets.json"
+# Browsergym 生成的 task_sets.json 路径。该文件不在本仓库内，需用户自行
+# 从上游 WebMall 打包得到；通过环境变量 WEBMALL_TASK_SET_PATH 显式指定。
+# 默认尝试项目根 docker/webmall/Browsergym/... 下的相对路径（若存在）。
+_repo_root = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..")
+)
+TASK_SET_PATH = os.environ.get(
+    "WEBMALL_TASK_SET_PATH",
+    os.path.join(
+        _repo_root, "docker", "webmall", "Browsergym",
+        "browsergym", "webmall", "src", "browsergym", "webmall",
+        "task_sets.json",
+    ),
 )
 
 
