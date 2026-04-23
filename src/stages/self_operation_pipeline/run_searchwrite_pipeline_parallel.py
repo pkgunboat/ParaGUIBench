@@ -130,11 +130,12 @@ OUTPUT_JSON_PATH = os.path.join(
 # 本地 HuggingFace 缓存根目录
 HF_DATA_DIR = os.path.join(parallel_benchmark_dir, "hf_data")
 
-# OnlyOffice 服务器上的文档存储路径（SCP 目标）
-# 注意：OnlyOffice document_sharing_server 实际运行在 webmall 项目下，
-# 因此上传目标必须指向该服务器的 shared_documents 目录，而非本项目的副本。
-ONLYOFFICE_SHARED_DOCS_DIR = (
-    "/home/yuzedong/code/webmall/onlyoffice/shared_documents"
+# OnlyOffice 服务器上的文档存储路径（SCP 目标）。
+# 单机部署时默认指向 repo 内 docker/onlyoffice/shared_documents；跨机部署
+# 或自定义路径时通过环境变量 ONLYOFFICE_SHARED_DOCS_DIR 覆盖。
+ONLYOFFICE_SHARED_DOCS_DIR = os.environ.get(
+    "ONLYOFFICE_SHARED_DOCS_DIR",
+    os.path.join(ubuntu_env_dir, "..", "docker", "onlyoffice", "shared_documents"),
 )
 
 # 全局追踪：记录所有已启动的容器组（用于 atexit 清理）

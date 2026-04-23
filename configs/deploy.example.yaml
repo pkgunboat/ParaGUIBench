@@ -42,7 +42,7 @@ resources:
   hf_repo: "your-org/ParaGUIBench-resources"
 
   # U 盘资源目录路径（仅 source=usb 时使用）
-  # usb_dir: "/media/yuzedong/u盘1/ParaGUIBench-resources"
+  # usb_dir: "/media/$USER/<usb-label>/ParaGUIBench-resources"
 
 services:
   # OnlyOffice DocumentServer + Flask 共享服务（SearchWrite pipeline 依赖）
