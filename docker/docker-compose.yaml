@@ -29,6 +29,7 @@ services:
       - "${ONLYOFFICE_DOC_PORT:-8080}:80"
     environment:
       - JWT_ENABLED=false
+      - ALLOW_PRIVATE_IP_ADDRESS=true
     volumes:
       - ./onlyoffice/data:/var/www/onlyoffice/Data
       - ./onlyoffice/logs:/var/log/onlyoffice
@@ -43,15 +44,20 @@ services:
       - "${ONLYOFFICE_FLASK_PORT:-5050}:5050"
     working_dir: /app
     volumes:
-      - ./onlyoffice:/app:ro
+      - ./onlyoffice:/app
       - ./onlyoffice/shared_documents:/app/shared_documents
     environment:
       - HOST_IP=${ONLYOFFICE_HOST_IP:-127.0.0.1}
       - DOC_SERVER_PORT=${ONLYOFFICE_DOC_PORT:-8080}
       - FLASK_PORT=5050
-    command: >
-      sh -c "pip install --no-cache-dir flask requests python-docx openpyxl python-pptx
-             && python document_sharing_server.py"
+      - DOC_FETCH_HOST=${ONLYOFFICE_FETCH_HOST:-bench-onlyoffice-share}
+      - DOC_FETCH_PORT=5050
+      - ONLYOFFICE_JWT_ENABLED=${ONLYOFFICE_JWT_ENABLED:-false}
+      - ONLYOFFICE_JWT_SECRET=${ONLYOFFICE_JWT_SECRET:-}
+    command:
+      - sh
+      - -c
+      - mkdir -p /app/shared_documents && chmod 0777 /app/shared_documents && pip install --no-cache-dir flask requests python-docx openpyxl python-pptx && python document_sharing_server.py
 
   # ═══════════════════════════════════════════════════════════
   # WebMall 商城服务

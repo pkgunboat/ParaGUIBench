@@ -271,8 +271,13 @@ class PlanAgentThoughtAction:
         self.gui_step_budget = gui_step_budget
         self._gui_steps_used = 0  # 已消耗的 GUI 步数
 
-        # 使用 deerapi 代理调用 GPT-5
         import os
+        self.serial_gui_calls = (
+            os.environ.get("PLAN_SERIAL_GUI_CALLS", "")
+            or os.environ.get("ABLATION_SERIAL_GUI_CALLS", "")
+        ).lower() in {"1", "true", "yes", "on"}
+
+        # 使用 deerapi 代理调用 GPT-5
         _api_config = get_api_config("deerapi")
         self.vlm = OpenAI(
             api_key=api_key or os.environ.get("OPENAI_API_KEY", _api_config["api_key"]),
@@ -289,6 +294,13 @@ class PlanAgentThoughtAction:
 
         # 根据 num_agents 生成动态 system prompt
         self.system_prompt = get_plan_agent_prompt(self.num_agents)
+        if self.serial_gui_calls:
+            self.system_prompt += (
+                "\n\n# RUNTIME CONSTRAINT\n"
+                "For this run, dispatch at most ONE call_gui_agent() tool call per round. "
+                "GUI tool calls are serialized to avoid shared-file locks and state drift. "
+                "If multiple subtasks are needed, call them across separate rounds."
+            )
 
         # 日志记录（用于 trajectory 可视化）
         self.execution_log = None
@@ -333,8 +345,15 @@ class PlanAgentThoughtAction:
                         "with independent browser session, cookies, cart, and login state. "
                         "The VM does NOT restart between rounds — all state is preserved. "
                         "Use the same agent_id across rounds to maintain session continuity. "
+                        "A GUI Agent only receives the task_description you send in this tool call; "
+                        "it cannot see the original TASK unless you include the relevant details. "
                         "IMPORTANT: When opening files, instruct the agent to use double_click action. "
-                        "For information gathering, the agent should RETURN data directly, NOT save to files."
+                        "When the original task contains exact URLs, file paths, or document names, "
+                        "include those exact values in every GUI subtask that needs them. "
+                        "If the original task requires editing a document or spreadsheet, do not finish "
+                        "after information gathering; dispatch a GUI task to write the collected results "
+                        "back into the target document and save it. "
+                        "For pure information gathering subtasks, the agent should RETURN data directly."
                     ),
                     "parameters": {
                         "type": "object",
@@ -521,7 +540,7 @@ class PlanAgentThoughtAction:
                     temperature=LLM_TEMPERATURE,
                     seed=LLM_SEED,
                     max_tokens=8000,  # 增大 token 限制，避免被截断
-                    parallel_tool_calls=True,  # 启用并行工具调用
+                    parallel_tool_calls=not self.serial_gui_calls,
                 )
                 assert_deterministic(_plan_kwargs)
                 response = self.vlm.chat.completions.create(**_plan_kwargs)
@@ -1766,33 +1785,22 @@ class PlanAgentThoughtAction:
                 if stdout_proxy:
                     stdout_proxy.clear_buffer()
 
-        # 并行执行
+        # 并行执行；调试/消融时可通过环境变量串行化 GUI 调用，避免多个
+        # Agent 同时触碰共享文件造成锁文件和状态漂移。
         thread_timeout = None if timeout_per_subtask <= 0 else timeout_per_subtask + 60
 
-        with ThreadPoolExecutor(max_workers=min(len(tool_calls), self.max_workers)) as executor:
-            futures = {executor.submit(execute_one, tc): tc for tc in tool_calls}
-            for future in as_completed(futures):
-                tc = futures[future]
+        should_serialize = (
+            self.serial_gui_calls
+            and any(tc.function.name == "call_gui_agent" for tc in tool_calls)
+        )
+        if should_serialize:
+            self.task_logger.info("[ACTIONS] Serial GUI mode enabled; executing tool calls one by one")
+            for tc in tool_calls:
                 ac = tool_agent_counts.get(tc.id, "unknown")
                 try:
-                    local_results.append(future.result(timeout=thread_timeout))
-                except TimeoutError:
-                    self.task_logger.error(f"[{ac}] 线程超时 ({thread_timeout}s)")
-                    local_results.append({
-                        "agent_count": ac,
-                        "result": {
-                            "tool_call_id": tc.id,
-                            "function": tc.function.name,
-                            "arguments": {},
-                            "agent_count": ac,
-                            "result": {
-                                "status": "failure", "result": "", "steps": [],
-                                "error": f"Thread-level timeout after {thread_timeout}s"
-                            }
-                        }
-                    })
+                    local_results.append(execute_one(tc))
                 except Exception as e:
-                    self.task_logger.error(f"[{ac}] 线程异常: {e}")
+                    self.task_logger.error(f"[{ac}] 串行执行异常: {e}")
                     local_results.append({
                         "agent_count": ac,
                         "result": {
@@ -1806,6 +1814,44 @@ class PlanAgentThoughtAction:
                             }
                         }
                     })
+        else:
+            with ThreadPoolExecutor(max_workers=min(len(tool_calls), self.max_workers)) as executor:
+                futures = {executor.submit(execute_one, tc): tc for tc in tool_calls}
+                for future in as_completed(futures):
+                    tc = futures[future]
+                    ac = tool_agent_counts.get(tc.id, "unknown")
+                    try:
+                        local_results.append(future.result(timeout=thread_timeout))
+                    except TimeoutError:
+                        self.task_logger.error(f"[{ac}] 线程超时 ({thread_timeout}s)")
+                        local_results.append({
+                            "agent_count": ac,
+                            "result": {
+                                "tool_call_id": tc.id,
+                                "function": tc.function.name,
+                                "arguments": {},
+                                "agent_count": ac,
+                                "result": {
+                                    "status": "failure", "result": "", "steps": [],
+                                    "error": f"Thread-level timeout after {thread_timeout}s"
+                                }
+                            }
+                        })
+                    except Exception as e:
+                        self.task_logger.error(f"[{ac}] 线程异常: {e}")
+                        local_results.append({
+                            "agent_count": ac,
+                            "result": {
+                                "tool_call_id": tc.id,
+                                "function": tc.function.name,
+                                "arguments": {},
+                                "agent_count": ac,
+                                "result": {
+                                    "status": "failure", "result": "", "steps": [],
+                                    "error": str(e)
+                                }
+                            }
+                        })
 
         # 主线程：按 agent_count 排序，统一收集结果
         local_results.sort(key=lambda x: x["agent_count"])
@@ -2185,4 +2231,3 @@ class PlanAgentThoughtAction:
             "elapsed_time": elapsed,
             "agent_count": agent_count  # 添加 agent_count 到返回结果
         }
-

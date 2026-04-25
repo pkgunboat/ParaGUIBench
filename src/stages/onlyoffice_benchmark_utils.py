@@ -15,8 +15,11 @@ import secrets
 from pathlib import Path
 from typing import Optional, Tuple
 
-# 与 document_sharing_server 保持一致
-_SCRIPT_DIR = Path(__file__).resolve().parent
+# 与 document_sharing_server 保持一致。
+# 当本文件位于 src/stages/ 时，实际共享目录仍应落在 repo 根的 docker/onlyoffice/ 下。
+_THIS_DIR = Path(__file__).resolve().parent
+_REPO_ONLYOFFICE_DIR = Path(__file__).resolve().parents[2] / "docker" / "onlyoffice"
+_SCRIPT_DIR = _THIS_DIR if (_THIS_DIR / "document_sharing_server.py").exists() else _REPO_ONLYOFFICE_DIR
 DOCUMENTS_DIR = _SCRIPT_DIR / "shared_documents"
 SHARED_LINKS_FILE = _SCRIPT_DIR / "shared_links.json"
 ALLOWED_EXTENSIONS = {
@@ -25,8 +28,8 @@ ALLOWED_EXTENSIONS = {
 }
 
 DEFAULT_SHARING_PORTS = (
-    tuple(range(5000, 5011))
-    + tuple(range(5050, 5061))
+    tuple(range(5050, 5061))
+    + tuple(range(5000, 5011))
     + tuple(range(8000, 8011))
 )
 
@@ -92,11 +95,16 @@ def resolve_document_sharing_url(
     解析文档共享服务 URL。
 
     - base_url 可用时直接使用。
-    - base_url 为空或指向错误服务时，按常见 Flask 端口自动检测。
-    - 无法检测时返回 base_url 或 http://host:5000，让后续健康检查给出明确错误。
+    - 显式提供 base_url 但不可用时，保留该配置并尽快失败，避免误连到其他项目的 Flask 服务。
+    - base_url 为空时，按常见 Flask 端口自动检测。
+    - 无法检测时返回 http://host:5050，让后续健康检查给出明确错误。
     """
     base_url = (base_url or "").strip().rstrip("/")
     if base_url and is_document_sharing_service(base_url, timeout=timeout):
+        return base_url
+    if base_url:
+        if log:
+            log.warning("OnlyOffice 文档共享服务 URL %s 不可用；保留显式配置，不再自动切换到其他端口", base_url)
         return base_url
 
     detected = detect_document_sharing_url(host, timeout=timeout)
@@ -107,7 +115,7 @@ def resolve_document_sharing_url(
             log.info("自动检测到 OnlyOffice 文档共享服务: %s", detected)
         return detected
 
-    fallback = base_url or f"http://{(host or 'localhost').strip()}:5000"
+    fallback = f"http://{(host or 'localhost').strip()}:5050"
     if log:
         log.warning("无法自动检测 OnlyOffice 文档共享服务，继续使用 %s", fallback)
     return fallback
@@ -149,6 +157,8 @@ def init_task_document(
     dest_dir = get_documents_dir()
     dest = dest_dir / f"{doc_id}.{ext}"
     import shutil
+    if dest.exists():
+        dest.unlink()
     shutil.copy2(source_path, dest)
     return doc_id
 

@@ -22,7 +22,7 @@ class GPTGUIAgentTool(BaseAgentTool):
         controller: PythonController 实例
         model_name: GPT 模型名称（默认 "gpt-5.2"；可传 "gpt-5.4-mini" 等）
         api_config_key: provider 名，传给 get_api_config() 取 key/base_url
-                        （默认 "bigai"；pincc 中转站传 "pincc"）
+                        （默认 "deerapi"；pincc 中转站传 "pincc"）
         reflection_model: 生成失败/成功反思总结用的模型名（默认沿用 model_name）
         max_tokens: 单次请求最大输出 token 数
         history_n: GUIAgent 内部保留的历史轮数
@@ -32,7 +32,7 @@ class GPTGUIAgentTool(BaseAgentTool):
         self,
         controller,
         model_name: str = "gpt-5.2",
-        api_config_key: str = "bigai",
+        api_config_key: str = "deerapi",
         reflection_model: Optional[str] = None,
         max_tokens: int = 2000,
         history_n: int = 5,

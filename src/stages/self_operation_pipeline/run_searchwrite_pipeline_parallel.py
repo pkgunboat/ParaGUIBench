@@ -47,10 +47,11 @@ import requests
 # ============================================================
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-examples_dir = os.path.dirname(current_dir)         # ubuntu_env/examples/
-ubuntu_env_dir = os.path.dirname(examples_dir)       # ubuntu_env/
+examples_dir = os.path.dirname(current_dir)          # src/stages/
+ubuntu_env_dir = os.path.dirname(examples_dir)       # src/
+repo_root = os.path.dirname(ubuntu_env_dir)          # repo root
 parallel_benchmark_dir = os.path.join(ubuntu_env_dir, "parallel_benchmark")
-onlyoffice_dir = os.path.join(ubuntu_env_dir, "extra_docker_env", "onlyoffice")
+onlyoffice_dir = os.path.join(repo_root, "docker", "onlyoffice")
 
 if parallel_benchmark_dir not in sys.path:
     sys.path.insert(0, parallel_benchmark_dir)
@@ -65,7 +66,6 @@ if onlyoffice_dir not in sys.path:
 # 从原始 pipeline 导入可复用函数（不修改原文件）
 # ============================================================
 
-from config_loader import resolve_host_ip  # noqa: E402
 from run_QA_pipeline import (  # noqa: E402
     ensure_conda_env,
     load_task_config,
@@ -103,10 +103,11 @@ from desktop_env.providers.docker.parallel_manager import (  # noqa: E402
 )
 
 # ============================================================
-# OnlyOffice 工具（从 extra_docker_env/onlyoffice 导入）
+# OnlyOffice 工具
 # ============================================================
 
 from onlyoffice_benchmark_utils import (  # noqa: E402
+    init_task_document,
     create_share_link_via_api,
     fetch_document_file_via_api,
     resolve_document_sharing_url,
@@ -129,14 +130,6 @@ OUTPUT_JSON_PATH = os.path.join(
 
 # 本地 HuggingFace 缓存根目录
 HF_DATA_DIR = os.path.join(parallel_benchmark_dir, "hf_data")
-
-# OnlyOffice 服务器上的文档存储路径（SCP 目标）。
-# 单机部署时默认指向 repo 内 docker/onlyoffice/shared_documents；跨机部署
-# 或自定义路径时通过环境变量 ONLYOFFICE_SHARED_DOCS_DIR 覆盖。
-ONLYOFFICE_SHARED_DOCS_DIR = os.environ.get(
-    "ONLYOFFICE_SHARED_DOCS_DIR",
-    os.path.join(ubuntu_env_dir, "..", "docker", "onlyoffice", "shared_documents"),
-)
 
 # 全局追踪：记录所有已启动的容器组（用于 atexit 清理）
 _active_groups: Dict[int, ContainerSetConfig] = {}
@@ -451,7 +444,7 @@ def stage0_prepare_documents(
     输入:
         task_items: [(task_uid, task_path, task_config), ...]
         onlyoffice_base_url: OnlyOffice 文档共享服务 base URL（如 http://<HOST_IP>:5050）
-        onlyoffice_host_ip: OnlyOffice 宿主机 IP（用于 SCP）
+        onlyoffice_host_ip: 兼容参数；文档初始化走本地共享目录/API，不再 SCP 上传
         log: logger
 
     输出:
@@ -499,27 +492,11 @@ def stage0_prepare_documents(
                 log.error("模板文件不存在: %s", local_path)
                 continue
 
-            # SCP 上传到 OnlyOffice 服务器的 shared_documents/
-            remote_path = f"{ONLYOFFICE_SHARED_DOCS_DIR}/{doc_id}.xlsx"
-            _creds = get_ssh_credentials(onlyoffice_host_ip)
-            scp_cmd = [
-                "sshpass", "-p", _creds["ssh_password"],
-                "scp",
-            ] + _creds["ssh_opts"] + [
-                local_path,
-                f"{_creds['ssh_host']}:{remote_path}",
-            ]
-
             try:
-                result = subprocess.run(
-                    scp_cmd, capture_output=True, text=True, timeout=30,
-                )
-                if result.returncode != 0:
-                    log.error("SCP 上传失败 %s: %s", xlsx_name, result.stderr)
-                    continue
-                log.info("  上传成功: %s → %s", xlsx_name, doc_id)
+                init_task_document(doc_id, local_path, ext="xlsx")
+                log.info("  文档准备成功: %s → %s", xlsx_name, doc_id)
             except Exception as exc:
-                log.error("SCP 上传异常 %s: %s", xlsx_name, exc)
+                log.error("准备共享文档失败 %s: %s", xlsx_name, exc)
                 continue
 
             # 通过 API 生成共享链接
@@ -733,11 +710,15 @@ def _build_instruction_with_share_urls(
         links_text += f"- {filename}: {url}\n"
 
     augmented = (
+        "IMPORTANT DOCUMENT LINKS:\n"
+        f"{links_text}\n"
+        "Use the exact link above whenever a GUI subtask needs to open or edit "
+        "the shared spreadsheet. Include the relevant link verbatim in those "
+        "GUI subtask descriptions.\n\n"
         f"{original_instruction}\n\n"
         "The document is available as an online shared spreadsheet. "
         "All team members can open the same link and edit simultaneously. "
-        "Please open the following link in Chrome:\n"
-        f"{links_text}\n"
+        "Please open the link above in Chrome. "
         "Each team member should search for and fill in their assigned portion. "
         "Edit the cells directly in the browser. "
         "After finishing all edits, close the browser tab to save."
@@ -1468,13 +1449,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--onlyoffice-url",
-        type=str, default=os.environ.get("ONLYOFFICE_URL", ""),
-        help="OnlyOffice 文档共享服务 URL（默认自动检测；也可用 ONLYOFFICE_URL 覆盖）",
+        type=str, default="",
+        help="OnlyOffice 文档共享服务 URL（默认读 deploy.yaml/ONLYOFFICE_HOST_IP；也可用 ONLYOFFICE_URL 覆盖）",
     )
     parser.add_argument(
         "--onlyoffice-host-ip",
-        type=str, default=resolve_host_ip("auto"),
-        help="OnlyOffice 宿主机 IP，用于 SCP（默认自动探测当前设备的默认出口 IP）",
+        type=str, default="",
+        help="OnlyOffice 宿主机 IP（默认读 deploy.yaml/ONLYOFFICE_HOST_IP）",
     )
     parser.add_argument(
         "--save-result-dir",
@@ -1538,6 +1519,22 @@ def main() -> None:
     4. 收集结果 + 写 JSON
     """
     args = parse_args()
+    try:
+        from config_loader import DeployConfig
+        deploy = DeployConfig()
+        default_host = os.environ.get(
+            "ONLYOFFICE_HOST_IP",
+            deploy.onlyoffice_host or deploy.vm_host,
+        )
+        if not args.onlyoffice_url:
+            args.onlyoffice_url = os.environ.get(
+                "ONLYOFFICE_URL",
+                f"http://{default_host}:{deploy.onlyoffice_flask_port}",
+            )
+        if not args.onlyoffice_host_ip:
+            args.onlyoffice_host_ip = default_host
+    except Exception:
+        pass
 
     # 消融实验环境变量覆盖（run_ablation.py 通过 subprocess 环境变量传递）
     _ablation_agent_mode = os.environ.get("ABLATION_AGENT_MODE", "")

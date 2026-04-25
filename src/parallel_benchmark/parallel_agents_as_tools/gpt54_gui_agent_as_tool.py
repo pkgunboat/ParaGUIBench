@@ -111,7 +111,7 @@ class GPT54GUIAgentTool(BaseAgentTool):
 
         try:
             # ---- 获取 API 配置 ----
-            api_config = get_api_config("bigai")
+            api_config = get_api_config("deerapi")
 
             # ---- 创建 GPT54Agent 实例 ----
             from parallel_agents.gpt54_gui_agent import GPT54Agent

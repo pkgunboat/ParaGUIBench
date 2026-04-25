@@ -44,7 +44,7 @@ KIMI_CONFIG = {
     "base_url": "https://api.moonshot.cn/v1",
 }
 
-# BigAI LiteLLM（GPT-5.2/5.4 等 GPT-style 模型）
+# BigAI LiteLLM（历史兼容保留；当前测试统一走 DeerAPI）
 BIGAI_CONFIG = {
     "api_key": "",
     "base_url": "",
@@ -104,19 +104,47 @@ def get_api_config(provider: str = "deerapi") -> dict:
             "base_url": _env("CLAUDE_BASE_URL", CLAUDE_CONFIG["base_url"]),
         }
     if provider == "doubao":
+        doubao_key = _env("DOUBAO_API_KEY")
+        if doubao_key:
+            return {
+                "api_key": doubao_key,
+                "base_url": _env("DOUBAO_BASE_URL", DOUBAO_CONFIG["base_url"]),
+            }
+        if _env("DEERAPI_API_KEY") or _env("DEERAPI_BASE_URL"):
+            return {
+                "api_key": _env("DEERAPI_API_KEY", _env("OPENAI_API_KEY")),
+                "base_url": _env("DEERAPI_BASE_URL", DEERAPI_CONFIG["base_url"]),
+            }
         return {
-            "api_key":  _env("DOUBAO_API_KEY", DOUBAO_CONFIG["api_key"]),
-            "base_url": _env("DOUBAO_BASE_URL", DOUBAO_CONFIG["base_url"]),
+            "api_key": DOUBAO_CONFIG["api_key"],
+            "base_url": DOUBAO_CONFIG["base_url"],
         }
     if provider == "kimi":
+        kimi_key = _env("KIMI_API_KEY", _env("MOONSHOT_API_KEY"))
+        if kimi_key:
+            return {
+                "api_key": kimi_key,
+                "base_url": _env("KIMI_BASE_URL", KIMI_CONFIG["base_url"]),
+            }
+        if _env("DEERAPI_API_KEY") or _env("DEERAPI_BASE_URL"):
+            return {
+                "api_key": _env("DEERAPI_API_KEY", _env("OPENAI_API_KEY")),
+                "base_url": _env("DEERAPI_BASE_URL", DEERAPI_CONFIG["base_url"]),
+            }
         return {
-            "api_key":  _env("KIMI_API_KEY", _env("MOONSHOT_API_KEY", KIMI_CONFIG["api_key"])),
-            "base_url": _env("KIMI_BASE_URL", KIMI_CONFIG["base_url"]),
+            "api_key": KIMI_CONFIG["api_key"],
+            "base_url": KIMI_CONFIG["base_url"],
         }
     if provider == "bigai":
         return {
-            "api_key":  _env("BIGAI_API_KEY", BIGAI_CONFIG["api_key"]),
-            "base_url": _env("BIGAI_BASE_URL", BIGAI_CONFIG["base_url"]),
+            "api_key":  _env(
+                "BIGAI_API_KEY",
+                _env("DEERAPI_API_KEY", _env("OPENAI_API_KEY", BIGAI_CONFIG["api_key"])),
+            ),
+            "base_url": _env(
+                "BIGAI_BASE_URL",
+                _env("DEERAPI_BASE_URL", DEERAPI_CONFIG["base_url"]),
+            ),
         }
     if provider == "pincc":
         return {
@@ -134,10 +162,8 @@ def get_api_config(provider: str = "deerapi") -> dict:
 
 def get_api_config_for_model(model_name: str) -> dict:
     """
-    根据模型名自动选 provider：gpt-* → bigai，其余 → deerapi。
+    根据模型名自动选 provider：当前测试统一走 deerapi。
     """
-    if model_name and model_name.lower().startswith("gpt"):
-        return get_api_config("bigai")
     return get_api_config("deerapi")
 
 

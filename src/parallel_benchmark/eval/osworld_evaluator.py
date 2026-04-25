@@ -803,6 +803,43 @@ def _get_result_command(
     return output
 
 
+def _persist_result_data(
+    result_data: Any,
+    result_type: str,
+    save_result_dir: str,
+    log: logging.Logger,
+) -> str:
+    """
+    Persist the evaluated result artifact before the temporary eval directory
+    is removed, so failed runs can still be inspected afterwards.
+    """
+    if not save_result_dir or result_data is None:
+        return ""
+
+    os.makedirs(save_result_dir, exist_ok=True)
+
+    if result_type == "vm_file" and isinstance(result_data, str) and os.path.exists(result_data):
+        basename = os.path.basename(os.path.normpath(result_data)) or "result"
+        dst = os.path.join(save_result_dir, basename)
+        if os.path.isdir(result_data):
+            if os.path.exists(dst):
+                shutil.rmtree(dst, ignore_errors=True)
+            shutil.copytree(result_data, dst)
+        else:
+            shutil.copy2(result_data, dst)
+        log.info("OSWorld 评测结果文件已保存: %s", dst)
+        return dst
+
+    if result_type == "vm_command_line":
+        dst = os.path.join(save_result_dir, "result.txt")
+        with open(dst, "w", encoding="utf-8") as f:
+            f.write(str(result_data))
+        log.info("OSWorld 评测命令输出已保存: %s", dst)
+        return dst
+
+    return ""
+
+
 # ============================================================
 # Expected 获取
 # ============================================================
@@ -939,6 +976,7 @@ def evaluate_osworld_task(
     vm_port: int,
     shared_host_dir: str,
     log: logging.Logger,
+    save_result_dir: str = "",
 ) -> Dict[str, Any]:
     """
     使用 OSWorld JSON 配置评估任务结果。
@@ -957,9 +995,10 @@ def evaluate_osworld_task(
         vm_port: VM API 端口
         shared_host_dir: 宿主机共享目录（如 /home/agentlab/shared/group_0）
         log: logger
+        save_result_dir: 可选；保存评测 result 产物的本地目录
 
     输出:
-        {"score": float, "pass": bool, "reason": str, "func": str}
+        {"score": float, "pass": bool, "reason": str, "func": str, ...}
     """
     # 1. 加载 JSON
     try:
@@ -986,6 +1025,7 @@ def evaluate_osworld_task(
 
     # 创建临时工作目录
     work_dir = tempfile.mkdtemp(prefix="osw_eval_")
+    saved_result_path = ""
 
     try:
         # 2. 执行 postconfig
@@ -1003,15 +1043,21 @@ def evaluate_osworld_task(
                 "score": 0.0, "pass": False,
                 "reason": "获取评测结果失败", "func": func_name,
             }
+        saved_result_path = _persist_result_data(
+            result_data, _result_type, save_result_dir, log,
+        )
 
         # 4. 获取 expected
         log.info("获取 expected...")
         expected_data, _expected_type = _get_expected(expected_cfg, work_dir, log)
         if expected_data is None:
-            return {
+            result = {
                 "score": 0.0, "pass": False,
                 "reason": "获取期望结果失败", "func": func_name,
             }
+            if saved_result_path:
+                result["saved_result_path"] = saved_result_path
+            return result
 
         # 5. 分发评测
         score = _dispatch_eval(func_name, result_data, expected_data, options, log)
@@ -1021,19 +1067,25 @@ def evaluate_osworld_task(
         log.info("OSWorld 评测完成: func=%s, score=%.4f, pass=%s",
                  func_name, score_val, passed)
 
-        return {
+        result = {
             "score": score_val,
             "pass": passed,
             "reason": f"OSWorld {func_name}: score={score_val:.4f}",
             "func": func_name,
         }
+        if saved_result_path:
+            result["saved_result_path"] = saved_result_path
+        return result
 
     except Exception as exc:
         log.error("OSWorld 评测异常: %s", exc, exc_info=True)
-        return {
+        result = {
             "score": 0.0, "pass": False,
             "reason": f"评测异常: {exc}", "func": func_name,
         }
+        if saved_result_path:
+            result["saved_result_path"] = saved_result_path
+        return result
 
     finally:
         try:
