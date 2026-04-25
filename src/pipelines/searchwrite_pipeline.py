@@ -27,6 +27,7 @@ from self_operation_pipeline.run_searchwrite_pipeline_parallel import (
     stage2_execute_gui_only as sw_stage2_gui_only,
     stage2_5_trigger_save,
     stage3_evaluate,
+    fetch_document_file_via_api,
 )
 from self_operation_pipeline.run_self_operation_pipeline_parallel import (
     stage1_initialize_with_flatten as op_stage1_initialize_with_flatten,
@@ -66,11 +67,6 @@ class SearchWritePipeline(BasePipeline):
         输入:
             parser: ArgumentParser 实例
         """
-        parser.add_argument(
-            "--onlyoffice-url", type=str,
-            default=os.environ.get("ONLYOFFICE_URL", ""),
-            help="OnlyOffice 文档共享服务 URL（默认自动检测；也可用 ONLYOFFICE_URL 覆盖）",
-        )
         # 默认从 deploy.yaml 的 services.onlyoffice.host_ip 读取；若未配置则退化到
         # server.vm_host（单机场景下两者相同）。环境变量 ONLYOFFICE_HOST_IP 亦可覆盖。
         from config_loader import DeployConfig
@@ -78,6 +74,15 @@ class SearchWritePipeline(BasePipeline):
         _default_oo_host = os.environ.get(
             "ONLYOFFICE_HOST_IP",
             _deploy.onlyoffice_host or _deploy.vm_host,
+        )
+        _default_oo_url = os.environ.get(
+            "ONLYOFFICE_URL",
+            f"http://{_default_oo_host}:{_deploy.onlyoffice_flask_port}",
+        )
+        parser.add_argument(
+            "--onlyoffice-url", type=str,
+            default=_default_oo_url,
+            help="OnlyOffice 文档共享服务 URL（默认读 deploy.yaml/ONLYOFFICE_HOST_IP；也可用 ONLYOFFICE_URL 覆盖）",
         )
         parser.add_argument(
             "--onlyoffice-host-ip", type=str,
@@ -215,6 +220,41 @@ class SearchWritePipeline(BasePipeline):
 
         return result, ctrl
 
+    def _save_onlyoffice_results_for_eval_rules(self, task, task_result_dir, log):
+        """
+        eval_rules uses operation_evaluator, which expects local result files.
+        For SearchWrite OnlyOffice tasks, download the edited shared document first.
+        """
+        share_urls = task.extra.get("share_urls", {})
+        if not share_urls:
+            return False
+
+        os.makedirs(task_result_dir, exist_ok=True)
+        uid_short = task.task_uid.split("-")[0]
+        saved = 0
+
+        for filename in share_urls:
+            safe_name = os.path.basename(filename)
+            stem = os.path.splitext(safe_name)[0]
+            doc_id = f"{uid_short}_{stem}"
+            try:
+                content = fetch_document_file_via_api(self.args.onlyoffice_url, doc_id)
+            except Exception as exc:
+                log.warning("下载 OnlyOffice 结果失败 %s: %s", doc_id, exc)
+                continue
+
+            if not content:
+                log.warning("OnlyOffice 结果为空: %s", doc_id)
+                continue
+
+            dst = os.path.join(task_result_dir, safe_name)
+            with open(dst, "wb") as f:
+                f.write(content)
+            saved += 1
+            log.info("OnlyOffice 结果已保存供 eval_rules 使用: %s", dst)
+
+        return saved > 0
+
     def stage_evaluate(self, task, agent_result, config, log):
         """
         评估：优先使用 eval_rules（operation_evaluator），
@@ -239,6 +279,7 @@ class SearchWritePipeline(BasePipeline):
                 return {"score": 0.0, "pass": False, "reason": "save_result_dir 未设置"}
 
             task_result_dir = os.path.join(result_dir, task.task_config.get("task_id", ""))
+            self._save_onlyoffice_results_for_eval_rules(task, task_result_dir, log)
             if not os.path.isdir(task_result_dir):
                 log.warning("结果目录不存在: %s", task_result_dir)
                 return {"score": 0.0, "pass": False, "reason": f"结果目录不存在: {task_result_dir}"}
@@ -265,6 +306,10 @@ class SearchWritePipeline(BasePipeline):
                     vm_port=vm_port,
                     shared_host_dir=config.shared_host_dir,
                     log=log,
+                    save_result_dir=os.path.join(
+                        self.args.save_result_dir,
+                        task.task_config.get("task_id", ""),
+                    ) if self.args.save_result_dir else "",
                 )
             except Exception as exc:
                 log.error("OSWorld 评测执行失败: %s", exc, exc_info=True)

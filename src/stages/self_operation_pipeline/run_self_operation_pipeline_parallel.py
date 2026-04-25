@@ -1602,6 +1602,8 @@ def stage3_evaluate_operation(
                 vm_port=vm_port,
                 shared_host_dir=config.shared_host_dir,
                 log=log,
+                save_result_dir=os.path.join(save_result_dir, task_id)
+                if save_result_dir else "",
             )
         except Exception as exc:
             log.error("OSWorld 评测执行失败: %s", exc, exc_info=True)

@@ -28,6 +28,14 @@ SHARED_LINKS_FILE = BASE_DIR / "shared_links.json"
 DOCUMENT_KEYS_FILE = BASE_DIR / "document_keys.json"  # 存储文档的协作 key
 ALLOWED_EXTENSIONS = {'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'ods', 'odp', 'txt', 'rtf', 'pdf'}
 
+
+def env_flag(name, default=False):
+    """读取布尔环境变量。"""
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
 # 获取主机 IP 地址（支持本地和远程访问）
 def get_host_ip():
     """
@@ -53,18 +61,25 @@ def get_host_ip():
         return 'localhost'
 
 HOST_IP = get_host_ip()
+DOC_SERVER_PORT = int(os.environ.get("DOC_SERVER_PORT", "8080"))
+FLASK_PORT = int(os.environ.get("FLASK_PORT", "5050"))
 
 # OnlyOffice 服务器地址（浏览器访问）
 # 本地访问使用 localhost，远程访问需要使用主机 IP
-ONLYOFFICE_SERVER = f"http://{HOST_IP}"
+if DOC_SERVER_PORT in (80, 443):
+    ONLYOFFICE_SERVER = f"http://{HOST_IP}"
+else:
+    ONLYOFFICE_SERVER = f"http://{HOST_IP}:{DOC_SERVER_PORT}"
 
-# Docker 容器访问主机的地址
-# 在 Docker Desktop (macOS/Windows) 中，容器可以通过 host.docker.internal 访问主机
-# 但如果 OnlyOffice 需要访问文档，最好使用实际 IP
-HOST_ACCESS = HOST_IP
+# 浏览器打开共享页时使用宿主机地址；DocumentServer 后台拉文件时应走 Docker
+# 网络内地址，避免触发 OnlyOffice 的 private-IP 过滤。
+DOC_FETCH_HOST = os.environ.get("DOC_FETCH_HOST", "bench-onlyoffice-share")
+DOC_FETCH_PORT = int(os.environ.get("DOC_FETCH_PORT", str(FLASK_PORT)))
 
-# JWT 配置（从 OnlyOffice 容器配置 /etc/onlyoffice/documentserver/local.json 中获取）
-JWT_SECRET = "BtWKOY3bweDL82vhwGyZwF6jP1mMYRdi"  # OnlyOffice 的 JWT Secret
+# JWT 配置。
+# 当 DocumentServer 未启用 browser JWT 时，不应向 DocsAPI 传递 config.token。
+ONLYOFFICE_JWT_ENABLED = env_flag("ONLYOFFICE_JWT_ENABLED", False)
+JWT_SECRET = os.environ.get("ONLYOFFICE_JWT_SECRET", "")
 
 # 确保目录存在
 DOCUMENTS_DIR.mkdir(exist_ok=True)
@@ -177,6 +192,8 @@ def generate_jwt_token(payload):
     注意：OnlyOffice 的 JWT token 只需要对整个配置对象签名，不是标准的 JWT payload
     """
     try:
+        if not JWT_SECRET:
+            raise RuntimeError("ONLYOFFICE_JWT_SECRET 为空，无法生成 JWT token")
         # 尝试使用 PyJWT 库（如果已安装）
         import jwt
         # OnlyOffice 使用的 JWT 格式：对整个 payload 签名
@@ -563,17 +580,14 @@ def index():
                     currentDocEditor.destroyEditor();
                 }
 
-                // 获取文档服务器地址（OnlyOffice 容器需要访问主机 IP）
-                const hostAccess = "''' + HOST_ACCESS + '''";
-                const port = window.location.port || '5001';
-                const docServerUrl = 'http://' + hostAccess + ':' + port;
+                // 浏览器打开 share 页用公开地址，但 DocumentServer 后台拉文件要走 Docker 内网地址。
+                const docServerUrl = "http://''' + DOC_FETCH_HOST + ":" + str(DOC_FETCH_PORT) + '''";
                 const baseUrl = window.location.origin;
                 
                 // URL 编码文档ID（处理包含特殊字符的情况）
                 const encodedDocId = encodeURIComponent(docId);
-                // 文档 URL 使用主机 IP（供 OnlyOffice Docker 容器访问）
+                // 文档 URL / callback URL 由 DocumentServer 后台访问。
                 const docUrl = docServerUrl + '/api/document/' + encodedDocId + '/file';
-                // Callback URL 也要使用 Docker 可访问的地址（回调来自 OnlyOffice 容器）
                 const callbackUrl = docServerUrl + '/api/document/' + encodedDocId + '/callback';
 
                 const fileType = docName.split('.').pop().toLowerCase();
@@ -603,6 +617,17 @@ def index():
                             height: '600px'
                         };
 
+                        const openEditor = () => {
+                            editorContainer.innerHTML = '<div id="editor" style="height: 600px;"></div>';
+                            currentDocEditor = new DocsAPI.DocEditor('editor', config);
+                            editorContainer.scrollIntoView({ behavior: 'smooth' });
+                        };
+
+                        if (!''' + ('true' if ONLYOFFICE_JWT_ENABLED else 'false') + ''') {
+                            openEditor();
+                            return;
+                        }
+
                         // 获取 JWT token（发送配置对象让服务器签名）
                         return fetch(baseUrl + '/api/document/' + encodedDocId + '/token', {
                             method: 'POST',
@@ -613,15 +638,11 @@ def index():
                         })
                         .then(r => r.json())
                         .then(data => {
-                            // 添加 token 到配置
+                            if (!data.token) {
+                                throw new Error(data.error || 'JWT token 生成失败');
+                            }
                             config.token = data.token;
-
-                            // 重新设置编辑器容器
-                            editorContainer.innerHTML = '<div id="editor" style="height: 600px;"></div>';
-                            currentDocEditor = new DocsAPI.DocEditor('editor', config);
-                            
-                            // 滚动到编辑器
-                            editorContainer.scrollIntoView({ behavior: 'smooth' });
+                            openEditor();
                         });
                     })
                     .catch(err => {
@@ -877,6 +898,8 @@ def get_document_token(document_id):
     data = request.json
     if not data:
         return jsonify({'error': '需要提供配置对象'}), 400
+    if not ONLYOFFICE_JWT_ENABLED:
+        return jsonify({'error': 'DocumentServer 未启用 JWT，无需生成 token'}), 400
     
     # 验证文档是否存在（支持以点结尾的文档ID）
     file_exists = False
@@ -902,6 +925,17 @@ def get_document_token(document_id):
     token = generate_jwt_token(payload)
     
     return jsonify({'token': token})
+
+
+@app.route('/healthz')
+def healthz():
+    """健康检查接口。"""
+    return jsonify({
+        'ok': True,
+        'documents_dir': str(DOCUMENTS_DIR),
+        'onlyoffice_server': ONLYOFFICE_SERVER,
+        'jwt_enabled': ONLYOFFICE_JWT_ENABLED,
+    })
 
 
 @app.route('/api/document/<path:document_id>/callback', methods=['POST'])
@@ -1127,14 +1161,11 @@ def share_document_view(share_key):
             <div id="editor"></div>
         </div>
         <script>
-            // 获取文档服务器地址（OnlyOffice 容器需要访问主机 IP）
-            const hostAccess = "{HOST_ACCESS}";
-            const port = window.location.port || '5001';
-            const docServerUrl = 'http://' + hostAccess + ':' + port;
+            // 浏览器打开 share 页用公开地址，但 DocumentServer 后台拉文件要走 Docker 内网地址。
+            const docServerUrl = "http://{DOC_FETCH_HOST}:{DOC_FETCH_PORT}";
             const baseUrl = window.location.origin;
             
             const docUrl = docServerUrl + '/api/document/{document_id}/file';
-            // Callback URL 也要使用 Docker 可访问的地址（回调来自 OnlyOffice 容器）
             const callbackUrl = docServerUrl + '/api/document/{document_id}/callback';
             
             const fileType = '{filename.split(".").pop()}';
@@ -1165,6 +1196,15 @@ def share_document_view(share_key):
                         height: '700px'
                     }};
 
+                    const openEditor = () => {{
+                        new DocsAPI.DocEditor('editor', config);
+                    }};
+
+                    if (!{str(ONLYOFFICE_JWT_ENABLED).lower()}) {{
+                        openEditor();
+                        return;
+                    }}
+
                     // 获取 JWT token（发送配置对象让服务器签名）
                     return fetch(baseUrl + '/api/document/{document_id}/token', {{
                         method: 'POST',
@@ -1175,10 +1215,11 @@ def share_document_view(share_key):
                     }})
                     .then(r => r.json())
                     .then(data => {{
-                        // 添加 token 到配置
+                        if (!data.token) {{
+                            throw new Error(data.error || 'JWT token 生成失败');
+                        }}
                         config.token = data.token;
-                        
-                        new DocsAPI.DocEditor('editor', config);
+                        openEditor();
                     }});
                 }})
                 .catch(err => {{
@@ -1198,6 +1239,8 @@ if __name__ == '__main__':
     print("=" * 60)
     print(f"文档存储目录: {DOCUMENTS_DIR}")
     print(f"OnlyOffice 服务器: {ONLYOFFICE_SERVER}")
+    print(f"Flask 端口: {FLASK_PORT}")
+    print(f"JWT Browser Token: {'enabled' if ONLYOFFICE_JWT_ENABLED else 'disabled'}")
     
     # 检查端口是否被占用
     # 支持环境变量 PORT 指定端口，或自动搜索可用端口
@@ -1212,6 +1255,9 @@ if __name__ == '__main__':
             print(f"使用环境变量指定的端口: {port}")
         except ValueError:
             print(f"⚠️  环境变量 PORT 值无效: {env_port}，将自动选择端口")
+    elif FLASK_PORT:
+        port = FLASK_PORT
+        print(f"使用 FLASK_PORT 指定的端口: {port}")
     
     # 如果没有指定端口或指定的端口无效，自动搜索可用端口
     if port is None:
@@ -1239,8 +1285,8 @@ if __name__ == '__main__':
     print("\n访问地址:")
     print(f"  - 文档管理: http://localhost:{port}")
     print(f"  - OnlyOffice 服务: {ONLYOFFICE_SERVER}")
-    print(f"  - 主机访问地址（供 Docker 访问）: {HOST_ACCESS}")
-    print(f"  - 文档服务器 URL: http://{HOST_ACCESS}:{port}")
+    print(f"  - 浏览器访问地址: http://{HOST_IP}:{port}")
+    print(f"  - DocumentServer 拉取地址: http://{DOC_FETCH_HOST}:{DOC_FETCH_PORT}")
     print("\n⚠️  重要：确保 OnlyOffice 容器可以访问上述文档服务器 URL")
     print("   如果无法访问，请检查防火墙设置或 Docker 网络配置")
     print("\n按 Ctrl+C 停止服务器")

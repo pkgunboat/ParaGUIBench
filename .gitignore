@@ -20,10 +20,14 @@ dist/
 # --- 项目运行产物 ---
 logs/
 resources/
+results/
 configs/deploy.yaml
 configs/api.yaml
 configs/agent.yaml
 .env
+src/parallel_benchmark/hf_data/
+src/stages/self_operation_pipeline/gt_cache/
+src/stages/shared_documents/
 
 # --- 大文件 ---
 *.qcow2
@@ -33,3 +37,6 @@ configs/agent.yaml
 
 # --- Docker 运行时产物 ---
 docker/onlyoffice/data/
+docker/onlyoffice/document_keys.json
+docker/onlyoffice/shared_links.json
+docker/onlyoffice/shared_documents/
