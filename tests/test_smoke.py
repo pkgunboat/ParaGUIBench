@@ -63,6 +63,7 @@ _wm_par.stage3_evaluate_parallel = MagicMock(return_value={"pass": False})
 _wn = sys.modules["run_webnavigate_pipeline_parallel"]
 _wn.reinitialize_vms = MagicMock(return_value=True)
 _wn.clear_bookmarks_parallel = MagicMock()
+_wn.open_browser_parallel = MagicMock()
 _wn.stage2_execute_plan = MagicMock(return_value=({}, None))
 _wn.stage2_execute_gui_only = MagicMock(return_value=({}, None))
 _wn.stage3_evaluate = MagicMock(return_value={"pass": False})
@@ -74,10 +75,13 @@ _op.stage3_evaluate_operation = MagicMock(return_value={"pass": False})
 
 _sw = sys.modules["self_operation_pipeline.run_searchwrite_pipeline_parallel"]
 _sw.stage0_prepare_documents = MagicMock(return_value={})
+_sw.stage1_initialize = MagicMock(return_value=True)
 _sw.resolve_document_sharing_url = MagicMock(return_value="http://localhost:5000")
+_sw._build_instruction_with_share_urls = MagicMock(return_value="")
 _sw.stage2_execute_gui_only = MagicMock(return_value=({}, None))
 _sw.stage2_5_trigger_save = MagicMock(return_value=True)
 _sw.stage3_evaluate = MagicMock(return_value={"pass": False})
+_sw.fetch_document_file_via_api = MagicMock(return_value=None)
 
 # 现在可以安全 import
 from pipeline_base import BasePipeline, TaskItem
@@ -127,7 +131,7 @@ class TestPipelineInstantiation(unittest.TestCase):
         self.assertEqual(args.onlyoffice_url, "http://localhost:5050")
 
         default_args = parser.parse_args([])
-        self.assertEqual(default_args.onlyoffice_url, "")
+        self.assertTrue(default_args.onlyoffice_url.startswith("http://"))
 
     def test_all_pipelines_have_default_subset_file(self):
         """每个 pipeline 都有 default_subset_file 属性。"""
@@ -148,6 +152,48 @@ class TestPipelineInstantiation(unittest.TestCase):
         """所有 pipeline_name 互不相同。"""
         names = [cls().pipeline_name for cls in self.PIPELINE_CLASSES]
         self.assertEqual(len(names), len(set(names)))
+
+    def test_extract_gui_metrics_from_plan_history(self):
+        """Plan 模式从 history 统计并行 GUI 步数。"""
+        metrics = BasePipeline._extract_gui_metrics({
+            "history": [
+                {
+                    "results": [
+                        {"result": {"steps": [1, 2, 3]}},
+                        {"result": {"steps": [1, 2]}},
+                    ],
+                },
+                {
+                    "results": [
+                        {"result": {"steps": [1]}},
+                    ],
+                },
+            ],
+        })
+        self.assertEqual(metrics["gui_rounds_total"], 6)
+        self.assertEqual(metrics["gui_steps_sequential"], 4)
+
+    def test_extract_gui_metrics_from_gui_only_execution_record(self):
+        """gui_only 模式从 execution_record.steps 统计单 Agent 步数。"""
+        metrics = BasePipeline._extract_gui_metrics({
+            "execution_record": {
+                "summary": {"mode": "gui_only", "total_rounds": 10},
+                "steps": [{"round": i} for i in range(7)],
+                "rounds_timing": [{"round": i} for i in range(7)],
+            },
+        })
+        self.assertEqual(metrics["gui_rounds_total"], 7)
+        self.assertEqual(metrics["gui_steps_sequential"], 7)
+
+    def test_extract_gui_metrics_from_gui_only_summary_fallback(self):
+        """gui_only 缺少 steps 时回退到 summary.total_rounds。"""
+        metrics = BasePipeline._extract_gui_metrics({
+            "execution_record": {
+                "summary": {"mode": "gui_only", "total_rounds": 5},
+            },
+        })
+        self.assertEqual(metrics["gui_rounds_total"], 5)
+        self.assertEqual(metrics["gui_steps_sequential"], 5)
 
     def test_expected_pipeline_names(self):
         """pipeline_name 与预期值一致。"""

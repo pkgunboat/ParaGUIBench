@@ -271,8 +271,13 @@ class PlanAgentThoughtAction:
         self.gui_step_budget = gui_step_budget
         self._gui_steps_used = 0  # 已消耗的 GUI 步数
 
-        # 使用 deerapi 代理调用 GPT-5
         import os
+        self.serial_gui_calls = (
+            os.environ.get("PLAN_SERIAL_GUI_CALLS", "")
+            or os.environ.get("ABLATION_SERIAL_GUI_CALLS", "")
+        ).lower() in {"1", "true", "yes", "on"}
+
+        # 使用 deerapi 代理调用 GPT-5
         _api_config = get_api_config("deerapi")
         self.vlm = OpenAI(
             api_key=api_key or os.environ.get("OPENAI_API_KEY", _api_config["api_key"]),
@@ -289,6 +294,13 @@ class PlanAgentThoughtAction:
 
         # 根据 num_agents 生成动态 system prompt
         self.system_prompt = get_plan_agent_prompt(self.num_agents)
+        if self.serial_gui_calls:
+            self.system_prompt += (
+                "\n\n# RUNTIME CONSTRAINT\n"
+                "For this run, dispatch at most ONE call_gui_agent() tool call per round. "
+                "GUI tool calls are serialized to avoid shared-file locks and state drift. "
+                "If multiple subtasks are needed, call them across separate rounds."
+            )
 
         # 日志记录（用于 trajectory 可视化）
         self.execution_log = None
@@ -333,8 +345,15 @@ class PlanAgentThoughtAction:
                         "with independent browser session, cookies, cart, and login state. "
                         "The VM does NOT restart between rounds — all state is preserved. "
                         "Use the same agent_id across rounds to maintain session continuity. "
+                        "A GUI Agent only receives the task_description you send in this tool call; "
+                        "it cannot see the original TASK unless you include the relevant details. "
                         "IMPORTANT: When opening files, instruct the agent to use double_click action. "
-                        "For information gathering, the agent should RETURN data directly, NOT save to files."
+                        "When the original task contains exact URLs, file paths, or document names, "
+                        "include those exact values in every GUI subtask that needs them. "
+                        "If the original task requires editing a document or spreadsheet, do not finish "
+                        "after information gathering; dispatch a GUI task to write the collected results "
+                        "back into the target document and save it. "
+                        "For pure information gathering subtasks, the agent should RETURN data directly."
                     ),
                     "parameters": {
                         "type": "object",
@@ -521,7 +540,7 @@ class PlanAgentThoughtAction:
                     temperature=LLM_TEMPERATURE,
                     seed=LLM_SEED,
                     max_tokens=8000,  # 增大 token 限制，避免被截断
-                    parallel_tool_calls=True,  # 启用并行工具调用
+                    parallel_tool_calls=not self.serial_gui_calls,
                 )
                 assert_deterministic(_plan_kwargs)
                 response = self.vlm.chat.completions.create(**_plan_kwargs)
@@ -1026,7 +1045,10 @@ class PlanAgentThoughtAction:
 
                     # 如果有额外的结果信息（包含失败总结）
                     if result_msg and result_msg != error:
-                        failure_details.append(f"\nDetails:\n{result_msg[:500]}")
+                        failure_details.append(
+                            "\nDetails (partial/unverified; task did not complete):\n"
+                            f"{result_msg[:500]}"
+                        )
 
                     # 兜底：从 steps 中提取 text_only 回答，避免 Agent 已找到答案但因 failure 状态丢失
                     steps = result_data.get("steps", [])
@@ -1049,38 +1071,65 @@ class PlanAgentThoughtAction:
                 # 调试输出
                 self.task_logger.info(f"[TOOL RESULT] Sending to LLM:\n{formatted_content[:300]}...")
             
-            # 添加摘要消息，帮助 LLM 理解哪些已完成和获取的数据
+            # 添加摘要消息，帮助 LLM 理解哪些已完成和获取的数据。
+            # Only successful tool calls are "completed"; failed/time-limited calls
+            # are attempts with unverified partial observations.
             if len(tool_results) > 0:
                 completed_tasks_summary = []
+                incomplete_tasks_summary = []
                 data_available = []
-                
+
                 for tr in tool_results:
                     func_name = tr["function"]
                     status = tr["result"].get("status", "unknown")
                     task_desc = tr.get("arguments", {}).get("task_description", "")[:60]
-                    completed_tasks_summary.append(f"- {func_name}: {task_desc}... → {status}")
-                    
+
                     # 如果成功，提取关键数据摘要
                     if status == "success":
+                        completed_tasks_summary.append(f"- {func_name}: {task_desc}... → {status}")
                         result_preview = tr["result"].get("result", "")[:150]
                         if result_preview:
                             data_available.append(f"  Data from '{task_desc[:30]}...': {result_preview}...")
-                
+                    else:
+                        error_preview = tr["result"].get("error", "")[:120]
+                        suffix = f" ({error_preview})" if error_preview else ""
+                        incomplete_tasks_summary.append(
+                            f"- {func_name}: {task_desc}... → {status}{suffix}"
+                        )
+
                 summary_parts = [
-                    f"✓ Completed {len(tool_results)} subtask(s) in this round:",
-                    "\n".join(completed_tasks_summary)
+                    f"Tool results from {len(tool_results)} subtask attempt(s) in this round:"
                 ]
-                
+
+                if completed_tasks_summary:
+                    summary_parts.append("\nCompleted successfully:")
+                    summary_parts.append("\n".join(completed_tasks_summary))
+
+                if incomplete_tasks_summary:
+                    summary_parts.append("\nIncomplete or failed attempts (NOT completed):")
+                    summary_parts.append("\n".join(incomplete_tasks_summary))
+
                 if data_available:
                     summary_parts.append("\n📊 Available data:")
                     summary_parts.extend(data_available)
-                
-                summary_parts.append(
-                    "\n⚠️ IMPORTANT: "
-                    "1) Do NOT repeat these completed subtasks. "
-                    "2) Use the data above to complete remaining parts of the original task. "
-                    "3) If all parts are done, confirm completion in your thought."
-                )
+
+                if incomplete_tasks_summary:
+                    summary_parts.append(
+                        "\n⚠️ IMPORTANT: "
+                        "1) Do NOT mark failed or incomplete attempts as completed. "
+                        "2) Treat failure details as partial, unverified observations; "
+                        "do NOT use them to conclude that no matches/items exist or to exclude sources/items "
+                        "from future work unless independently verified by a successful call. "
+                        "3) Retry, narrow, or decompose the remaining work as needed. "
+                        "4) Do not repeat successful completed subtasks unless required for state continuity."
+                    )
+                else:
+                    summary_parts.append(
+                        "\n⚠️ IMPORTANT: "
+                        "1) Do NOT repeat successful completed subtasks unless required for state continuity. "
+                        "2) Use the data above to complete remaining parts of the original task. "
+                        "3) If all parts are done, confirm completion in your thought."
+                    )
                 
                 summary_text = "\n".join(summary_parts)
                 
@@ -1766,33 +1815,22 @@ class PlanAgentThoughtAction:
                 if stdout_proxy:
                     stdout_proxy.clear_buffer()
 
-        # 并行执行
+        # 并行执行；调试/消融时可通过环境变量串行化 GUI 调用，避免多个
+        # Agent 同时触碰共享文件造成锁文件和状态漂移。
         thread_timeout = None if timeout_per_subtask <= 0 else timeout_per_subtask + 60
 
-        with ThreadPoolExecutor(max_workers=min(len(tool_calls), self.max_workers)) as executor:
-            futures = {executor.submit(execute_one, tc): tc for tc in tool_calls}
-            for future in as_completed(futures):
-                tc = futures[future]
+        should_serialize = (
+            self.serial_gui_calls
+            and any(tc.function.name == "call_gui_agent" for tc in tool_calls)
+        )
+        if should_serialize:
+            self.task_logger.info("[ACTIONS] Serial GUI mode enabled; executing tool calls one by one")
+            for tc in tool_calls:
                 ac = tool_agent_counts.get(tc.id, "unknown")
                 try:
-                    local_results.append(future.result(timeout=thread_timeout))
-                except TimeoutError:
-                    self.task_logger.error(f"[{ac}] 线程超时 ({thread_timeout}s)")
-                    local_results.append({
-                        "agent_count": ac,
-                        "result": {
-                            "tool_call_id": tc.id,
-                            "function": tc.function.name,
-                            "arguments": {},
-                            "agent_count": ac,
-                            "result": {
-                                "status": "failure", "result": "", "steps": [],
-                                "error": f"Thread-level timeout after {thread_timeout}s"
-                            }
-                        }
-                    })
+                    local_results.append(execute_one(tc))
                 except Exception as e:
-                    self.task_logger.error(f"[{ac}] 线程异常: {e}")
+                    self.task_logger.error(f"[{ac}] 串行执行异常: {e}")
                     local_results.append({
                         "agent_count": ac,
                         "result": {
@@ -1806,6 +1844,44 @@ class PlanAgentThoughtAction:
                             }
                         }
                     })
+        else:
+            with ThreadPoolExecutor(max_workers=min(len(tool_calls), self.max_workers)) as executor:
+                futures = {executor.submit(execute_one, tc): tc for tc in tool_calls}
+                for future in as_completed(futures):
+                    tc = futures[future]
+                    ac = tool_agent_counts.get(tc.id, "unknown")
+                    try:
+                        local_results.append(future.result(timeout=thread_timeout))
+                    except TimeoutError:
+                        self.task_logger.error(f"[{ac}] 线程超时 ({thread_timeout}s)")
+                        local_results.append({
+                            "agent_count": ac,
+                            "result": {
+                                "tool_call_id": tc.id,
+                                "function": tc.function.name,
+                                "arguments": {},
+                                "agent_count": ac,
+                                "result": {
+                                    "status": "failure", "result": "", "steps": [],
+                                    "error": f"Thread-level timeout after {thread_timeout}s"
+                                }
+                            }
+                        })
+                    except Exception as e:
+                        self.task_logger.error(f"[{ac}] 线程异常: {e}")
+                        local_results.append({
+                            "agent_count": ac,
+                            "result": {
+                                "tool_call_id": tc.id,
+                                "function": tc.function.name,
+                                "arguments": {},
+                                "agent_count": ac,
+                                "result": {
+                                    "status": "failure", "result": "", "steps": [],
+                                    "error": str(e)
+                                }
+                            }
+                        })
 
         # 主线程：按 agent_count 排序，统一收集结果
         local_results.sort(key=lambda x: x["agent_count"])
@@ -2185,4 +2261,3 @@ class PlanAgentThoughtAction:
             "elapsed_time": elapsed,
             "agent_count": agent_count  # 添加 agent_count 到返回结果
         }
-

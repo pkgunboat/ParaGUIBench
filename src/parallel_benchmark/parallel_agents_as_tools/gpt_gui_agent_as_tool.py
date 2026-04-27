@@ -39,7 +39,7 @@ class GPTGUIAgentTool(BaseAgentTool):
             print(f"[DEBUG] GUIAgent loaded successfully with GPT support")
             
             # 创建 GUIAgent 实例（GPT 模式）
-            _api_config = get_api_config("bigai")
+            _api_config = get_api_config("deerapi")
             # 创建反思总结用的 OpenAI 兼容客户端
             from openai import OpenAI as _OpenAI
             _reflection_client = _OpenAI(

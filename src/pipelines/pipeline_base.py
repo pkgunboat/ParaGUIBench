@@ -711,11 +711,14 @@ class BasePipeline(ABC):
         适配 plan_agent_thought_action.execute_task() 的返回格式：
           - "history": List[Dict]，每轮包含 "results" 列表，
             每个 result 的 "result.steps" 记录该 GUI Agent 的执行步骤
+          - gui_only 模式返回的 "execution_record"，其中 summary.mode == "gui_only"，
+            轮次记录在 execution_record.steps / rounds_timing / summary.total_rounds
 
         计算逻辑:
           - gui_rounds_total: 所有 Plan 轮次中所有 GUI Agent 的步骤数总和
           - gui_steps_sequential: 每轮 Plan 中各 GUI Agent 步骤数取 max，再求和
             （串行等效步骤数，用于计算并行度 = total / sequential）
+          - gui_only 只有单个 GUI Agent，total 与 sequential 相同
 
         输入:
             agent_result: stage_execute 返回的结果字典
@@ -738,31 +741,93 @@ class BasePipeline(ABC):
         # 优先级 3: 从 history 中提取（plan_agent_thought_action 的格式）
         # history 结构: [{round, tool_calls, results: [{result: {steps: [...]}}]}]
         history = agent_result.get("history", [])
-        if not history:
-            return {"gui_rounds_total": 0, "gui_steps_sequential": 0}
+        if history:
+            gui_total = 0
+            gui_seq = 0
+            for plan_round in history:
+                results = plan_round.get("results", [])
+                if not results:
+                    continue
+                # 每个 result 对应一个并行 GUI Agent 的执行结果
+                round_steps = []
+                for r in results:
+                    result_data = r.get("result", {})
+                    if isinstance(result_data, dict):
+                        steps = result_data.get("steps", [])
+                        step_count = len(steps) if isinstance(steps, list) else 0
+                    else:
+                        step_count = 0
+                    round_steps.append(step_count)
 
-        gui_total = 0
-        gui_seq = 0
-        for plan_round in history:
-            results = plan_round.get("results", [])
-            if not results:
-                continue
-            # 每个 result 对应一个并行 GUI Agent 的执行结果
-            round_steps = []
-            for r in results:
-                result_data = r.get("result", {})
-                if isinstance(result_data, dict):
-                    steps = result_data.get("steps", [])
-                    step_count = len(steps) if isinstance(steps, list) else 0
-                else:
-                    step_count = 0
-                round_steps.append(step_count)
+                if round_steps:
+                    gui_total += sum(round_steps)
+                    gui_seq += max(round_steps)
 
-            if round_steps:
-                gui_total += sum(round_steps)
-                gui_seq += max(round_steps)
+            return {"gui_rounds_total": gui_total, "gui_steps_sequential": gui_seq}
 
-        return {"gui_rounds_total": gui_total, "gui_steps_sequential": gui_seq}
+        # 优先级 4: gui_only 模式没有 Plan history，轮次在 execution_record 中。
+        gui_only_record = agent_result.get("execution_record")
+        if isinstance(gui_only_record, dict):
+            summary = gui_only_record.get("summary", {})
+            if isinstance(summary, dict) and summary.get("mode") == "gui_only":
+                total = BasePipeline._extract_single_gui_round_count(gui_only_record)
+                return {"gui_rounds_total": total, "gui_steps_sequential": total}
+
+        # 优先级 5: 兼容直接传入 GUI Agent result / execution_record 的情况。
+        if agent_result.get("steps") or agent_result.get("rounds_timing"):
+            total = BasePipeline._extract_single_gui_round_count(agent_result)
+            return {"gui_rounds_total": total, "gui_steps_sequential": total}
+
+        return {"gui_rounds_total": 0, "gui_steps_sequential": 0}
+
+    @staticmethod
+    def _extract_single_gui_round_count(record: Dict[str, Any]) -> int:
+        """
+        从单 GUI Agent 的执行记录中提取轮次数。
+
+        gui_only 当前写入三种冗余来源，按可信度优先使用：
+          1. steps 列表长度
+          2. rounds_timing 列表长度
+          3. summary.total_rounds
+          4. devices[*].agents[*].summary.total_rounds
+        """
+        steps = record.get("steps")
+        if isinstance(steps, list) and steps:
+            return len(steps)
+
+        rounds_timing = record.get("rounds_timing")
+        if isinstance(rounds_timing, list) and rounds_timing:
+            return len(rounds_timing)
+
+        summary = record.get("summary")
+        if isinstance(summary, dict):
+            total_rounds = summary.get("total_rounds")
+            try:
+                if total_rounds is not None and int(total_rounds) > 0:
+                    return int(total_rounds)
+            except (TypeError, ValueError):
+                pass
+
+        total = 0
+        devices = record.get("devices", [])
+        if isinstance(devices, list):
+            for device in devices:
+                if not isinstance(device, dict):
+                    continue
+                agents = device.get("agents", [])
+                if not isinstance(agents, list):
+                    continue
+                for agent in agents:
+                    if not isinstance(agent, dict):
+                        continue
+                    agent_summary = agent.get("summary", {})
+                    if not isinstance(agent_summary, dict):
+                        continue
+                    try:
+                        total += int(agent_summary.get("total_rounds") or 0)
+                    except (TypeError, ValueError):
+                        continue
+        return total
 
     def _run_single_task_wrapper(self, task: TaskItem) -> Dict[str, Any]:
         """

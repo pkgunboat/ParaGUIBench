@@ -317,10 +317,11 @@ def get_ssh_credentials(vm_ip: str) -> Dict[str, Any]:
     deploy = DeployConfig()
     vm_user = os.environ.get("BENCH_SSH_USER") or deploy.vm_user
     password = get_ssh_password()
+    required_env = os.environ.get("REQUIRED_CONDA_ENV", "parallelbenchmark")
     conda_activate = os.environ.get(
         "BENCH_CONDA_ACTIVATE",
         f"source /home/{vm_user}/miniconda3/etc/profile.d/conda.sh "
-        f"&& conda activate tonggui",
+        f"&& conda activate {required_env}",
     )
     if not password:
         raise RuntimeError(

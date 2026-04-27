@@ -710,11 +710,15 @@ def _build_instruction_with_share_urls(
         links_text += f"- {filename}: {url}\n"
 
     augmented = (
+        "IMPORTANT DOCUMENT LINKS:\n"
+        f"{links_text}\n"
+        "Use the exact link above whenever a GUI subtask needs to open or edit "
+        "the shared spreadsheet. Include the relevant link verbatim in those "
+        "GUI subtask descriptions.\n\n"
         f"{original_instruction}\n\n"
         "The document is available as an online shared spreadsheet. "
         "All team members can open the same link and edit simultaneously. "
-        "Please open the following link in Chrome:\n"
-        f"{links_text}\n"
+        "Please open the link above in Chrome. "
         "Each team member should search for and fill in their assigned portion. "
         "Edit the cells directly in the browser. "
         "After finishing all edits, close the browser tab to save."

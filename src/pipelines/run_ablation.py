@@ -101,6 +101,15 @@ ABLATION_CONDITIONS = {
         "vms_per_task": 5,
         "agent_mode": None,
     },
+    "baseline_n5": {
+        "description": "主实验：Plan(gpt-5.4) + GUI(seed-1.8), n=5（兼容迁移 condition 名）",
+        "env": {
+            "ABLATION_PLAN_MODEL": "gpt-5.4",
+            "ABLATION_GUI_AGENT": "seed18",
+        },
+        "vms_per_task": 5,
+        "agent_mode": None,
+    },
     "gui_only_seed18": {
         "description": "主实验：GUI-only(seed-1.8), n=1",
         "env": {
@@ -164,6 +173,15 @@ ABLATION_CONDITIONS = {
         "vms_per_task": 5,
         "agent_mode": None,
     },
+    "gui_kimi_n5": {
+        "description": "GUI Agent 消融：Kimi（Plan=gpt-5.4, n=5，兼容迁移 condition 名）",
+        "env": {
+            "ABLATION_PLAN_MODEL": "gpt-5.4",
+            "ABLATION_GUI_AGENT": "kimi",
+        },
+        "vms_per_task": 5,
+        "agent_mode": None,
+    },
     "gui_only_kimi": {
         "description": "GUI-Only 消融：Kimi",
         "env": {
@@ -184,6 +202,15 @@ ABLATION_CONDITIONS = {
     },
     "gui_gpt54": {
         "description": "GUI Agent 消融：GPT-5.4（Plan=gpt-5.4）",
+        "env": {
+            "ABLATION_PLAN_MODEL": "gpt-5.4",
+            "ABLATION_GUI_AGENT": "gpt54",
+        },
+        "vms_per_task": 5,
+        "agent_mode": None,
+    },
+    "gui_gpt54_n5": {
+        "description": "GUI Agent 消融：GPT-5.4（Plan=gpt-5.4, n=5，兼容迁移 condition 名）",
         "env": {
             "ABLATION_PLAN_MODEL": "gpt-5.4",
             "ABLATION_GUI_AGENT": "gpt54",
