@@ -173,7 +173,7 @@ def create_share_link_via_api(base_url: str, document_id: str) -> str:
     通过 Flask API 创建共享链接。
 
     参数:
-        base_url: 文档共享服务根地址，如 http://10.1.110.114:5050（不要末尾斜杠）。
+        base_url: 文档共享服务根地址，如 http://<HOST_IP>:5050（不要末尾斜杠）。
         document_id: 文档 ID（与 init_task_document 的 doc_id 一致）。
 
     返回:
@@ -203,7 +203,7 @@ def create_share_link_local(
 
     参数:
         document_id: 文档 ID。
-        base_url: 文档共享服务根地址，如 http://10.1.110.114:5050。
+        base_url: 文档共享服务根地址，如 http://<HOST_IP>:5050。
 
     返回:
         共享链接 URL。

@@ -23,7 +23,10 @@ DEERAPI_CONFIG = {
     "base_url": "https://api.deerapi.com/v1/",
 }
 
-# Anthropic Claude API
+# Anthropic Claude API（Computer Use 原生 endpoint）
+# 开源版安全基线：api_key 不得写入仓库；通过环境变量注入：
+#   - ANTHROPIC_API_KEY 或 CLAUDE_API_KEY
+#   - CLAUDE_BASE_URL（如需切到代理端点）
 CLAUDE_CONFIG = {
     "api_key": "",
     "base_url": "https://api.anthropic.com/v1/",
@@ -47,6 +50,13 @@ BIGAI_CONFIG = {
     "base_url": "",
 }
 
+# Pincc v2 网关（OpenAI 兼容，用于不支持原生 Responses API computer-use 的中转场景）
+# 通过 function-calling 自定义 computer_use 工具调用 GPT-5.x；key 仅从环境变量读取。
+PINCC_CONFIG = {
+    "api_key": "",
+    "base_url": "https://v2.pincc.ai/v1",
+}
+
 # DashScope / Qwen
 DASHSCOPE_CONFIG = {
     "api_key": "",
@@ -58,12 +68,14 @@ DEFAULT_MODELS = {
     "plan_agent":       os.environ.get("BENCH_DEFAULT_PLAN_AGENT",        "gpt-5.4"),
     "code_agent":       os.environ.get("BENCH_DEFAULT_CODE_AGENT",        "gpt-5.2"),
     "gui_agent":        os.environ.get("BENCH_DEFAULT_GUI_AGENT",         "claude-opus-4-5"),
+    "claude_gui_agent": os.environ.get("BENCH_DEFAULT_CLAUDE_GUI_AGENT", "claude-sonnet-4-5-20250929"),
     "seed18_gui_agent": os.environ.get("BENCH_DEFAULT_SEED18_GUI_AGENT",  "doubao-seed-1-8-251228"),
     "doubao_plan_agent":os.environ.get("BENCH_DEFAULT_DOUBAO_PLAN_AGENT", "doubao-seed-1-8-251228"),
     "doubao_gui_agent": os.environ.get("BENCH_DEFAULT_DOUBAO_GUI_AGENT",  "doubao-seed-1-8-251228"),
     "kimi_gui_agent":   os.environ.get("BENCH_DEFAULT_KIMI_GUI_AGENT",    "kimi-k2.5"),
     "qwen_gui_agent":   os.environ.get("BENCH_DEFAULT_QWEN_GUI_AGENT",    "qwen3-vl"),
     "gpt54_gui_agent":  os.environ.get("BENCH_DEFAULT_GPT54_GUI_AGENT",   "gpt-5.4-mini"),
+    "gpt54_fc_gui_agent": os.environ.get("BENCH_DEFAULT_GPT54_FC_GUI_AGENT", "gpt-5.4-mini"),
 }
 
 
@@ -77,7 +89,7 @@ def get_api_config(provider: str = "deerapi") -> dict:
     获取指定 provider 的 API 配置。
 
     输入:
-        provider: "deerapi" | "claude" | "doubao" | "kimi" | "bigai" | "dashscope"
+        provider: "deerapi" | "claude" | "doubao" | "kimi" | "bigai" | "pincc" | "dashscope"
     输出:
         {"api_key": str, "base_url": str}
     """
@@ -133,6 +145,11 @@ def get_api_config(provider: str = "deerapi") -> dict:
                 "BIGAI_BASE_URL",
                 _env("DEERAPI_BASE_URL", DEERAPI_CONFIG["base_url"]),
             ),
+        }
+    if provider == "pincc":
+        return {
+            "api_key":  _env("PINCC_API_KEY", PINCC_CONFIG["api_key"]),
+            "base_url": _env("PINCC_BASE_URL", PINCC_CONFIG["base_url"]),
         }
     if provider == "dashscope":
         return {

@@ -19,7 +19,7 @@ Agent 通过 OnlyOffice 共享链接在浏览器中协作编辑 xlsx 文档。
     python run_searchwrite_pipeline_parallel.py -p 2 -n 3
 
     # 指定 VM IP，OnlyOffice 文档共享服务地址会自动检测
-    python run_searchwrite_pipeline_parallel.py --vm-ip 10.1.110.114
+    python run_searchwrite_pipeline_parallel.py --vm-ip <HOST_IP>
 """
 
 from __future__ import annotations
@@ -443,8 +443,8 @@ def stage0_prepare_documents(
 
     输入:
         task_items: [(task_uid, task_path, task_config), ...]
-        onlyoffice_base_url: OnlyOffice 文档共享服务 base URL（如 http://10.1.110.114:5000）
-        onlyoffice_host_ip: OnlyOffice 宿主机 IP（用于生成 Agent 可访问链接）
+        onlyoffice_base_url: OnlyOffice 文档共享服务 base URL（如 http://<HOST_IP>:5050）
+        onlyoffice_host_ip: 兼容参数；文档初始化走本地共享目录/API，不再 SCP 上传
         log: logger
 
     输出:
@@ -1010,6 +1010,13 @@ def stage2_execute_gui_only(
     elif gui_agent == "gpt54":
         from parallel_agents_as_tools.gpt54_gui_agent_as_tool import GPT54GUIAgentTool
         gui_tool = GPT54GUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")
+    elif gui_agent == "gpt54_fc":
+        from parallel_agents_as_tools.gpt_gui_agent_as_tool import GPTGUIAgentTool
+        gui_tool = GPTGUIAgentTool(
+            controller=controller_vm1,
+            model_name="gpt-5.4-mini",
+            api_config_key="pincc",
+        )
     else:
         log.warning("未知的 gui_agent: %s，fallback 到 seed18", gui_agent)
         gui_tool = Seed18GUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")
@@ -1447,8 +1454,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--onlyoffice-host-ip",
-        type=str, default="10.1.110.114",
-        help="OnlyOffice 宿主机 IP（默认 10.1.110.114）",
+        type=str, default="",
+        help="OnlyOffice 宿主机 IP（默认读 deploy.yaml/ONLYOFFICE_HOST_IP）",
     )
     parser.add_argument(
         "--save-result-dir",

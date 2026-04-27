@@ -63,7 +63,7 @@ _wm_par.stage3_evaluate_parallel = MagicMock(return_value={"pass": False})
 _wn = sys.modules["run_webnavigate_pipeline_parallel"]
 _wn.reinitialize_vms = MagicMock(return_value=True)
 _wn.clear_bookmarks_parallel = MagicMock()
-_wn.open_browser_parallel = MagicMock()
+_wn.open_browser_parallel = MagicMock(return_value=True)
 _wn.stage2_execute_plan = MagicMock(return_value=({}, None))
 _wn.stage2_execute_gui_only = MagicMock(return_value=({}, None))
 _wn.stage3_evaluate = MagicMock(return_value={"pass": False})
@@ -77,11 +77,11 @@ _sw = sys.modules["self_operation_pipeline.run_searchwrite_pipeline_parallel"]
 _sw.stage0_prepare_documents = MagicMock(return_value={})
 _sw.stage1_initialize = MagicMock(return_value=True)
 _sw.resolve_document_sharing_url = MagicMock(return_value="http://localhost:5000")
-_sw._build_instruction_with_share_urls = MagicMock(return_value="")
+_sw._build_instruction_with_share_urls = MagicMock(side_effect=lambda instruction, _urls: instruction)
+_sw.fetch_document_file_via_api = MagicMock(return_value=b"")
 _sw.stage2_execute_gui_only = MagicMock(return_value=({}, None))
 _sw.stage2_5_trigger_save = MagicMock(return_value=True)
 _sw.stage3_evaluate = MagicMock(return_value={"pass": False})
-_sw.fetch_document_file_via_api = MagicMock(return_value=None)
 
 # 现在可以安全 import
 from pipeline_base import BasePipeline, TaskItem
@@ -132,6 +132,7 @@ class TestPipelineInstantiation(unittest.TestCase):
 
         default_args = parser.parse_args([])
         self.assertTrue(default_args.onlyoffice_url.startswith("http://"))
+        self.assertTrue(default_args.onlyoffice_url.endswith(":5050"))
 
     def test_all_pipelines_have_default_subset_file(self):
         """每个 pipeline 都有 default_subset_file 属性。"""

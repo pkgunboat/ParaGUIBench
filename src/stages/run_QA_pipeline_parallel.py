@@ -395,6 +395,7 @@ if ubuntu_env_dir not in sys.path:
 from run_QA_pipeline import (  # noqa: E402
     ensure_conda_env,
     ensure_sshpass_available,
+    ensure_container_host_ssh_proxy,
     scan_qa_tasks,
     load_task_config,
     load_evaluator,
@@ -403,6 +404,7 @@ from run_QA_pipeline import (  # noqa: E402
     download_task_files_on_vm,
     extract_execution_summary,
     ensure_docker_image_with_sshfs,
+    get_guest_shared_ssh_target,
     stage3_evaluate,
     _list_hf_files,
     _download_files_with_wget,
@@ -802,6 +804,17 @@ def rebuild_containers_parallel(
             if result.returncode == 0:
                 log.info("  %s 启动成功 (s:%s v:%s)",
                          c["name"], c["server_port"], c["vnc_port"])
+                if ensure_container_host_ssh_proxy(
+                    ssh_password=ssh_password,
+                    ssh_opts=ssh_opts,
+                    ssh_host=ssh_host,
+                    conda_activate=conda_activate,
+                    container_name=c["name"],
+                ):
+                    log.info("  %s - host SSH proxy 已就绪 (guest -> host.lan:22)", c["name"])
+                else:
+                    log.error("  %s - host SSH proxy 启动失败", c["name"])
+                    return False
             else:
                 log.error("  %s 启动失败: %s", c["name"], result.stderr[:300])
                 return False
@@ -1007,10 +1020,11 @@ def init_vm_parallel(
     # [3/5] 挂载 shared（使用参数化路径）
     log.info("[3/5] 挂载 shared (%s)...", shared_host_dir)
     _creds = get_ssh_credentials(vm_ip)
+    _guest_ssh_target = get_guest_shared_ssh_target(_creds["ssh_user"])
     # 用 base64 编码密码避免 shell 特殊字符（如反引号）被解释为命令替换
     _pw_b64 = base64.b64encode(_creds['ssh_password'].encode()).decode()
     cmd = (
-        f"bash -c \"echo {_pw_b64} | base64 -d | sshfs {_creds['ssh_host']}:{shared_host_dir} "
+        f"bash -c \"echo {_pw_b64} | base64 -d | sshfs {_guest_ssh_target}:{shared_host_dir} "
         "/home/user/shared -o password_stdin -o StrictHostKeyChecking=no\""
     )
     result = execute_on_vm_with_ip(vm_ip, vm_port, cmd, timeout=vm_command_timeout)
@@ -1265,6 +1279,7 @@ def setup_environment_parallel(
         use_qwen_gui=(gui_agent_override == "qwen"),
         use_doubao_gui=(gui_agent_override == "doubao"),
         use_gpt54_gui=(gui_agent_override == "gpt54"),
+        use_claude_gui=(gui_agent_override == "claude"),
         gpt54_use_response_id=gpt54_use_rid,
         gpt54_max_images=gpt54_max_img,
     )
@@ -1481,6 +1496,13 @@ def stage2_execute_gui_only(
     elif gui_agent == "gpt54":
         from parallel_agents_as_tools.gpt54_gui_agent_as_tool import GPT54GUIAgentTool
         gui_tool = GPT54GUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")
+    elif gui_agent == "gpt54_fc":
+        from parallel_agents_as_tools.gpt_gui_agent_as_tool import GPTGUIAgentTool
+        gui_tool = GPTGUIAgentTool(
+            controller=controller_vm1,
+            model_name="gpt-5.4-mini",
+            api_config_key="pincc",
+        )
     else:
         log.warning("未知的 gui_agent: %s，fallback 到 seed18", gui_agent)
         gui_tool = Seed18GUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")

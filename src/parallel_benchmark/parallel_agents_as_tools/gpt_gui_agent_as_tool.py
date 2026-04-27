@@ -1,28 +1,58 @@
 """
 GPT GUI Agent as Tool
-将 GUIAgent (GPT模式) 封装为可被 Plan Agent 调用的工具
+将 GUIAgent (GPT模式) 封装为可被 Plan Agent 调用的工具。
+
+通过 OpenAI Function Calling 调用自定义 computer_use 工具（非 Responses API 原生
+computer-use），适用于任何支持 function calling 的 OpenAI 兼容网关。
 """
 import sys
 import os
 
-from typing import Dict
+from typing import Dict, Optional
 import time
 from .base_agent_tool import BaseAgentTool
 from config.api_config import get_api_config
 
 
 class GPTGUIAgentTool(BaseAgentTool):
-    """GPT GUI Agent 工具封装"""
-    
+    """
+    GPT 系列 GUI Agent 工具封装（Function Calling 路径）。
+
+    输入:
+        controller: PythonController 实例
+        model_name: GPT 模型名称（默认 "gpt-5.2"；可传 "gpt-5.4-mini" 等）
+        api_config_key: provider 名，传给 get_api_config() 取 key/base_url
+                        （默认 "deerapi"；pincc 中转站传 "pincc"）
+        reflection_model: 生成失败/成功反思总结用的模型名（默认沿用 model_name）
+        max_tokens: 单次请求最大输出 token 数
+        history_n: GUIAgent 内部保留的历史轮数
+    """
+
+    def __init__(
+        self,
+        controller,
+        model_name: str = "gpt-5.2",
+        api_config_key: str = "deerapi",
+        reflection_model: Optional[str] = None,
+        max_tokens: int = 2000,
+        history_n: int = 5,
+    ):
+        super().__init__(controller)
+        self._model_name = model_name
+        self._api_config_key = api_config_key
+        self._reflection_model = reflection_model or model_name
+        self._max_tokens = max_tokens
+        self._history_n = history_n
+
     def execute(self, task: str, max_rounds: int = 15, timeout: int = 300) -> Dict:
         """
-        执行基于 GUI 的任务（使用 GPT-5）
-        
+        执行基于 GUI 的任务（使用 GPT-5.x function calling）
+
         Args:
             task: 任务描述
             max_rounds: 最大执行轮次（默认 15 轮）
             timeout: 超时时间(秒，默认 300 秒)
-        
+
         Returns:
             执行结果字典
         """
@@ -32,28 +62,28 @@ class GPTGUIAgentTool(BaseAgentTool):
         # Token 消耗累计器
         token_usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
         thoughts = []  # 记录所有思考过程，用于生成失败总结
-        
+
         try:
             # 从主目录导入统一的 GUIAgent
             from parallel_agents.gui_agent import GUIAgent
-            print(f"[DEBUG] GUIAgent loaded successfully with GPT support")
-            
+            print(f"[DEBUG] GUIAgent loaded successfully with GPT support (model={self._model_name}, provider={self._api_config_key})")
+
             # 创建 GUIAgent 实例（GPT 模式）
-            _api_config = get_api_config("deerapi")
+            _api_config = get_api_config(self._api_config_key)
             # 创建反思总结用的 OpenAI 兼容客户端
             from openai import OpenAI as _OpenAI
             _reflection_client = _OpenAI(
                 api_key=_api_config["api_key"],
                 base_url=_api_config["base_url"]
             )
-            _reflection_model = "gpt-5.2"
+            _reflection_model = self._reflection_model
             runtime_conf = {
                 "gpt_api_key": _api_config["api_key"],
-                "base_url": _api_config["base_url"],
-                "gpt_model_name": "gpt-5.2",
+                "gpt_base_url": _api_config["base_url"],
+                "gpt_model_name": self._model_name,
                 "temperature": 0.0,
-                "max_tokens": 2000,
-                "history_n": 5,
+                "max_tokens": self._max_tokens,
+                "history_n": self._history_n,
                 "language": "English"
             }
             
@@ -83,7 +113,7 @@ class GPTGUIAgentTool(BaseAgentTool):
                         "steps": steps,
                         "error": f"Timeout after {timeout}s. {failure_summary}",
                         "rounds_timing": rounds_timing,
-                        "model_name": "gpt-5.2",
+                        "model_name": self._model_name,
                         "gui_token_usage": token_usage
                     }
                 
@@ -103,7 +133,7 @@ class GPTGUIAgentTool(BaseAgentTool):
                             "steps": steps,
                             "error": "Screenshot capture failed",
                             "rounds_timing": rounds_timing,
-                            "model_name": "gpt-5.2",
+                            "model_name": self._model_name,
                             "gui_token_usage": token_usage
                         }
                     obs = {"screenshot": screenshot}
@@ -114,7 +144,7 @@ class GPTGUIAgentTool(BaseAgentTool):
                         "steps": steps,
                         "error": f"Failed to get screenshot: {str(e)}",
                         "rounds_timing": rounds_timing,
-                        "model_name": "gpt-5.2",
+                        "model_name": self._model_name,
                         "gui_token_usage": token_usage
                     }
                 
@@ -194,7 +224,7 @@ class GPTGUIAgentTool(BaseAgentTool):
                             "steps": steps,
                             "error": "",
                             "rounds_timing": rounds_timing,
-                            "model_name": "gpt-5.2",
+                            "model_name": self._model_name,
                             "gui_token_usage": token_usage
                         }
                     
@@ -256,7 +286,7 @@ class GPTGUIAgentTool(BaseAgentTool):
                 "steps": steps,
                 "error": f"Reached maximum rounds ({max_rounds}) without completing the task.",
                 "rounds_timing": rounds_timing,
-                "model_name": "gpt-5.2",
+                "model_name": self._model_name,
                 "gui_token_usage": token_usage
             }
             
@@ -271,7 +301,7 @@ class GPTGUIAgentTool(BaseAgentTool):
                 "steps": steps,
                 "error": error_msg,
                 "rounds_timing": rounds_timing,
-                "model_name": "gpt-5.2",
+                "model_name": self._model_name,
                 "gui_token_usage": token_usage
             }
     
