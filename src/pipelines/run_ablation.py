@@ -53,6 +53,7 @@ import argparse
 import json
 import logging
 import os
+import subprocess
 import sys
 import time
 from datetime import datetime
@@ -490,6 +491,73 @@ def run_one_condition(
 
 
 # ============================================================
+# 多机同步 hook
+# ============================================================
+
+def _maybe_run_sync(action: str, args, log: logging.Logger,
+                    message: str = "") -> None:
+    """
+    可选触发 scripts/results_sync.sh，由 configs/sync.yaml 的 behavior 开关控制。
+
+    输入:
+        action: "pull" | "push"
+        args: 已解析的命令行参数（用于读取 dry_run 等）
+        log: logger
+        message: push 时附加的 commit message（仅对 action="push" 生效）
+
+    输出:
+        无返回值。
+        默认情况下同步失败仅 log warning，不抛异常；
+        若 behavior.fail_on_sync_error=true，则向上抛异常。
+    """
+    if getattr(args, "dry_run", False):
+        return
+
+    sync_script = os.path.join(REPO_ROOT, "scripts", "results_sync.sh")
+    if not os.path.exists(sync_script):
+        log.debug("[sync] scripts/results_sync.sh 未安装，跳过 %s", action)
+        return
+
+    sync_cfg = os.environ.get("BENCH_SYNC_CONFIG") or os.path.join(
+        REPO_ROOT, "configs", "sync.yaml")
+    if not os.path.exists(sync_cfg):
+        log.debug("[sync] configs/sync.yaml 不存在，跳过 %s", action)
+        return
+
+    try:
+        import yaml  # 项目已依赖 PyYAML
+        with open(sync_cfg, "r", encoding="utf-8") as f:
+            cfg = yaml.safe_load(f) or {}
+    except Exception as exc:
+        log.warning("[sync] 读取 sync.yaml 失败，跳过 %s: %s", action, exc)
+        return
+
+    behavior = cfg.get("behavior", {}) or {}
+    enabled_key = "autosync_after_run" if action == "push" else "pull_before_run"
+    if not behavior.get(enabled_key, False):
+        return
+    fail_on_err = bool(behavior.get("fail_on_sync_error", False))
+
+    cmd = ["bash", sync_script, action]
+    if action == "push" and message:
+        cmd += ["--message", message]
+
+    log.info("[sync] 触发 %s ...", action)
+    try:
+        rc = subprocess.run(cmd, timeout=600).returncode
+    except Exception as exc:
+        log.warning("[sync] %s 异常 (非阻塞): %s", action, exc)
+        if fail_on_err:
+            raise
+        return
+
+    if rc != 0:
+        log.warning("[sync] %s 退出码非零 (%d)", action, rc)
+        if fail_on_err:
+            raise RuntimeError(f"sync {action} failed with rc={rc}")
+
+
+# ============================================================
 # 入口
 # ============================================================
 
@@ -549,6 +617,10 @@ def main():
         datefmt="%Y-%m-%d %H:%M:%S",
     )
     log = logging.getLogger("ablation_v2")
+
+    # 多机同步：开 run 前先 pull 一次 hub，避免基于过期数据工作
+    # （由 configs/sync.yaml behavior.pull_before_run 控制；dry-run 不触发）
+    _maybe_run_sync("pull", args, log)
 
     # 输出根目录：注入 host_tag 命名空间，避免多机同跑时撞目录
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -639,6 +711,15 @@ def main():
     if all_results:
         report_dir = generate_report(all_results, root_output_dir, log=log)
         log.info("统计报告: %s", report_dir)
+
+    # 多机同步：run 结束后把本机命名空间 commit + push 到 hub
+    # （由 configs/sync.yaml behavior.autosync_after_run 控制；dry-run 不触发）
+    push_msg = (
+        f"[{host_tag}] run-end: ablation_{timestamp} "
+        f"conditions={','.join(args.conditions)} "
+        f"pipelines={','.join(args.pipelines or ['all'])}"
+    )
+    _maybe_run_sync("push", args, log, message=push_msg)
 
 
 if __name__ == "__main__":

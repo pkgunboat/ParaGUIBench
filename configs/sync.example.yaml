@@ -1,0 +1,51 @@
+# 多机实验结果同步配置（事件驱动 + 单 hub 拓扑）。
+#
+# 使用方法:
+#   1. 复制本文件为 configs/sync.yaml（已被 .gitignore 忽略）
+#   2. 修改 self / hub / behavior 字段以匹配本节点
+#   3. 在节点上跑一次 scripts/results_init.sh 引导嵌套 git init
+#   4. 之后 scripts/results_sync.sh / autosync hook 会按需要触发同步
+#
+# 同步底层是 git over SSH，logs/ 目录被嵌套 git init（与主仓互不影响），
+# 所有节点共享同一个 hub bare repo 作为权威 history。
+#
+# 关键不变量: 每节点只往 logs/<self>/ 子树写实验数据；提交时也只 add
+# 自己的命名空间。跨节点 path 集合不相交，merge 永远是 fast-forward
+# 或纯 add，无冲突。
+
+# 本机的 host_tag。
+# 必须与 PARABENCH_HOST_TAG 环境变量（或 socket.gethostname() 短主机名）
+# 经 _host_tag.get_host_tag() 合法化后得到的值完全一致。
+# 如果不确定，运行: python3 -c "from src.pipelines._host_tag import get_host_tag; print(get_host_tag())"
+self: mac-laptop
+
+# logs/ 根目录。绝对路径优先；相对路径相对于仓库根。
+logs_root: logs
+
+# 唯一中心 hub（bare repo）。所有节点都把它配为 git remote origin。
+hub:
+  ssh_target: yuzedong@10.1.110.114                          # user@host
+  repo_path: /home/yuzedong/git/parabench-results.git        # hub 上 bare repo 绝对路径
+  branch: main                                               # 默认分支
+
+# 行为开关。
+behavior:
+  # run 结束（写完 ablation_summary.json）后，是否自动 add/commit/push 本机
+  # 命名空间。建议在跑实验的节点开启；纯分析机可关闭。
+  autosync_after_run: true
+
+  # run 启动早期是否自动 git pull --rebase。建议保持开启，避免基于过期数据
+  # 重跑或误解。dry-run 不会触发。
+  pull_before_run: true
+
+  # 同步出错时是否中止本地操作。默认 false：同步是辅助，不阻塞实验。
+  fail_on_sync_error: false
+
+# rsync / git 透传选项（保留给 results_sync.sh，目前用得上的就 ssh_opts）。
+rsync:
+  bwlimit: 0
+  extra_args: []
+
+ssh:
+  # 传给 git 调用的 SSH 选项。BatchMode=yes 可避免 hub 不可达时卡在密码提示。
+  options: "-o BatchMode=yes -o ConnectTimeout=5"

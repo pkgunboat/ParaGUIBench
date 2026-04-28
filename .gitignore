@@ -24,6 +24,7 @@ results/
 configs/deploy.yaml
 configs/api.yaml
 configs/agent.yaml
+configs/sync.yaml
 .env
 src/parallel_benchmark/hf_data/
 src/stages/self_operation_pipeline/gt_cache/
