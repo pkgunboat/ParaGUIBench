@@ -95,6 +95,9 @@ from parallel_agents_as_tools.seed18_gui_agent_as_tool import Seed18GUIAgentTool
 from parallel_agents_as_tools.claude_gui_agent_as_tool import ClaudeGUIAgentTool  # noqa: E402
 from parallel_agents_as_tools.kimi_gui_agent_as_tool import KimiGUIAgentTool  # noqa: E402
 
+# 多机同步：当前节点 host_tag，作为 logs/ 下的命名空间目录名
+from pipelines._host_tag import get_host_tag  # noqa: E402
+
 from desktop_env.providers.docker.parallel_manager import (  # noqa: E402
     ContainerSetConfig,
     MemoryGuard,
@@ -1080,7 +1083,8 @@ def stage2_execute_gui_only(
 
     # 保存执行记录
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    _record_dir = output_dir if output_dir else os.path.join(ubuntu_env_dir, "logs")
+    _record_dir = output_dir if output_dir else os.path.join(
+        ubuntu_env_dir, "logs", get_host_tag())
     os.makedirs(_record_dir, exist_ok=True)
     record_path = os.path.join(
         _record_dir, f"searchwrite_gui_only_{task_uid}_{timestamp}.json"
@@ -1246,7 +1250,8 @@ def run_single_task(
 
         # Plan 模式执行记录保存（与 gui_only 模式保持一致的输出逻辑）
         if agent_mode != "gui_only":
-            _record_dir = os.environ.get("ABLATION_RECORD_DIR", "") or os.path.join(ubuntu_env_dir, "logs")
+            _record_dir = os.environ.get("ABLATION_RECORD_DIR", "") or os.path.join(
+                ubuntu_env_dir, "logs", get_host_tag())
             os.makedirs(_record_dir, exist_ok=True)
             _ts = datetime.now().strftime("%Y%m%d_%H%M%S")
             _record_path = os.path.join(_record_dir, f"searchwrite_plan_{task_uid}_{_ts}.json")

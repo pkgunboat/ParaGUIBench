@@ -64,6 +64,9 @@ from run_QA_pipeline_parallel import (  # noqa: E402
     get_ssh_credentials,
 )
 
+# 多机同步：当前节点 host_tag，作为 logs/ 下的命名空间目录名
+from pipelines._host_tag import get_host_tag  # noqa: E402
+
 # ============================================================
 # 从 Docker 并行管理器导入
 # ============================================================
@@ -800,7 +803,8 @@ def stage2_execute_plan(
 
     # 保存执行记录
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    _record_dir = output_dir if output_dir else os.path.join(ubuntu_env_dir, "logs")
+    _record_dir = output_dir if output_dir else os.path.join(
+        ubuntu_env_dir, "logs", get_host_tag())
     os.makedirs(_record_dir, exist_ok=True)
     record_path = os.path.join(
         _record_dir, f"webnavigate_execution_{task_id}_{timestamp}.json"
@@ -944,7 +948,8 @@ def stage2_execute_gui_only(
 
     # 保存执行记录
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    _record_dir = output_dir if output_dir else os.path.join(ubuntu_env_dir, "logs")
+    _record_dir = output_dir if output_dir else os.path.join(
+        ubuntu_env_dir, "logs", get_host_tag())
     os.makedirs(_record_dir, exist_ok=True)
     record_path = os.path.join(
         _record_dir, f"webnavigate_gui_only_{task_id}_{timestamp}.json"

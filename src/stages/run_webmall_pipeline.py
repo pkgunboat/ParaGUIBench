@@ -52,6 +52,9 @@ from parallel_agents.plan_agent_thought_action import PlanAgentThoughtAction, ca
 from config.api_config import get_api_config, get_model_name
 from config_loader import resolve_host_ip
 
+# 多机同步：当前节点 host_tag，作为 logs/ 下的命名空间目录名
+from pipelines._host_tag import get_host_tag
+
 # WebMall: 基于收藏夹(Bookmarks)的 string 任务评测辅助工具（外层仓库副本）
 from webmall_eval_assets.bookmark_utils import close_chrome_and_clear_bookmarks, read_bookmark_urls
 
@@ -75,7 +78,8 @@ from webmall_eval_assets.checkout_evaluator_from_at import (
 # 的 services.webmall.host_ip 可覆盖（见 DeployConfig.webmall_host）。
 VM_IP = resolve_host_ip("auto")
 WEBMALL_TASKS_DIR = os.path.join(extra_docker_env_dir, "tasks")
-OUTPUT_JSON_PATH = os.path.join(ubuntu_env_dir, "logs", "run_webmall_pipeline_all.json")
+OUTPUT_JSON_PATH = os.path.join(
+    ubuntu_env_dir, "logs", get_host_tag(), "run_webmall_pipeline_all.json")
 
 # 默认测试任务列表（每种类型各选一个 expected_urls 最少的任务）
 DEFAULT_TASK_UIDS = [
@@ -1099,7 +1103,7 @@ def stage2_execute_agent(
 
     # 保存执行记录
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = os.path.join(ubuntu_env_dir, "logs")
+    output_dir = os.path.join(ubuntu_env_dir, "logs", get_host_tag())
     os.makedirs(output_dir, exist_ok=True)
     record_path = os.path.join(output_dir, f"webmall_execution_{task_uid}_{timestamp}.json")
     if planner.recorder:

@@ -29,7 +29,7 @@
     python run_ablation.py --conditions baseline --dry-run
 
 输出:
-    logs/ablation_<timestamp>/
+    logs/<host_tag>/ablation_<timestamp>/
     ├── baseline/
     │   ├── qa_results.json
     │   ├── webmall_results.json
@@ -40,6 +40,13 @@
     │   └── ablation_config.json
     ├── plan_kimi/
     └── ablation_summary.json
+
+    其中 <host_tag> 默认取本机 hostname（可由环境变量 PARABENCH_HOST_TAG 覆盖）。
+    多机同步场景下，每台节点只往自己的 <host_tag>/ 子树写入，
+    避免多机同时跑同 condition 时彼此覆盖。
+
+    跨节点共享物（如 logs/final_results/oracle_plans/、logs/master_table/）
+    保持在 logs/ 顶层，不加 host_tag 前缀。
 """
 
 import argparse
@@ -67,6 +74,9 @@ from webmall_pipeline import WebMallPipeline
 from webnavigate_pipeline import WebNavigatePipeline
 from operation_pipeline import OperationPipeline
 from searchwrite_pipeline import SearchWritePipeline
+
+# 多机同步：当前节点 host_tag，作为 logs/ 下的命名空间目录名
+from _host_tag import get_host_tag
 
 
 # ============================================================
@@ -540,11 +550,13 @@ def main():
     )
     log = logging.getLogger("ablation_v2")
 
-    # 输出根目录
+    # 输出根目录：注入 host_tag 命名空间，避免多机同跑时撞目录
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    root_output_dir = os.path.join(UBUNTU_ENV_DIR, "logs", f"ablation_{timestamp}")
+    host_tag = get_host_tag()
+    root_output_dir = os.path.join(
+        UBUNTU_ENV_DIR, "logs", host_tag, f"ablation_{timestamp}")
     os.makedirs(root_output_dir, exist_ok=True)
-    log.info("输出目录: %s", root_output_dir)
+    log.info("输出目录: %s (host_tag=%s)", root_output_dir, host_tag)
 
     common_args = {
         "max_parallel_tasks": args.max_parallel_tasks,

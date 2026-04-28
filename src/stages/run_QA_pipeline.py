@@ -109,9 +109,13 @@ from desktop_env.controllers.python import PythonController
 from parallel_agents.plan_agent_thought_action import PlanAgentThoughtAction
 from config.api_config import get_api_config
 
+# 多机同步：当前节点 host_tag，作为 logs/ 下的命名空间目录名
+from pipelines._host_tag import get_host_tag
+
 TASKS_LIST_DIR = os.path.join(parallel_benchmark_dir, "tasks_list")
 DEFAULT_QA_EVALUATOR_PATH = os.path.join("eval", "file_search_readonly_evaluator.py")
-OUTPUT_JSON_PATH = os.path.join(ubuntu_env_dir, "logs", "run_qa_pipeline_all.json")
+OUTPUT_JSON_PATH = os.path.join(
+    ubuntu_env_dir, "logs", get_host_tag(), "run_qa_pipeline_all.json")
 
 
 def ensure_conda_env(expected_env: str, strict: bool = True) -> None:
@@ -877,7 +881,7 @@ def stage2_execute_agent(task_config: Dict[str, Any], task_uid: str) -> Tuple[Di
     print(f"\n执行完成，耗时: {elapsed_time:.2f}s")
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = os.path.join(ubuntu_env_dir, "logs")
+    output_dir = os.path.join(ubuntu_env_dir, "logs", get_host_tag())
     os.makedirs(output_dir, exist_ok=True)
     record_path = os.path.join(output_dir, f"test_qa_execution_{task_uid}_{timestamp}.json")
 

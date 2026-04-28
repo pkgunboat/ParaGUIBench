@@ -61,6 +61,9 @@ UNIFIED_TASKS_DIR = os.path.join(SRC_DIR, "parallel_benchmark", "tasks")
 # ── 部署配置（单服务器默认值的权威来源） ──
 from config_loader import DeployConfig, get_ssh_password  # noqa: E402
 
+# ── 多机同步：当前节点的 host_tag，作为 logs/ 下的命名空间目录名 ──
+from _host_tag import get_host_tag  # noqa: E402
+
 _DEPLOY = DeployConfig()
 
 # ── 从现有代码导入公共基础设施 ──
@@ -1302,26 +1305,34 @@ class BasePipeline(ABC):
 
         优先级: --final > output_dir_override > args.output_json_path > 默认路径
 
+        默认路径在多机同步语义下注入 host_tag 作为命名空间，
+        即 logs/<host_tag>/<pipeline>_<ts>/results.json，
+        以避免多机同时运行同 condition 时彼此覆盖；显式覆盖路径不变。
+
         输出:
             JSON 文件绝对路径
         """
-        # --final 模式：固定目录
+        # --final 模式：固定目录（显式覆盖，不注入 host_tag）
         if getattr(self.args, "final", "") and self.args.final:
             final_dir = self.args.final
             os.makedirs(final_dir, exist_ok=True)
             return os.path.join(final_dir, f"{self.pipeline_name}_results.json")
 
+        # output_dir_override：上游显式指定，不注入 host_tag
         if self.output_dir_override:
             os.makedirs(self.output_dir_override, exist_ok=True)
             return os.path.join(self.output_dir_override,
                                 f"{self.pipeline_name}_results.json")
+        # --output-json-path：用户显式指定，不注入 host_tag
         if self.args.output_json_path:
             out_dir = os.path.dirname(self.args.output_json_path)
             if out_dir:
                 os.makedirs(out_dir, exist_ok=True)
             return self.args.output_json_path
+        # 默认分支：注入 host_tag 命名空间
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        logs_dir = os.path.join(UBUNTU_ENV_DIR, "logs",
+        host_tag = get_host_tag()
+        logs_dir = os.path.join(UBUNTU_ENV_DIR, "logs", host_tag,
                                 f"{self.pipeline_name}_{timestamp}")
         os.makedirs(logs_dir, exist_ok=True)
         return os.path.join(logs_dir, "results.json")
