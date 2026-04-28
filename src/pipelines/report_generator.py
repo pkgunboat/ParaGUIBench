@@ -10,6 +10,8 @@
 """
 
 import os
+import glob
+import json
 from collections import defaultdict
 from datetime import datetime
 from typing import Any, Dict, List
@@ -55,6 +57,137 @@ def _calc_parallelism(total: int, seq: int) -> str:
     return f"{total / seq:.1f}x"
 
 
+def _as_int(value: Any) -> int:
+    """宽松转换统计字段，空值/非法值按 0 处理。"""
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _extract_gui_only_step_count(record: Dict[str, Any]) -> int:
+    """
+    从 gui_only execution_record 中提取 GUI step 数。
+
+    优先使用完整 steps，其次 rounds_timing，再回退 summary.total_rounds。
+    """
+    if not isinstance(record, dict):
+        return 0
+
+    summary = record.get("summary", {})
+    if not isinstance(summary, dict) or summary.get("mode") != "gui_only":
+        return 0
+
+    steps = record.get("steps")
+    if isinstance(steps, list) and steps:
+        return len(steps)
+
+    rounds_timing = record.get("rounds_timing")
+    if isinstance(rounds_timing, list) and rounds_timing:
+        return len(rounds_timing)
+
+    return _as_int(summary.get("total_rounds"))
+
+
+def _execution_record_candidates(result: Dict[str, Any], output_dir: str) -> List[str]:
+    """按可信度列出可能的 execution_record.json 路径。"""
+    task_id = result.get("task_id")
+    if not task_id or not output_dir:
+        return []
+
+    candidates: List[str] = []
+    for key in ("result_dir", "result_dir_path"):
+        result_dir = result.get(key)
+        if result_dir:
+            candidates.append(os.path.join(result_dir, "execution_record.json"))
+
+    condition = result.get("condition")
+    if condition:
+        candidates.append(os.path.join(output_dir, condition, task_id,
+                                       "execution_record.json"))
+
+    candidates.append(os.path.join(output_dir, task_id, "execution_record.json"))
+    candidates.extend(glob.glob(os.path.join(output_dir, "*", task_id,
+                                             "execution_record.json")))
+
+    seen = set()
+    out = []
+    for path in candidates:
+        norm = os.path.abspath(path)
+        if norm in seen:
+            continue
+        seen.add(norm)
+        if os.path.isfile(norm):
+            out.append(norm)
+    return out
+
+
+def _backfill_gui_only_steps(result: Dict[str, Any], output_dir: str) -> Dict[str, Any]:
+    """
+    当历史 *_results.json 里 GUI step 为 0 时，从任务目录的
+    execution_record.json 回填 gui_only step 统计。
+    """
+    if result.get("agent_mode") != "gui_only":
+        return result
+    if _as_int(result.get("gui_rounds_total")) > 0 \
+            or _as_int(result.get("gui_steps_sequential")) > 0:
+        return result
+
+    for path in _execution_record_candidates(result, output_dir):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                record = json.load(f)
+        except Exception:
+            continue
+        step_count = _extract_gui_only_step_count(record)
+        if step_count <= 0:
+            continue
+        enriched = dict(result)
+        enriched["gui_rounds_total"] = step_count
+        enriched["gui_steps_sequential"] = step_count
+        enriched.setdefault("result_dir", os.path.dirname(path))
+        return enriched
+
+    return result
+
+
+def enrich_results_with_gui_step_metrics(
+    results: Dict[str, Dict[str, Any]],
+    output_dir: str,
+) -> Dict[str, Dict[str, Any]]:
+    """回填 GUI-only step 指标，供报告和汇总复用。"""
+    return {
+        key: _backfill_gui_only_steps(result, output_dir)
+        for key, result in results.items()
+    }
+
+
+def compute_results_summary(
+    results: Dict[str, Dict[str, Any]],
+    output_dir: str = "",
+) -> Dict[str, Any]:
+    """计算一次 pipeline 结果的机器可读汇总。"""
+    if output_dir:
+        results = enrich_results_with_gui_step_metrics(results, output_dir)
+    summary = _compute_pipeline_summary(list(results.values()))
+    return {
+        "tasks": summary["total"],
+        "pass": summary["passed"],
+        "fail": summary["failed"],
+        "interrupted": summary["interrupted"],
+        "pass_rate": summary["rate"],
+        "plan_rounds": summary["plan_rounds"],
+        "gui_rounds_total": summary["gui_total"],
+        "gui_steps_sequential": summary["gui_seq"],
+        "parallelism": summary["parallelism"],
+        "token_plan": summary["token_plan"],
+        "token_gui": summary["token_gui"],
+        "token_total": summary["token_total"],
+        "cost_usd": summary["cost_usd"],
+        "elapsed_time_sec": summary["time_sec"],
+    }
+
+
 def generate_report(
     results: Dict[str, Dict[str, Any]],
     output_dir: str,
@@ -77,6 +210,8 @@ def generate_report(
     """
     report_dir = os.path.join(output_dir, "report")
     os.makedirs(report_dir, exist_ok=True)
+
+    results = enrich_results_with_gui_step_metrics(results, output_dir)
 
     # 按 pipeline 分组
     by_pipeline = defaultdict(list)

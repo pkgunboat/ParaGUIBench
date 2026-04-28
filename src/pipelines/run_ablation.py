@@ -401,19 +401,32 @@ def run_one_condition(
         try:
             pipeline_instance.main()
             elapsed = time.time() - start_time
+            from report_generator import compute_results_summary
+            pipeline_results = getattr(pipeline_instance, "last_results", {}) or {}
             results[pipeline_name] = {
                 "status": "success",
                 "elapsed_seconds": round(elapsed, 1),
+                **compute_results_summary(pipeline_results, output_dir=output_dir),
             }
             log.info("[%s / %s] 完成 (%.1fs)", condition_name, pipeline_name, elapsed)
         except Exception as exc:
             elapsed = time.time() - start_time
             log.error("[%s / %s] 失败 (%.1fs): %s",
                       condition_name, pipeline_name, elapsed, exc)
+            partial_results = getattr(pipeline_instance, "last_results", {}) or {}
+            summary = {}
+            if partial_results:
+                try:
+                    from report_generator import compute_results_summary
+                    summary = compute_results_summary(partial_results,
+                                                      output_dir=output_dir)
+                except Exception:
+                    summary = {}
             results[pipeline_name] = {
                 "status": "error",
                 "error": str(exc),
                 "elapsed_seconds": round(elapsed, 1),
+                **summary,
             }
         finally:
             # 清理过程文件环境变量，避免影响下一个 pipeline
@@ -604,7 +617,11 @@ def main():
                 fpath = os.path.join(cond_output_dir, fname)
                 try:
                     with open(fpath, "r", encoding="utf-8") as f:
-                        all_results.update(json.load(f))
+                        loaded = json.load(f)
+                    for key, value in loaded.items():
+                        value = dict(value)
+                        value.setdefault("condition", cond_name)
+                        all_results[f"{cond_name}:{key}"] = value
                 except Exception:
                     pass
     if all_results:

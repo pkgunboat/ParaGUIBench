@@ -13,6 +13,7 @@ Master Table 核心数据模块。
 """
 
 import csv
+import json
 import os
 import re
 import sys
@@ -269,8 +270,107 @@ def _build_new_row_template(
     return row
 
 
-def _fill_metric_columns(row: Dict[str, Any], result: Dict[str, Any]) -> None:
+def _safe_int(value: Any) -> int:
+    """宽松转换统计字段，空值/非法值按 0 处理。"""
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _extract_gui_only_step_count_from_record(record: Dict[str, Any]) -> int:
+    """从 gui_only execution_record 中提取单 Agent step 数。"""
+    if not isinstance(record, dict):
+        return 0
+
+    summary = record.get("summary", {})
+    if not isinstance(summary, dict) or summary.get("mode") != "gui_only":
+        return 0
+
+    steps = record.get("steps")
+    if isinstance(steps, list) and steps:
+        return len(steps)
+
+    rounds_timing = record.get("rounds_timing")
+    if isinstance(rounds_timing, list) and rounds_timing:
+        return len(rounds_timing)
+
+    return _safe_int(summary.get("total_rounds"))
+
+
+def _execution_record_candidates(
+    row: Dict[str, Any],
+    result: Dict[str, Any],
+    context: Optional[Dict[str, Any]],
+) -> List[str]:
+    """按可信度列出可能的 execution_record.json 路径。"""
+    task_id = row.get("task_id") or result.get("task_id")
+    if not task_id:
+        return []
+
+    candidates: List[str] = []
+    for key in ("result_dir", "result_dir_path"):
+        result_dir = result.get(key)
+        if result_dir:
+            candidates.append(os.path.join(result_dir, "execution_record.json"))
+
+    if context:
+        run_dir = context.get("run_dir", "")
+        if run_dir:
+            base = run_dir if os.path.isabs(run_dir) else os.path.join(
+                UBUNTU_ENV_DIR, "logs", run_dir)
+            candidates.append(os.path.join(base, task_id, "execution_record.json"))
+
+    seen = set()
+    out = []
+    for path in candidates:
+        norm = os.path.abspath(path)
+        if norm in seen:
+            continue
+        seen.add(norm)
+        if os.path.isfile(norm):
+            out.append(norm)
+    return out
+
+
+def _backfill_gui_only_steps_for_master(
+    row: Dict[str, Any],
+    result: Dict[str, Any],
+    context: Optional[Dict[str, Any]],
+) -> Dict[str, Any]:
+    """历史结果 GUI step 为 0 时，从 execution_record.json 回填。"""
+    agent_mode = result.get("agent_mode") or (context or {}).get("agent_mode")
+    if agent_mode != "gui_only":
+        return result
+    if _safe_int(result.get("gui_rounds_total")) > 0 \
+            or _safe_int(result.get("gui_steps_sequential")) > 0:
+        return result
+
+    for path in _execution_record_candidates(row, result, context):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                record = json.load(f)
+        except Exception:
+            continue
+        step_count = _extract_gui_only_step_count_from_record(record)
+        if step_count <= 0:
+            continue
+        enriched = dict(result)
+        enriched["gui_rounds_total"] = step_count
+        enriched["gui_steps_sequential"] = step_count
+        enriched.setdefault("result_dir", os.path.dirname(path))
+        return enriched
+
+    return result
+
+
+def _fill_metric_columns(
+    row: Dict[str, Any],
+    result: Dict[str, Any],
+    context: Optional[Dict[str, Any]] = None,
+) -> None:
     """从 pipeline result dict 中抽取指标字段写入 row。缺失字段填默认值。"""
+    result = _backfill_gui_only_steps_for_master(row, result, context)
     for col in METRIC_COLUMNS:
         if col in result:
             row[col] = result[col]
@@ -399,13 +499,13 @@ def upsert_results(
 
             # 按类型写指标与标记
             if kind == "ok":
-                _fill_metric_columns(row, results_by_id[task_id])
+                _fill_metric_columns(row, results_by_id[task_id], context)
                 _fill_provenance_from_result(row, results_by_id[task_id], context)
                 row["empty"] = False
                 row["error"] = False
                 row["needs_rerun"] = False
             elif kind == "error":
-                _fill_metric_columns(row, results_by_id[task_id])
+                _fill_metric_columns(row, results_by_id[task_id], context)
                 _fill_provenance_from_result(row, results_by_id[task_id], context)
                 row["error"] = True
                 # empty / needs_rerun 保持现状

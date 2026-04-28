@@ -1018,6 +1018,7 @@ class BasePipeline(ABC):
                 "interrupted": False,
                 "interrupt_reason": "",
                 "group_id": group_id,
+                "result_dir": log_dir,
             }
             # ── 自动问题检测 ──
             try:
@@ -1064,6 +1065,7 @@ class BasePipeline(ABC):
                 "interrupted": True,
                 "interrupt_reason": str(exc),
                 "group_id": group_id,
+                "result_dir": log_dir,
             }
             # ── 自动问题检测（异常场景）──
             try:

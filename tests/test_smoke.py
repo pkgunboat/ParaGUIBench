@@ -7,6 +7,8 @@ import os
 import sys
 import types
 import unittest
+import json
+import tempfile
 from unittest.mock import MagicMock
 
 # 确保能 import 当前目录
@@ -90,6 +92,11 @@ from webmall_pipeline import WebMallPipeline
 from webnavigate_pipeline import WebNavigatePipeline
 from operation_pipeline import OperationPipeline
 from searchwrite_pipeline import SearchWritePipeline
+from report_generator import (
+    compute_results_summary,
+    enrich_results_with_gui_step_metrics,
+)
+import master_table
 
 
 class TestPipelineInstantiation(unittest.TestCase):
@@ -195,6 +202,60 @@ class TestPipelineInstantiation(unittest.TestCase):
         })
         self.assertEqual(metrics["gui_rounds_total"], 5)
         self.assertEqual(metrics["gui_steps_sequential"], 5)
+
+    def test_report_backfills_gui_only_steps_from_execution_record(self):
+        """历史 results 为 0 时，报告生成前可从 execution_record 回填 step。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            task_id = "InformationRetrieval-WebSearch-VisualSearch-001"
+            task_dir = os.path.join(tmp, task_id)
+            os.makedirs(task_dir)
+            with open(os.path.join(task_dir, "execution_record.json"),
+                      "w", encoding="utf-8") as f:
+                json.dump({
+                    "summary": {"mode": "gui_only", "total_rounds": 9},
+                    "steps": [{"round": i} for i in range(4)],
+                }, f)
+
+            results = {
+                "task": {
+                    "task_id": task_id,
+                    "pipeline": "qa",
+                    "agent_mode": "gui_only",
+                    "pass": True,
+                    "gui_rounds_total": 0,
+                    "gui_steps_sequential": 0,
+                },
+            }
+            enriched = enrich_results_with_gui_step_metrics(results, tmp)
+            self.assertEqual(enriched["task"]["gui_rounds_total"], 4)
+            self.assertEqual(enriched["task"]["gui_steps_sequential"], 4)
+
+            summary = compute_results_summary(results, output_dir=tmp)
+            self.assertEqual(summary["gui_rounds_total"], 4)
+            self.assertEqual(summary["gui_steps_sequential"], 4)
+
+    def test_master_table_backfills_gui_only_steps_from_result_dir(self):
+        """master 导入旧结果时也应从 execution_record 回填 GUI-only step。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            with open(os.path.join(tmp, "execution_record.json"),
+                      "w", encoding="utf-8") as f:
+                json.dump({
+                    "summary": {"mode": "gui_only", "total_rounds": 6},
+                    "rounds_timing": [{"round": i} for i in range(6)],
+                }, f)
+
+            row = {col: master_table.DEFAULTS[col]
+                   for col in master_table.COLUMNS}
+            row["task_id"] = "Operation-FileOperate-SearchAndWrite-001"
+            result = {
+                "agent_mode": "gui_only",
+                "gui_rounds_total": 0,
+                "gui_steps_sequential": 0,
+                "result_dir": tmp,
+            }
+            master_table._fill_metric_columns(row, result, context={})
+            self.assertEqual(row["gui_rounds_total"], 6)
+            self.assertEqual(row["gui_steps_sequential"], 6)
 
     def test_expected_pipeline_names(self):
         """pipeline_name 与预期值一致。"""
