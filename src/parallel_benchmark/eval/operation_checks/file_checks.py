@@ -28,7 +28,13 @@ def _fail(reason: str) -> Dict[str, Any]:
 
 
 def _partial(score: float, reason: str) -> Dict[str, Any]:
-    return {"pass": score >= 0.5, "score": round(score, 4), "reason": reason}
+    # 严格阈值：仅当 score 等于 1.0 才算 pass
+    return {"pass": score >= 1.0 - 1e-9, "score": round(score, 4), "reason": reason}
+
+
+def _config_error(reason: str) -> Dict[str, Any]:
+    """评价器配置错误（缺参数等）：score=-1 哨兵，由上层冒泡为 evaluator_error。"""
+    return {"pass": False, "score": -1.0, "status": "evaluator_error", "reason": reason}
 
 
 # ------------------------------------------------------------------
@@ -51,7 +57,7 @@ def check_files_exist(result_dir: str, params: dict) -> dict:
     search_subdirs = params.get("search_subdirs", True)
 
     if not expected_files:
-        return _fail("参数缺少 expected_files")
+        return _config_error("参数缺少 expected_files")
 
     found_files = []
     missing_files = []
@@ -104,7 +110,7 @@ def check_files_in_same_folder(result_dir: str, params: dict) -> dict:
     file_groups = params.get("file_groups", [])
 
     if not file_groups:
-        return _fail("参数缺少 file_groups")
+        return _config_error("参数缺少 file_groups")
 
     effective_groups = 0
     passed_groups = 0
@@ -237,7 +243,7 @@ def check_named_files_exist(result_dir: str, params: dict) -> dict:
     search_subdirs = params.get("search_subdirs", True)
 
     if not filenames:
-        return _fail("参数缺少 filenames")
+        return _config_error("参数缺少 filenames")
 
     found = []
     missing = []

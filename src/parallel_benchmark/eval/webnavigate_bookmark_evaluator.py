@@ -204,11 +204,14 @@ def evaluate(
 
     # 1. 获取正则匹配规则
     if task_id not in REGEX_PATTERNS:
+        # 任务在 evaluator 端未配置匹配规则；统一上报 evaluator_error，
+        # 让上层与 operation_evaluator 的状态语义保持一致
+        # （score=-1.0 哨兵表示评价器无法给出有意义的得分）
         return {
-            "pass": None,
-            "score": None,
-            "status": "skip",
-            "reason": f"任务 {task_id} 没有配置正则匹配规则。",
+            "pass": False,
+            "score": -1.0,
+            "status": "evaluator_error",
+            "reason": f"任务 {task_id} 未在 webnavigate_bookmark_evaluator 中配置匹配规则。",
             "task_id": task_id,
         }
 
@@ -225,10 +228,11 @@ def evaluate(
             from bookmark_utils import read_bookmark_urls
             actual_urls = read_bookmark_urls(controller)
         except Exception as exc:
+            # 评价器无法获取必需输入（书签数据），归类为评价器故障
             return {
                 "pass": False,
-                "score": 0.0,
-                "status": "error",
+                "score": -1.0,
+                "status": "evaluator_error",
                 "reason": f"通过 controller 读取书签失败: {exc}",
                 "task_id": task_id,
             }
@@ -242,17 +246,17 @@ def evaluate(
         except Exception as exc:
             return {
                 "pass": False,
-                "score": 0.0,
-                "status": "error",
+                "score": -1.0,
+                "status": "evaluator_error",
                 "reason": f"通过 vm_ip={vm_ip}:{vm_port} 读取书签失败: {exc}",
                 "task_id": task_id,
             }
 
     if actual_urls is None:
         return {
-            "pass": None,
-            "score": None,
-            "status": "error",
+            "pass": False,
+            "score": -1.0,
+            "status": "evaluator_error",
             "reason": "未提供书签数据来源（需 bookmark_urls / controller / vm_ip+vm_port 之一）。",
             "task_id": task_id,
         }
@@ -278,6 +282,7 @@ def evaluate(
     return {
         "pass": passed,
         "score": score,
+        # 严格通过：score==1.0 才 pass（_match_urls_with_regex 已使用 min(...,1.0) 钳位）
         "status": "ok",
         "reason": reason,
         "task_id": task_id,

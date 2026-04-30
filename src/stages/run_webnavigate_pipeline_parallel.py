@@ -1255,24 +1255,26 @@ def run_single_task(
             except Exception as _save_exc:
                 log.warning("[中间保存] 写入失败: %s", _save_exc)
 
-        # 6. 书签评估（无 answer 的任务跳过自动评估，标记为人工评价）
+        # 6. 书签评估（无 answer / 无 evaluator_path 的任务跳过自动评估）
         answer = task_config.get("answer", "")
-        if not answer or not str(answer).strip():
+        evaluator_path = task_config.get("evaluator_path", "")
+        if not answer or not str(answer).strip() or not str(evaluator_path).strip():
+            # 任务自身未声明评价目标或评价器路径 → 统一标记为 evaluator_error，
+            # 由上层从 PASS/FAIL 统计中剔除（与 operation_evaluator 状态语义一致）
             task_result["evaluator_output"] = {
-                "score": -1, "pass": None, "status": "unknown",
-                "reason": "无评估目标（answer 为空），需人工评价",
+                "score": -1.0, "pass": False, "status": "evaluator_error",
+                "reason": "任务未声明 answer 或 evaluator_path，无法自动评价",
             }
-            log.info("任务 %s 无 answer，跳过书签评估", task_id)
+            log.info("任务 %s 未配置自动评价目标，跳过书签评估", task_id)
         else:
             try:
                 eval_result = stage3_evaluate(task_config, config, log)
                 task_result["evaluator_output"] = eval_result
             except Exception as exc:
-                task_result["interrupted"] = True
-                task_result["interrupt_reason"] = f"stage3_evaluate_exception: {exc}"
+                # 评估异常：评价器自身故障，区别于 agent 中断
                 task_result["evaluator_output"] = {
-                    "pass": False, "score": 0.0,
-                    "error": f"evaluator_exception: {exc}",
+                    "pass": False, "score": -1.0, "status": "evaluator_error",
+                    "reason": f"evaluator_exception: {exc}",
                 }
                 log.error("评估失败: %s", exc)
 
@@ -1632,6 +1634,9 @@ def main() -> None:
 
             if task_result.get("interrupted"):
                 status = "INTERRUPTED"
+            elif eval_out.get("status") == "evaluator_error":
+                # 评价器自身无法给出有意义的判定：从 PASS/FAIL 统计中剔除
+                status = "EVALUATOR_ERROR"
             elif is_passed:
                 status = "PASS"
             else:
@@ -1665,6 +1670,7 @@ def main() -> None:
     pass_count = 0
     fail_count = 0
     interrupt_count = 0
+    eval_error_count = 0
     total_cost = 0.0
 
     for tid, res in output_results.items():
@@ -1675,6 +1681,9 @@ def main() -> None:
         if res.get("interrupted"):
             status = "INTERRUPTED"
             interrupt_count += 1
+        elif eval_out.get("status") == "evaluator_error":
+            status = "EVALUATOR_ERROR"
+            eval_error_count += 1
         elif is_passed:
             status = "PASS"
             pass_count += 1
@@ -1698,8 +1707,8 @@ def main() -> None:
 
     log.info("-" * 40)
     log.info(
-        "  PASS: %d | FAIL: %d | INTERRUPTED: %d | 总计: %d",
-        pass_count, fail_count, interrupt_count, total_count,
+        "  PASS: %d | FAIL: %d | INTERRUPTED: %d | EVALUATOR_ERROR: %d | 总计: %d",
+        pass_count, fail_count, interrupt_count, eval_error_count, total_count,
     )
     if total_cost > 0:
         log.info("  总 Token 费用: $%.4f", total_cost)

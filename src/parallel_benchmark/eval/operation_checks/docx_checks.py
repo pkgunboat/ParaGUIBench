@@ -49,8 +49,13 @@ def _fail(reason: str) -> Dict[str, Any]:
 
 
 def _partial(score: float, reason: str) -> Dict[str, Any]:
-    """构造部分通过结果。"""
-    return {"pass": score >= 0.5, "score": round(score, 4), "reason": reason}
+    """构造部分通过结果。严格阈值：仅当 score 等于 1.0 才算 pass。"""
+    return {"pass": score >= 1.0 - 1e-9, "score": round(score, 4), "reason": reason}
+
+
+def _config_error(reason: str) -> Dict[str, Any]:
+    """评价器配置错误（缺参数等）：score=-1 哨兵，由上层冒泡为 evaluator_error。"""
+    return {"pass": False, "score": -1.0, "status": "evaluator_error", "reason": reason}
 
 
 # ------------------------------------------------------------------
@@ -112,7 +117,7 @@ def check_font_name(file_path: str, params: dict) -> dict:
     threshold = params.get("threshold", 0.9)
 
     if not expected_font:
-        return _fail("参数缺少 font_name")
+        return _config_error("参数缺少 font_name")
 
     doc = _load_document(file_path)
     if doc is None:
@@ -165,7 +170,7 @@ def check_line_spacing(file_path: str, params: dict) -> dict:
     threshold = params.get("threshold", 0.9)
 
     if expected_spacing is None:
-        return _fail("参数缺少 spacing")
+        return _config_error("参数缺少 spacing")
 
     doc = _load_document(file_path)
     if doc is None:
@@ -236,7 +241,7 @@ def check_heading_hierarchy(file_path: str, params: dict) -> dict:
     threshold = params.get("threshold", 0.8)
 
     if not rules:
-        return _fail("参数缺少 rules")
+        return _config_error("参数缺少 rules")
 
     doc = _load_document(file_path)
     if doc is None:
@@ -467,7 +472,7 @@ def check_heading_style_exists(file_path: str, params: dict) -> dict:
     style_name = params.get("style_name", "")
 
     if not style_name:
-        return _fail("参数缺少 style_name")
+        return _config_error("参数缺少 style_name")
 
     doc = _load_document(file_path)
     if doc is None:
@@ -669,7 +674,7 @@ def check_misspelled_words_highlighted(file_path: str, params: dict) -> dict:
     highlight_color = params.get("highlight_color", "FFFF00").upper()
 
     if not expected_highlights:
-        return _fail("参数缺少 expected_highlights")
+        return _config_error("参数缺少 expected_highlights")
 
     doc = _load_document(file_path)
     if doc is None:

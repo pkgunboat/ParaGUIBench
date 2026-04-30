@@ -1407,8 +1407,8 @@ def match_and_compare_files(
 
     输出:
         {
-            "score": float,           # 0.0~1.0
-            "pass": bool,             # score >= 0.5
+            "score": float,           # 0.0~1.0（允许部分得分）
+            "pass": bool,             # 严格通过：仅当 score == 1.0 时为 True
             "file_scores": {filename: score},
             "missing_files": [...],
             "gt_file_count": int,
@@ -1430,8 +1430,9 @@ def match_and_compare_files(
     if not gt_map:
         log.warning("GT 目录中没有可比对的文档文件")
         return {
-            "score": 0.0,
+            "score": -1.0,
             "pass": False,
+            "status": "evaluator_error",
             "file_scores": {},
             "missing_files": [],
             "gt_file_count": 0,
@@ -1472,7 +1473,9 @@ def match_and_compare_files(
 
     return {
         "score": total_score,
-        "pass": total_score >= 0.5,
+        # 严格阈值：仅当所有文件全部满分（平均 == 1.0）才算通过；与 operation_evaluator 对齐
+        "pass": total_score >= 1.0 - 1e-9,
+        "status": "ok",
         "file_scores": file_scores,
         "missing_files": missing_files,
         "gt_file_count": len(gt_map),
@@ -1480,7 +1483,7 @@ def match_and_compare_files(
         "reason": (
             f"比对 {len(file_scores)} 个文件，"
             f"缺失 {len(missing_files)} 个，"
-            f"平均得分 {total_score:.2f}"
+            f"平均得分 {total_score:.2f}/1.00"
         ),
     }
 
@@ -2419,6 +2422,10 @@ def main() -> None:
             evaluator_output = task_result.get("evaluator_output")
             if task_result.get("interrupted"):
                 status = "INTERRUPTED"
+            elif evaluator_output and evaluator_output.get("status") == "evaluator_error":
+                # 评价器自身故障（缺规则/目录不存在/check 未注册/异常等）：
+                # 既不算 PASS 也不算 FAIL，由统计层单独计入
+                status = "EVALUATOR_ERROR"
             elif evaluator_output and evaluator_output.get("pass"):
                 status = "PASS"
             else:
@@ -2460,10 +2467,18 @@ def main() -> None:
         if r.get("evaluator_output") and r.get("evaluator_output", {}).get("pass")
     )
     interrupted = sum(1 for r in output_results.values() if r.get("interrupted"))
-    failed = total_count - passed - interrupted
+    eval_error = sum(
+        1 for r in output_results.values()
+        if (not r.get("interrupted"))
+        and r.get("evaluator_output")
+        and r.get("evaluator_output", {}).get("status") == "evaluator_error"
+    )
+    failed = total_count - passed - interrupted - eval_error
 
-    log.info("统计: 通过 %d | 失败 %d | 中断 %d | 总计 %d",
-             passed, failed, interrupted, total_count)
+    log.info(
+        "统计: 通过 %d | 失败 %d | 中断 %d | 评价器错误 %d | 总计 %d",
+        passed, failed, interrupted, eval_error, total_count,
+    )
 
     # 输出每个任务的详细得分
     log.info("-" * 60)
@@ -2472,6 +2487,8 @@ def main() -> None:
         ev = res.get("evaluator_output")
         if res.get("interrupted"):
             log.info("  %s: INTERRUPTED (%s)", tid, res.get("interrupt_reason", ""))
+        elif ev and ev.get("status") == "evaluator_error":
+            log.info("  %s: EVALUATOR_ERROR (%s)", tid, ev.get("reason", ""))
         elif ev:
             log.info("  %s: %s (score=%.2f)", tid,
                      "PASS" if ev.get("pass") else "FAIL", ev.get("score", 0))

@@ -226,12 +226,14 @@ def _execute_single_rule(
     # 查找检查函数及默认文件模式
     entry = CHECK_REGISTRY.get(check_name)
     if entry is None:
+        # 评价器自身故障：规则配置引用了未注册的 check 函数
         return {
             "check": check_name,
             "description": description,
             "weight": weight,
-            "score": 0.0,
+            "score": -1.0,
             "pass": False,
+            "status": "evaluator_error",
             "file_results": [],
             "reason": f"未注册的检查函数: {check_name}",
         }
@@ -300,14 +302,31 @@ def _execute_single_rule(
             **result,
         })
 
+    # 检测单文件评价器错误（如 check 原语返回"参数缺少 ..."），冒泡为规则级 evaluator_error
+    file_eval_errors = [r for r in file_results if r.get("status") == "evaluator_error"]
+    if file_eval_errors:
+        first_err = file_eval_errors[0]
+        return {
+            "check": check_name,
+            "description": description,
+            "weight": weight,
+            "score": -1.0,
+            "pass": False,
+            "status": "evaluator_error",
+            "file_results": file_results,
+            "reason": f"{description}: {first_err.get('reason','')}",
+        }
+
     # 取所有文件得分的平均值
     avg_score = sum(r.get("score", 0.0) for r in file_results) / len(file_results)
-    all_passed = all(r.get("pass", False) for r in file_results)
+    # 规则级 pass：所有文件均严格满分（1.0）才算 pass，与 _partial 阈值保持一致
+    all_passed = avg_score >= 1.0 - 1e-9
 
     passed_count = sum(1 for r in file_results if r.get("pass", False))
+    # 文案显式说明"严格满分（=1.0）"语义，避免与平均分产生矛盾的观感
     reason = (
-        f"{description}: {passed_count}/{len(file_results)} 文件通过，"
-        f"平均分 {avg_score:.2f}"
+        f"{description}: {passed_count}/{len(file_results)} 文件严格满分，"
+        f"平均得分 {avg_score:.2f}/1.00"
     )
 
     return {
@@ -337,8 +356,13 @@ def evaluate(result_dir: str, task_config: dict) -> dict:
         task_config: 任务配置字典，必须包含 eval_rules 字段
     输出:
         {
-            "score": float,            # 0.0~1.0 加权总分
-            "pass": bool,              # score >= 0.5
+            "score": float,            # 0.0~1.0 加权总分（允许部分得分）；
+                                       # 评价器自身故障时为 -1.0（哨兵）
+            "pass": bool,              # 严格通过：仅当 weighted_score == 1.0 时为 True
+            "status": str,             # "ok" | "evaluator_error"
+                                       # ok: 评价器正常完成（无论 pass/fail）
+                                       # evaluator_error: 评价器自身故障（缺规则/目录不存在/check 未注册），
+                                       #                  外层应排除出 fail 统计
             "reason": str,             # 汇总说明
             "rule_results": list,      # 每条规则的详细结果
             "task_id": str,
@@ -349,8 +373,9 @@ def evaluate(result_dir: str, task_config: dict) -> dict:
 
     if not eval_rules:
         return {
-            "score": 0.0,
+            "score": -1.0,
             "pass": False,
+            "status": "evaluator_error",
             "reason": f"任务 {task_id} 未定义 eval_rules",
             "rule_results": [],
             "task_id": task_id,
@@ -358,8 +383,9 @@ def evaluate(result_dir: str, task_config: dict) -> dict:
 
     if not os.path.isdir(result_dir):
         return {
-            "score": 0.0,
+            "score": -1.0,
             "pass": False,
+            "status": "evaluator_error",
             "reason": f"结果目录不存在: {result_dir}",
             "rule_results": [],
             "task_id": task_id,
@@ -373,6 +399,18 @@ def evaluate(result_dir: str, task_config: dict) -> dict:
         logger.info("执行规则 %d/%d: %s", i + 1, len(eval_rules), rule.get("check", ""))
         result = _execute_single_rule(rule, result_dir)
         rule_results.append(result)
+
+    # 评价器自身故障冒泡：任一规则标记 evaluator_error 则整个任务视为评价器故障
+    error_rules = [r for r in rule_results if r.get("status") == "evaluator_error"]
+    if error_rules:
+        return {
+            "score": -1.0,
+            "pass": False,
+            "status": "evaluator_error",
+            "reason": f"任务 {task_id}: 评价器配置错误（{error_rules[0].get('reason','')}）",
+            "rule_results": rule_results,
+            "task_id": task_id,
+        }
 
     # 加权汇总
     total_weight = sum(r["weight"] for r in rule_results)
@@ -388,14 +426,16 @@ def evaluate(result_dir: str, task_config: dict) -> dict:
 
     reason = (
         f"任务 {task_id}: "
-        f"{passed_rules}/{len(rule_results)} 条规则通过，"
-        f"加权得分 {weighted_score:.2f}"
+        f"加权得分 {weighted_score:.2f}/1.00（严格通过 "
+        f"{passed_rules}/{len(rule_results)} 条规则）"
     )
     logger.info(reason)
 
     return {
         "score": weighted_score,
-        "pass": weighted_score >= 1.0,
+        # 严格通过：浮点容差仅用于消除 round 误差
+        "pass": weighted_score >= 1.0 - 1e-9,
+        "status": "ok",
         "reason": reason,
         "rule_results": rule_results,
         "task_id": task_id,

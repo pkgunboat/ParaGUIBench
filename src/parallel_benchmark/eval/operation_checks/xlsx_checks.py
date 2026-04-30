@@ -64,7 +64,13 @@ def _fail(reason: str) -> Dict[str, Any]:
 
 
 def _partial(score: float, reason: str) -> Dict[str, Any]:
-    return {"pass": score >= 0.5, "score": round(score, 4), "reason": reason}
+    # 严格阈值：仅当得分等于 1.0 时算通过；保留 score 用于聚合时的部分得分加权
+    return {"pass": score >= 1.0 - 1e-9, "score": round(score, 4), "reason": reason}
+
+
+def _config_error(reason: str) -> Dict[str, Any]:
+    """评价器配置错误（缺参数 / 参数无法解析等）：score=-1 哨兵，由上层冒泡为 evaluator_error。"""
+    return {"pass": False, "score": -1.0, "status": "evaluator_error", "reason": reason}
 
 
 def _is_numeric_cell(cell) -> bool:
@@ -118,7 +124,7 @@ def check_cell_value(file_path: str, params: dict) -> dict:
     tolerance = params.get("tolerance", 0.01)
 
     if not cell_ref:
-        return _fail("参数缺少 cell")
+        return _config_error("参数缺少 cell")
 
     wb = _load_workbook(file_path, data_only=True)
     if wb is None:
@@ -228,7 +234,7 @@ def check_column_alignment(file_path: str, params: dict) -> dict:
     threshold = params.get("threshold", 0.8)
 
     if not expected_align:
-        return _fail("参数缺少 alignment")
+        return _config_error("参数缺少 alignment")
 
     wb = _load_workbook(file_path)
     if wb is None:
@@ -324,7 +330,7 @@ def check_sort_order(file_path: str, params: dict) -> dict:
     skip_header = params.get("skip_header", True)
 
     if column is None:
-        return _fail("参数缺少 column")
+        return _config_error("参数缺少 column")
 
     wb = _load_workbook(file_path, data_only=True)
     if wb is None:
@@ -337,7 +343,7 @@ def check_sort_order(file_path: str, params: dict) -> dict:
 
         col_idx = _resolve_column(column, ws)
         if col_idx is None:
-            return _fail(f"无法解析列: {column}")
+            return _config_error(f"无法解析列: {column}")
 
         start_row = 2 if skip_header else 1
         values = []
@@ -658,9 +664,9 @@ def check_cell_contains_string(file_path: str, params: dict) -> dict:
     sheet_name = params.get("sheet_name")
 
     if not cell_ref:
-        return _fail("参数缺少 cell")
+        return _config_error("参数缺少 cell")
     if not expected:
-        return _fail("参数缺少 expected")
+        return _config_error("参数缺少 expected")
 
     wb = _load_workbook(file_path, data_only=True)
     if wb is None:
@@ -704,7 +710,7 @@ def check_values_are_decimals(file_path: str, params: dict) -> dict:
     threshold = params.get("threshold", 0.8)
 
     if not start_cell or not end_cell:
-        return _fail("参数缺少 start_cell 或 end_cell")
+        return _config_error("参数缺少 start_cell 或 end_cell")
 
     wb = _load_workbook(file_path, data_only=True)
     if wb is None:
@@ -767,7 +773,7 @@ def check_negative_values_colored(file_path: str, params: dict) -> dict:
     sheet_name = params.get("sheet_name")
 
     if not start_cell or not end_cell:
-        return _fail("参数缺少 start_cell 或 end_cell")
+        return _config_error("参数缺少 start_cell 或 end_cell")
 
     wb = _load_workbook(file_path)
     if wb is None:
@@ -890,7 +896,7 @@ def check_sequential_numbers(file_path: str, params: dict) -> dict:
     threshold = params.get("threshold", 0.8)
 
     if not start_after:
-        return _fail("参数缺少 start_after")
+        return _config_error("参数缺少 start_after")
 
     wb = _load_workbook(file_path, data_only=True)
     if wb is None:
@@ -955,7 +961,7 @@ def check_multi_cell_values(file_path: str, params: dict) -> dict:
     sheet_name = params.get("sheet_name")
 
     if not cells:
-        return _fail("参数缺少 cells")
+        return _config_error("参数缺少 cells")
 
     wb = _load_workbook(file_path, data_only=True)
     if wb is None:
@@ -1049,7 +1055,7 @@ def check_cells_filled(file_path: str, params: dict) -> dict:
     sheet_name = params.get("sheet_name")
 
     if not start_cell or not end_cell:
-        return _fail("参数缺少 start_cell 或 end_cell")
+        return _config_error("参数缺少 start_cell 或 end_cell")
 
     wb = _load_workbook(file_path, data_only=True)
     if wb is None:

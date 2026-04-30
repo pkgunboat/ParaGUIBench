@@ -1006,7 +1006,10 @@ def evaluate_osworld_task(
             osw_config = json.load(f)
     except Exception as exc:
         log.error("加载 OSWorld JSON 失败: %s → %s", evaluator_json_path, exc)
-        return {"score": 0.0, "pass": False, "reason": f"JSON 加载失败: {exc}", "func": ""}
+        return {
+            "score": -1.0, "pass": False, "status": "evaluator_error",
+            "reason": f"JSON 加载失败: {exc}", "func": "",
+        }
 
     evaluator = osw_config.get("evaluator", {})
     func_name = evaluator.get("func", "")
@@ -1016,7 +1019,10 @@ def evaluate_osworld_task(
     options = evaluator.get("options", {})
 
     if not func_name:
-        return {"score": 0.0, "pass": False, "reason": "JSON 缺少 evaluator.func", "func": ""}
+        return {
+            "score": -1.0, "pass": False, "status": "evaluator_error",
+            "reason": "JSON 缺少 evaluator.func", "func": "",
+        }
 
     log.info("=" * 50)
     log.info("OSWorld 评测开始: func=%s", func_name)
@@ -1040,7 +1046,7 @@ def evaluate_osworld_task(
         )
         if result_data is None:
             return {
-                "score": 0.0, "pass": False,
+                "score": -1.0, "pass": False, "status": "evaluator_error",
                 "reason": "获取评测结果失败", "func": func_name,
             }
         saved_result_path = _persist_result_data(
@@ -1052,7 +1058,7 @@ def evaluate_osworld_task(
         expected_data, _expected_type = _get_expected(expected_cfg, work_dir, log)
         if expected_data is None:
             result = {
-                "score": 0.0, "pass": False,
+                "score": -1.0, "pass": False, "status": "evaluator_error",
                 "reason": "获取期望结果失败", "func": func_name,
             }
             if saved_result_path:
@@ -1061,8 +1067,9 @@ def evaluate_osworld_task(
 
         # 5. 分发评测
         score = _dispatch_eval(func_name, result_data, expected_data, options, log)
-        passed = bool(score >= 0.5) if isinstance(score, (int, float)) else False
         score_val = float(score) if isinstance(score, (int, float)) else 0.0
+        # 严格通过：仅当 score == 1.0 才算 pass（与 operation_evaluator 对齐）
+        passed = score_val >= 1.0 - 1e-9
 
         log.info("OSWorld 评测完成: func=%s, score=%.4f, pass=%s",
                  func_name, score_val, passed)
@@ -1070,7 +1077,8 @@ def evaluate_osworld_task(
         result = {
             "score": score_val,
             "pass": passed,
-            "reason": f"OSWorld {func_name}: score={score_val:.4f}",
+            "status": "ok",
+            "reason": f"OSWorld {func_name}: score={score_val:.4f}/1.00",
             "func": func_name,
         }
         if saved_result_path:
@@ -1080,7 +1088,7 @@ def evaluate_osworld_task(
     except Exception as exc:
         log.error("OSWorld 评测异常: %s", exc, exc_info=True)
         result = {
-            "score": 0.0, "pass": False,
+            "score": -1.0, "pass": False, "status": "evaluator_error",
             "reason": f"评测异常: {exc}", "func": func_name,
         }
         if saved_result_path:

@@ -45,7 +45,13 @@ def _fail(reason: str) -> Dict[str, Any]:
 
 
 def _partial(score: float, reason: str) -> Dict[str, Any]:
-    return {"pass": score >= 0.5, "score": round(score, 4), "reason": reason}
+    # 严格阈值：仅当 score 等于 1.0 才算 pass
+    return {"pass": score >= 1.0 - 1e-9, "score": round(score, 4), "reason": reason}
+
+
+def _config_error(reason: str) -> Dict[str, Any]:
+    """评价器配置错误（缺参数等）：score=-1 哨兵，由上层冒泡为 evaluator_error。"""
+    return {"pass": False, "score": -1.0, "status": "evaluator_error", "reason": reason}
 
 
 # ------------------------------------------------------------------
@@ -155,7 +161,7 @@ def check_slide_transition(file_path: str, params: dict) -> dict:
     expected_type = params.get("transition_type", "")
 
     if not expected_type:
-        return _fail("参数缺少 transition_type")
+        return _config_error("参数缺少 transition_type")
 
     prs = _load_presentation(file_path)
     if prs is None:
@@ -465,7 +471,7 @@ def check_ppt_slide_has_number(file_path: str, params: dict) -> dict:
     threshold = params.get("threshold", 0.8)
 
     if expected_number is None:
-        return _fail("参数缺少 expected_number")
+        return _config_error("参数缺少 expected_number")
 
     prs = _load_presentation(file_path)
     if prs is None:
