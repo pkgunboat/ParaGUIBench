@@ -5,6 +5,7 @@ Agent Tool Registry
 from typing import Dict, Optional, List
 from desktop_env.controllers.python import PythonController
 from .tool_definitions import get_agent_tools_definitions
+from .result_utils import normalize_result_metadata
 
 # 开源版按需加载各个 GUI Agent tool。Claude 的 agent 依赖 benchmarkClient
 # cookbook（未随开源版分发），所以用 try/except 给一个清晰的错误提示；
@@ -198,12 +199,12 @@ class AgentToolRegistry:
         tool = self._tools.get(tool_name)
         
         if not tool:
-            return {
+            return normalize_result_metadata({
                 "status": "failure",
                 "result": "",
                 "steps": [],
                 "error": f"Unknown tool: {tool_name}. Available tools: {list(self._tools.keys())}"
-            }
+            })
         
         # 准备参数
         kwargs: Dict = {"task": task}
@@ -215,14 +216,14 @@ class AgentToolRegistry:
         # 执行工具
         try:
             result = tool.execute(**kwargs)
-            return result
+            return normalize_result_metadata(result)
         except Exception as e:
-            return {
+            return normalize_result_metadata({
                 "status": "failure",
                 "result": "",
                 "steps": [],
                 "error": f"Unexpected error executing {tool_name}: {str(e)}"
-            }
+            })
     
     def get_available_tools(self):
         """获取所有可用的工具列表"""

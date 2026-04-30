@@ -360,6 +360,8 @@ def run_one_condition(
             "-n", str(condition_config.get("vms_per_task", 5)),
             "-p", str(common_args.get("max_parallel_tasks", 1)),
         ]
+        if common_args.get("docker_image"):
+            cli_args.extend(["--docker-image", common_args["docker_image"]])
         agent_mode = condition_config.get("agent_mode") or "plan"
         cli_args.extend(["--agent-mode", agent_mode])
 
@@ -588,6 +590,12 @@ def main():
         help="full=全集, ablation=子集",
     )
     parser.add_argument("-p", "--max-parallel-tasks", type=int, default=1)
+    parser.add_argument(
+        "--docker-image",
+        type=str,
+        default=os.environ.get("BENCH_DOCKER_IMAGE", ""),
+        help="覆盖下游 pipeline 使用的 Docker 镜像",
+    )
     parser.add_argument("--gui-agent", type=str, default="")
     parser.add_argument("--skip-completed-dir", type=str, default="")
     parser.add_argument("--save-result-dir", type=str, default="")
@@ -632,6 +640,7 @@ def main():
 
     common_args = {
         "max_parallel_tasks": args.max_parallel_tasks,
+        "docker_image": args.docker_image,
         "gui_agent": args.gui_agent,
         "skip_completed_dir": args.skip_completed_dir,
         "save_result_dir": args.save_result_dir,

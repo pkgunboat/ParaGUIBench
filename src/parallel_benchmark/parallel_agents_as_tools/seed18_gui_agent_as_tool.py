@@ -28,6 +28,7 @@ import io
 import base64
 from PIL import Image
 from .base_agent_tool import BaseAgentTool
+from .result_utils import normalize_result_metadata
 from config.api_config import get_api_config, get_model_name
 
 # 从 seed_1_8_gui_test 导入核心组件
@@ -518,7 +519,7 @@ class Seed18GUIAgentTool(BaseAgentTool):
 
             final_result = force_answer if force_answer else reflection
 
-            return {
+            return normalize_result_metadata({
                 "status": "failure",
                 "result": final_result,
                 "steps": steps,
@@ -526,7 +527,7 @@ class Seed18GUIAgentTool(BaseAgentTool):
                 "rounds_timing": rounds_timing,
                 "model_name": model_name,
                 "gui_token_usage": token_usage,
-            }
+            })
 
         except Exception as e:
             import traceback

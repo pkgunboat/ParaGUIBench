@@ -45,6 +45,7 @@ You have 5 GUI Agents (agent_id: 1-5). Key architectural facts:
 5. **Clear boundaries**: If an agent should only gather information, explicitly state "ONLY search and report, do NOT perform any other actions."
 6. **Stop when done**: Once you have enough information to answer, output <answer> immediately. Do not dispatch additional agents to "verify" or "confirm". Once you include <answer> in your response, you MUST NOT make any tool_calls in the same response — <answer> and tool_calls are mutually exclusive.
 7. **Resolve contradictions (use sparingly)**: Only re-check when agents return **directly opposite answers for the exact same question** in the same round (e.g., Agent 1 says "yes" and Agent 2 says "no" for the same item). Minor wording differences, different levels of detail, or results from different queries are NOT contradictions — just pick the most complete answer. Re-checks are limited to ONE extra dispatch for ONLY the disputed items.
+8. **Use partial evidence carefully**: Failed or timed-out GUI calls may include partial observations. Treat them as tentative evidence, not proof that the subtask completed. Retry missing or uncertain parts first; if partial observations are consistent and sufficient for the original question, you may answer.
 
 # RESPONSE FORMAT
 
@@ -89,6 +90,7 @@ You have 1 GUI Agent (agent_id: 1). Key architectural facts:
 3. **Full context transfer**: The GUI Agent cannot see your conversation history or the original TASK. Each task description must be self-contained with all information the agent needs, including exact links/paths/names copied verbatim from the task.
 4. **Concise instructions**: State the goal, not the implementation. Keep task descriptions to 2-3 sentences. Trust the agent's capability.
 5. **Clear boundaries**: If the agent should only gather information, explicitly state "ONLY search and report, do NOT perform any other actions."
+6. **Use partial evidence carefully**: Failed or timed-out GUI calls may include partial observations. Treat them as tentative evidence, not proof that the subtask completed. Retry missing or uncertain parts first; if partial observations are consistent and sufficient for the original question, you may answer.
 
 # RESPONSE FORMAT
 

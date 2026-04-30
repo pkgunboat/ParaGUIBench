@@ -6,6 +6,8 @@ import base64
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
 
+from .result_utils import normalize_result_metadata
+
 
 class BaseAgentTool(ABC):
     """Agent Tool 基类"""
@@ -78,7 +80,7 @@ class BaseAgentTool(ABC):
         if gui_token_usage:
             result_dict["gui_token_usage"] = gui_token_usage
 
-        return result_dict
+        return normalize_result_metadata(result_dict)
 
     # ------------------------------------------------------------------
     # 反思总结：所有 GUI Agent Tool 通用

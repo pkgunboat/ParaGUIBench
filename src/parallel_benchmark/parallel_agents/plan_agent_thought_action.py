@@ -24,6 +24,7 @@ except ImportError:
         return {"api_key": "", "base_url": "https://api.deerapi.com/v1/"}
 
 from parallel_agents_as_tools.agent_tool_registry import AgentToolRegistry
+from parallel_agents_as_tools.result_utils import normalize_result_metadata
 from desktop_env.controllers.python import PythonController
 from prompts.plan_agent_prompt_thought_action import (
     MINIMAL_PARALLEL_PLANNER_PROMPT_THOUGHT_ACTION,
@@ -117,27 +118,86 @@ def _last_executed_round_all_failed(execution_log) -> bool:
     return False  # 没找到任何已执行轮
 
 
-def _maybe_override_with_insufficient_evidence(execution_log, thought_answer, task_logger):
+def _last_executed_round_has_partial_evidence(execution_log) -> bool:
     """
-    若最近一轮 subagent 全挂，覆盖 thought_answer 为 INSUFFICIENT_EVIDENCE。
+    查找 execution_log.rounds 中最近一个含 call_gui_agent 调用的轮次，
+    判定该轮是否存在任一 call_gui_agent 结果携带 partial evidence。
+
+    兼容顶层简化字段和嵌套 result 字段。
+    """
+    if not isinstance(execution_log, dict):
+        return False
+    rounds = execution_log.get("rounds") or []
+    for r in reversed(rounds):
+        if not isinstance(r, dict):
+            continue
+        tool_calls = r.get("tool_calls") or []
+        has_gui_call = any(
+            isinstance(tc, dict)
+            and (tc.get("function") == "call_gui_agent"
+                 or tc.get("name") == "call_gui_agent")
+            for tc in tool_calls
+        )
+        if not has_gui_call:
+            continue
+
+        results = r.get("results") or []
+        for res in results:
+            if not isinstance(res, dict):
+                continue
+            is_gui = (
+                res.get("function") == "call_gui_agent"
+                or res.get("name") == "call_gui_agent"
+                or res.get("tool_name") == "call_gui_agent"
+            )
+            if not is_gui:
+                continue
+
+            nested = res.get("result") if isinstance(res.get("result"), dict) else {}
+            if res.get("has_partial_evidence") or nested.get("has_partial_evidence"):
+                return True
+            if res.get("partial_evidence") or nested.get("partial_evidence"):
+                return True
+        return False
+    return False
+
+
+def _warn_if_answer_after_all_failed_attempts(execution_log, thought_answer, task_logger) -> None:
+    """
+    Log a low-confidence warning when the planner answers after a failed GUI round.
 
     输入:
         execution_log: dict，见 _last_executed_round_all_failed
         thought_answer: 原 thought 中提取并清洗后的答案
         task_logger: 日志对象（需支持 .warning）
-    输出:
-        str: 若触发拦截返回 "INSUFFICIENT_EVIDENCE"，否则返回原 thought_answer
     """
     if _last_executed_round_all_failed(execution_log):
         try:
+            evidence_note = (
+                "partial evidence was present"
+                if _last_executed_round_has_partial_evidence(execution_log)
+                else "no partial evidence was present"
+            )
             task_logger.warning(
-                f"[ABSTAIN] All subagents failed in last round, "
-                f"overriding thought answer '{thought_answer}' with INSUFFICIENT_EVIDENCE"
+                f"[LOW CONFIDENCE] Planner answered '{thought_answer}' after a GUI round "
+                f"where all subagents failed; preserving the explicit answer "
+                f"({evidence_note})."
             )
         except Exception:
             pass
-        return "INSUFFICIENT_EVIDENCE"
-    return thought_answer
+
+
+def _should_set_insufficient_evidence_fallback(execution_log, final_answer) -> bool:
+    """
+    Max-round abstain policy: only abstain when there is no final answer, the
+    latest GUI execution round fully failed, and that round has no partial evidence.
+    """
+    if final_answer and str(final_answer).strip():
+        return False
+    return (
+        _last_executed_round_all_failed(execution_log)
+        and not _last_executed_round_has_partial_evidence(execution_log)
+    )
 
 
 # ============================================================
@@ -479,6 +539,7 @@ class PlanAgentThoughtAction:
         consecutive_no_tool_calls = 0
         # 用于跟踪连续 API 致命错误的轮次（如 GUI Agent API 欠费 403）
         self._consecutive_api_fatal_rounds = 0
+        max_rounds_exhausted = False
         
         for round_num in range(max_rounds):
             # === Fix 3: 整体任务超时检查 ===
@@ -619,8 +680,8 @@ class PlanAgentThoughtAction:
                     _raw_answer = _answer_match.group(1).strip()
                     # P0-2: 本地清洗，避免二次模型调用修改答案内容
                     _extracted_answer = _local_clean_answer(_raw_answer)
-                    # P0-4: 若之前最近一轮 call_gui_agent 全部失败，覆盖为 INSUFFICIENT_EVIDENCE
-                    _extracted_answer = _maybe_override_with_insufficient_evidence(
+                    # 保留 planner 显式答案；最近 GUI 轮全失败时只记录低置信 warning。
+                    _warn_if_answer_after_all_failed_attempts(
                         self.execution_log, _extracted_answer, self.task_logger
                     )
                     self.task_logger.info(
@@ -807,16 +868,17 @@ class PlanAgentThoughtAction:
                     # 构造虚拟结果告知 LLM 步数已用完
                     tool_results = []
                     for tc in message.tool_calls:
+                        budget_result = normalize_result_metadata({
+                            "status": "failure",
+                            "result": "",
+                            "steps": [],
+                            "error": f"GUI step budget exhausted ({self._gui_steps_used}/{self.gui_step_budget} steps used). No more actions allowed."
+                        })
                         tool_results.append({
                             "tool_call_id": tc.id,
                             "function": tc.function.name,
                             "arguments": self._load_tool_arguments(tc),
-                            "result": {
-                                "status": "failure",
-                                "result": "",
-                                "steps": [],
-                                "error": f"GUI step budget exhausted ({self._gui_steps_used}/{self.gui_step_budget} steps used). No more actions allowed."
-                            },
+                            "result": budget_result,
                             "agent_count": f"budget_exhausted_{tc.id}"
                         })
                         messages.append({
@@ -824,6 +886,26 @@ class PlanAgentThoughtAction:
                             "tool_call_id": tc.id,
                             "content": f"GUI step budget exhausted ({self._gui_steps_used}/{self.gui_step_budget} steps used). Please summarize results and finish."
                         })
+                    round_log["tool_calls"] = [
+                        {
+                            "id": tc.id,
+                            "function": tc.function.name,
+                            "arguments": self._load_tool_arguments(tc),
+                        }
+                        for tc in message.tool_calls
+                    ]
+                    round_log["results"] = [
+                        {
+                            "tool_call_id": tr.get("tool_call_id", ""),
+                            "function": tr.get("function", ""),
+                            "status": tr.get("result", {}).get("status", "unknown"),
+                            "completion_state": tr.get("result", {}).get("completion_state", "failed_no_evidence"),
+                            "has_partial_evidence": bool(tr.get("result", {}).get("has_partial_evidence")),
+                            "partial_evidence": tr.get("result", {}).get("partial_evidence", ""),
+                            "agent_count": tr.get("agent_count", ""),
+                        }
+                        for tr in tool_results
+                    ]
                     self.execution_log["rounds"].append(round_log)
                     break
                 effective_max_rounds = min(max_rounds_per_subtask, remaining_budget)
@@ -848,6 +930,9 @@ class PlanAgentThoughtAction:
                 timeout_per_subtask,
                 round_log  # 传递 round_log 用于记录
             )
+            for _tr in tool_results:
+                if isinstance(_tr, dict):
+                    _tr["result"] = normalize_result_metadata(_tr.get("result"))
 
             # 主线程统一填充 round_log（替代原先工作线程中的并发写入）
             round_log["tool_calls"] = [
@@ -863,6 +948,9 @@ class PlanAgentThoughtAction:
                     "tool_call_id": tr.get("tool_call_id", ""),
                     "function": tr.get("function", ""),
                     "status": tr.get("result", {}).get("status", "unknown") if isinstance(tr.get("result"), dict) else "unknown",
+                    "completion_state": tr.get("result", {}).get("completion_state", "failed_no_evidence") if isinstance(tr.get("result"), dict) else "failed_no_evidence",
+                    "has_partial_evidence": bool(tr.get("result", {}).get("has_partial_evidence")) if isinstance(tr.get("result"), dict) else False,
+                    "partial_evidence": tr.get("result", {}).get("partial_evidence", "") if isinstance(tr.get("result"), dict) else "",
                     "agent_count": tr.get("agent_count", ""),
                 }
                 for tr in tool_results
@@ -987,11 +1075,8 @@ class PlanAgentThoughtAction:
             # 将工具结果添加到消息历史
             for tool_result in tool_results:
                 # 格式化工具结果，让 LLM 更容易理解
-                result_data = tool_result.get("result")
-                if not isinstance(result_data, dict):
-                    self.task_logger.warning(f"Unexpected result type: {type(result_data).__name__}, wrapping as failure")
-                    result_data = {"status": "failure", "result": "", "steps": [],
-                                   "error": f"Unexpected result format: {type(result_data).__name__}"}
+                result_data = normalize_result_metadata(tool_result.get("result"))
+                tool_result["result"] = result_data
 
                 # 构建清晰的结果描述
                 if result_data.get("status") == "success":
@@ -1034,31 +1119,22 @@ class PlanAgentThoughtAction:
                 else:
                     # 失败情况 - 包含详细的失败原因
                     error = result_data.get("error", "Unknown error")
-                    result_msg = result_data.get("result", "")
+                    completion_state = result_data.get("completion_state", "failed_no_evidence")
+                    partial_evidence = result_data.get("partial_evidence", "")
                     result_agent_id = tool_result.get("arguments", {}).get("agent_id", "?")
 
                     # 构建详细的失败描述
                     failure_details = []
                     failure_details.append(f"✗ FAILURE [Agent {result_agent_id}]")
                     failure_details.append(f"Task: {tool_result.get('arguments', {}).get('task_description', '')[:150]}")
+                    failure_details.append(f"Completion state: {completion_state}")
                     failure_details.append(f"\nError: {error}")
 
-                    # 如果有额外的结果信息（包含失败总结）
-                    if result_msg and result_msg != error:
+                    if partial_evidence:
                         failure_details.append(
-                            "\nDetails (partial/unverified; task did not complete):\n"
-                            f"{result_msg[:500]}"
+                            "\nPartial evidence (tentative/unverified; task did not complete):\n"
+                            f"{partial_evidence[:800]}"
                         )
-
-                    # 兜底：从 steps 中提取 text_only 回答，避免 Agent 已找到答案但因 failure 状态丢失
-                    steps = result_data.get("steps", [])
-                    if steps and isinstance(steps, list):
-                        for step in reversed(steps):
-                            if isinstance(step, dict) and step.get("status") == "text_only" and step.get("output"):
-                                text_answer = step["output"]
-                                if len(text_answer.strip()) > 20:
-                                    failure_details.append(f"\nAgent's text answer (from text_only round):\n{text_answer[:800]}")
-                                    break
 
                     formatted_content = "\n".join(failure_details)
                 
@@ -1078,24 +1154,33 @@ class PlanAgentThoughtAction:
                 completed_tasks_summary = []
                 incomplete_tasks_summary = []
                 data_available = []
+                partial_observations = []
 
                 for tr in tool_results:
                     func_name = tr["function"]
-                    status = tr["result"].get("status", "unknown")
+                    tr_result = normalize_result_metadata(tr.get("result"))
+                    tr["result"] = tr_result
+                    status = tr_result.get("status", "unknown")
+                    completion_state = tr_result.get("completion_state", "failed_no_evidence")
                     task_desc = tr.get("arguments", {}).get("task_description", "")[:60]
 
                     # 如果成功，提取关键数据摘要
                     if status == "success":
                         completed_tasks_summary.append(f"- {func_name}: {task_desc}... → {status}")
-                        result_preview = tr["result"].get("result", "")[:150]
+                        result_preview = tr_result.get("result", "")[:150]
                         if result_preview:
                             data_available.append(f"  Data from '{task_desc[:30]}...': {result_preview}...")
                     else:
-                        error_preview = tr["result"].get("error", "")[:120]
+                        error_preview = str(tr_result.get("error", ""))[:120]
                         suffix = f" ({error_preview})" if error_preview else ""
                         incomplete_tasks_summary.append(
-                            f"- {func_name}: {task_desc}... → {status}{suffix}"
+                            f"- {func_name}: {task_desc}... → {completion_state}{suffix}"
                         )
+                        partial_evidence = tr_result.get("partial_evidence", "")
+                        if partial_evidence:
+                            partial_observations.append(
+                                f"- {func_name}: {task_desc}... → {partial_evidence[:300]}"
+                            )
 
                 summary_parts = [
                     f"Tool results from {len(tool_results)} subtask attempt(s) in this round:"
@@ -1113,14 +1198,21 @@ class PlanAgentThoughtAction:
                     summary_parts.append("\n📊 Available data:")
                     summary_parts.extend(data_available)
 
+                if partial_observations:
+                    summary_parts.append(
+                        "\nPartial observations from incomplete attempts "
+                        "(tentative, unverified):"
+                    )
+                    summary_parts.append("\n".join(partial_observations))
+
                 if incomplete_tasks_summary:
                     summary_parts.append(
                         "\n⚠️ IMPORTANT: "
                         "1) Do NOT mark failed or incomplete attempts as completed. "
-                        "2) Treat failure details as partial, unverified observations; "
-                        "do NOT use them to conclude that no matches/items exist or to exclude sources/items "
-                        "from future work unless independently verified by a successful call. "
-                        "3) Retry, narrow, or decompose the remaining work as needed. "
+                        "2) Treat partial observations as tentative evidence only; "
+                        "they can support a final answer if consistent and sufficient, but they do not prove "
+                        "the subtask completed. "
+                        "3) Retry, narrow, or decompose missing or uncertain parts as needed. "
                         "4) Do not repeat successful completed subtasks unless required for state continuity."
                     )
                 else:
@@ -1335,6 +1427,8 @@ class PlanAgentThoughtAction:
             
             # 不在这里提前退出，让 LLM 决定是否还需要继续执行其他任务
             # 只有当达到最大轮次或 LLM 不再调用工具时才会自然结束
+        else:
+            max_rounds_exhausted = True
         
         elapsed_time = time.time() - start_time
         
@@ -1358,15 +1452,17 @@ class PlanAgentThoughtAction:
             # 如果没有任何轮次，标记为失败
             task_success = False
 
-        # P0-4: 若循环是因为 max_rounds 耗尽（非 break 退出）且 recorder 未设置答案，
-        # 且最近一轮 subagent 全挂，则兜底为 INSUFFICIENT_EVIDENCE 避免瞎猜
-        if not getattr(self.recorder, "final_answer", None):
-            if _last_executed_round_all_failed(self.execution_log):
-                self.task_logger.warning(
-                    "[ABSTAIN] Max rounds reached and last round all-failed; "
-                    "setting final_answer=INSUFFICIENT_EVIDENCE"
-                )
-                self.recorder.set_final_answer("INSUFFICIENT_EVIDENCE")
+        # 若 max_rounds 耗尽且没有最终答案，仅在最近 GUI 轮全部失败且没有任何
+        # partial evidence 时才 abstain；有 partial evidence 时交给 summary 阶段判断。
+        if max_rounds_exhausted and _should_set_insufficient_evidence_fallback(
+            self.execution_log, getattr(self.recorder, "final_answer", None)
+        ):
+            self.task_logger.warning(
+                "[ABSTAIN] Max rounds reached, last round all-failed, "
+                "and no partial evidence was available; "
+                "setting final_answer=INSUFFICIENT_EVIDENCE"
+            )
+            self.recorder.set_final_answer("INSUFFICIENT_EVIDENCE")
 
         # === 总结步骤：额外调用一次模型，从完整对话历史中提取简洁的最终答案 ===
         # P0-2 修复: 若 thought 分支已通过 [ANSWER DETECTED] 设置 final_answer，
@@ -2222,6 +2318,7 @@ class PlanAgentThoughtAction:
                 "steps": [],
                 "error": str(e)
             }
+        result = normalize_result_metadata(result)
         
         elapsed = time.time() - start_time
         success = result.get('status') == 'success'
