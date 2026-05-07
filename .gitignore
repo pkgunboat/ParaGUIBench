@@ -41,3 +41,8 @@ docker/onlyoffice/data/
 docker/onlyoffice/document_keys.json
 docker/onlyoffice/shared_links.json
 docker/onlyoffice/shared_documents/
+
+# --- 本地工具/代理状态（不入仓） ---
+.omc/
+.golutra/
+*.bak
