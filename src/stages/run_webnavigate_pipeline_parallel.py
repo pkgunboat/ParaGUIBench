@@ -887,6 +887,11 @@ def stage2_execute_gui_only(
             model_name="gpt-5.4-mini",
             api_config_key="pincc",
         )
+    elif gui_agent == "qwen":
+        # Qwen3-VL baseline：通过环境变量 BENCH_DEFAULT_QWEN_GUI_AGENT
+        # 切换具体模型（如 qwen3-vl、qwen3-vl-235b-a22b）
+        from parallel_agents_as_tools.qwen_gui_agent_as_tool import QwenGUIAgentTool
+        gui_tool = QwenGUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")
     else:
         log.warning("未知的 gui_agent: %s，fallback 到 seed18", gui_agent)
         gui_tool = Seed18GUIAgentTool(controller=controller_vm1, prompt_mode="gui_only")
@@ -1397,7 +1402,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--gui-agent",
         type=str, default="seed18",
-        help="GUI Agent 类型（默认 seed18，可选 claude/kimi）",
+        help="GUI Agent 类型（默认 seed18，可选 claude / kimi / gpt54 / gpt54_fc / qwen）",
     )
     parser.add_argument(
         "--agent-mode",

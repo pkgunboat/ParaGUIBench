@@ -26,7 +26,33 @@ class QwenGUIAgentTool(BaseAgentTool):
 
     基于 OSWorld 官方 Qwen3VLAgent 适配，使用 OpenAI 兼容后端调用 Qwen3-VL。
     通过 BaseAgentTool 继承获得 controller 和 format_result 能力。
+
+    支持两种使用场景：
+    - Plan Agent 模式：作为 GUI 子 Agent 被 Plan Agent 调用
+    - gui_only 模式：作为独立 baseline Agent 直接完成完整任务
     """
+
+    def __init__(
+        self,
+        controller,
+        model_name: str = None,
+        prompt_mode: str = "tool",
+    ):
+        """
+        初始化 Qwen GUI Agent Tool
+
+        Args:
+            controller: PythonController 实例（VM 交互）
+            model_name: 模型名（如 "qwen3-vl"、"qwen3-vl-235b-a22b"）。
+                        为 None 时回退到 get_model_name("qwen_gui_agent")，
+                        即环境变量 BENCH_DEFAULT_QWEN_GUI_AGENT 或默认值 "qwen3-vl"。
+            prompt_mode: prompt 模式选择（"tool" | "gui_only"）。
+                         对齐 Seed18/GPT54 接口；当前 Qwen3VL 的内置 prompt
+                         已具备独立完成任务能力，两种模式无差异，参数仅用于签名一致性。
+        """
+        super().__init__(controller)
+        self.model_name = model_name
+        self.prompt_mode = prompt_mode
 
     def execute(self, task: str, max_rounds: int = 15, timeout: int = 600) -> Dict:
         """
@@ -61,7 +87,8 @@ class QwenGUIAgentTool(BaseAgentTool):
         steps: List[Dict] = []
         rounds_timing: List[Dict] = []
         thoughts: List[str] = []
-        model_name = get_model_name("qwen_gui_agent")
+        # 优先使用构造时传入的 model_name，否则回退到环境变量/默认值
+        model_name = self.model_name or get_model_name("qwen_gui_agent")
 
         # Token 消耗累计器
         token_usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
