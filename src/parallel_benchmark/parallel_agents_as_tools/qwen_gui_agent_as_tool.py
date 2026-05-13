@@ -5,7 +5,7 @@ Qwen GUI Agent as Tool
 核心改动（相比旧版）：
 - 不再使用 Mode 1（GUIAgent + qwen_adapter），改为 Mode 2（独立 Agent 直接封装）
 - 使用 Qwen3VL 专用 Prompt（Action → <tool_call> XML 格式）
-- 通过 OpenAI 兼容后端调用 DashScope API
+- 通过 OpenAI 兼容后端调用 Qwen3-VL（默认 DeerAPI，可切换 dashscope）
 - 支持 QA 答案提取（answer action / terminate answer_text）
 - 返回值包含 rounds_timing 和 model_name
 """
@@ -37,6 +37,7 @@ class QwenGUIAgentTool(BaseAgentTool):
         controller,
         model_name: str = None,
         prompt_mode: str = "tool",
+        api_provider: str = "deerapi",
     ):
         """
         初始化 Qwen GUI Agent Tool
@@ -49,17 +50,20 @@ class QwenGUIAgentTool(BaseAgentTool):
             prompt_mode: prompt 模式选择（"tool" | "gui_only"）。
                          对齐 Seed18/GPT54 接口；当前 Qwen3VL 的内置 prompt
                          已具备独立完成任务能力，两种模式无差异，参数仅用于签名一致性。
+            api_provider: API 来源（默认 "deerapi"，可选 "dashscope"）。
+                          决定从 get_api_config() 取哪一组 api_key / base_url。
         """
         super().__init__(controller)
         self.model_name = model_name
         self.prompt_mode = prompt_mode
+        self.api_provider = api_provider
 
     def execute(self, task: str, max_rounds: int = 15, timeout: int = 600) -> Dict:
         """
         执行基于 GUI 的任务（使用 Qwen3-VL）
 
         执行流程：
-        1. 从 config 获取 DashScope API 配置
+        1. 从 config 获取 API 配置（默认 deerapi，可由 self.api_provider 切换）
         2. 创建 Qwen3GUIAgent 实例（注入 controller）
         3. 循环执行 predict()，每轮获取截图 → 调用模型 → 解析动作 → 执行
         4. 根据 DONE/WAIT/FAIL 状态返回结果
@@ -98,8 +102,8 @@ class QwenGUIAgentTool(BaseAgentTool):
             from parallel_agents.qwen3_gui_agent import Qwen3GUIAgent
             print(f"[DEBUG] Qwen3GUIAgent loaded successfully")
 
-            # 从统一配置获取 DashScope API 信息
-            dashscope_config = get_api_config("dashscope")
+            # 从统一配置获取 API 信息（默认走 DeerAPI 网关，亦可切回 dashscope）
+            api_cfg = get_api_config(self.api_provider)
 
             # 创建 Qwen3GUIAgent 实例
             agent = Qwen3GUIAgent(
@@ -107,22 +111,23 @@ class QwenGUIAgentTool(BaseAgentTool):
                 max_tokens=32768,
                 history_n=4,
                 coordinate_type="relative",
-                api_key=dashscope_config["api_key"],
-                base_url=dashscope_config["base_url"],
+                api_key=api_cfg["api_key"],
+                base_url=api_cfg["base_url"],
                 controller=self.controller,
                 execute_actions=True,
             )
 
-            # 创建反思总结用的 OpenAI 兼容客户端（复用 DashScope API 配置）
+            # 创建反思总结用的 OpenAI 兼容客户端（复用同一组 API 配置）
             from openai import OpenAI as _OpenAI
             _reflection_client = _OpenAI(
-                api_key=dashscope_config["api_key"],
-                base_url=dashscope_config["base_url"]
+                api_key=api_cfg["api_key"],
+                base_url=api_cfg["base_url"]
             )
             _reflection_model = model_name
 
             print(f"\n[Qwen GUI Agent] Starting task: {task[:100]}...")
-            print(f"[Qwen GUI Agent] Model: {model_name}")
+            print(f"[Qwen GUI Agent] Model: {model_name} | Provider: {self.api_provider}")
+            print(f"[Qwen GUI Agent] Base URL: {api_cfg['base_url']}")
             print(f"[Qwen GUI Agent] Max rounds: {max_rounds}, Timeout: {timeout}s")
 
             # 执行循环
