@@ -387,6 +387,10 @@ def run_one_condition(
             cli_args.append("--test")
         if common_args.get("no_dashboard"):
             cli_args.append("--no-dashboard")
+        if common_args.get("skip_service_health_check"):
+            cli_args.append("--skip-service-health-check")
+        if common_args.get("service_health_timeout"):
+            cli_args.extend(["--service-health-timeout", str(common_args["service_health_timeout"])])
 
         pipeline_args = parser.parse_args(cli_args)
         pipeline_instance.args = pipeline_args
@@ -613,6 +617,11 @@ def main():
                         help="测试模式：每 pipeline 仅跑 1 个任务，gui_max_rounds=2（转发给子 pipeline）")
     parser.add_argument("--no-dashboard", dest="no_dashboard", action="store_true",
                         help="禁用 Rich 仪表板，保留 stdout 日志（方便 debug init 阶段）")
+    parser.add_argument("--skip-service-health-check", dest="skip_service_health_check",
+                        action="store_true",
+                        help="跳过 WebMall/OnlyOffice 外部服务健康检查")
+    parser.add_argument("--service-health-timeout", type=float, default=8.0,
+                        help="外部服务健康检查单请求超时时间（秒）")
     parser.add_argument("--dry-run", action="store_true", help="仅打印配置不执行")
     parser.add_argument("-n", "--vms-per-task", type=int, default=0,
                         help="覆盖条件配置中的 vms_per_task（0=使用条件默认值）")
@@ -650,6 +659,8 @@ def main():
         "record_to_master": args.record_to_master,
         "test": args.test,
         "no_dashboard": args.no_dashboard,
+        "skip_service_health_check": args.skip_service_health_check,
+        "service_health_timeout": args.service_health_timeout,
     }
 
     from progress_display import ProgressState

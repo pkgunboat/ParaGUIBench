@@ -155,6 +155,21 @@ class SearchWritePipeline(BasePipeline):
         for task in tasks:
             task.extra["share_urls"] = self._task_share_urls.get(task.task_uid, {})
 
+    def service_health_pipeline_names(self, tasks):
+        """
+        只有包含 OnlyOffice 共享文档任务时才检查 OnlyOffice 服务。
+        SearchWrite 中的 OSWorld JSON 任务不依赖该服务。
+        """
+        for task in tasks:
+            cfg = task.task_config
+            is_osworld_task = (
+                cfg.get("task_type") == "OSWorld脚本"
+                or cfg.get("evaluator_path", "").endswith(".json")
+            )
+            if not is_osworld_task:
+                return ["searchwrite"]
+        return []
+
     def stage_init(self, task, config, log):
         """
         SearchWrite 专用初始化。

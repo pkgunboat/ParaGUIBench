@@ -21,9 +21,9 @@ print(f"export ONLYOFFICE_DOC_PORT={raw.get('services', {}).get('onlyoffice', {}
 ports = d.webmall_ports
 for i, p in enumerate(ports[:4], start=1):
     print(f"export WEBMALL_PORT_{i}={p}")
-# WebMall 前端端口（默认不对外暴露，设为 80 可覆盖）
+# WebMall 前端入口端口；保持与 docker-compose.yaml 默认值一致。
 webmall_cfg = raw.get('services', {}).get('webmall', {})
-frontend_port = webmall_cfg.get('frontend_port', 80)
+frontend_port = webmall_cfg.get('frontend_port', 8090)
 print(f"export WEBMALL_FRONTEND_PORT={frontend_port}")
 PY
 )"

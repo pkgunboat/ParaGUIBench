@@ -102,6 +102,10 @@ services:
       - MARIADB_DATABASE=bitnami_wordpress
     volumes:
       - webmall_mariadb_shop1:/bitnami/mariadb
+    networks:
+      default:
+        aliases:
+          - mariadb_shop1
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bn_wordpress", "-p${WEBMALL_DB_PASSWORD:-wordpress_db_password}"]
       interval: 10s
@@ -154,6 +158,10 @@ services:
       - MARIADB_DATABASE=bitnami_wordpress
     volumes:
       - webmall_mariadb_shop2:/bitnami/mariadb
+    networks:
+      default:
+        aliases:
+          - mariadb_shop2
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bn_wordpress", "-p${WEBMALL_DB_PASSWORD:-wordpress_db_password}"]
       interval: 10s
@@ -206,6 +214,10 @@ services:
       - MARIADB_DATABASE=bitnami_wordpress
     volumes:
       - webmall_mariadb_shop3:/bitnami/mariadb
+    networks:
+      default:
+        aliases:
+          - mariadb_shop3
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bn_wordpress", "-p${WEBMALL_DB_PASSWORD:-wordpress_db_password}"]
       interval: 10s
@@ -258,6 +270,10 @@ services:
       - MARIADB_DATABASE=bitnami_wordpress
     volumes:
       - webmall_mariadb_shop4:/bitnami/mariadb
+    networks:
+      default:
+        aliases:
+          - mariadb_shop4
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bn_wordpress", "-p${WEBMALL_DB_PASSWORD:-wordpress_db_password}"]
       interval: 10s
@@ -302,26 +318,33 @@ networks:
   default:
     name: bench-net
 
-# 显式写 name: 固定卷名，避免 compose 根据 project dir 追加 `docker_` 前缀
-# （否则 setup_webmall.sh 预建的 webmall_* 卷会和 compose 实际用的 docker_webmall_*
-# 错位，数据"恢复成功"但实际没挂进服务）。
+# 显式写 name: 固定卷名，避免 compose 根据 project dir 追加 `docker_` 前缀。
+# WebMall 数据使用本机既有的完整 woocommerce_* 卷。
 volumes:
   webmall_esdata:
     name: webmall_esdata
     driver: local
   webmall_mariadb_shop1:
-    name: webmall_mariadb_shop1
+    name: woocommerce_mariadb_data_shop1
+    external: true
   webmall_mariadb_shop2:
-    name: webmall_mariadb_shop2
+    name: woocommerce_mariadb_data_shop2
+    external: true
   webmall_mariadb_shop3:
-    name: webmall_mariadb_shop3
+    name: woocommerce_mariadb_data_shop3
+    external: true
   webmall_mariadb_shop4:
-    name: webmall_mariadb_shop4
+    name: woocommerce_mariadb_data_shop4
+    external: true
   webmall_wordpress_shop1:
-    name: webmall_wordpress_shop1
+    name: woocommerce_wordpress_data_shop1
+    external: true
   webmall_wordpress_shop2:
-    name: webmall_wordpress_shop2
+    name: woocommerce_wordpress_data_shop2
+    external: true
   webmall_wordpress_shop3:
-    name: webmall_wordpress_shop3
+    name: woocommerce_wordpress_data_shop3
+    external: true
   webmall_wordpress_shop4:
-    name: webmall_wordpress_shop4
+    name: woocommerce_wordpress_data_shop4
+    external: true

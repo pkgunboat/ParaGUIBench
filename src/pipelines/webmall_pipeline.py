@@ -2,7 +2,7 @@
 WebMall Pipeline：电商网站操作任务（收藏/购物车/下单）。
 
 特殊逻辑:
-    - pre_run_hook: 检查 WebMall 商店可达性
+    - BasePipeline service health gate: 检查 WebMall 商店可达性
     - stage_init: 重建容器
     - stage_execute: 改写 string 任务指令
     - stage_evaluate: 3 种评估方式（string/cart/checkout）
@@ -24,10 +24,6 @@ for _p in [SRC_DIR, SCRIPT_DIR]:
 from pipeline_base import BasePipeline, TaskItem, UNIFIED_TASKS_DIR
 from task_scanner import scan_unified_tasks
 
-# 导入 WebMall 特有函数
-from run_webmall_pipeline import (
-    check_webmall_shops,
-)
 from run_webmall_pipeline_parallel import (
     reinitialize_vms_parallel,
     stage2_execute_parallel,
@@ -82,12 +78,12 @@ class WebMallPipeline(BasePipeline):
 
     def pre_run_hook(self, tasks):
         """
-        检查 WebMall 商店可达性。
+        WebMall 服务健康检查已由 BasePipeline 在资源初始化前完成。
 
         输入:
             tasks: 待执行的任务列表
         """
-        check_webmall_shops()
+        self.log.info("WebMall 服务健康检查已通过，准备进入任务调度")
 
     def stage_init(self, task, config, log):
         """

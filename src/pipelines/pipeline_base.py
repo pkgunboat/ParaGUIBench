@@ -378,6 +378,10 @@ class BasePipeline(ABC):
                             help="执行前显示完整配置并等待用户确认")
         parser.add_argument("--no-dashboard", action="store_true",
                             help="禁用 Rich 仪表板，使用传统 logging 输出")
+        parser.add_argument("--skip-service-health-check", action="store_true",
+                            help="跳过 WebMall/OnlyOffice 外部服务健康检查")
+        parser.add_argument("--service-health-timeout", type=float, default=8.0,
+                            help="外部服务健康检查单请求超时时间（秒）")
 
     def add_pipeline_args(self, parser):
         """
@@ -1173,6 +1177,15 @@ class BasePipeline(ABC):
         """
         pass
 
+    def service_health_pipeline_names(self, tasks: List[TaskItem]) -> List[str]:
+        """
+        返回当前任务集需要检查的外部服务类型。
+
+        默认使用 pipeline_name；不依赖外部服务的 pipeline 会在
+        service_health 模块中自然返回空检查项。子类可基于任务内容缩小范围。
+        """
+        return [self.pipeline_name]
+
     def post_run_hook(self, results: Dict[str, Any]):
         """
         并行调度后的后处理钩子。默认空实现。
@@ -1380,6 +1393,8 @@ class BasePipeline(ABC):
         self.log.info("  Skip Completed:  %s", args.skip_completed_dir or "(未启用)")
         self.log.info("  Reset Mode:      %s", args.reset_mode)
         self.log.info("  VM IP:           %s", args.vm_ip)
+        self.log.info("  Service Health:  %s",
+                      "SKIP" if args.skip_service_health_check else f"{args.service_health_timeout:.1f}s timeout")
         self.log.info("  Test Mode:       %s", "YES" if args.test else "NO")
         self.log.info("  Final Mode:      %s", args.final if getattr(args, "final", "") else "(未启用)")
         self.log.info("=" * 60)
@@ -1471,24 +1486,42 @@ class BasePipeline(ABC):
                        self.args.vms_per_task)
         self.log.info("=" * 60)
 
-        # 6. 资源
+        # 6. 外部服务健康检查。必须在资源初始化和 Agent 执行前完成，
+        # 避免服务虽返回 200 但实际是默认空站点时继续跑任务。
+        skip_health = (
+            getattr(self.args, "skip_service_health_check", False)
+            or os.environ.get("PARAGUIBENCH_SKIP_SERVICE_HEALTH", "") == "1"
+        )
+        if skip_health:
+            self.log.warning("[ServiceHealth] 已跳过外部服务健康检查")
+        else:
+            from service_health import ensure_pipeline_services_healthy
+            for health_pipeline in self.service_health_pipeline_names(tasks):
+                ensure_pipeline_services_healthy(
+                    health_pipeline,
+                    _DEPLOY,
+                    timeout=getattr(self.args, "service_health_timeout", 8.0),
+                    log=self.log,
+                )
+
+        # 7. 资源
         self.setup_resources()
 
         try:
-            # 7. pre hook
+            # 8. pre hook
             self.pre_run_hook(tasks)
 
-            # 8. 并行调度
+            # 9. 并行调度
             results = self.run_all_tasks(tasks)
 
-            # 9. post hook
+            # 10. post hook
             self.post_run_hook(results)
 
             # 暴露结果和应跑任务列表供外部（如 run_ablation.py --record-to-master）消费
             self.last_results = results
             self.last_expected_task_ids = [t.task_id for t in tasks]
 
-            # 10. 统计
+            # 11. 统计
             total = len(results)
             passed = sum(1 for r in results.values()
                          if r.get("pass", False))
@@ -1505,5 +1538,5 @@ class BasePipeline(ABC):
             report_dir = generate_report(results, self.get_output_dir(), log=self.log)
             self.log.info("统计报告: %s", report_dir)
         finally:
-            # 11. 清理
+            # 12. 清理
             self.cleanup_resources()
