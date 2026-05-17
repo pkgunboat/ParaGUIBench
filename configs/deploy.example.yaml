@@ -48,7 +48,7 @@ services:
   # OnlyOffice DocumentServer + Flask 共享服务（SearchWrite pipeline 依赖）
   # host_ip 可填具体 IP 或 "auto"（自动探测当前设备的默认出口 IP）
   onlyoffice:
-    host_ip: "127.0.0.1"
+    host_ip: "auto"
     flask_port: 5050          # document_sharing_server.py
     doc_server_port: 8080     # OnlyOffice DocumentServer（docker-compose）
 
