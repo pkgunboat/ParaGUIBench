@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-015",
+    "task_uid": "9f55fdb6-a749-4170-91a2-bebddd3492d7",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "I am writing my thesis. I have listed all the cited references in the opened docx file. However, my supervisor requires me to use LaTeX instead of Word. So can you help me export the DBLP BibTeX of these papers to a 'references.bib' file? By the way, if the paper has been published, please do not use the arXiv version. For clarity, please separate each BibTeX entry with a blank line.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/df67aebb-fb3a-44fd-b75b-51b6012df509/references.docx",
+    "evaluator_path": "eval/osworld_scripts/9f55fdb6-a749-4170-91a2-bebddd3492d7.json",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-015"
+}

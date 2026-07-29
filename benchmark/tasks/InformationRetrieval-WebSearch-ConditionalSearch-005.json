@@ -1,0 +1,18 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-005",
+    "task_uid": "d7df3db6-58e0-411f-80e9-488691bb6e16",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "answer_match_mode": "numeric",
+    "instruction": "Among the songs released by Taylor Swift in 2024 (i.e., all 31 tracks of 'The Tortured Poets Department: The Anthology'), how many songs' lyrics contain the word love? Count case-insensitively (a capitalized 'Love' also counts) and count the word love itself, including the contraction \"love's\", but excluding variants such as loved, loves, lover, and lovin'. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "10",
+    "accepted_answers": [
+        "ten",
+        "10 songs",
+        "ten songs"
+    ],
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-005"
+}

@@ -6,38 +6,53 @@ Official project repository for **Beyond Sequential Interaction: Benchmarking Pa
 Execution and Coordination for GUI Agents**.
 
 > [!IMPORTANT]
-> This repository currently serves as the project page. The paper will be linked after its
-> arXiv release. The benchmark, infrastructure, evaluation toolkit, and baseline
-> implementations are being prepared for public release. No code or benchmark files have
-> been released yet.
+> This is a **0.1 preview**, not the complete benchmark runtime. All 233 canonical task
+> definitions have been migrated, but the runtime support manifest currently marks only
+> GUI-only Seed18 with `InformationRetrieval-FileSearch-Readonly-001` as
+> `live_validated`. A published task definition does not imply that its environment,
+> assets, evaluator, and Agent System are executable in this preview.
 
 ## Overview
 
-GUI agents typically execute long-horizon tasks as a serial chain of
-perception--decision--action cycles. This sequential interaction pattern incurs repeated
-large-multimodal-model inference and becomes increasingly inefficient as trajectories grow.
-ParaGUIBench studies whether multiple GUI agents can instead coordinate and execute
-decomposable workloads in parallel on separate desktop instances.
+GUI agents commonly execute long-horizon tasks as a serial
+perception--decision--action loop. ParaGUIBench studies whether multiple GUI agents can
+coordinate decomposable workloads across isolated desktop instances and reduce the
+critical path without weakening task-level evaluation.
 
-ParaGUIBench contains three main components:
+The repository separates reusable orchestration from runnable Agent Systems:
 
-- **Parallel-native infrastructure.** Each GUI worker operates in an isolated Docker container
-  with a full Ubuntu desktop, while all workers share a mounted directory for exchanging
-  intermediate artifacts. The infrastructure supports a configurable number of concurrent
-  workers and restores each container before every run.
-- **Benchmark dataset.** The benchmark contains 233 tasks across six categories in two
-  domains. Each task is annotated with its parallel-execution pattern:
-  `parallel_independent`, `parallel_dependent`, or `serial`.
-- **Evaluation system.** Rule-based evaluators verify textual answers or resulting
-  environment states and report task success together with step reduction ratio,
-  parallelism degree, and token cost.
+- `framework` defines provider-neutral DAG contracts and bounded scheduling mechanics.
+- `agents/systems` contains runnable policies. The GUI-only Seed18 vertical slice is the
+  current live gate; ParaGUI planner--worker components are under active integration.
+- `benchmark` contains the 233 canonical JSON definitions, release integrity records,
+  task assets manifests, schemas, provenance, and the per-task runtime support manifest.
+- `runtime`, `evaluation`, and `integrations` assemble task preparation, disposable
+  OSWorld sessions, deterministic evaluation, and environment adapters.
+- `runstore` persists one run/task/attempt hierarchy with separate execution and
+  evaluation outcomes, atomic writes, and default sanitization.
 
-We also introduce **ParaGUI**, a planner--worker agent that decomposes long-horizon GUI tasks,
-dispatches parallelizable sub-tasks to concurrent workers, aggregates their returned
-summaries, and decides whether to continue with another round. On ParaGUIBench, ParaGUI
-achieves a **46.4% success rate**, outperforming the strongest serial baseline, Claude Sonnet
-4.6, by **12.9 percentage points**. Under the default visual-history configurations, it uses
-roughly half that baseline's critical-path steps and less than half its tokens.
+ParaGUI is the planner--worker agent introduced in the paper. It decomposes a task into a
+dependency-aware plan, dispatches ready subtasks to concurrent workers, and synthesizes
+their results. The paper reports a **46.4% success rate**, **12.9 percentage points** above
+the strongest serial baseline in that study. These are paper results; the complete
+experiment suite needed to reproduce them is not yet `live_validated` in this preview.
+
+## Release status
+
+| Surface | Preview status |
+|---|---|
+| Canonical benchmark definitions | 233/233 migrated and covered by `benchmark/manifests/release-v1.json` |
+| Runtime support declaration | 233 per-task records in `benchmark/manifests/runtime-support-v1.json` |
+| Live-validated task | `InformationRetrieval-FileSearch-Readonly-001` only |
+| Blocked tasks | 232; each records explicit blocker codes in the runtime support manifest |
+| Live-validated Agent System | GUI-only Seed18, one VM and one worker |
+| Reference deployment | Execution `SUCCEEDED`, evaluation `PASSED`, score `1.0` |
+| WebMall portability | Logical URLs, guest-directory binding, and versioned synthetic checkout fixture completed; full WebMall runtime is not live-validated |
+| Remaining release work | Additional assets, environment adapters, evaluators, Agent Systems, suite metrics, licensing, and category-level live validation |
+
+The runtime support manifest is the authoritative machine-readable statement of what can
+run today. Entries marked `blocked` remain useful canonical benchmark definitions, but the
+CLI must not present them as supported.
 
 ## Benchmark at a glance
 
@@ -51,34 +66,78 @@ roughly half that baseline's critical-path steps and less than half its tokens.
 | Operation and manipulation | Search and write | 10 | *Fill a table with the top five schools in the 2025 QS rankings and their details.* |
 | **Total** |  | **233** |  |
 
-## Planned release
+## Quick start from a source checkout
 
-- [ ] arXiv preprint
-- [ ] Benchmark tasks and annotations
-- [ ] Multi-container environment and setup scripts
-- [ ] Evaluation toolkit
-- [ ] ParaGUI and baseline implementations
-- [ ] Reproduction instructions and dependency documentation
+The package supports Python 3.11--3.13. A live OSWorld run additionally requires Linux
+x86-64, Docker, writable `/dev/kvm`, sufficient local storage for the VM image, and an
+OpenAI-compatible model service.
 
-Star or watch this repository to follow release updates.
+```bash
+git clone https://github.com/pkgunboat/ParaGUIBench.git
+cd ParaGUIBench
+python3.12 -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e '.[live,dev]'
+python -m pytest
+python scripts/benchmark/validate_release.py --repo-root .
+python scripts/benchmark/validate_runtime_support.py --repo-root .
+python scripts/security/scan_repository.py --root .
+```
 
-## Paper
+Model credentials must come from a secret manager or an owner-only file **outside the
+checkout**. The CLI reads the environment variable references
+`PARAGUIBENCH_MODEL_API_KEY` and `PARAGUIBENCH_MODEL_BASE_URL`; it has no command-line
+option for their values. `.env.example` is documentation only and is **not loaded
+automatically**.
 
-The preprint link will be added here after the paper is available on arXiv.
+For the pinned VM, task assets, ten-check `doctor`, live command, and safe inspection
+workflow, follow [the OSWorld Linux deployment guide](docs/deployment/osworld-linux.md).
+The sanitized successful deployment record is
+[reference-run-20260729.md](docs/reproduction/reference-run-20260729.md).
 
-## Citation
+## Run records and privacy
 
-A BibTeX entry will be added together with the arXiv preprint.
+RunStore uses stable `run_id`, `task_id`, and `attempt_id` boundaries:
+
+```text
+<runs-root>/<run_id>/
+├── run.json
+└── tasks/<task_id>/attempts/<attempt_id>/
+    ├── task.json
+    ├── summary.json
+    ├── events/
+    └── artifacts/
+```
+
+Directories are created with mode `0700` and files with mode `0600`. Execution and
+evaluation outcomes remain independent, so an evaluator failure cannot be misreported as
+an Agent execution failure. Persisted records use allowlists and sanitization; credentials,
+endpoint values, raw model responses, and full checkout fixture values are outside the
+default log contract. Run roots and asset caches should remain outside the source
+checkout and are ignored if created locally by mistake.
+
+## Documentation
+
+- [OSWorld Linux deployment](docs/deployment/osworld-linux.md)
+- [Reference live run](docs/reproduction/reference-run-20260729.md)
+- [Architecture and dependency directions](docs/architecture/dependency-tree.md)
+- [Benchmark provenance](benchmark/provenance/README.md)
+- [Third-party sources and release boundaries](docs/licenses/third-party-sources.md)
+- [Safe configuration examples](configs/examples/README.md)
+
+## Paper and citation
+
+The preprint link and BibTeX entry will be added after the paper is available on arXiv.
 
 ## License
 
-Original source code developed for this project is planned for release under the
-[Apache License 2.0](LICENSE). This license does not apply to benchmark tasks and
-annotations, data, or third-party components and assets; their applicable terms will be
-documented separately before release.
+Original source code developed for this project is licensed under the
+[Apache License 2.0](LICENSE). This license does not automatically cover benchmark data,
+task assets, VM/container images, model services, or other third-party material.
 
-ParaGUIBench's multi-container execution manager adapts
-[OSWorld](https://github.com/xlang-ai/OSWorld)'s single-VM evaluation backend. Some benchmark
-tasks are adapted from VeriWeb, OSWorld, and WebMall, while others are manually constructed
-to study parallel execution and cross-worker coordination; all online-shopping tasks use the
-WebMall environment. Third-party components remain subject to their respective licenses.
+ParaGUIBench adapts parts of OSWorld's evaluation protocol and uses tasks or environments
+derived from VeriWeb, OSWorld, and WebMall. The OSWorld image digest has been verified on
+the reference deployment, but its redistribution and layered licensing review remains
+open. See [third-party-sources.md](docs/licenses/third-party-sources.md) before packaging or
+redistributing any external asset.

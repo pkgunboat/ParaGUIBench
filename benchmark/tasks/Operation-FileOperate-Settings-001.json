@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-Settings-001",
+    "task_uid": "9b5220d5-f1f0-4db9-902d-ad41aae4d775",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "The scenery at 00:08 in this video is very beautiful. Please extract this frame and set it as the background of the second page of the opened slide. ",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5/Robotic_Workshop_Infographics.pptx , https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5/landscape.mp4",
+    "evaluator_path": "eval/osworld_scripts/9b5220d5-f1f0-4db9-902d-ad41aae4d775.json",
+    "original_task_id": "Operation-FileOperate-settings-001"
+}

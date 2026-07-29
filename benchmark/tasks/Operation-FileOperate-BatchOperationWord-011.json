@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-011",
+    "task_uid": "248add77-e3c1-4a59-b98e-03752238dc81",
+    "task_type": "",
+    "task_tag": "FileOperate",
+    "instruction": "There are many Word documents in the folder, some of which reference each other. Please change their headings to four colors: red, yellow, blue, and green, ensuring that mutually referenced documents are not the same color .word",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/248add77-e3c1-4a59-b98e-03752238dc81",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-011",
+    "eval_rules": [
+        {
+            "check": "check_heading_palette_and_references",
+            "file_pattern": "*",
+            "params": {
+                "expected_files": ["Doc_A.docx", "Doc_B.docx", "Doc_C.docx", "Doc_D.docx", "Doc_E.docx"],
+                "palette": ["FF0000", "FFFF00", "0000FF", "00B050", "00FF00", "008000"]
+            },
+            "weight": 1.0,
+            "description": "主标题使用红黄蓝绿色板，互引文档颜色不同"
+        }
+    ]
+}

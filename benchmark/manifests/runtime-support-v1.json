@@ -1,0 +1,3023 @@
+{
+  "$schema": "../schemas/runtime-support-v1.schema.json",
+  "schema_version": 1,
+  "manifest_id": "runtime-support-v1",
+  "release_id": "release-v1",
+  "release_manifest_sha256": "913b74e3f39fcb65bc1ea807db7633d02a4c473504378950b8d474a5bf4e7e8a",
+  "canonical_task_count": 233,
+  "tasks": [
+    {
+      "task_id": "InformationRetrieval-FileSearch-Readonly-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "pinned_download_manifest",
+      "support_status": "live_validated",
+      "support_reason_code": "live_validation_passed",
+      "blocker_codes": []
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-Readonly-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-Readonly-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.keyed-numeric-set.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-VisualSearch-Video-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.ordered-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-006",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-007",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-008",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-009",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-010",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-006",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-007",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-008",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-006",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-007",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-009",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-010",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-011",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-012",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-013",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-014",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-015",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-016",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-017",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-018",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-019",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-020",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-021",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-022",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-024",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-025",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-026",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-027",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-028",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-029",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.ordered-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-030",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-006",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-009",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-010",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-013",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-017",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-018",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-019",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-020",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-021",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-022",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-023",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-024",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-025",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-026",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperation-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperation-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-006",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-007",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-008",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-009",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationPPT-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationPPT-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationPPT-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-006",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-007",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-008",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-009",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-010",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-011",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-012",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-006",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-007",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-008",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-009",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-010",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-011",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-012",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-013",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-014",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-015",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-006",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-007",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-008",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-009",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-Settings-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-006",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-007",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-006",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-007",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-008",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-009",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-010",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-006",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-006",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-007",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-008",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-009",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-010",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-011",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-012",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-006",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-007",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-008",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-006",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-007",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-008",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-006",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-007",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-008",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-009",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-010",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-011",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-006",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-007",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-008",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-001",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-002",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-003",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-004",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-005",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-006",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-007",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-008",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-009",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-010",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-011",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-012",
+      "canonical_status": "published",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-SearchAndWrite-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-Settings-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-Settings-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-Settings-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "legacy_remote_reference",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-001",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-002",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-003",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-004",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-005",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-007",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-008",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-009",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-010",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-011",
+      "canonical_status": "published",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "asset_status": "no_task_assets_declared",
+      "support_status": "blocked",
+      "support_reason_code": "runtime_components_incomplete",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ]
+    }
+  ]
+}

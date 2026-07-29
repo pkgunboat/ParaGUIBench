@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "InformationRetrieval-FileSearch-Readonly-001",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/2b49d58c-521c-4e5a-963c-fc476c80534d",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "architecture.jpg",
+      "size": 63456,
+      "sha256": "b092b19032ee2527911fd4f8a1bbce932a9ddf25305b5b50ea3fd92f77561f8c"
+    },
+    {
+      "path": "paper1.pdf",
+      "size": 375868,
+      "sha256": "209023b417d0fe522bd737f021170f866c03850426e76356b00d4f866eeca433"
+    },
+    {
+      "path": "paper2.pdf",
+      "size": 4266952,
+      "sha256": "c539d934cd63ec8f457059c5e80a3cd864773dfaa7118d7888045f636c0166cd"
+    },
+    {
+      "path": "paper3.pdf",
+      "size": 116103,
+      "sha256": "bf03a9c6cb0a484e6e908f0b358e2d671f06e8d44bde8ef03154702eaf72577b"
+    }
+  ]
+}

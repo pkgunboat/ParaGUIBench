@@ -1,0 +1,18 @@
+{
+  "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-007",
+  "task_uid": "b59778e8ac3440818af05ef012d8d1de",
+  "source_task_id": "products_fulfilling_specific_requirements_task_11",
+  "task_type": "QA",
+  "task_tag": "ProductsFulfillingSpecificRequirements",
+  "instruction": "You have access to the following four online shops:\n- E-Store Athletes: webmall://store-1\n- TechTalk: webmall://store-2\n- CamelCases: webmall://store-3\n- Hardware Cafe: webmall://store-4\n\nFind all currently in-stock and purchasable offers for Fractal Design PC gaming cases whose offer-page title explicitly states support for both (1) a GPU at least 330 mm long and (2) a radiator at least 240 mm long. Both limits must be printed in the title; do not infer compatibility from the model name, product description, or external sources.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+  "task_source": "WebMall",
+  "evaluator_type": "QuestionAnswering",
+  "answer": "webmall://store-1/product/fractal-design-meshify-2-mini-black-tg-gaming-case-w-dark-glass-window-micro-atx-angular-mesh-usb-c-331mm-gpu-280mm-radiator-support###webmall://store-4/product/fractal-design-meshify-2-mini-black-tg-gaming-case-w-dark-glass-window-micro-atx-angular-mesh-usb-c-331mm-gpu-280mm-radiator-support",
+  "evaluator_path": "evaluators/string_url_evaluator.py",
+  "answer_type": "string",
+  "expected_urls": [
+    "webmall://store-1/product/fractal-design-meshify-2-mini-black-tg-gaming-case-w-dark-glass-window-micro-atx-angular-mesh-usb-c-331mm-gpu-280mm-radiator-support",
+    "webmall://store-4/product/fractal-design-meshify-2-mini-black-tg-gaming-case-w-dark-glass-window-micro-atx-angular-mesh-usb-c-331mm-gpu-280mm-radiator-support"
+  ],
+  "original_task_id": "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-b59778e8ac3440818af05ef012d8d1de"
+}

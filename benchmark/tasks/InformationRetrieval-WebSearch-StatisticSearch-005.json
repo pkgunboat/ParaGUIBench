@@ -1,0 +1,19 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-005",
+    "task_uid": "63ea4f95-9f2c-4a97-b44f-d0116fe6e80a",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "answer_match_mode": "exact",
+    "instruction": "As of January 1, 2026, among the games that have won the TGA Game of the Year award, which game has the highest standard-edition regular price (ignore temporary sale discounts) in the Steam China region? If multiple games are tied for the highest price, answer the one that won the Game of the Year award most recently. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "The last of us Part II",
+    "accepted_answers": [
+        "The Last of Us Part 2",
+        "The Last of Us Part II Remastered",
+        "The Last of Us Part 2 Remastered",
+        "The Last of Us™ Part II Remastered"
+    ],
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-StatisticSearch-005"
+}

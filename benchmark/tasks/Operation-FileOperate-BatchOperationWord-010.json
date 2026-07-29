@@ -1,0 +1,25 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-010",
+    "task_uid": "6e55deaf-c95d-49e9-91b2-b0155fe1dc45",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Insert images from the folder into Word documents with matching filenames, insert them after the placeholder named image Slot, and set the image width to 5cm.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/6e55deaf-c95d-49e9-91b2-b0155fe1dc45",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-010",
+    "eval_rules": [
+        {
+            "check": "check_image_name_matches_doc",
+            "file_pattern": "*.docx",
+            "params": {
+                "expected_width_cm": 5.0,
+                "width_tolerance_cm": 0.15,
+                "source_extensions": [".jpeg", ".jpg", ".png"]
+            },
+            "weight": 1.0,
+            "description": "嵌入图片是否为文档同名源图且宽度为 5cm"
+        }
+    ]
+}

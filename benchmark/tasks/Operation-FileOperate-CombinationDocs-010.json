@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-010",
+    "task_uid": "a1cd6a49-f077-4ae0-88db-5414ef18089c",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "I am grading students' English test papers, but this test only has multiple-choice questions. Checking each question and recording detailed scores is too tiring. Can you help me compare the remaining students' answers with the answer key and record the detailed scores in the already opened spreadsheet?",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/aceb0368-56b8-4073-b70e-3dc9aee184e0/exam.zip",
+    "evaluator_path": "eval/osworld_scripts/aceb0368-56b8-4073-b70e-3dc9aee184e0.json",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-010"
+}

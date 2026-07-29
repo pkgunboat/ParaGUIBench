@@ -1,0 +1,19 @@
+ParaGUIBench
+Copyright 2026 ParaGUIBench Authors
+
+ParaGUIBench contains original software distributed under the Apache License,
+Version 2.0. The repository may also distribute modified portions of OSWorld:
+
+  OSWorld
+  Copyright 2024 XLANG NLP Lab
+  https://github.com/xlang-ai/OSWorld
+  Licensed under the Apache License, Version 2.0.
+
+Files derived from OSWorld must retain applicable upstream copyright, patent,
+trademark, attribution, and modification notices.
+
+Benchmark annotations, task data, model weights, virtual-machine images,
+container images, websites, document corpora, and other third-party assets are
+not automatically covered by the ParaGUIBench repository license. Their source,
+distribution mode, and applicable terms are recorded in
+docs/licenses/third-party-sources.md.

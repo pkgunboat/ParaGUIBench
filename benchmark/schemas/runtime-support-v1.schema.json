@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:paraguibench:schema:runtime-support:v1",
+  "title": "ParaGUIBench Runtime Support Manifest v1",
+  "description": "Separates canonical task publication from preview runtime readiness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "manifest_id",
+    "release_id",
+    "release_manifest_sha256",
+    "canonical_task_count",
+    "tasks"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../schemas/runtime-support-v1.schema.json"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "manifest_id": {
+      "const": "runtime-support-v1"
+    },
+    "release_id": {
+      "const": "release-v1"
+    },
+    "release_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "canonical_task_count": {
+      "const": 233
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 233,
+      "maxItems": 233,
+      "items": {
+        "$ref": "#/$defs/taskSupport"
+      }
+    }
+  },
+  "$defs": {
+    "taskSupport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "canonical_status",
+        "environment_protocol",
+        "evaluation_protocol",
+        "asset_status",
+        "support_status",
+        "support_reason_code",
+        "blocker_codes"
+      ],
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "canonical_status": {
+          "const": "published"
+        },
+        "environment_protocol": {
+          "enum": [
+            "osworld.desktop.v1",
+            "osworld.chrome.v1",
+            "webmall.browser.v1"
+          ]
+        },
+        "evaluation_protocol": {
+          "enum": [
+            "paraguibench.answer.exact.v1",
+            "paraguibench.answer.numeric.v1",
+            "paraguibench.answer.keyed-numeric-set.v1",
+            "paraguibench.answer.ordered-structured.v1",
+            "paraguibench.answer.implicit-structured.v1",
+            "legacy.file-search-readonly.v1",
+            "legacy.webnavigate.bookmark.v1",
+            "legacy.webmall.bookmark-url-set.v1",
+            "legacy.webmall.cart.v1",
+            "legacy.webmall.checkout.v1",
+            "legacy.osworld.state.v1",
+            "legacy.python-reference.v1",
+            "legacy.operation.eval-rules.v1",
+            "legacy.answer.exact.v1",
+            "legacy.answer.numeric.v1",
+            "legacy.answer.ordered-structured.v1",
+            "legacy.pipeline-implicit.v1"
+          ]
+        },
+        "asset_status": {
+          "enum": [
+            "pinned_download_manifest",
+            "legacy_remote_reference",
+            "no_task_assets_declared"
+          ]
+        },
+        "support_status": {
+          "enum": [
+            "live_validated",
+            "blocked"
+          ]
+        },
+        "support_reason_code": {
+          "enum": [
+            "live_validation_passed",
+            "runtime_components_incomplete"
+          ]
+        },
+        "blocker_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "legacy_evaluator_not_migrated",
+              "legacy_asset_manifest_not_migrated",
+              "live_validation_not_completed"
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "support_status": {
+                "const": "live_validated"
+              }
+            },
+            "required": [
+              "support_status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "support_reason_code": {
+                "const": "live_validation_passed"
+              },
+              "blocker_codes": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "support_reason_code": {
+                "const": "runtime_components_incomplete"
+              },
+              "blocker_codes": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

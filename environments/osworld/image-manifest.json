@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "environment_id": "osworld-ubuntu-x86_64",
+  "vm_archive": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld",
+    "revision": "a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133",
+    "path": "Ubuntu.qcow2.zip",
+    "size": 12273896463,
+    "sha256": "b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712",
+    "distribution_policy": "download_only"
+  },
+  "extracted_image": {
+    "path": "Ubuntu.qcow2",
+    "sha256": "6d8056d8b8ea15578969d60c16be2b89f46a41f6dc86ba201e3037902aaca97e",
+    "status": "verified_on_reference_deployment"
+  },
+  "container": {
+    "image": "happysixd/osworld-docker-sshfs@sha256:3be783bbe5dc770f99a3d7d485511844744f4259abd49f949b641dca873a3d1e",
+    "distribution_policy": "pull_only",
+    "build_recipe_status": "pending_upstream_audit"
+  }
+}

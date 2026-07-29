@@ -1,0 +1,29 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-006",
+    "task_uid": "186a98aa-ada2-44e3-9187-558ddee9153b",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Please insert tables after data descriptions in Word documents to display the described data.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/186a98aa-ada2-44e3-9187-558ddee9153b",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-006",
+    "eval_rules": [
+        {
+            "check": "check_table_contains_expected_values",
+            "file_pattern": "*.docx",
+            "params": {
+                "min_rows": 5,
+                "min_columns": 4,
+                "expected_values_by_file": {
+                    "2025年重点城市房地产市场活跃度分析.docx": ["城市", "平均房价", "同比涨幅", "成交量", "北京", "63,500", "-2.1%", "12,400", "深圳", "58,200", "1.5%", "15,800", "成都", "18,900", "4.8%", "10,200", "杭州", "32,400", "0.8%", "8,600"],
+                    "城市平均房价.docx": ["城市", "平均房价(元/㎡)", "同比涨幅", "成交量(套)", "北京", "63,500", "-2.1%", "12,400", "深圳", "58,200", "+1.5%", "15,800", "成都", "18,900", "+4.8%", "10,200", "杭州", "32,400", "+0.8%", "8,600"],
+                    "设备名称单价.docx": ["设备名称", "单价(CNY)", "季度销量", "库存状态", "全景摄像头", "899", "1,500", "充足", "红外传感器", "156", "4,200", "预警", "中控网关", "1,299", "850", "极低", "智能插座", "79", "6,800", "充足"]
+                }
+            },
+            "weight": 1.0,
+            "description": "文档表格是否具有正确结构并完整承载描述数据"
+        }
+    ]
+}

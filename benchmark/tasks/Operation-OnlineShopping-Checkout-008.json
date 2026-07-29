@@ -1,0 +1,21 @@
+{
+  "task_id": "Operation-OnlineShopping-Checkout-008",
+  "task_uid": "e9623fc7fed44861b1d4dc10d2aec266",
+  "source_task_id": "checkout_task_6",
+  "task_type": "QA",
+  "task_tag": "Checkout",
+  "instruction_template": "You have access to the following four online shops:\n- E-Store Athletes: webmall://store-1\n- TechTalk: webmall://store-2\n- CamelCases: webmall://store-3\n- Hardware Cafe: webmall://store-4\n\nAdd the product on page webmall://store-2/product/corsair-3500x-gaming-case-w-glass-side-amp-front-e-atx-no-fans-usb-c-asus-btf-compatible-white to the shopping cart and complete the checkout process. Pay via credit card using the following checkout information: {{checkout_profile}}.\n\nAfter completing the checkout, report the URLs of the products you purchased, separated by ### characters.",
+  "fixture_ref": {
+    "binding": "checkout_profile",
+    "fixture_id": "webmall.checkout-profile.synthetic-public.v1"
+  },
+  "task_source": "WebMall",
+  "evaluator_type": "QuestionAnswering",
+  "answer": "webmall://store-2/product/corsair-3500x-gaming-case-w-glass-side-amp-front-e-atx-no-fans-usb-c-asus-btf-compatible-white",
+  "evaluator_path": "evaluators/checkout_evaluator.py",
+  "answer_type": "checkout",
+  "expected_urls": [
+    "webmall://store-2/product/corsair-3500x-gaming-case-w-glass-side-amp-front-e-atx-no-fans-usb-c-asus-btf-compatible-white"
+  ],
+  "original_task_id": "TaskExecution-MultiShopShopping-Checkout-e9623fc7fed44861b1d4dc10d2aec266"
+}

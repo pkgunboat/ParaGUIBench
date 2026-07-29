@@ -1,0 +1,14 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-001",
+    "task_uid": "ca7b6d03-0c78-4547-ab05-4f01d6ed8461",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "answer_match_mode": "numeric",
+    "instruction": "Among Beijing's sister cities listed on the English Wikipedia page 'List of twin towns and sister cities in China' (as of June 2026), consider those located in East Asia or on the Indochinese Peninsula (Mainland Southeast Asia). How many unordered pairs of these cities mutually list each other as sister cities on English Wikipedia (each city's own article or its country-level twin-towns list page)? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "8",
+    "accepted_answers": ["eight", "8 pairs"],
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Multi-HopSearch-001"
+}

@@ -1,0 +1,17 @@
+{
+  "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-006",
+  "task_uid": "fa7393e32d6e43b786f4251b512bcce2",
+  "source_task_id": "cheapest_offer_vague_requirements_task_5",
+  "task_type": "QA",
+  "task_tag": "CheapestOfferVagueRequirements",
+  "instruction": "You have access to the following four online shops:\n- E-Store Athletes: webmall://store-1\n- TechTalk: webmall://store-2\n- CamelCases: webmall://store-3\n- Hardware Cafe: webmall://store-4\n\nFind the cheapest currently in-stock and purchasable offer for a product whose title contains both \"Gaming\" and \"Monitor\" (case-insensitive), and whose own product page explicitly advertises a maximum refresh rate of at least 180 Hz and a response time of 1 ms or less. Both numerical specifications must appear on that product page; do not infer missing values. If multiple offers share the lowest price, return all of them.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+  "task_source": "WebMall",
+  "evaluator_type": "QuestionAnswering",
+  "answer": "webmall://store-4/product/msi-g255f-25-gaming-monitor-1920x1080-fhd-rapid-ips-1mz-180hz-adaptive-sync-hdmi-displayport-black",
+  "evaluator_path": "evaluators/string_url_evaluator.py",
+  "answer_type": "string",
+  "expected_urls": [
+    "webmall://store-4/product/msi-g255f-25-gaming-monitor-1920x1080-fhd-rapid-ips-1mz-180hz-adaptive-sync-hdmi-displayport-black"
+  ],
+  "original_task_id": "InformationRetrieval-MultiShopShopping-CheapestOfferVagueRequirements-fa7393e32d6e43b786f4251b512bcce2"
+}

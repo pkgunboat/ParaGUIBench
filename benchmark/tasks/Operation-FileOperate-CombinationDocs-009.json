@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-009",
+    "task_uid": "4fb43529-485f-4385-a6e8-b861bb562b5f",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "My PowerPoint slides and speech scripts are both saved on the desktop. Please help me insert the scheduled speech script for each slide into the Notes section of PowerPoint as a reminder. I have already completed this task for some slides; please help me complete the remaining parts.PowerPointPowerPoint“”",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/4fb43529-485f-4385-a6e8-b861bb562b5f",
+    "evaluator_path": "eval/osworld_scripts/eb303e01-261e-4972-8c07-c9b4e7a4922a.json",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-009"
+}

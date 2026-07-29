@@ -1,0 +1,27 @@
+{
+  "$schema": "../../schemas/webmall-checkout-fixture-v1.schema.json",
+  "schema_version": 1,
+  "fixture_id": "webmall.checkout-profile.synthetic-public.v1",
+  "fixture_type": "checkout_profile",
+  "data_classification": "synthetic_public_test_data",
+  "task_storage_policy": "reference_only",
+  "intended_use": "benchmark_testing_only",
+  "profile": {
+    "shipping_address": {
+      "name": "ParaGUI Test User",
+      "email": "checkout-v1@example.invalid",
+      "street": "Benchmark Avenue",
+      "house_number": "100",
+      "zip": "94107",
+      "city": "San Francisco",
+      "state": "CA",
+      "country": "USA"
+    },
+    "payment_method": {
+      "type": "credit_card",
+      "card_number": "4242424242424242",
+      "cvv": "123",
+      "expiry_date": "12/39"
+    }
+  }
+}

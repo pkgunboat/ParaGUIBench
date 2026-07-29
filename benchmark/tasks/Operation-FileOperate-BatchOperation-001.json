@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperation-001",
+    "task_uid": "4b987de4-a022-4078-8f50-8f34a39115e6",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "I have several photos of mountains in my shared directory, but I don't know the names of these mountains. Please help me identify these images and rename the image files to the names of the mountains shown in the pictures.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/4b987de4-a022-4078-8f50-8f34a39115e6",
+    "evaluator_path": "eval/osworld_scripts/ce2b64a2-ddc1-4f91-8c7d-a88be7121aac.json",
+    "original_task_id": "Operation-FileOperate-Batchoperation-001"
+}

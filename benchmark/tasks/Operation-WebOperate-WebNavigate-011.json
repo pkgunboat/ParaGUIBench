@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-011",
+    "task_uid": "38b185ab-d01d-4c97-a58e-d8d5ab4bec7b",
+    "task_type": "OSWorld脚本改造",
+    "task_tag": "WebOperate",
+  "instruction": "Open the official FDA page describing Tamiflu pediatric adverse events, side effects, and historical safety review information. After opening the target page, bookmark it in Chrome.",
+    "task_source": "OSWorld",
+  "answer": "https://www.fda.gov/drugs/postmarket-drug-safety-information-patients-and-providers/tamiflu-pediatric-adverse-events-questions-and-answers",
+    "prepare_script_path": "",
+  "evaluator_path": "eval/webnavigate_bookmark_evaluator.py",
+    "original_task_id": "Operation-WebOperate-Webnavigate-011"
+}

@@ -1,0 +1,34 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationExcel-007",
+    "task_uid": "7e6bdc0a-b1dd-47c5-98a7-baafd3f5fd0f",
+    "task_type": "OSWorld脚本改造",
+    "task_tag": "FileOperate",
+    "instruction": "Sort this Excel file separately by date, name, order ID, and sales amount, and save as four separate copies.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/7e6bdc0a-b1dd-47c5-98a7-baafd3f5fd0f",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationexcel-007",
+    "eval_rules": [
+        {
+            "check": "check_sorted_copies_preserve_rows",
+            "file_pattern": "*",
+            "params": {
+                "source_filename": "Company_Sales_Data.xlsx",
+                "header_row": 3,
+                "column_count": 4,
+                "expected_data_rows": 50,
+                "expected_total_rows": 51,
+                "source_data_sha256": "3ff60c88368d5deda80ad30518d24f3c53e0ee647bf755890f314f3c687ab99a",
+                "required_sorts": [
+                    {"column": "A", "order": "asc"},
+                    {"column": "B", "order": "asc"},
+                    {"column": "C", "order": "asc"},
+                    {"column": "D", "order": "asc"}
+                ]
+            },
+            "weight": 1.0,
+            "description": "四个完整数据副本分别按日期、姓名、订单号和销售额升序排列"
+        }
+    ]
+}

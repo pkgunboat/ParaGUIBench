@@ -1,0 +1,33 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-001",
+    "task_uid": "1dd4c724-6930-42ae-b9c6-d219083f3480",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "These Word documents have disordered heading hierarchy issues. Please fix them to: chapter headings → Heading 1, section headings → Heading 2.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/1dd4c724-6930-42ae-b9c6-d219083f3480",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-001",
+    "eval_rules": [
+        {
+            "check": "check_heading_hierarchy",
+            "file_pattern": "*.docx",
+            "params": {
+                "threshold": 1.0,
+                "rules": [
+                    {
+                        "pattern": "^(?:Project Background|Algorithm Principles|Results Analysis|Basic Requirements|Information Security|Performance and Assessment|\\d+\\.(?!\\d))",
+                        "expected_style": "Heading 1"
+                    },
+                    {
+                        "pattern": "^\\d+\\.\\d+",
+                        "expected_style": "Heading 2"
+                    }
+                ]
+            },
+            "weight": 1.0,
+            "description": "章标题映射 Heading 1，节标题映射 Heading 2"
+        }
+    ]
+}

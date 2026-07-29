@@ -1,0 +1,1656 @@
+{
+  "schema_version": 1,
+  "release_id": "release-v1",
+  "task_count": 233,
+  "task_root": "benchmark/tasks",
+  "fixture_root": "benchmark/fixtures",
+  "fixtures": [
+    {
+      "fixture_id": "webmall.checkout-profile.synthetic-public.v1",
+      "path": "benchmark/fixtures/webmall/checkout-profile-v1.json",
+      "sha256": "3b3bcb25075173bec16b1c5c5f04eab60060320b9e67f93953ad9f8f8fa92176"
+    }
+  ],
+  "excluded_task_ids": [
+    "Operation-FileOperate-Coding-001",
+    "Operation-FileOperate-Coding-002",
+    "Operation-FileOperate-Coding-003",
+    "Operation-FileOperate-Coding-004",
+    "Operation-FileOperate-Coding-005"
+  ],
+  "tasks": [
+    {
+      "task_id": "InformationRetrieval-FileSearch-Readonly-001",
+      "task_uid": "2b49d58c-521c-4e5a-963c-fc476c80534d",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-Readonly-001.json",
+      "sha256": "b4e50805b496fcba74119812de24ac955d4f8a37d1100fb7b79679ede983bfb6"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-Readonly-002",
+      "task_uid": "1dcb866c-9a32-452b-a398-59785ddba699",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-Readonly-002.json",
+      "sha256": "f15ab2c57e49efb83344abcb82871386ed505d9223c1b9ad131278a180518119"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-Readonly-003",
+      "task_uid": "04aad45f-ff78-4508-9403-b60cb8f357ff",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-Readonly-003.json",
+      "sha256": "1047df63ce37535e414fdda02a5f8aad296863ac2d844a3e16f1a9ad13e13052"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-001",
+      "task_uid": "06b65a9a-7fe5-4fa0-a8b7-27275d8c29e9",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-001.json",
+      "sha256": "012197f9f294905d9598a8206922a340e6a855fde900aec5f96df4e377908cc4"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-002",
+      "task_uid": "c65ead66-0dca-40e9-993f-affc35bde5bc",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-002.json",
+      "sha256": "54ac514b9da1809c958a593e82cdcca4332507e658c1d717f96b33e439dd22f5"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-003",
+      "task_uid": "163c86bd-de63-4311-8da5-ff750e8f7961",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-003.json",
+      "sha256": "8506e9923819882ceaf00231ec5a82c80e8bbfac57d7f8c50571c609e21dbeeb"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-004",
+      "task_uid": "cf706a4b-01a8-40be-92b9-539e77024928",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-004.json",
+      "sha256": "940e8624232e9a695e85f0b01ab13ce8b7460f20e0141ca502f25edaacf7af03"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-005",
+      "task_uid": "1fad9312-f060-4a1e-8208-2e65f6e950a0",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-005.json",
+      "sha256": "e90e6c0fcccf521a19c44c86c28ec5bd65de26fa29ec76219fb97002e98196b0"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-001",
+      "task_uid": "4f870c1f-b01c-4a10-90c3-1e3f0eab0373",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyWord-001.json",
+      "sha256": "d2898a8e8adcc54a962f8de7da559c483ad2da7bd63968ecec33d503f02803ba"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-002",
+      "task_uid": "d2783609-b215-457d-99bb-3e3153b286cb",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyWord-002.json",
+      "sha256": "fbeccede568d0cbc76f3fe487f5a3f5fc4b768f7bdedd655c226c222acb045e9"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-003",
+      "task_uid": "b568284e-3675-4352-a2ff-4a8305c99388",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyWord-003.json",
+      "sha256": "ec4ece5eb40948df3228cf5938933684d9cfe16fcc0b02a108ac2207c989a67d"
+    },
+    {
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-004",
+      "task_uid": "134a34d3-9f52-44f6-b7bd-12945c2479f2",
+      "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyWord-004.json",
+      "sha256": "54ba6e6fa9c253e9a560abfcb05f5db6e4bca98cf1d4195b230f3ba09ed9bade"
+    },
+    {
+      "task_id": "InformationRetrieval-VisualSearch-Video-001",
+      "task_uid": "f184a09d-7f09-49f5-87ac-c9d1e87ae403",
+      "path": "benchmark/tasks/InformationRetrieval-VisualSearch-Video-001.json",
+      "sha256": "b406a1e00d747135a34fc16ce49a7a4711f778ef610449cd921a0a986f477947"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-001",
+      "task_uid": "a2476a0a-6317-4617-9126-0d331f32d44d",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-001.json",
+      "sha256": "faa313e78c99e130e89bcba683c876001de894907e46cef3b51056ee40157fde"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-002",
+      "task_uid": "8fac924a-c33c-4f10-9892-c519f8b5a6fd",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-002.json",
+      "sha256": "994b367b55d0a3c81633a5709d15c383e7b4fc83eb23545d15e32c85e7d95716"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-003",
+      "task_uid": "5f69b47d-21d9-47db-ac80-9d1f1ebe737c",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-003.json",
+      "sha256": "8f485d4f1849204a6de09ac0477458fd02af19942af4758634388d6df2d1c0c3"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-004",
+      "task_uid": "0d0f34b5-6163-4537-b565-fce4e8c5d158",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-004.json",
+      "sha256": "81e25ad7aecc1b974eaec29bb7db81a2ab9c1616de69a77b7ae2f3acaa3cd560"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-005",
+      "task_uid": "d7df3db6-58e0-411f-80e9-488691bb6e16",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-005.json",
+      "sha256": "6be58c54f31df6f33cb25b55fc7bf90627860ca7dab9ec1f3c4e866b126cc620"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-006",
+      "task_uid": "023c25e5-322d-4d59-be6a-a38a61a833c7",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-006.json",
+      "sha256": "45f18b228b994dff40bedb6bd3077fbccec7152226be36f94e72dc575e2ffbf8"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-007",
+      "task_uid": "1bf60141-62c1-4b65-83df-ac96bde8cb84",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-007.json",
+      "sha256": "242559141c1bdef79b82ae8e13ed76f9b8d7d4c12cc2c012fea5f00b66ed6716"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-008",
+      "task_uid": "fb4dca31-5b24-4b36-a97b-8f17e453b471",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-008.json",
+      "sha256": "25b348504109012f2043e19a9d3dd4b5c06e6e047e5e5d570bfdb10d39e63c57"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-009",
+      "task_uid": "345d0730-4a97-4b10-a371-1b8e96b1f239",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-009.json",
+      "sha256": "e5f3f17f2e6ebb394c594a1d09a2835bc6edcd1b321f77061005989c602b17d7"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-010",
+      "task_uid": "8c67853e-ce0a-44c3-ae87-c6fe5b7a7b2e",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-ConditionalSearch-010.json",
+      "sha256": "031acc665824deb345ad0bedb0ee150fd312651ffd77a566850c18378277fdfe"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-001",
+      "task_uid": "ca7b6d03-0c78-4547-ab05-4f01d6ed8461",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-MultiHopSearch-001.json",
+      "sha256": "c20bba10c155a7c2db8421b660c0409a89e068ebc4ec96e5de309d4555cb8bca"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-002",
+      "task_uid": "4a3a3274-889d-4fab-bb3c-b3c1a8667098",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-MultiHopSearch-002.json",
+      "sha256": "0913053f4d316ce19c9606a976a6a988b07b4156c7392db61a5a82b1ed27c7c2"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-003",
+      "task_uid": "92ba2e82-f3e4-445b-9b69-cdcb110fc3f6",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-MultiHopSearch-003.json",
+      "sha256": "4c7f9579a5d848242705f97d1017597c253682aabddfff3fa41a5e6678fae2c7"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-004",
+      "task_uid": "30cab820-35c3-42ad-8719-ac0cd6851b26",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-MultiHopSearch-004.json",
+      "sha256": "5c663aedf4d868947abc2f4368253cb608d885aec612eebf00e8b5cdb2904e5a"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-005",
+      "task_uid": "bdae778a-b032-46a2-9abc-e0aceb11dc09",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-MultiHopSearch-005.json",
+      "sha256": "a29ac67f93a8725f10295a731887a38171e541bca3873531e3c57326b71d84dd"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-006",
+      "task_uid": "e7bc8cc9-2988-4c8a-8f9a-e09b09a5c4e9",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-MultiHopSearch-006.json",
+      "sha256": "2460a694120557343b22475b89efcf5e613ed913720177011e4601d7dc053abd"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-007",
+      "task_uid": "7a7f36d5-889f-4cc2-889b-c683065e9245",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-MultiHopSearch-007.json",
+      "sha256": "6af941c93baba5594e8e1e0d024a4bcae87f6011ddb594ad070381206305dab2"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-008",
+      "task_uid": "730b5e1e-746a-4598-8464-53a8bbb376b9",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-MultiHopSearch-008.json",
+      "sha256": "bb1f65d94a2969ae31bcd88830e7bc480826c65f89e945090352e67b5d640682"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-001",
+      "task_uid": "ab73b290-25dc-40fb-882e-dc4ac7cabaf4",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-001.json",
+      "sha256": "18920740e3d81b333920cf3de6b77f9dd4fbd3d3457abe38d3c239eba27d50e4"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-003",
+      "task_uid": "93b18f33-67b9-4225-a895-f833e1fd2f27",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-003.json",
+      "sha256": "094d6132fd813460d17c6edbe3e48b8ba31b80008fcaa68c98bc4b56fd2f2e09"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-004",
+      "task_uid": "7e76cfd7-7256-42b5-9570-a7665e881c0f",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-004.json",
+      "sha256": "823e600b48d8dcdc6f8f164321dcc4c8170c29a521a29c723c04ba7ef350162d"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-005",
+      "task_uid": "63ea4f95-9f2c-4a97-b44f-d0116fe6e80a",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-005.json",
+      "sha256": "639601c47eb1dd578ae236293d7398544f510d4759b1dc7acb234d17d5ce140d"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-006",
+      "task_uid": "d8b49bd7-12d0-4562-be7c-8bdcb2fb9b80",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-006.json",
+      "sha256": "6a50c49e9af85ee2feacc43f32caeb58d456668a518719f44405c5ba717ec406"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-007",
+      "task_uid": "cc72eb2a-ab16-4d7f-ace8-83f2bd55aef7",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-007.json",
+      "sha256": "e4911823a6e962439605340683baf4526e207735ac832209e8f85c97b441fe98"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-009",
+      "task_uid": "be4584d8-b912-4069-b023-2daf118fb90d",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-009.json",
+      "sha256": "5cc176e9ad6a843db0c058d24005560b2f995d1337b699d0aad4575e6bff0e7d"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-010",
+      "task_uid": "37792bfc-881a-4cfd-890e-a86a2ba70500",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-010.json",
+      "sha256": "c72ad463ea7cf1ef809bade19e212bf90275a2d5841046df2cbf72de49cc5543"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-011",
+      "task_uid": "42a1ebe0-7c9f-48d4-9cea-ae45415a8e41",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-011.json",
+      "sha256": "d269d2abfdd68db7a455b0b328bcc36db1983f520ce987ca36a5138913b726bd"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-012",
+      "task_uid": "41663784-fa75-47ff-8457-e9208a7a4158",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-012.json",
+      "sha256": "7d8006e112d98a86bcde07a885b09655e949ba27022a4d717fbe5149d60c5d95"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-013",
+      "task_uid": "56906036-c60a-47d7-9eff-54648aaf50d6",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-013.json",
+      "sha256": "7519e683b7d83b16e2aa71a3191ca6b7595add602ce136f2b84a494d6f8eed78"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-014",
+      "task_uid": "5c452f20-25a5-4c4f-ab51-5ba3168e1e2b",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-014.json",
+      "sha256": "89465c1aa4a8b748582713f3d70764b091ad3f0b99ccd7b4d953231b05c0c6ba"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-015",
+      "task_uid": "f732ca89-4b2d-4ff4-a34d-d56b5b510c9b",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-015.json",
+      "sha256": "f804e4e2c65435fd9b1c3d78815fe453de2d598309272ac8f23f5f9ea8ba8133"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-016",
+      "task_uid": "0e39dbd0-49b9-4c70-b174-f2fda04a4173",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-016.json",
+      "sha256": "904f97f95a8878e03b553ec19841916601e3ed7b547cd8def7d61d31f0e754f0"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-017",
+      "task_uid": "fb26b1f7-68aa-4a24-b7f2-b6dec896ed36",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-017.json",
+      "sha256": "968889fca4c2f2236343c15a9024ea54b0170fe523a45ba68523329109b3652b"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-018",
+      "task_uid": "b813337a-fa8b-442e-a51c-5920c273883c",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-018.json",
+      "sha256": "5b17c2ba588da7851fc94544c0f61de6a9913f54cdd764dee552eedcb74ae996"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-019",
+      "task_uid": "84728436-cfa7-41f5-b5b7-62d60fc33e59",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-019.json",
+      "sha256": "070cf0ab2bffb70e475d402ec61d0b758ab713f07b66e0dd01052d8ade5c5cd3"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-020",
+      "task_uid": "a134bfaf-37e2-4c5c-8d27-76c6fc7a37b1",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-020.json",
+      "sha256": "27df48489cf04d77ba80e614755d6f904638ab18a3dac3db9c99c6f92f5190a4"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-021",
+      "task_uid": "1d377c61-a917-49e6-b190-bb94ec9cad05",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-021.json",
+      "sha256": "b289cd7bba52a47bec0ce0c812efac216d3d2df5a33cddbb5a85f68a34375b98"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-022",
+      "task_uid": "a13b7561-1ee7-4d84-ac07-61844f8b46ab",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-022.json",
+      "sha256": "0b11a067460190439ab40345dee0d4dbd5bfe04b07a49effacadddf797ffa4a4"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-024",
+      "task_uid": "e55e97d6-6369-4e4d-bfdf-6009d8ffcbac",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-024.json",
+      "sha256": "7d9677db875d831a76de6aaf71dd7c697bc5e87a9bd12ddf9da147c3a1601f3c"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-025",
+      "task_uid": "37f18438-a9e4-49da-8164-1fdafabfa2ae",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-025.json",
+      "sha256": "8dc45d9ecf5f1eb1a86fbbb466619a3d7148d6702eb9e97ea9b4f15e28f9cb62"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-026",
+      "task_uid": "393b8c61-73b3-4d4f-b3f3-9230750c07aa",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-026.json",
+      "sha256": "9c8464ebaca410caf7ba6065825097fdb76302e66f8bc108cd89579136a60987"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-027",
+      "task_uid": "30a76b3f-da3a-4d0a-af5a-01c785649d27",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-027.json",
+      "sha256": "f193ee11e249854e260543bc5310fc7881919d105c68f27c233587d81f3e0889"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-028",
+      "task_uid": "da8a055c-e275-407c-bbe7-4359c983c8f5",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-028.json",
+      "sha256": "fa017bae2a9809a9fea89624197fc945c32a6683e7d87d0af263f18c204296dc"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-029",
+      "task_uid": "529636d9-fce1-44bd-a6bb-d1c231c8028e",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-029.json",
+      "sha256": "55f2fe05a95f7d8f6955a790b3901b14ea3e5a342529f4a738ea18dab13bbbc2"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-030",
+      "task_uid": "6c111e2a-8b42-4dd2-915f-b83f57dadb5d",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-StatisticSearch-030.json",
+      "sha256": "aeda33d7f19cc14ff0407f1f10713571031c301c073f3818e12f01d678a31713"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-001",
+      "task_uid": "38540eff-1861-4e19-b74c-15c0f8697be8",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-001.json",
+      "sha256": "a6e1b10cd622e750ba987c808a4679fbc0b2bb93630e4646ddd9184dcc6fb2c0"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-002",
+      "task_uid": "1eb91cee-905f-40a5-a6dd-ea87b7761c11",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-002.json",
+      "sha256": "57a41dd3f582ac0f8b4527c6bde88c556ccd609e6f99f0a7cc58a343006fe388"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-003",
+      "task_uid": "a54e59ba-08f4-4941-907f-1383e603cc99",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-003.json",
+      "sha256": "aa8922f949234598a5899c0324fce557a15797661f5ea128bedb9c21d2c14a82"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-004",
+      "task_uid": "a3809ce2-6a9c-4db8-afe9-74c0e3d860ad",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-004.json",
+      "sha256": "9b27bef400e8dd09920bf3a85f7ebf2112b4614211289d08cc6153dc331c9ba5"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-005",
+      "task_uid": "fa726b3a-c7bd-4242-882c-07c348ba2536",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-005.json",
+      "sha256": "fb08f7607616e5b557620c44c62a9ed39fb008e23b39b4ea46e491567ab6e365"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-006",
+      "task_uid": "58f36d7f-d64d-4e74-963b-8c48c4b8b135",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-006.json",
+      "sha256": "b6b5b7b5177f64047c258181b79df787ca659bd63c7dfeb65c5211c3a92651d5"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-009",
+      "task_uid": "a2f6bbe4-1da2-40b4-aa1e-85115b6fc1cc",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-009.json",
+      "sha256": "f62afd87c7882f41417dee06d86964fd4a72a6a2b9f97740a9bfebd12775323a"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-010",
+      "task_uid": "37b2cb1b-0b02-4343-afd6-708a00f8f239",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-010.json",
+      "sha256": "201b4e52d0039735b9af374cedcc812383315fa705dd5818cb86866400304ca2"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-013",
+      "task_uid": "4e4f6413-46c0-4dfd-af58-ba7c8f07944f",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-013.json",
+      "sha256": "d1860fdb4455d0a663cbeb4f6a41a7b0ed924d18587379b7ff62de6023de9e3f"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-017",
+      "task_uid": "2599ad5c-3391-47f8-b931-230bdb29cf3e",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-017.json",
+      "sha256": "c60a882eb9b94818a1d3aaee59d1c2d4c8669e156732a67082dfc73fa102a534"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-018",
+      "task_uid": "6ffc9118-8dad-4b1c-9ba3-3f8b98ec87da",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-018.json",
+      "sha256": "41854f787c75dcf187ba943ffd7f5e200bcd6ab97310d11347b2d549beaac03a"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-019",
+      "task_uid": "49d0bc86-2d30-4bbb-aa23-9994ed6b2d8f",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-019.json",
+      "sha256": "bd09cc33bb7222f6829bb5cfd56133f1751f289fc7e95178dbbe1a15fc9890c0"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-020",
+      "task_uid": "a90e39a0-6ce3-4112-bbf2-c0e06ee11cc4",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-020.json",
+      "sha256": "24abab8b94e9b8f5f626d80c51e4697c3b26b569a1f59e811b3493157a1f9222"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-021",
+      "task_uid": "d2f3d40d-a3b1-407b-90a1-dbeec1a3b2eb",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-021.json",
+      "sha256": "f862475cb94fd1fb9445c79e3700c512b57fc0c8ffb0076da2b422b1cae98066"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-022",
+      "task_uid": "ce49c71c-4506-4937-a75b-5aadbf18983d",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-022.json",
+      "sha256": "8f267c84b8a1d4dd851927ea34c7b99f82a4a27f90eb4f93ba2ba99e51a60dc8"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-023",
+      "task_uid": "ff4b5778-378b-4120-9b08-4033de555011",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-023.json",
+      "sha256": "eee3de979eb893ff726d54c4696b717986571e85d23a70ccd184fad69cb3a11b"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-024",
+      "task_uid": "711893a6-8480-4503-8685-56589ba17636",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-024.json",
+      "sha256": "550017a53fdf902abdc6d7f84a716728e91239a4c2d51cd9ebb115205beecd90"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-025",
+      "task_uid": "285122b6-df09-4d42-992b-077e4cba312b",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-025.json",
+      "sha256": "6c647b79335b59cc66ef8bbe73e895f5c7385257eb50180b34e2984d683103ad"
+    },
+    {
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-026",
+      "task_uid": "ae58ad02-582d-4933-b0d3-873f0c52802e",
+      "path": "benchmark/tasks/InformationRetrieval-WebSearch-VisualSearch-026.json",
+      "sha256": "0f0c505e79220b9c3505f35012751903bd9983eaa8f564bd60e2a8af5fddfa64"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperation-001",
+      "task_uid": "4b987de4-a022-4078-8f50-8f34a39115e6",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperation-001.json",
+      "sha256": "20d67ad992e5debe33f524cb1e6f4cebc5c50e4bc690217e6312759a0b2096a9"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperation-003",
+      "task_uid": "c919165f-cdfb-413a-8e00-424a0a133620",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperation-003.json",
+      "sha256": "c5dc113a82cac6e32cfaad0590343968cc86982b832072de6b0b408bb38bb0f3"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-001",
+      "task_uid": "5e573e33-135a-4b45-b398-f85c0f7fea0a",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-001.json",
+      "sha256": "877e0eba3e79ac2a58cb60150824d471f8950a28f4f4d4eafb5f3452213a9067"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-002",
+      "task_uid": "a1510a05-9fca-46ba-b95d-451dd5779194",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-002.json",
+      "sha256": "a33b035cb27fed34dac66c5283d8d1c42b5c1e7df7963263742dd84f619dccb9"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-003",
+      "task_uid": "fdb089b8-070f-4ccc-9612-e4599db799be",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-003.json",
+      "sha256": "9454d810af7533ce2fefdd8c2c2975c719f36488f5bb9683c68c9dd428d953ef"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-004",
+      "task_uid": "086f42e6-d412-4a4b-9702-0ef374e38c2b",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-004.json",
+      "sha256": "0490aa1fc67957c33e086fbc904b323f13996c7c79c438abf04c5e346b0a20eb"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-005",
+      "task_uid": "cccf5baf-e392-47af-a605-65401ef56fe5",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-005.json",
+      "sha256": "2442095a11fdfa799e129e53fa93b2a107aeae529581970cb2cc83ed4ba6dc1c"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-006",
+      "task_uid": "ed04e7b5-a2c6-449a-a493-b22999919008",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-006.json",
+      "sha256": "8259049865c6cce325632e6f65a9f12674da57b70d40956dec16fb4f22065efd"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-007",
+      "task_uid": "7e6bdc0a-b1dd-47c5-98a7-baafd3f5fd0f",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-007.json",
+      "sha256": "1b02115c9e8b945ce3f049ef29ba8cb4fab840a6599aaa791648114ebcdde991"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-008",
+      "task_uid": "1c73128f-a5ef-4a97-97ce-ef427d6d46b4",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-008.json",
+      "sha256": "e079aa6eacf37f0c952b814c2d74de82fbfc325f945b31dfe44f0b355411133e"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-009",
+      "task_uid": "0f045849-d0e4-48d5-9010-ece2534c2b8c",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-009.json",
+      "sha256": "fc297db1e7aaf4939256953d421944770957295d5f6300d194a3d0a1340bed86"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationPPT-001",
+      "task_uid": "a7ba9165-a65f-45a3-8449-ac2f358d3a9d",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationPPT-001.json",
+      "sha256": "8a7813440129f419fc59f38f26ca60503f5aea0aee40c786287f8c6951a7a866"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationPPT-002",
+      "task_uid": "85da5285-4ba1-4550-8f5a-00ea07fca510",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationPPT-002.json",
+      "sha256": "a0a5bcc7e9d0feb110ff01644877035f422f63ce1b6a5b91779ced2c46aa664f"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationPPT-003",
+      "task_uid": "e544ee0f-90e6-43a4-9958-6b74e88d94a6",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationPPT-003.json",
+      "sha256": "f987ec9eca91d34bbc5b809da5afbd7440e5e01573cd42ccb59323884f1f549a"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-001",
+      "task_uid": "1dd4c724-6930-42ae-b9c6-d219083f3480",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-001.json",
+      "sha256": "6b0092ef6fde5d9c3458ebe7c9b4d0b446bae5dfd72e4b42f8b1b86373f29b3f"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-002",
+      "task_uid": "f9d27527-85a2-4b64-99e9-7f3199cb1cd5",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-002.json",
+      "sha256": "4ab5e6451cf81f208b4ab2405e5109ea5132bda6a2997744ef9c5d6c4bca2a96"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-003",
+      "task_uid": "c36d8396-4dc7-4390-a661-9bb8c54bee9f",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-003.json",
+      "sha256": "79f0fdeef18c9b3b5f624178eed5fbe8514e98a40972afdecaae46a506094f7c"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-004",
+      "task_uid": "6ed5298a-16d6-44fb-9c0c-35e87d3f13c0",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-004.json",
+      "sha256": "e4602313635d5616d80dc15ab2c376c6be1ff916125b2767e156a6142cbcb10e"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-005",
+      "task_uid": "0ae169d8-aeb9-4c78-ab11-a182444c8eed",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-005.json",
+      "sha256": "00ec9f3ce1788685af50262817a32eac45e45a420e5007941048ee1d3e247ac5"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-006",
+      "task_uid": "186a98aa-ada2-44e3-9187-558ddee9153b",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-006.json",
+      "sha256": "0e0debe4d59e38ba21388566b164f01552c1838811c5b67be4cebfb0cab27f1d"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-007",
+      "task_uid": "8ff7afec-e238-43df-a240-c4d16807f8b4",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-007.json",
+      "sha256": "1c2c09e50478cef840fdad7743ce05b4c235ed4ed010777e80fb0ad095018120"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-008",
+      "task_uid": "b9929f12-d179-450a-922a-22afb361bad3",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-008.json",
+      "sha256": "6b0993ecc288fc05b3de08c9d9fcb6cc4a175d368ea6ecd25754294d85896756"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-009",
+      "task_uid": "6af0b589-eec2-4b76-a0dd-b18a06ff705b",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-009.json",
+      "sha256": "3432ee97f969e0f11d059dbcf63ecd8a9deef91816189f1362c796a36abd5b5b"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-010",
+      "task_uid": "6e55deaf-c95d-49e9-91b2-b0155fe1dc45",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-010.json",
+      "sha256": "1e88d1b0f3c268ba555a20e46b99b3ee9b71c22c977f616047eecbc203562ada"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-011",
+      "task_uid": "248add77-e3c1-4a59-b98e-03752238dc81",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-011.json",
+      "sha256": "bb0910c920e950ce6a21eacab2207afa315a595460cbf72fee33dcac8d0fedad"
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationWord-012",
+      "task_uid": "0857689f-8976-49a3-9314-d2b194f9d629",
+      "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-012.json",
+      "sha256": "9bb9b3eb813e7b4e3dd9ad9d3d55226afca5a7ae793a5fbff3ff8b1596ad5d2f"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-001",
+      "task_uid": "c2ec79c0-bb7c-4f45-b5e5-437d15d518cb",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-001.json",
+      "sha256": "c25d63c700e925d8eb108aed9eac11b47852665e7405c9f12e159fcdc2f67836"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-002",
+      "task_uid": "6bf5b1c9-a2a2-4901-bbe3-631a33da45e8",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-002.json",
+      "sha256": "9edf9789486e871bf3fc94445851269e5d0e78a748c10dc0aba35dd2c051c945"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-003",
+      "task_uid": "2654f880-dd6b-4f8c-9f88-aebe2bfa51be",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-003.json",
+      "sha256": "ecd90672b9c91e451f077601bc680ef444335137b90bcd668c0b1102a0248613"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-004",
+      "task_uid": "04a0b25e-f726-40a0-a88d-69bbf538f634",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-004.json",
+      "sha256": "c512ef575f741525a09a41bbd9b662b2ed6e4313581a8baaeab82ad86f6a3a3a"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-005",
+      "task_uid": "58870403-ea44-4f4c-8941-b2a57f170cd1",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-005.json",
+      "sha256": "3b241d239ce150da6a2ee379f54f3a7ce0310df623de0000292f3d4242ecde5d"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-006",
+      "task_uid": "d5999c0f-ff61-476d-8e98-9c5f1b91fed9",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-006.json",
+      "sha256": "0374619cbb148c06742d511a44b2c24ba6fc152543017327e762aaf7fb385607"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-007",
+      "task_uid": "eebc7ed2-5c7d-4df5-ab71-b53040167536",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-007.json",
+      "sha256": "01fdc9dd73e3017d911169147bcc25b980fd2a8a0d2aca29eb90122a98214e83"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-008",
+      "task_uid": "3f600f5d-a835-4c59-9fae-b9139365d03e",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-008.json",
+      "sha256": "0444080f796f89f611cf4ea4f2749d43e39939510a0d83e87dd1847791c7763b"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-009",
+      "task_uid": "4fb43529-485f-4385-a6e8-b861bb562b5f",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-009.json",
+      "sha256": "ce0b56cd5bdffe2650cf16acd7aca677b1e4aa9d84910b6463e54edae8f55f1b"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-010",
+      "task_uid": "a1cd6a49-f077-4ae0-88db-5414ef18089c",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-010.json",
+      "sha256": "6fa7d67d027ff93562079026e56d1a9c7a548c4c170ba3fb16c618971783d1cd"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-011",
+      "task_uid": "60ed834a-2f51-4e3b-9b0b-6ed9c24249a4",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-011.json",
+      "sha256": "283981518445f6d71cb1456711eada7332c6a3cf8dca387e38e1a5fe348a2161"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-012",
+      "task_uid": "a92f8e87-36b0-4da1-aa72-f7b753011488",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-012.json",
+      "sha256": "7d890f55371d190ff820ade1d9b1f36d8c2774c3530c69ea27f64326d8449e2f"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-013",
+      "task_uid": "3d514057-efd2-44b9-98dd-4b092ac2828a",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-013.json",
+      "sha256": "1d9387c0f31c39a4a159da7e66f584cba8f2bd7400a239e9b7e87a3ddffefd5e"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-014",
+      "task_uid": "f5e1b40b-ea38-4d9f-9cf6-11f1dff5f2cc",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-014.json",
+      "sha256": "aea975bafbc9645cea1be79c350962c5e3a0279dbb0cfff4388995cc7702c801"
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-015",
+      "task_uid": "9f55fdb6-a749-4170-91a2-bebddd3492d7",
+      "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-015.json",
+      "sha256": "a546589ba0bc08a2b0d67c7ceeaeb2e5526ba9b1edb39dcc681a73ab64d50da1"
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-001",
+      "task_uid": "e9e7bcf6-92da-4ff0-aaea-821099370093",
+      "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-001.json",
+      "sha256": "ca8a828b3c0c7fe6baa33af559ec860e627950f2eb61ebce7ba04d31bfab5f69"
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-002",
+      "task_uid": "31d84d8d-8c61-4181-b321-44b83adc03f9",
+      "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-002.json",
+      "sha256": "93cdf47e1a93ec34e0c51e2794fd9b6b0567e3b1370c6ca2b9eb7ece845ab3e8"
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-003",
+      "task_uid": "51d7a7fe-e659-4de0-8345-c2c04da90373",
+      "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-003.json",
+      "sha256": "eb3131d2d6cec46e9d5265d0c9f8469960a68b0ccb167f1d3f19252d6f7d4de7"
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-004",
+      "task_uid": "19ed62a3-9df0-4879-a685-0681acc1c708",
+      "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-004.json",
+      "sha256": "855a15c17e1e5c416b8d3e62d23c9518737dbca96cb9f1103aa5755d2c5d1065"
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-005",
+      "task_uid": "dce61462-cf48-42d9-9466-5a0171aa5d12",
+      "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-005.json",
+      "sha256": "9681e54a66ed787ca316959ecfab4e14f7d6cc8889c5fb4014f91dfbb44f337b"
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-006",
+      "task_uid": "d624fd2f-f184-4041-a33c-678f6fa10744",
+      "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-006.json",
+      "sha256": "2f6131ecf67b69054b67852ad1b427e374effaf9c7110490584afa47254af006"
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-007",
+      "task_uid": "6f137b26-6efd-45e7-bd3c-034c81ddc790",
+      "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-007.json",
+      "sha256": "dccb8a4fe13a3260fd200f298fb3cdea521c9c3a808ed05b91e4252f72a0e286"
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-008",
+      "task_uid": "65a4848d-b4b2-4173-8308-a0213fdafbd0",
+      "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-008.json",
+      "sha256": "acdec8a0efb8ca8185b4462dda8a7b2bfe3cbd396c6cb60e5e67f33e18075fa3"
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-009",
+      "task_uid": "14b28a49-e101-4458-835e-2067823ddefb",
+      "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-009.json",
+      "sha256": "27d11ee9bce54bcce81824c14c1411a59e336bfa590606a4e771d23550ea8165"
+    },
+    {
+      "task_id": "Operation-FileOperate-Settings-001",
+      "task_uid": "9b5220d5-f1f0-4db9-902d-ad41aae4d775",
+      "path": "benchmark/tasks/Operation-FileOperate-Settings-001.json",
+      "sha256": "64369235cfb2d26b1817114348b584880cdcfed98b4c38a2266ceb5e7756f290"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-001",
+      "task_uid": "30fdee8df9174a09b1a4ef89d483605c",
+      "path": "benchmark/tasks/Operation-OnlineShopping-AddToCart-001.json",
+      "sha256": "08763f1e81c0acc54a8f70e550088a675aa851e5a1d8dbd0cd5890e8801ad8df"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-002",
+      "task_uid": "71e2f451e6ba44819c3be89fcbe6124f",
+      "path": "benchmark/tasks/Operation-OnlineShopping-AddToCart-002.json",
+      "sha256": "0b937acf55229acd0e5971236d129b85b418aafd4e629d4a6564dfebf5e82f03"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-003",
+      "task_uid": "79b0cd0861774d4291ce506c43257972",
+      "path": "benchmark/tasks/Operation-OnlineShopping-AddToCart-003.json",
+      "sha256": "88959ef1d77c99b16f49de78c208b698d3f28c3ad39480902f6af1a5582ccf9c"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-004",
+      "task_uid": "88958e999e6d40c4a90758e913d77ffd",
+      "path": "benchmark/tasks/Operation-OnlineShopping-AddToCart-004.json",
+      "sha256": "ae66aa5623994da58dba205a01926a2ce0d301e0995298ef3aee904d5cdb5050"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-005",
+      "task_uid": "b6335f7661c943b8b205e010332deb96",
+      "path": "benchmark/tasks/Operation-OnlineShopping-AddToCart-005.json",
+      "sha256": "61a9f6f4fa886ca62a4a847a1d57a6caba32878294f1ce06a2b2a2b0df5350e1"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-006",
+      "task_uid": "eb5f7cc68c2349a29a37d799f3bf65b0",
+      "path": "benchmark/tasks/Operation-OnlineShopping-AddToCart-006.json",
+      "sha256": "550491a895a88cb609de875bbe19847d22b21fd267a95fce42ac5f5f8f07a16e"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-AddToCart-007",
+      "task_uid": "f2cb4a0fa45142b093243f9ff947cc68",
+      "path": "benchmark/tasks/Operation-OnlineShopping-AddToCart-007.json",
+      "sha256": "f4d194eb8fce41da55ce9074f19385627cccabb227afd5477732a3a97f3bf733"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-001",
+      "task_uid": "07f5bca86b55489180542f7b87034439",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-001.json",
+      "sha256": "a7a7d7a6715453dff7f2a4671c9ed88f7fc1a72956598c0ea1317dbb37361f9f"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-002",
+      "task_uid": "16299858995641daadf4ef40b919f438",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-002.json",
+      "sha256": "2139e2f4533e0d1cf8c8ed890ed6ce7dbbb7f271cc16b66ebe0bbf59c5848b95"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-003",
+      "task_uid": "233aa6457c054445a1150694bf6a5a86",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-003.json",
+      "sha256": "949423c81877a913703146a164582be0cec44debb2418695f34d4664edb89311"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-004",
+      "task_uid": "7b4c474028014cbe9f41c2ab707bb2f3",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-004.json",
+      "sha256": "45e6a98eaf69883bba5a212b8593fb5571ed98ee334c724d36c745e256944ed9"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-005",
+      "task_uid": "859f25436e3240b492f37100cc0b80cf",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-005.json",
+      "sha256": "0a0cd1701ae6705cfde71e23c862cdf27083b80bcfab1111471767fe24f46e5e"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-006",
+      "task_uid": "866a95cd092f44ca9bab77047c277678",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-006.json",
+      "sha256": "b5cea39de94e0ca9b64ed78c42a6b68e98c4be8f15b3440954bbd9c0ee85f1ab"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-007",
+      "task_uid": "945163435d714a0baea55523cc1fe8f2",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-007.json",
+      "sha256": "1bfa38e5957570fac030670dca237cf5d6fc8fef47b4e91875f1774ca14f0179"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-008",
+      "task_uid": "be2c11065a3c424e98c77568c5ce8275",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-008.json",
+      "sha256": "d2c4205d060426e287bf979220089bdb96dd3542d86b83e8723b4d6c4ac6cda6"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-009",
+      "task_uid": "d4d5500f17174ebc98ba70ac04682647",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-009.json",
+      "sha256": "e329a8b36a1acb609e749f142b8a347340715d0b9ef321c52450b9033f64da28"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-010",
+      "task_uid": "fdcab038b1e04ef694394e959b1a8a65",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferSpecificRequirements-010.json",
+      "sha256": "ee138fff755a68d52c2e54f5226144e5b5415dcd87f78f0948c49703d5e3a64b"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-001",
+      "task_uid": "2f786b90968c471b8cdf5ef5c3da7e67",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferVagueRequirements-001.json",
+      "sha256": "cfc69ea65f62869f5e41b66de58e5dc44f77b9edb3655faeb4a3edff24531b1d"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-002",
+      "task_uid": "4b758a34ba7e432294a877dc5c11fe8b",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferVagueRequirements-002.json",
+      "sha256": "9e8a3284b682f350db2443a85f7c677f3b9bd3ee6cc5e6f508134b9df42ef5c8"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-003",
+      "task_uid": "71fe4b7a4054459d97f10285deb5d0b1",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferVagueRequirements-003.json",
+      "sha256": "ada003aba76bdc74377521a96709cd4c8feb90d7d84dbeb6d601100fe3eab613"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-004",
+      "task_uid": "a2d8477741be4cb59ede7aadf8e6ec91",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferVagueRequirements-004.json",
+      "sha256": "6e4a6c1462db33072187d49767a802fcb794fab6c29c8e77d51a11d0507ab10f"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-005",
+      "task_uid": "bea3ac2752ca4c9f9dc023a99d0a995b",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferVagueRequirements-005.json",
+      "sha256": "c41db5cf27f1af8b0b5a99f9f62304b8668f92e0965e8179c9fc2a34b7a198c4"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-006",
+      "task_uid": "fa7393e32d6e43b786f4251b512bcce2",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestOfferVagueRequirements-006.json",
+      "sha256": "0ef0799ee0701e35bcb587efd8f45cb8c0c52a5c46054ab13d4b6c7389b1d88e"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-001",
+      "task_uid": "03f89eaeaaaa47aaa48f83c5f8a2ff47",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-001.json",
+      "sha256": "bd099a95ee958648ca64db28ee125d85a8a6c15aa5e0af02a7ba1198cf1d4b67"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-002",
+      "task_uid": "08e367e75bb54b47901a5bc1bbf1de19",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-002.json",
+      "sha256": "608001954d5cb69e0884405ecf9623313b99f8c4628dfbe08c970af519bc4738"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-003",
+      "task_uid": "17dbb505e1304188ab8b24e1419541b3",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-003.json",
+      "sha256": "7b43a1caf3cb897306b68d547a915ce5e2b0d2e9c694967db1f154188739cd89"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-004",
+      "task_uid": "3d31169529ed4cd68b093c34816c6018",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-004.json",
+      "sha256": "6787a86a670b5d9c770e7bae22a5c1decc06018fbbeceedb2a1b7fc2ada038e5"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-005",
+      "task_uid": "3d6863788de1466c96d58ecdc6bba73b",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-005.json",
+      "sha256": "d340118e664450e35833d3730b6f3be5d597f1cd220f244de6ad10937b850310"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-006",
+      "task_uid": "3fb27e66bdff4e1d8e0c818c28fa6ba6",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-006.json",
+      "sha256": "c858ddaea6939b3e2f76dcfb2e2f3b3d6bcd36b440ac5be474f34205ee2922b9"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-007",
+      "task_uid": "3feea8377a87475e8a95f93af0e13738",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-007.json",
+      "sha256": "518a01905738484bc1f779f676b082f0d09b3d0ecccc317eb8c122c73c00aec4"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-008",
+      "task_uid": "768238446931424daf6388822e01954e",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-008.json",
+      "sha256": "e6fd34e09867e3a5b591eef7c210c7e56235c1b05236bd04318593674902789c"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-009",
+      "task_uid": "a61d02d9b07242ad8034acf5857d219f",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-009.json",
+      "sha256": "4a5c012a929617c85b9d7eeecad61f66c7def989c7297a4cbb6fb2ab3e7b9044"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-010",
+      "task_uid": "d75216bdee0043639d36848bda29fc05",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-010.json",
+      "sha256": "d8c38e7ead6bc174c40cea492bc1c3642466c502255671a4a4b82db514b44b7c"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-011",
+      "task_uid": "d9f3746fe10f4ce7bfc9f800fd058f17",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-011.json",
+      "sha256": "98458906abe54c1d1f7a3e5fbb80dd4e2c30ad161480ce80010d4c44bfea87ff"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-012",
+      "task_uid": "e4a72eb7a5344d70bcb61e379b7f143f",
+      "path": "benchmark/tasks/Operation-OnlineShopping-CheapestProductSearch-012.json",
+      "sha256": "cdef26e8336911b4dcfb6fa5758094212f6c4b203cd52f3a61cae9533efd9316"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-001",
+      "task_uid": "232c21f186804b808fea91e18ccec092",
+      "path": "benchmark/tasks/Operation-OnlineShopping-Checkout-001.json",
+      "sha256": "9629dd3755a826f967032fcfc22f7674d371b5c0ba06becf0837f703b75170e5"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-002",
+      "task_uid": "7ab658aa7c0240d1b4723de8988f7766",
+      "path": "benchmark/tasks/Operation-OnlineShopping-Checkout-002.json",
+      "sha256": "23e092ceb52f6a25934094253cffb538b446f8e746d022a0dd18adc4237220e5"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-003",
+      "task_uid": "7d18858b5a5d496e9f41b5b9fa9cfa67",
+      "path": "benchmark/tasks/Operation-OnlineShopping-Checkout-003.json",
+      "sha256": "c8f54521f71dbb6e8f27b6052423919cabbadb37b8ac724e9451c66caa6671c2"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-004",
+      "task_uid": "8f368ad172f84e7fb46cbcaf4deb9cc2",
+      "path": "benchmark/tasks/Operation-OnlineShopping-Checkout-004.json",
+      "sha256": "2a6026ce6f6290d5ba588b433dfdd7aeed276ac48f5b81c24ee5dc743710ad3d"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-005",
+      "task_uid": "9c4a06f81e0547ed96f6b12b337b7c13",
+      "path": "benchmark/tasks/Operation-OnlineShopping-Checkout-005.json",
+      "sha256": "b94eb049724d7b285dc37a5e529011d30297af14b532593bf6790dd0f8657525"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-006",
+      "task_uid": "a3da1abaa0b8440a9c34ba05cfd7b442",
+      "path": "benchmark/tasks/Operation-OnlineShopping-Checkout-006.json",
+      "sha256": "d8749305a21e683cabbfa812a76571cfa3aec5b03683cf71adf693aecfda1ee5"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-007",
+      "task_uid": "b00bbe997f284aed9a81d3a0e565637b",
+      "path": "benchmark/tasks/Operation-OnlineShopping-Checkout-007.json",
+      "sha256": "04f827523698b81c1075124a40ce864a96cf8ee3329673fe74eae20c7e27540e"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-Checkout-008",
+      "task_uid": "e9623fc7fed44861b1d4dc10d2aec266",
+      "path": "benchmark/tasks/Operation-OnlineShopping-Checkout-008.json",
+      "sha256": "23d741daa6c9cfaddd9acac561ac53507a9ea53fc80710753f61c2148ea338e0"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-001",
+      "task_uid": "622832d524704bd9a5a2e0a4ed3efb15",
+      "path": "benchmark/tasks/Operation-OnlineShopping-EndToEnd-001.json",
+      "sha256": "4a566ba8a73cea38ad3f2a374cb1d68fdf789cee24f254d570f7c36e14eb3fa2"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-002",
+      "task_uid": "6eaaebfc174b429db8cd5dc900b0b00d",
+      "path": "benchmark/tasks/Operation-OnlineShopping-EndToEnd-002.json",
+      "sha256": "8e3ac7aaa6140aafa4e6f4bec098c2cc18e37945d54f98790a77bdd558c1fed3"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-003",
+      "task_uid": "7f3356a56e0446be84aff1bcbeae7bdc",
+      "path": "benchmark/tasks/Operation-OnlineShopping-EndToEnd-003.json",
+      "sha256": "c762122f469e0c6f4c24a9b4b844fa99b44ee861c7d063e8078c658dd83914df"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-004",
+      "task_uid": "94191bc954484f90aeb2037c2da2e8a4",
+      "path": "benchmark/tasks/Operation-OnlineShopping-EndToEnd-004.json",
+      "sha256": "631f514c8a3f6091bf871ff3cfd5c59491b67a28aa25255f3fabc47fec497c30"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-005",
+      "task_uid": "aaca1ad4c789466d9ec8335ca58ed26d",
+      "path": "benchmark/tasks/Operation-OnlineShopping-EndToEnd-005.json",
+      "sha256": "4a42f71a6ff4ca52e207bfa308c89d3d80cbeb225cde6cae446e7e9f31983b7f"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-006",
+      "task_uid": "cd38f9aaf2b448a48c7ff1306fe8684c",
+      "path": "benchmark/tasks/Operation-OnlineShopping-EndToEnd-006.json",
+      "sha256": "7e03e421eabfd3680ac8242f57d32f5f837b895432a5c266fd36c9e66aa67f88"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-007",
+      "task_uid": "e485786845ff490ba8db98c1ae9c5a0e",
+      "path": "benchmark/tasks/Operation-OnlineShopping-EndToEnd-007.json",
+      "sha256": "ac5976c0d420f3a1933b75e516369aa31a510702ee06b95afc80bdb5220b054c"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-EndToEnd-008",
+      "task_uid": "f4e2962c142f46c48c05d6173f2e7313",
+      "path": "benchmark/tasks/Operation-OnlineShopping-EndToEnd-008.json",
+      "sha256": "ab0b1f3d1bb026fe31d9120374acf92a921af3ae75f0e517cc774e858244cdcd"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-001",
+      "task_uid": "0d34c4e1863c4ddb832ec4eba10d5ef6",
+      "path": "benchmark/tasks/Operation-OnlineShopping-FindCompatibleProducts-001.json",
+      "sha256": "d489fb0a4ab98ec4ba0a12b12e68dadabe0778d54282916de4b5b95fec12d06e"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-002",
+      "task_uid": "528e679576bc4462aeec4a0abae5c414",
+      "path": "benchmark/tasks/Operation-OnlineShopping-FindCompatibleProducts-002.json",
+      "sha256": "e733c670ea9660c2b2b0fc70ff05b0578ea4d2f03f35c2c62b50b5a7379a8059"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-003",
+      "task_uid": "5e20f6ab917d4524810d51f0e559a1ff",
+      "path": "benchmark/tasks/Operation-OnlineShopping-FindCompatibleProducts-003.json",
+      "sha256": "83a392aab02d0c159951d2b5ecbab20753d735fbf7759cee332190ffc860836e"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-004",
+      "task_uid": "a6ed8ba3033845539ba27903548e8a22",
+      "path": "benchmark/tasks/Operation-OnlineShopping-FindCompatibleProducts-004.json",
+      "sha256": "7ac117568dabee763f048fb5e0bdfe397b31ca89165ed765a9f20aff2047b192"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-005",
+      "task_uid": "b7bac2c9dccb4d3eb448ff39788ebc66",
+      "path": "benchmark/tasks/Operation-OnlineShopping-FindCompatibleProducts-005.json",
+      "sha256": "90a8803646c6d949f6c465dfd01d4b6a41c2992b4a5f60883f2af9645f27aef3"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-001",
+      "task_uid": "33f0b28a99694aa28d4370bacf65cf11",
+      "path": "benchmark/tasks/Operation-OnlineShopping-FindSubstitutes-001.json",
+      "sha256": "d7c99d28198ce60e8cc5c6c0c48eeaf716c7414ed6d72ea0a55cf45663d0c918"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-002",
+      "task_uid": "bb4139a2ba6f4267ad69309e7bc40834",
+      "path": "benchmark/tasks/Operation-OnlineShopping-FindSubstitutes-002.json",
+      "sha256": "729031ccf587a27ea830e04ad086d734c332837b321c8f162896c96cdbc0a431"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-003",
+      "task_uid": "deaa61ddd20f4cad9c2d1e965698d67b",
+      "path": "benchmark/tasks/Operation-OnlineShopping-FindSubstitutes-003.json",
+      "sha256": "157156524c40fa633be0bb6f4c0ccf9588c6c5a319fd6b4f4b03c7b14d223045"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-004",
+      "task_uid": "fcc4d2c9076645a2a0d9b785b7fc1ed9",
+      "path": "benchmark/tasks/Operation-OnlineShopping-FindSubstitutes-004.json",
+      "sha256": "68860af310e3954881ca5a7e45ecd0d94ad6751915ef57498b59e33771d1f803"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-001",
+      "task_uid": "194e2797198b42ae96cd5693490ac651",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-001.json",
+      "sha256": "ad9beb3e1aff890b930891d5005e3237b018aaae2e5a22e38912fb8dec1980b3"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-002",
+      "task_uid": "36251517df2b4fb780d7851f830b6547",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-002.json",
+      "sha256": "f5d76e308ba60119514033de72e6cc41ab4dbaa23dae94303c4fd27f0aed5375"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-003",
+      "task_uid": "3e1b77fb22034860af10835c58f54b68",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-003.json",
+      "sha256": "6006fea762ef94b4c65149148fa2fba51486b077bc61d8a4f29e759e48947404"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-004",
+      "task_uid": "85a721caec6e45ff877fc5a58451d600",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-004.json",
+      "sha256": "d2c0ea0a0b28ba13116a5ca7f2bddbbb5d7e17f57c9bb218d67764f3e066a546"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-005",
+      "task_uid": "9ef50470a95446ef89f2f37fcc24ec00",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-005.json",
+      "sha256": "fb2291b14d8d119a7e014cfd1f1ae3ba187a56a213bc61399e77ee3c3d147cf6"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-006",
+      "task_uid": "a2dc1b7a75134647aaf2c20bc82b75cb",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-006.json",
+      "sha256": "6f1b7060659b417e91aad8fef00bfd4f96b9718b5fd58e41b087f268eb794e3c"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-007",
+      "task_uid": "b59778e8ac3440818af05ef012d8d1de",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-007.json",
+      "sha256": "3531424efce964359658a862a23fa778dc4aa823191be211a43c14457102fe19"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-008",
+      "task_uid": "ba65d33f3b29492fb8cb30a14b915d66",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-008.json",
+      "sha256": "8d629ba463d1f183bb24b8410baabdafbcc03adcf192006ec6e04b91a9db4fd5"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-009",
+      "task_uid": "bc0c902cc2cc4255ab02acabc282fb66",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-009.json",
+      "sha256": "7694b66ae86d3ef7282a5bbbdf80b0624a4e0e42bdff7c6d9b93e6125277d811"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-010",
+      "task_uid": "e4023f2a64e74903a7acd081e212cde9",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-010.json",
+      "sha256": "9c46e6ec112358aee515b036911fe840861a079e5408ddedd1b99c56391e5ff1"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-011",
+      "task_uid": "fad4f2bbe3994256871f7a47bb0fd1f1",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-011.json",
+      "sha256": "bc3f0e6ef2d9f45764f50191c47ee5eb1ce4a10f93e9de930fc61aea2fc85c82"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-001",
+      "task_uid": "09558c9fab504598b5a762dfeed2f813",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-001.json",
+      "sha256": "0ae918a089d7a6277b1925ee7bcf7c8e326ae58798bac342e5025e3cb46d0d21"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-002",
+      "task_uid": "1273cd377d0e4403a88ec4eb8b340eca",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-002.json",
+      "sha256": "c4c35143b163a01413e3925c7ee9ad053fb57a2ee938cb53ae6bd73e18c1d696"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-003",
+      "task_uid": "2615b7d0426746a4ab055bc13654afdd",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-003.json",
+      "sha256": "549f9ffb7e2408bd5a8abde8362839a35b54b95ddbb10d6096e68b2ca5101aa6"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-004",
+      "task_uid": "3191661fafcd4cc286823b8f497d3236",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-004.json",
+      "sha256": "252cc23ed2a06940d0da64fbe08f9b6a75c342919c8227e466268ffa2041cdd3"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-005",
+      "task_uid": "866f7d2d65544b52afadcf62a6f7b433",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-005.json",
+      "sha256": "f9023f0265e182e97d0587f01ab6d816b9f98612b209d99ce2153001f2809484"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-006",
+      "task_uid": "8afcd2bf9ddc438893cafa082b14e2ef",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-006.json",
+      "sha256": "e05ec238a3a9702543eef7a6dfe5477cefc0fcca4d4a8211a20805c05693cb7f"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-007",
+      "task_uid": "d7b2e5619bbf495989529a59f4fcaa34",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-007.json",
+      "sha256": "5b17c9ac0bf1df66a672355fb4de534a0488c118e531c17bf90be177ad23a4f4"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-008",
+      "task_uid": "e5c6ca4628a64fcca84ac9d2a4b1ea0e",
+      "path": "benchmark/tasks/Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-008.json",
+      "sha256": "8a527e501e16d53a7cf5a4ca39aeea059e93275a240233c64faa2b8e050a4c32"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-001",
+      "task_uid": "40d1b025835f49748c39760e864a1b58",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-001.json",
+      "sha256": "7e04b38d49449024ab4eab44f6c46bf7975012cf611ce50c1317c614d332d458"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-002",
+      "task_uid": "49c2dd6584354367b86e595b1b254c6a",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-002.json",
+      "sha256": "ff2815554249d6b792880f60eec20d77de0f85b67ab91ff3d599293645f16bf8"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-003",
+      "task_uid": "76f1863124574f01be1ac89c7fb35461",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-003.json",
+      "sha256": "19f210cbd6a78436f33c05ab6f66bf67ed6d6a7383f0f96dbe4b7918b8b8f638"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-004",
+      "task_uid": "78007b2751bd408991d3e4ca935924d1",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-004.json",
+      "sha256": "e7061010d7b037549fd781467c672fc6ca0e089ec551318f9d4501589e1dec01"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-005",
+      "task_uid": "8214dbc9ce734341b49efa15f08497ad",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-005.json",
+      "sha256": "c0781fe06870b94f0714c8e65a15702e982e8ee7165a5b08306cfc30f0c73e24"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-006",
+      "task_uid": "9203328311c7430aaedb899a4496b6e9",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-006.json",
+      "sha256": "67233763f35c15f6670bc30c01b2b37f1627dff9141eb4152d88e472256d418a"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-007",
+      "task_uid": "c2b0c383b748483dbf6b9d0a988cceb4",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-007.json",
+      "sha256": "8b5265ab58715f058ff4593face3d6ac526b516f060c51555dae35a162c922e7"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-008",
+      "task_uid": "c6d833365c824e84a4922052ee1d30bc",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-008.json",
+      "sha256": "125ce56c15ab289fd686c69b31102cdd609b073c82a422c1f0c413e3ab257b8f"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-009",
+      "task_uid": "d122b67ad3964616897f1139473acdd2",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-009.json",
+      "sha256": "6fe605026f73ba064b86d3271fba5493d65b0fabc50404de2ef2ff043a913400"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-010",
+      "task_uid": "ebcdc85561f147a8af110fbd74cf7306",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-010.json",
+      "sha256": "753c649db00488f6f040f13fc9b4cb7400b32e587319699293d90e3d763cbf4a"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-011",
+      "task_uid": "f07c156fc7dd4aaaa1bae39027df14a9",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-011.json",
+      "sha256": "d61ded6a7be6c1a9afbd4f997b5d092beebc82ffc4d9d3b83177894b440a3405"
+    },
+    {
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-012",
+      "task_uid": "f1fd2bb33f9a40e994bdda1272a463c2",
+      "path": "benchmark/tasks/Operation-OnlineShopping-SingleProductSearch-012.json",
+      "sha256": "726b020a051869f5b32c0d83a1de0c96d5eb31d670c0a259e22d342669531084"
+    },
+    {
+      "task_id": "Operation-WebOperate-SearchAndWrite-001",
+      "task_uid": "d017201e-a098-46ab-86be-6c99d263ecff",
+      "path": "benchmark/tasks/Operation-WebOperate-SearchAndWrite-001.json",
+      "sha256": "de4231f6bcd38e424fff198c4166dfb4c355137c95c03dc09ae3d2660ec0e61b"
+    },
+    {
+      "task_id": "Operation-WebOperate-Settings-001",
+      "task_uid": "b88b0015-1eb0-4f9e-be76-d1e96939f36c",
+      "path": "benchmark/tasks/Operation-WebOperate-Settings-001.json",
+      "sha256": "1626ff75372c1d31f999934197726f675edecb5c983c2df56fda35e4ef52222f"
+    },
+    {
+      "task_id": "Operation-WebOperate-Settings-002",
+      "task_uid": "ef47625b-cd1b-46ca-a16c-b0ac0c99c2cc",
+      "path": "benchmark/tasks/Operation-WebOperate-Settings-002.json",
+      "sha256": "377e7fa5b1372564c41b90e7b10d649b202f38b9f9ae40cc7eb6cbe8591e1c29"
+    },
+    {
+      "task_id": "Operation-WebOperate-Settings-003",
+      "task_uid": "bc69ee94-cf90-4cc4-a6ed-4266daa71706",
+      "path": "benchmark/tasks/Operation-WebOperate-Settings-003.json",
+      "sha256": "ad7c699b12fe6b4aadaf5357a78ad51134b39df99b2380f3bb0e3162d5b04895"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-001",
+      "task_uid": "49be33a6-666a-4f17-8f96-54ecf6fca25e",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-001.json",
+      "sha256": "cfacbddc776d0e86c5e22bf93faf55b29fbd432dc27e3f907a2f1b375e46be08"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-002",
+      "task_uid": "9bc31d45-a51c-45c9-95de-b30d8bc67f79",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-002.json",
+      "sha256": "99dde03fed7cdaa0ddeb379a50e8147817536e5192aaac09a818609d211ab04b"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-003",
+      "task_uid": "22e76d4d-0b1f-4c51-ab58-8ae41cbee9b7",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-003.json",
+      "sha256": "2d9ccbab2da9d7bea67564bf957076285b6cb339771845639384ed99b1943e87"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-004",
+      "task_uid": "a1d0e68a-6dd0-402b-8d6a-713c152c19dc",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-004.json",
+      "sha256": "aa29b5d763d2180e63b3afc2391615174d9f8be9589dcaf9e631e72bec4cea39"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-005",
+      "task_uid": "0f931391-7dd0-46ea-a492-13f064056d99",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-005.json",
+      "sha256": "b9d11c0dec31b932cdd5f644f107c6315b27192625254a0f6dded12e73eb1237"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-007",
+      "task_uid": "1c100df8-4a3e-4680-be7e-3f5e2e26b22f",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-007.json",
+      "sha256": "5cd59d06d353fd6d91f68cc03ce87cd6948ba61655e5e44ad10c6b5c590059bb"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-008",
+      "task_uid": "eb1ad6e6-b3cc-49e6-a633-a012ae38f56e",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-008.json",
+      "sha256": "eb0e0339eb4ea4cbb9b8ae668cb9f58b3285be7a8ce69db0c376851bb0ff2176"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-009",
+      "task_uid": "86019a8b-30a2-45c0-af7d-140e1f9ab904",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-009.json",
+      "sha256": "4232fbdd264eedd76061c67f31c261388582a942f67113a4dd3ec560bb5ad0dd"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-010",
+      "task_uid": "a93c6823-7716-40a2-91e1-17dabbaf7d0c",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-010.json",
+      "sha256": "617cc33ca75b292096f7251c8214b9f9349affb02bc3dcac7b1b18cd5e1d1ed0"
+    },
+    {
+      "task_id": "Operation-WebOperate-WebNavigate-011",
+      "task_uid": "38b185ab-d01d-4c97-a58e-d8d5ab4bec7b",
+      "path": "benchmark/tasks/Operation-WebOperate-WebNavigate-011.json",
+      "sha256": "95d0e71cc5bc25ed865ff1cea95e2ebc3bf0806f94f4f92cbd9500b742cd1fba"
+    }
+  ],
+  "task_id_mapping": {
+    "InformationRetrieval-FileSearch-Readonly-001": "InformationRetrieval-FileSearch-Readonly-001",
+    "InformationRetrieval-FileSearch-Readonly-002": "InformationRetrieval-FileSearch-Readonly-002",
+    "InformationRetrieval-FileSearch-Readonly-003": "InformationRetrieval-FileSearch-Readonly-003",
+    "InformationRetrieval-FileSearch-ReadonlyWord-001": "InformationRetrieval-FileSearch-ReadonlyWord-001",
+    "InformationRetrieval-FileSearch-ReadonlyWord-002": "InformationRetrieval-FileSearch-ReadonlyWord-002",
+    "InformationRetrieval-FileSearch-ReadonlyWord-003": "InformationRetrieval-FileSearch-ReadonlyWord-003",
+    "InformationRetrieval-FileSearch-ReadonlyWord-004": "InformationRetrieval-FileSearch-ReadonlyWord-004",
+    "InformationRetrieval-FileSearch-Readonlyppt-001": "InformationRetrieval-FileSearch-ReadonlyPPT-001",
+    "InformationRetrieval-FileSearch-Readonlyppt-002": "InformationRetrieval-FileSearch-ReadonlyPPT-002",
+    "InformationRetrieval-FileSearch-Readonlyppt-003": "InformationRetrieval-FileSearch-ReadonlyPPT-003",
+    "InformationRetrieval-FileSearch-Readonlyppt-004": "InformationRetrieval-FileSearch-ReadonlyPPT-004",
+    "InformationRetrieval-FileSearch-Readonlyppt-005": "InformationRetrieval-FileSearch-ReadonlyPPT-005",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-07f5bca86b55489180542f7b87034439": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-001",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-16299858995641daadf4ef40b919f438": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-002",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-233aa6457c054445a1150694bf6a5a86": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-003",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-7b4c474028014cbe9f41c2ab707bb2f3": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-004",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-859f25436e3240b492f37100cc0b80cf": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-005",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-866a95cd092f44ca9bab77047c277678": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-006",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-945163435d714a0baea55523cc1fe8f2": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-007",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-be2c11065a3c424e98c77568c5ce8275": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-008",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-d4d5500f17174ebc98ba70ac04682647": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-009",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-fdcab038b1e04ef694394e959b1a8a65": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-010",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferVagueRequirements-2f786b90968c471b8cdf5ef5c3da7e67": "Operation-OnlineShopping-CheapestOfferVagueRequirements-001",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferVagueRequirements-4b758a34ba7e432294a877dc5c11fe8b": "Operation-OnlineShopping-CheapestOfferVagueRequirements-002",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferVagueRequirements-71fe4b7a4054459d97f10285deb5d0b1": "Operation-OnlineShopping-CheapestOfferVagueRequirements-003",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferVagueRequirements-a2d8477741be4cb59ede7aadf8e6ec91": "Operation-OnlineShopping-CheapestOfferVagueRequirements-004",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferVagueRequirements-bea3ac2752ca4c9f9dc023a99d0a995b": "Operation-OnlineShopping-CheapestOfferVagueRequirements-005",
+    "InformationRetrieval-MultiShopShopping-CheapestOfferVagueRequirements-fa7393e32d6e43b786f4251b512bcce2": "Operation-OnlineShopping-CheapestOfferVagueRequirements-006",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-03f89eaeaaaa47aaa48f83c5f8a2ff47": "Operation-OnlineShopping-CheapestProductSearch-001",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-08e367e75bb54b47901a5bc1bbf1de19": "Operation-OnlineShopping-CheapestProductSearch-002",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-17dbb505e1304188ab8b24e1419541b3": "Operation-OnlineShopping-CheapestProductSearch-003",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-3d31169529ed4cd68b093c34816c6018": "Operation-OnlineShopping-CheapestProductSearch-004",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-3d6863788de1466c96d58ecdc6bba73b": "Operation-OnlineShopping-CheapestProductSearch-005",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-3fb27e66bdff4e1d8e0c818c28fa6ba6": "Operation-OnlineShopping-CheapestProductSearch-006",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-3feea8377a87475e8a95f93af0e13738": "Operation-OnlineShopping-CheapestProductSearch-007",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-768238446931424daf6388822e01954e": "Operation-OnlineShopping-CheapestProductSearch-008",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-a61d02d9b07242ad8034acf5857d219f": "Operation-OnlineShopping-CheapestProductSearch-009",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-d75216bdee0043639d36848bda29fc05": "Operation-OnlineShopping-CheapestProductSearch-010",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-d9f3746fe10f4ce7bfc9f800fd058f17": "Operation-OnlineShopping-CheapestProductSearch-011",
+    "InformationRetrieval-MultiShopShopping-CheapestProductSearch-e4a72eb7a5344d70bcb61e379b7f143f": "Operation-OnlineShopping-CheapestProductSearch-012",
+    "InformationRetrieval-VisualSearch-video-001": "InformationRetrieval-VisualSearch-Video-001",
+    "InformationRetrieval-WebSearch-Conditionalsearch-001": "InformationRetrieval-WebSearch-ConditionalSearch-001",
+    "InformationRetrieval-WebSearch-Conditionalsearch-002": "InformationRetrieval-WebSearch-ConditionalSearch-002",
+    "InformationRetrieval-WebSearch-Conditionalsearch-003": "InformationRetrieval-WebSearch-ConditionalSearch-003",
+    "InformationRetrieval-WebSearch-Conditionalsearch-004": "InformationRetrieval-WebSearch-ConditionalSearch-004",
+    "InformationRetrieval-WebSearch-Conditionalsearch-005": "InformationRetrieval-WebSearch-ConditionalSearch-005",
+    "InformationRetrieval-WebSearch-Conditionalsearch-006": "InformationRetrieval-WebSearch-ConditionalSearch-006",
+    "InformationRetrieval-WebSearch-Conditionalsearch-007": "InformationRetrieval-WebSearch-ConditionalSearch-007",
+    "InformationRetrieval-WebSearch-Conditionalsearch-008": "InformationRetrieval-WebSearch-ConditionalSearch-008",
+    "InformationRetrieval-WebSearch-Conditionalsearch-009": "InformationRetrieval-WebSearch-ConditionalSearch-009",
+    "InformationRetrieval-WebSearch-Conditionalsearch-010": "InformationRetrieval-WebSearch-ConditionalSearch-010",
+    "InformationRetrieval-WebSearch-Multi-HopSearch-001": "InformationRetrieval-WebSearch-MultiHopSearch-001",
+    "InformationRetrieval-WebSearch-Multi-HopSearch-002": "InformationRetrieval-WebSearch-MultiHopSearch-002",
+    "InformationRetrieval-WebSearch-Multi-HopSearch-003": "InformationRetrieval-WebSearch-MultiHopSearch-003",
+    "InformationRetrieval-WebSearch-Multi-HopSearch-004": "InformationRetrieval-WebSearch-MultiHopSearch-004",
+    "InformationRetrieval-WebSearch-Multi-HopSearch-005": "InformationRetrieval-WebSearch-MultiHopSearch-005",
+    "InformationRetrieval-WebSearch-Multi-HopSearch-006": "InformationRetrieval-WebSearch-MultiHopSearch-006",
+    "InformationRetrieval-WebSearch-Multi-HopSearch-007": "InformationRetrieval-WebSearch-MultiHopSearch-007",
+    "InformationRetrieval-WebSearch-Multi-HopSearch-008": "InformationRetrieval-WebSearch-MultiHopSearch-008",
+    "InformationRetrieval-WebSearch-StatisticSearch-004": "InformationRetrieval-WebSearch-StatisticSearch-004",
+    "InformationRetrieval-WebSearch-StatisticSearch-005": "InformationRetrieval-WebSearch-StatisticSearch-005",
+    "InformationRetrieval-WebSearch-Statisticsearch-001": "InformationRetrieval-WebSearch-StatisticSearch-001",
+    "InformationRetrieval-WebSearch-Statisticsearch-003": "InformationRetrieval-WebSearch-StatisticSearch-003",
+    "InformationRetrieval-WebSearch-Statisticsearch-006": "InformationRetrieval-WebSearch-StatisticSearch-006",
+    "InformationRetrieval-WebSearch-Statisticsearch-007": "InformationRetrieval-WebSearch-StatisticSearch-007",
+    "InformationRetrieval-WebSearch-Statisticsearch-009": "InformationRetrieval-WebSearch-StatisticSearch-009",
+    "InformationRetrieval-WebSearch-Statisticsearch-010": "InformationRetrieval-WebSearch-StatisticSearch-010",
+    "InformationRetrieval-WebSearch-Statisticsearch-011": "InformationRetrieval-WebSearch-StatisticSearch-011",
+    "InformationRetrieval-WebSearch-Statisticsearch-012": "InformationRetrieval-WebSearch-StatisticSearch-012",
+    "InformationRetrieval-WebSearch-Statisticsearch-013": "InformationRetrieval-WebSearch-StatisticSearch-013",
+    "InformationRetrieval-WebSearch-Statisticsearch-014": "InformationRetrieval-WebSearch-StatisticSearch-014",
+    "InformationRetrieval-WebSearch-Statisticsearch-015": "InformationRetrieval-WebSearch-StatisticSearch-015",
+    "InformationRetrieval-WebSearch-Statisticsearch-016": "InformationRetrieval-WebSearch-StatisticSearch-016",
+    "InformationRetrieval-WebSearch-Statisticsearch-017": "InformationRetrieval-WebSearch-StatisticSearch-017",
+    "InformationRetrieval-WebSearch-Statisticsearch-018": "InformationRetrieval-WebSearch-StatisticSearch-018",
+    "InformationRetrieval-WebSearch-Statisticsearch-019": "InformationRetrieval-WebSearch-StatisticSearch-019",
+    "InformationRetrieval-WebSearch-Statisticsearch-020": "InformationRetrieval-WebSearch-StatisticSearch-020",
+    "InformationRetrieval-WebSearch-Statisticsearch-021": "InformationRetrieval-WebSearch-StatisticSearch-021",
+    "InformationRetrieval-WebSearch-Statisticsearch-022": "InformationRetrieval-WebSearch-StatisticSearch-022",
+    "InformationRetrieval-WebSearch-Statisticsearch-024": "InformationRetrieval-WebSearch-StatisticSearch-024",
+    "InformationRetrieval-WebSearch-Statisticsearch-025": "InformationRetrieval-WebSearch-StatisticSearch-025",
+    "InformationRetrieval-WebSearch-Statisticsearch-026": "InformationRetrieval-WebSearch-StatisticSearch-026",
+    "InformationRetrieval-WebSearch-Statisticsearch-027": "InformationRetrieval-WebSearch-StatisticSearch-027",
+    "InformationRetrieval-WebSearch-Statisticsearch-028": "InformationRetrieval-WebSearch-StatisticSearch-028",
+    "InformationRetrieval-WebSearch-Statisticsearch-029": "InformationRetrieval-WebSearch-StatisticSearch-029",
+    "InformationRetrieval-WebSearch-Statisticsearch-030": "InformationRetrieval-WebSearch-StatisticSearch-030",
+    "InformationRetrieval-WebSearch-VisualSearch-001": "InformationRetrieval-WebSearch-VisualSearch-001",
+    "InformationRetrieval-WebSearch-VisualSearch-002": "InformationRetrieval-WebSearch-VisualSearch-002",
+    "InformationRetrieval-WebSearch-VisualSearch-003": "InformationRetrieval-WebSearch-VisualSearch-003",
+    "InformationRetrieval-WebSearch-VisualSearch-004": "InformationRetrieval-WebSearch-VisualSearch-004",
+    "InformationRetrieval-WebSearch-VisualSearch-020": "InformationRetrieval-WebSearch-VisualSearch-020",
+    "InformationRetrieval-WebSearch-VisualSearch-021": "InformationRetrieval-WebSearch-VisualSearch-021",
+    "InformationRetrieval-WebSearch-VisualSearch-022": "InformationRetrieval-WebSearch-VisualSearch-022",
+    "InformationRetrieval-WebSearch-VisualSearch-023": "InformationRetrieval-WebSearch-VisualSearch-023",
+    "InformationRetrieval-WebSearch-VisualSearch-024": "InformationRetrieval-WebSearch-VisualSearch-024",
+    "InformationRetrieval-WebSearch-VisualSearch-025": "InformationRetrieval-WebSearch-VisualSearch-025",
+    "InformationRetrieval-WebSearch-VisualSearch-026": "InformationRetrieval-WebSearch-VisualSearch-026",
+    "InformationRetrieval-WebSearch-Visualsearch-005": "InformationRetrieval-WebSearch-VisualSearch-005",
+    "InformationRetrieval-WebSearch-Visualsearch-006": "InformationRetrieval-WebSearch-VisualSearch-006",
+    "InformationRetrieval-WebSearch-Visualsearch-009": "InformationRetrieval-WebSearch-VisualSearch-009",
+    "InformationRetrieval-WebSearch-Visualsearch-010": "InformationRetrieval-WebSearch-VisualSearch-010",
+    "InformationRetrieval-WebSearch-Visualsearch-013": "InformationRetrieval-WebSearch-VisualSearch-013",
+    "InformationRetrieval-WebSearch-Visualsearch-017": "InformationRetrieval-WebSearch-VisualSearch-017",
+    "InformationRetrieval-WebSearch-Visualsearch-018": "InformationRetrieval-WebSearch-VisualSearch-018",
+    "InformationRetrieval-WebSearch-Visualsearch-019": "InformationRetrieval-WebSearch-VisualSearch-019",
+    "Operation-FileOperate-Batchoperation-001": "Operation-FileOperate-BatchOperation-001",
+    "Operation-FileOperate-Batchoperation-003": "Operation-FileOperate-BatchOperation-003",
+    "Operation-FileOperate-BatchoperationWord-001": "Operation-FileOperate-BatchOperationWord-001",
+    "Operation-FileOperate-BatchoperationWord-002": "Operation-FileOperate-BatchOperationWord-002",
+    "Operation-FileOperate-BatchoperationWord-003": "Operation-FileOperate-BatchOperationWord-003",
+    "Operation-FileOperate-BatchoperationWord-004": "Operation-FileOperate-BatchOperationWord-004",
+    "Operation-FileOperate-BatchoperationWord-005": "Operation-FileOperate-BatchOperationWord-005",
+    "Operation-FileOperate-BatchoperationWord-006": "Operation-FileOperate-BatchOperationWord-006",
+    "Operation-FileOperate-BatchoperationWord-007": "Operation-FileOperate-BatchOperationWord-007",
+    "Operation-FileOperate-BatchoperationWord-008": "Operation-FileOperate-BatchOperationWord-008",
+    "Operation-FileOperate-BatchoperationWord-009": "Operation-FileOperate-BatchOperationWord-009",
+    "Operation-FileOperate-BatchoperationWord-010": "Operation-FileOperate-BatchOperationWord-010",
+    "Operation-FileOperate-BatchoperationWord-011": "Operation-FileOperate-BatchOperationWord-011",
+    "Operation-FileOperate-BatchoperationWord-012": "Operation-FileOperate-BatchOperationWord-012",
+    "Operation-FileOperate-Batchoperationexcel-001": "Operation-FileOperate-BatchOperationExcel-001",
+    "Operation-FileOperate-Batchoperationexcel-002": "Operation-FileOperate-BatchOperationExcel-002",
+    "Operation-FileOperate-Batchoperationexcel-003": "Operation-FileOperate-BatchOperationExcel-003",
+    "Operation-FileOperate-Batchoperationexcel-004": "Operation-FileOperate-BatchOperationExcel-004",
+    "Operation-FileOperate-Batchoperationexcel-005": "Operation-FileOperate-BatchOperationExcel-005",
+    "Operation-FileOperate-Batchoperationexcel-006": "Operation-FileOperate-BatchOperationExcel-006",
+    "Operation-FileOperate-Batchoperationexcel-007": "Operation-FileOperate-BatchOperationExcel-007",
+    "Operation-FileOperate-Batchoperationexcel-008": "Operation-FileOperate-BatchOperationExcel-008",
+    "Operation-FileOperate-Batchoperationexcel-009": "Operation-FileOperate-BatchOperationExcel-009",
+    "Operation-FileOperate-Batchoperationppt-001": "Operation-FileOperate-BatchOperationPPT-001",
+    "Operation-FileOperate-Batchoperationppt-002": "Operation-FileOperate-BatchOperationPPT-002",
+    "Operation-FileOperate-Batchoperationppt-003": "Operation-FileOperate-BatchOperationPPT-003",
+    "Operation-FileOperate-Combinationdocs-001": "Operation-FileOperate-CombinationDocs-001",
+    "Operation-FileOperate-Combinationdocs-002": "Operation-FileOperate-CombinationDocs-002",
+    "Operation-FileOperate-Combinationdocs-003": "Operation-FileOperate-CombinationDocs-003",
+    "Operation-FileOperate-Combinationdocs-004": "Operation-FileOperate-CombinationDocs-004",
+    "Operation-FileOperate-Combinationdocs-005": "Operation-FileOperate-CombinationDocs-005",
+    "Operation-FileOperate-Combinationdocs-006": "Operation-FileOperate-CombinationDocs-006",
+    "Operation-FileOperate-Combinationdocs-007": "Operation-FileOperate-CombinationDocs-007",
+    "Operation-FileOperate-Combinationdocs-008": "Operation-FileOperate-CombinationDocs-008",
+    "Operation-FileOperate-Combinationdocs-009": "Operation-FileOperate-CombinationDocs-009",
+    "Operation-FileOperate-Combinationdocs-010": "Operation-FileOperate-CombinationDocs-010",
+    "Operation-FileOperate-Combinationdocs-011": "Operation-FileOperate-CombinationDocs-011",
+    "Operation-FileOperate-Combinationdocs-012": "Operation-FileOperate-CombinationDocs-012",
+    "Operation-FileOperate-Combinationdocs-013": "Operation-FileOperate-CombinationDocs-013",
+    "Operation-FileOperate-Combinationdocs-014": "Operation-FileOperate-CombinationDocs-014",
+    "Operation-FileOperate-Combinationdocs-015": "Operation-FileOperate-CombinationDocs-015",
+    "Operation-FileOperate-Search&write-001": "Operation-FileOperate-SearchAndWrite-001",
+    "Operation-FileOperate-Search&write-002": "Operation-FileOperate-SearchAndWrite-003",
+    "Operation-FileOperate-Search&write-003": "Operation-FileOperate-SearchAndWrite-005",
+    "Operation-FileOperate-Search&write-004": "Operation-FileOperate-SearchAndWrite-007",
+    "Operation-FileOperate-Search&write-005": "Operation-FileOperate-SearchAndWrite-009",
+    "Operation-FileOperate-SearchAndWrite-001": "Operation-FileOperate-SearchAndWrite-002",
+    "Operation-FileOperate-SearchAndWrite-002": "Operation-FileOperate-SearchAndWrite-004",
+    "Operation-FileOperate-SearchAndWrite-003": "Operation-FileOperate-SearchAndWrite-006",
+    "Operation-FileOperate-SearchAndWrite-004": "Operation-FileOperate-SearchAndWrite-008",
+    "Operation-FileOperate-settings-001": "Operation-FileOperate-Settings-001",
+    "Operation-WebOperate-Search&write-001": "Operation-WebOperate-SearchAndWrite-001",
+    "Operation-WebOperate-Webnavigate-001": "Operation-WebOperate-WebNavigate-001",
+    "Operation-WebOperate-Webnavigate-002": "Operation-WebOperate-WebNavigate-002",
+    "Operation-WebOperate-Webnavigate-003": "Operation-WebOperate-WebNavigate-003",
+    "Operation-WebOperate-Webnavigate-004": "Operation-WebOperate-WebNavigate-004",
+    "Operation-WebOperate-Webnavigate-005": "Operation-WebOperate-WebNavigate-005",
+    "Operation-WebOperate-Webnavigate-007": "Operation-WebOperate-WebNavigate-007",
+    "Operation-WebOperate-Webnavigate-008": "Operation-WebOperate-WebNavigate-008",
+    "Operation-WebOperate-Webnavigate-009": "Operation-WebOperate-WebNavigate-009",
+    "Operation-WebOperate-Webnavigate-010": "Operation-WebOperate-WebNavigate-010",
+    "Operation-WebOperate-Webnavigate-011": "Operation-WebOperate-WebNavigate-011",
+    "Operation-WebOperate-settings-001": "Operation-WebOperate-Settings-001",
+    "Operation-WebOperate-settings-002": "Operation-WebOperate-Settings-002",
+    "Operation-WebOperate-settings-003": "Operation-WebOperate-Settings-003",
+    "TaskExecution-MultiShopShopping-AddtoCart-30fdee8df9174a09b1a4ef89d483605c": "Operation-OnlineShopping-AddToCart-001",
+    "TaskExecution-MultiShopShopping-AddtoCart-71e2f451e6ba44819c3be89fcbe6124f": "Operation-OnlineShopping-AddToCart-002",
+    "TaskExecution-MultiShopShopping-AddtoCart-79b0cd0861774d4291ce506c43257972": "Operation-OnlineShopping-AddToCart-003",
+    "TaskExecution-MultiShopShopping-AddtoCart-88958e999e6d40c4a90758e913d77ffd": "Operation-OnlineShopping-AddToCart-004",
+    "TaskExecution-MultiShopShopping-AddtoCart-b6335f7661c943b8b205e010332deb96": "Operation-OnlineShopping-AddToCart-005",
+    "TaskExecution-MultiShopShopping-AddtoCart-eb5f7cc68c2349a29a37d799f3bf65b0": "Operation-OnlineShopping-AddToCart-006",
+    "TaskExecution-MultiShopShopping-AddtoCart-f2cb4a0fa45142b093243f9ff947cc68": "Operation-OnlineShopping-AddToCart-007",
+    "TaskExecution-MultiShopShopping-Checkout-232c21f186804b808fea91e18ccec092": "Operation-OnlineShopping-Checkout-001",
+    "TaskExecution-MultiShopShopping-Checkout-7ab658aa7c0240d1b4723de8988f7766": "Operation-OnlineShopping-Checkout-002",
+    "TaskExecution-MultiShopShopping-Checkout-7d18858b5a5d496e9f41b5b9fa9cfa67": "Operation-OnlineShopping-Checkout-003",
+    "TaskExecution-MultiShopShopping-Checkout-8f368ad172f84e7fb46cbcaf4deb9cc2": "Operation-OnlineShopping-Checkout-004",
+    "TaskExecution-MultiShopShopping-Checkout-9c4a06f81e0547ed96f6b12b337b7c13": "Operation-OnlineShopping-Checkout-005",
+    "TaskExecution-MultiShopShopping-Checkout-a3da1abaa0b8440a9c34ba05cfd7b442": "Operation-OnlineShopping-Checkout-006",
+    "TaskExecution-MultiShopShopping-Checkout-b00bbe997f284aed9a81d3a0e565637b": "Operation-OnlineShopping-Checkout-007",
+    "TaskExecution-MultiShopShopping-Checkout-e9623fc7fed44861b1d4dc10d2aec266": "Operation-OnlineShopping-Checkout-008",
+    "TaskExecution-MultiShopShopping-EndtoEnd-622832d524704bd9a5a2e0a4ed3efb15": "Operation-OnlineShopping-EndToEnd-001",
+    "TaskExecution-MultiShopShopping-EndtoEnd-6eaaebfc174b429db8cd5dc900b0b00d": "Operation-OnlineShopping-EndToEnd-002",
+    "TaskExecution-MultiShopShopping-EndtoEnd-7f3356a56e0446be84aff1bcbeae7bdc": "Operation-OnlineShopping-EndToEnd-003",
+    "TaskExecution-MultiShopShopping-EndtoEnd-94191bc954484f90aeb2037c2da2e8a4": "Operation-OnlineShopping-EndToEnd-004",
+    "TaskExecution-MultiShopShopping-EndtoEnd-aaca1ad4c789466d9ec8335ca58ed26d": "Operation-OnlineShopping-EndToEnd-005",
+    "TaskExecution-MultiShopShopping-EndtoEnd-cd38f9aaf2b448a48c7ff1306fe8684c": "Operation-OnlineShopping-EndToEnd-006",
+    "TaskExecution-MultiShopShopping-EndtoEnd-e485786845ff490ba8db98c1ae9c5a0e": "Operation-OnlineShopping-EndToEnd-007",
+    "TaskExecution-MultiShopShopping-EndtoEnd-f4e2962c142f46c48c05d6173f2e7313": "Operation-OnlineShopping-EndToEnd-008",
+    "TaskExecution-MultiShopShopping-FindCompatibleProducts-0d34c4e1863c4ddb832ec4eba10d5ef6": "Operation-OnlineShopping-FindCompatibleProducts-001",
+    "TaskExecution-MultiShopShopping-FindCompatibleProducts-528e679576bc4462aeec4a0abae5c414": "Operation-OnlineShopping-FindCompatibleProducts-002",
+    "TaskExecution-MultiShopShopping-FindCompatibleProducts-5e20f6ab917d4524810d51f0e559a1ff": "Operation-OnlineShopping-FindCompatibleProducts-003",
+    "TaskExecution-MultiShopShopping-FindCompatibleProducts-a6ed8ba3033845539ba27903548e8a22": "Operation-OnlineShopping-FindCompatibleProducts-004",
+    "TaskExecution-MultiShopShopping-FindCompatibleProducts-b7bac2c9dccb4d3eb448ff39788ebc66": "Operation-OnlineShopping-FindCompatibleProducts-005",
+    "TaskExecution-MultiShopShopping-FindSubstitutes-33f0b28a99694aa28d4370bacf65cf11": "Operation-OnlineShopping-FindSubstitutes-001",
+    "TaskExecution-MultiShopShopping-FindSubstitutes-bb4139a2ba6f4267ad69309e7bc40834": "Operation-OnlineShopping-FindSubstitutes-002",
+    "TaskExecution-MultiShopShopping-FindSubstitutes-deaa61ddd20f4cad9c2d1e965698d67b": "Operation-OnlineShopping-FindSubstitutes-003",
+    "TaskExecution-MultiShopShopping-FindSubstitutes-fcc4d2c9076645a2a0d9b785b7fc1ed9": "Operation-OnlineShopping-FindSubstitutes-004",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-194e2797198b42ae96cd5693490ac651": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-001",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-36251517df2b4fb780d7851f830b6547": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-002",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-3e1b77fb22034860af10835c58f54b68": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-003",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-85a721caec6e45ff877fc5a58451d600": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-004",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-9ef50470a95446ef89f2f37fcc24ec00": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-005",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-a2dc1b7a75134647aaf2c20bc82b75cb": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-006",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-b59778e8ac3440818af05ef012d8d1de": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-007",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-ba65d33f3b29492fb8cb30a14b915d66": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-008",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-bc0c902cc2cc4255ab02acabc282fb66": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-009",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-e4023f2a64e74903a7acd081e212cde9": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-010",
+    "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-fad4f2bbe3994256871f7a47bb0fd1f1": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-011",
+    "TaskExecution-MultiShopShopping-ProductsSatisfyingVagueRequirements-09558c9fab504598b5a762dfeed2f813": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-001",
+    "TaskExecution-MultiShopShopping-ProductsSatisfyingVagueRequirements-1273cd377d0e4403a88ec4eb8b340eca": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-002",
+    "TaskExecution-MultiShopShopping-ProductsSatisfyingVagueRequirements-2615b7d0426746a4ab055bc13654afdd": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-003",
+    "TaskExecution-MultiShopShopping-ProductsSatisfyingVagueRequirements-3191661fafcd4cc286823b8f497d3236": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-004",
+    "TaskExecution-MultiShopShopping-ProductsSatisfyingVagueRequirements-866f7d2d65544b52afadcf62a6f7b433": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-005",
+    "TaskExecution-MultiShopShopping-ProductsSatisfyingVagueRequirements-8afcd2bf9ddc438893cafa082b14e2ef": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-006",
+    "TaskExecution-MultiShopShopping-ProductsSatisfyingVagueRequirements-d7b2e5619bbf495989529a59f4fcaa34": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-007",
+    "TaskExecution-MultiShopShopping-ProductsSatisfyingVagueRequirements-e5c6ca4628a64fcca84ac9d2a4b1ea0e": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-008",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-40d1b025835f49748c39760e864a1b58": "Operation-OnlineShopping-SingleProductSearch-001",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-49c2dd6584354367b86e595b1b254c6a": "Operation-OnlineShopping-SingleProductSearch-002",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-76f1863124574f01be1ac89c7fb35461": "Operation-OnlineShopping-SingleProductSearch-003",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-78007b2751bd408991d3e4ca935924d1": "Operation-OnlineShopping-SingleProductSearch-004",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-8214dbc9ce734341b49efa15f08497ad": "Operation-OnlineShopping-SingleProductSearch-005",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-9203328311c7430aaedb899a4496b6e9": "Operation-OnlineShopping-SingleProductSearch-006",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-c2b0c383b748483dbf6b9d0a988cceb4": "Operation-OnlineShopping-SingleProductSearch-007",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-c6d833365c824e84a4922052ee1d30bc": "Operation-OnlineShopping-SingleProductSearch-008",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-d122b67ad3964616897f1139473acdd2": "Operation-OnlineShopping-SingleProductSearch-009",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-ebcdc85561f147a8af110fbd74cf7306": "Operation-OnlineShopping-SingleProductSearch-010",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-f07c156fc7dd4aaaa1bae39027df14a9": "Operation-OnlineShopping-SingleProductSearch-011",
+    "TaskExecution-MultiShopShopping-SingleProductSearch-f1fd2bb33f9a40e994bdda1272a463c2": "Operation-OnlineShopping-SingleProductSearch-012"
+  }
+}

@@ -1,0 +1,33 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationExcel-005",
+    "task_uid": "cccf5baf-e392-47af-a605-65401ef56fe5",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Unify all monetary units in all Excel files to ten thousand yuan.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/cccf5baf-e392-47af-a605-65401ef56fe5",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationexcel-005",
+    "eval_rules": [
+        {
+            "check": "check_values_scaled_from_source",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "start_cell": "B4",
+                "end_cell": "B15",
+                "divisor": 10000,
+                "relative_tolerance": 0.001,
+                "absolute_tolerance": 0.005,
+                "source_values_by_file": {
+                    "store1.xlsx": [100924, 69917, 92050, 51583, 120930, 90228, 116026, 146386, 66271, 117566, 55478, 110618],
+                    "store2.xlsx": [54084, 117221, 64069, 122215, 141995, 82291, 100298, 129104, 130555, 124257, 67661, 54744],
+                    "store3.xlsx": [89334, 60333, 123183, 110368, 119157, 100556, 136581, 137610, 129954, 145621, 119389, 92787],
+                    "store4.xlsx": [90723, 141829, 74561, 126160, 116279, 129049, 72176, 98231, 136740, 132993, 135155, 99148]
+                }
+            },
+            "weight": 1.0,
+            "description": "B4:B15 均按元除以 10000 换算为万元"
+        }
+    ]
+}

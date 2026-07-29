@@ -1,0 +1,13 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-008",
+    "task_uid": "fb4dca31-5b24-4b36-a97b-8f17e453b471",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "answer_match_mode": "exact",
+    "instruction": "According to the U.S. Food and Drug Administration (FDA) press announcement published on July 6, 2023, provide the proprietary (brand) name of the Alzheimer's disease treatment described as the first amyloid beta-directed antibody to be converted from accelerated approval to traditional approval. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Leqembi",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-008"
+}

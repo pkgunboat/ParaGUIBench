@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:paraguibench:schema:webmall-checkout-task:v1",
+  "title": "ParaGUIBench WebMall checkout task fixture reference v1",
+  "description": "Overlay contract for checkout and end-to-end canonical tasks.",
+  "type": "object",
+  "required": [
+    "instruction_template",
+    "fixture_ref"
+  ],
+  "properties": {
+    "instruction_template": {
+      "type": "string",
+      "pattern": "\\{\\{checkout_profile\\}\\}"
+    },
+    "fixture_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binding",
+        "fixture_id"
+      ],
+      "properties": {
+        "binding": {
+          "const": "checkout_profile"
+        },
+        "fixture_id": {
+          "const": "webmall.checkout-profile.synthetic-public.v1"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "not": {
+        "required": [
+          "instruction"
+        ]
+      }
+    },
+    {
+      "not": {
+        "required": [
+          "user_details"
+        ]
+      }
+    },
+    {
+      "not": {
+        "required": [
+          "payment_info"
+        ]
+      }
+    }
+  ]
+}

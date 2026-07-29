@@ -1,0 +1,146 @@
+{
+    "task_id": "Operation-FileOperate-SearchAndWrite-007",
+    "task_uid": "6f137b26-6efd-45e7-bd3c-034c81ddc790",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "I now want to count the host cities of these three machine learning conferences over the past decade, from 2013 to 2019 (including 2013 and 2019). I have already listed the conference names and years in Excel. Please fill in the blank locations.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/6f4073b8-d8ea-4ade-8a18-c5d1d5d5aa9a/Conference.xlsx",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Search&write-004",
+    "eval_rules": [
+        {
+            "check": "check_multi_cell_values",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "cells": [
+                    {
+                        "cell": "C2",
+                        "contains": "Scottsdale"
+                    },
+                    {
+                        "cell": "C3",
+                        "contains": "Atlanta"
+                    },
+                    {
+                        "cell": "C4",
+                        "contains_any": [
+                            "Lake Tahoe",
+                            "Stateline"
+                        ]
+                    },
+                    {
+                        "cell": "C5",
+                        "contains_any": [
+                            "Banff",
+                            "Alberta's Rockies",
+                            "Alberta’s Rockies"
+                        ]
+                    },
+                    {
+                        "cell": "C6",
+                        "contains": "Beijing"
+                    },
+                    {
+                        "cell": "C7",
+                        "contains_any": [
+                            "Montreal",
+                            "Montréal"
+                        ]
+                    },
+                    {
+                        "cell": "C8",
+                        "contains": "San Diego"
+                    },
+                    {
+                        "cell": "C9",
+                        "contains": "Lille"
+                    },
+                    {
+                        "cell": "C10",
+                        "contains_any": [
+                            "Montreal",
+                            "Montréal"
+                        ]
+                    },
+                    {
+                        "cell": "C11",
+                        "contains": "San Juan"
+                    },
+                    {
+                        "cell": "C12",
+                        "contains_any": [
+                            "New York",
+                            "New York City",
+                            "NYC"
+                        ]
+                    },
+                    {
+                        "cell": "C13",
+                        "contains": "Barcelona"
+                    },
+                    {
+                        "cell": "C14",
+                        "contains": "Toulon"
+                    },
+                    {
+                        "cell": "C15",
+                        "contains": "Sydney"
+                    },
+                    {
+                        "cell": "C16",
+                        "contains_any": [
+                            "Los Angeles",
+                            "Long Beach",
+                            "LA"
+                        ]
+                    },
+                    {
+                        "cell": "C17",
+                        "contains": "Vancouver"
+                    },
+                    {
+                        "cell": "C18",
+                        "contains": "Stockholm"
+                    },
+                    {
+                        "cell": "C19",
+                        "contains_any": [
+                            "Montreal",
+                            "Montréal"
+                        ]
+                    },
+                    {
+                        "cell": "C20",
+                        "contains": "New Orleans"
+                    },
+                    {
+                        "cell": "C21",
+                        "contains_any": [
+                            "Los Angeles",
+                            "Long Beach",
+                            "LA"
+                        ]
+                    },
+                    {
+                        "cell": "C22",
+                        "contains": "Vancouver"
+                    }
+                ]
+            },
+            "weight": 0.7,
+            "description": "C2:C22 会议举办城市正确性（OSWorld Gold 答案,含别名）"
+        },
+        {
+            "check": "check_cells_filled",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "start_cell": "C2",
+                "end_cell": "C22"
+            },
+            "weight": 0.3,
+            "description": "C2:C22 城市列填充（仅 agent 需填的列,不含预填的年份/会议列）"
+        }
+    ]
+}

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:paraguibench:schema:webmall-checkout-fixture:v1",
+  "title": "ParaGUIBench WebMall checkout fixture v1",
+  "description": "Public synthetic checkout profile referenced by canonical tasks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "fixture_id",
+    "fixture_type",
+    "data_classification",
+    "task_storage_policy",
+    "intended_use",
+    "profile"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../../schemas/webmall-checkout-fixture-v1.schema.json"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "fixture_id": {
+      "const": "webmall.checkout-profile.synthetic-public.v1"
+    },
+    "fixture_type": {
+      "const": "checkout_profile"
+    },
+    "data_classification": {
+      "const": "synthetic_public_test_data"
+    },
+    "task_storage_policy": {
+      "const": "reference_only"
+    },
+    "intended_use": {
+      "const": "benchmark_testing_only"
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shipping_address",
+        "payment_method"
+      ],
+      "properties": {
+        "shipping_address": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "email",
+            "street",
+            "house_number",
+            "zip",
+            "city",
+            "state",
+            "country"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "email": {
+              "type": "string",
+              "pattern": "^[^@\\s]+@example\\.invalid$"
+            },
+            "street": {
+              "type": "string",
+              "minLength": 1
+            },
+            "house_number": {
+              "type": "string",
+              "minLength": 1
+            },
+            "zip": {
+              "type": "string",
+              "minLength": 1
+            },
+            "city": {
+              "type": "string",
+              "minLength": 1
+            },
+            "state": {
+              "type": "string",
+              "minLength": 1
+            },
+            "country": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "payment_method": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "card_number",
+            "cvv",
+            "expiry_date"
+          ],
+          "properties": {
+            "type": {
+              "const": "credit_card"
+            },
+            "card_number": {
+              "const": "4242424242424242"
+            },
+            "cvv": {
+              "type": "string",
+              "pattern": "^[0-9]{3,4}$"
+            },
+            "expiry_date": {
+              "type": "string",
+              "pattern": "^(0[1-9]|1[0-2])/[0-9]{2}$"
+            }
+          }
+        }
+      }
+    }
+  }
+}

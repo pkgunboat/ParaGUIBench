@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationExcel-003",
+    "task_uid": "fdb089b8-070f-4ccc-9612-e4599db799be",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Sort each Excel by sales amount in descending order and save.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/fdb089b8-070f-4ccc-9612-e4599db799be",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationexcel-003",
+    "eval_rules": [
+        {
+            "check": "check_sort_order",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "column": "B",
+                "order": "desc"
+            },
+            "weight": 1.0,
+            "description": "B列降序排列"
+        }
+    ]
+}

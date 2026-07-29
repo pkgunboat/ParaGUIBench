@@ -1,0 +1,17 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-009",
+    "task_uid": "86019a8b-30a2-45c0-af7d-140e1f9ab904",
+    "source_task_id": "7f52cab9-535c-4835-ac8c-391ee64dc930",
+    "source_config_path": "src/parallel_benchmark/dataviewer/OSWorld/examples_zh/chrome/7f52cab9-535c-4835-ac8c-391ee64dc930.json",
+    "task_type": "OSWorld脚本改造",
+    "task_tag": "WebOperate",
+    "instruction": "Create a list of drip coffee makers on Google Shopping that are on sale, priced between $25-60, and have a black appearance.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "",
+    "evaluation_mode": "osworld_active_tab",
+    "evaluator_path": "dataviewer/OSWorld/examples_zh/chrome/7f52cab9-535c-4835-ac8c-391ee64dc930.json",
+    "active_tab_adapter": "google_shopping_selected_filters_v1",
+    "vm_aggregation": "any_complete",
+    "original_task_id": "Operation-WebOperate-Webnavigate-009"
+}

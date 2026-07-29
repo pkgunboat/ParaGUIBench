@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paraguibench"
+version = "0.1.0.dev0"
+description = "A benchmark and execution framework for parallel GUI agents"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { file = "LICENSE" }
+authors = [
+  { name = "ParaGUIBench Authors" },
+]
+dependencies = []
+
+[project.optional-dependencies]
+live = [
+  "openai>=1.82,<3",
+  "Pillow>=11,<13",
+  "requests>=2.32,<3",
+]
+dev = [
+  "pytest>=8.3,<9",
+]
+
+[project.scripts]
+paraguibench = "paraguibench.cli.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/paraguibench"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
