@@ -1,0 +1,57 @@
+name: Pages site CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-site-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+  PAGES_BASE_PATH: /ParaGUIBench/
+
+jobs:
+  static-site:
+    name: Read-only build and artifact gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out source without persisted credentials
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Test the static artifact validator
+        run: node --test website/scripts/validate-static-site.test.mjs
+
+      - name: Verify that the public site dataset is current
+        run: python3 scripts/site/generate_site_data.py --check
+
+      - name: Install website dependencies from the lockfile
+        working-directory: website
+        run: npm ci
+
+      - name: Run website tests when defined
+        working-directory: website
+        run: npm test --if-present
+
+      - name: Build for the ParaGUIBench project path
+        working-directory: website
+        run: npm run build -- --base "$PAGES_BASE_PATH"
+
+      - name: Validate index, 404, base path, links, and file types
+        run: >-
+          node website/scripts/validate-static-site.mjs
+          website/dist
+          --base "$PAGES_BASE_PATH"

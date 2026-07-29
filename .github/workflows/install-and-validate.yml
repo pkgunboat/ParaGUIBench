@@ -1,0 +1,63 @@
+name: Install and validate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  clean-wheel:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Check out source without persisted credentials
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Build wheel from the checkout
+        run: python -m pip wheel --no-deps --wheel-dir dist .
+
+      - name: Install and verify the core wheel in a clean venv
+        shell: bash
+        run: |
+          WHEEL_PATH="$(find "$(pwd)/dist" -type f -name 'paraguibench-*.whl' -print -quit)"
+          test -n "$WHEEL_PATH"
+          python -m venv .venv-core
+          .venv-core/bin/python -m pip install --no-index "$WHEEL_PATH"
+          .venv-core/bin/python scripts/installation/verify_install.py --profile core
+          .venv-core/bin/paraguibench --help >/dev/null
+
+      - name: Install the same wheel with live and test extras
+        shell: bash
+        run: |
+          WHEEL_PATH="$(find "$(pwd)/dist" -type f -name 'paraguibench-*.whl' -print -quit)"
+          test -n "$WHEEL_PATH"
+          python -m venv .venv-ci
+          .venv-ci/bin/python -m pip install \
+            "paraguibench[live,dev] @ file://${WHEEL_PATH}"
+          .venv-ci/bin/python scripts/installation/verify_install.py --profile live-osworld
+
+      - name: Run tests and repository validators
+        run: |
+          .venv-ci/bin/python -m pytest
+          .venv-ci/bin/python scripts/benchmark/validate_release.py --repo-root .
+          .venv-ci/bin/python scripts/benchmark/validate_runtime_support.py --repo-root .
+          .venv-ci/bin/python scripts/security/scan_repository.py --root .

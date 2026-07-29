@@ -28,3 +28,6 @@ configs/deploy.yaml
 *.qcow2
 *.img
 *.iso
+
+/website/node_modules/
+/website/dist/

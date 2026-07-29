@@ -107,12 +107,18 @@ checkout fixture 值不属于默认日志契约。运行目录与资产缓存应
 
 ## 文档
 
+- [安装说明](INSTALL.md)
+- [中文安装说明](docs/installation/zh-CN.md)
+- [安装排障](docs/installation/troubleshooting.md)
 - [OSWorld Linux 部署](docs/deployment/osworld-linux.md)
 - [参考真实运行](docs/reproduction/reference-run-20260729.md)
 - [架构与依赖方向](docs/architecture/dependency-tree.md)
+- [评价协议与结果边界](docs/evaluation/protocol.md)
 - [Benchmark provenance](benchmark/provenance/README.md)
 - [第三方来源与发布边界](docs/licenses/third-party-sources.md)
 - [安全配置示例](configs/examples/README.md)
+- [贡献指南](CONTRIBUTING.md)
+- [GitHub Pages 源码与本地预览](website/README.md)
 
 ## 论文与引用
 

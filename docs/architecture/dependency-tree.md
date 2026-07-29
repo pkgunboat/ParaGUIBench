@@ -109,3 +109,36 @@ paraguibench
 extra，不能把旧项目的大型统一依赖集合复制到 `core`。每个新 extra 都需要同步
 更新依赖许可证清单、lazy import 测试、对应 evaluator/integration 测试和至少
 一个分类级 live gate。
+
+## 公开站点依赖方向
+
+`website` 是独立的静态交付面，不属于 Python runtime，也不能直接读取 canonical
+任务正文：
+
+```text
+benchmark/manifests + benchmark/tasks hashes
+└── scripts/site/generate_site_data.py
+    └── website/public/data/site-data.json
+        └── website/src/lib/taskData.js
+            └── website/src/components/TaskExplorer.jsx
+                └── website/src/App.jsx
+
+website/src/content.js
+└── website/src/components/*
+    └── website/src/App.jsx
+        └── website/src/main.jsx
+            └── website/index.html
+
+website/vite.config.js
+└── website/dist
+    └── website/scripts/validate-static-site.mjs
+        └── GitHub Pages artifact
+```
+
+站点数据生成器只允许输出白名单元数据、双语标签、计数和输入摘要；任务 instruction、
+expected answer、profile、URL、fixture 值、内部路径、模型信息与凭据均不能进入
+`site-data.json`。React 组件只能依赖该公开投影，不能在构建阶段绕过生成器读取
+`benchmark/tasks/*.json`。
+
+前端 production dependencies 仅为 `react` 与 `react-dom`；Vite 和 React plugin
+只参与构建。站点不包含后端、分析脚本、外部字体、credential 或运行时 API 调用。

@@ -119,12 +119,17 @@ checkout and are ignored if created locally by mistake.
 
 ## Documentation
 
+- [Installation guide](INSTALL.md)
+- [Installation troubleshooting](docs/installation/troubleshooting.md)
 - [OSWorld Linux deployment](docs/deployment/osworld-linux.md)
 - [Reference live run](docs/reproduction/reference-run-20260729.md)
 - [Architecture and dependency directions](docs/architecture/dependency-tree.md)
+- [Evaluation protocol and outcome boundaries](docs/evaluation/protocol.md)
 - [Benchmark provenance](benchmark/provenance/README.md)
 - [Third-party sources and release boundaries](docs/licenses/third-party-sources.md)
 - [Safe configuration examples](configs/examples/README.md)
+- [Contributing](CONTRIBUTING.md)
+- [GitHub Pages source and local preview](website/README.md)
 
 ## Paper and citation
 

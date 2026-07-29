@@ -1,0 +1,4108 @@
+{
+  "dataset_id": "paraguibench-site-data-v1",
+  "input_manifests": {
+    "release": {
+      "id": "release-v1",
+      "sha256": "913b74e3f39fcb65bc1ea807db7633d02a4c473504378950b8d474a5bf4e7e8a",
+      "task_count": 233
+    },
+    "runtime_support": {
+      "id": "runtime-support-v1",
+      "sha256": "17b3716ab4351262019184f1536e3d9780978e68a399b32e9c577c049386e7cb",
+      "task_count": 233
+    }
+  },
+  "labels": {
+    "fields": {
+      "asset_status": {
+        "en": "Asset status",
+        "zh-CN": "资产状态"
+      },
+      "benchmark_group": {
+        "en": "Benchmark group",
+        "zh-CN": "论文任务分组"
+      },
+      "blocker_codes": {
+        "en": "Blockers",
+        "zh-CN": "阻塞项"
+      },
+      "category": {
+        "en": "Category",
+        "zh-CN": "任务大类"
+      },
+      "environment_protocol": {
+        "en": "Environment",
+        "zh-CN": "环境协议"
+      },
+      "evaluation_protocol": {
+        "en": "Evaluation",
+        "zh-CN": "评价协议"
+      },
+      "source": {
+        "en": "Source",
+        "zh-CN": "任务来源"
+      },
+      "support_status": {
+        "en": "Support status",
+        "zh-CN": "支持状态"
+      },
+      "tag": {
+        "en": "Tag",
+        "zh-CN": "任务标签"
+      },
+      "task_id": {
+        "en": "Task ID",
+        "zh-CN": "任务 ID"
+      },
+      "type": {
+        "en": "Type",
+        "zh-CN": "任务类型"
+      }
+    },
+    "values": {
+      "asset_status": {
+        "legacy_remote_reference": {
+          "en": "Legacy remote reference",
+          "zh-CN": "旧版远程资产引用"
+        },
+        "no_task_assets_declared": {
+          "en": "No task assets declared",
+          "zh-CN": "未声明任务资产"
+        },
+        "pinned_download_manifest": {
+          "en": "Pinned download manifest",
+          "zh-CN": "已固定下载清单"
+        }
+      },
+      "benchmark_group": {
+        "FileOperation": {
+          "en": "File Operation",
+          "zh-CN": "文件操作"
+        },
+        "FileSearch": {
+          "en": "File Search",
+          "zh-CN": "文件检索"
+        },
+        "OnlineShopping": {
+          "en": "Online Shopping",
+          "zh-CN": "在线购物"
+        },
+        "SearchAndWrite": {
+          "en": "Search and Write",
+          "zh-CN": "检索并写入"
+        },
+        "WebNavigation": {
+          "en": "Web Navigation",
+          "zh-CN": "网页导航"
+        },
+        "WebSearch": {
+          "en": "Web Search",
+          "zh-CN": "网页检索"
+        }
+      },
+      "blocker_codes": {
+        "legacy_asset_manifest_not_migrated": {
+          "en": "Legacy asset manifest not migrated",
+          "zh-CN": "旧版资产清单尚未迁移"
+        },
+        "legacy_evaluator_not_migrated": {
+          "en": "Legacy evaluator not migrated",
+          "zh-CN": "旧版评价器尚未迁移"
+        },
+        "live_validation_not_completed": {
+          "en": "Live validation not completed",
+          "zh-CN": "尚未完成真实环境验证"
+        }
+      },
+      "category": {
+        "InformationRetrieval": {
+          "en": "Information Retrieval",
+          "zh-CN": "信息检索"
+        },
+        "Operation": {
+          "en": "Operation",
+          "zh-CN": "操作"
+        }
+      },
+      "environment_protocol": {
+        "osworld.chrome.v1": {
+          "en": "OSWorld Chrome",
+          "zh-CN": "OSWorld Chrome 环境"
+        },
+        "osworld.desktop.v1": {
+          "en": "OSWorld Desktop",
+          "zh-CN": "OSWorld 桌面环境"
+        },
+        "webmall.browser.v1": {
+          "en": "WebMall Browser",
+          "zh-CN": "WebMall 浏览器环境"
+        }
+      },
+      "evaluation_protocol": {
+        "legacy.operation.eval-rules.v1": {
+          "en": "Legacy Operation Rules",
+          "zh-CN": "旧版操作规则评价"
+        },
+        "legacy.osworld.state.v1": {
+          "en": "Legacy OSWorld State",
+          "zh-CN": "旧版 OSWorld 状态评价"
+        },
+        "legacy.pipeline-implicit.v1": {
+          "en": "Legacy Implicit Pipeline",
+          "zh-CN": "旧版隐式流水线评价"
+        },
+        "legacy.webmall.bookmark-url-set.v1": {
+          "en": "Legacy WebMall Bookmark Set",
+          "zh-CN": "旧版 WebMall 书签集合评价"
+        },
+        "legacy.webmall.cart.v1": {
+          "en": "Legacy WebMall Cart",
+          "zh-CN": "旧版 WebMall 购物车评价"
+        },
+        "legacy.webmall.checkout.v1": {
+          "en": "Legacy WebMall Checkout",
+          "zh-CN": "旧版 WebMall 结账评价"
+        },
+        "legacy.webnavigate.bookmark.v1": {
+          "en": "Legacy Web Navigation Bookmark",
+          "zh-CN": "旧版网页导航书签评价"
+        },
+        "paraguibench.answer.exact.v1": {
+          "en": "Exact Answer",
+          "zh-CN": "精确答案评价"
+        },
+        "paraguibench.answer.implicit-structured.v1": {
+          "en": "Implicit Structured Answer",
+          "zh-CN": "隐式结构化答案评价"
+        },
+        "paraguibench.answer.keyed-numeric-set.v1": {
+          "en": "Keyed Numeric Set",
+          "zh-CN": "带键数值集合评价"
+        },
+        "paraguibench.answer.numeric.v1": {
+          "en": "Numeric Answer",
+          "zh-CN": "数值答案评价"
+        },
+        "paraguibench.answer.ordered-structured.v1": {
+          "en": "Ordered Structured Answer",
+          "zh-CN": "有序结构化答案评价"
+        }
+      },
+      "source": {
+        "OSWorld": {
+          "en": "OSWorld",
+          "zh-CN": "OSWorld"
+        },
+        "VeriGUI": {
+          "en": "VeriGUI",
+          "zh-CN": "VeriGUI"
+        },
+        "WebMall": {
+          "en": "WebMall",
+          "zh-CN": "WebMall"
+        },
+        "self": {
+          "en": "Self-collected",
+          "zh-CN": "自建"
+        },
+        "unspecified": {
+          "en": "Unspecified",
+          "zh-CN": "未标注"
+        }
+      },
+      "support_status": {
+        "blocked": {
+          "en": "Blocked",
+          "zh-CN": "尚未闭环"
+        },
+        "live_validated": {
+          "en": "Live validated",
+          "zh-CN": "真实环境已验证"
+        }
+      },
+      "tag": {
+        "AddToCart": {
+          "en": "Add to Cart",
+          "zh-CN": "加入购物车"
+        },
+        "CheapestOfferSpecificRequirements": {
+          "en": "Cheapest Offer with Specific Requirements",
+          "zh-CN": "特定要求下的最低报价"
+        },
+        "CheapestOfferVagueRequirements": {
+          "en": "Cheapest Offer with Vague Requirements",
+          "zh-CN": "模糊要求下的最低报价"
+        },
+        "CheapestProductSearch": {
+          "en": "Cheapest Product Search",
+          "zh-CN": "最低价商品检索"
+        },
+        "Checkout": {
+          "en": "Checkout",
+          "zh-CN": "结账"
+        },
+        "EndToEnd": {
+          "en": "End to End",
+          "zh-CN": "端到端购物"
+        },
+        "FileOperate": {
+          "en": "File Operation",
+          "zh-CN": "文件操作"
+        },
+        "FileSearch": {
+          "en": "File Search",
+          "zh-CN": "文件检索"
+        },
+        "FindCompatibleProducts": {
+          "en": "Find Compatible Products",
+          "zh-CN": "查找兼容商品"
+        },
+        "FindSubstitutes": {
+          "en": "Find Substitutes",
+          "zh-CN": "查找替代商品"
+        },
+        "ProductsFulfillingSpecificRequirements": {
+          "en": "Products Fulfilling Specific Requirements",
+          "zh-CN": "满足特定要求的商品"
+        },
+        "ProductsSatisfyingVagueRequirements": {
+          "en": "Products Satisfying Vague Requirements",
+          "zh-CN": "满足模糊要求的商品"
+        },
+        "SingleProductSearch": {
+          "en": "Single Product Search",
+          "zh-CN": "单商品检索"
+        },
+        "VisualSearch": {
+          "en": "Visual Search",
+          "zh-CN": "视觉检索"
+        },
+        "WebOperate": {
+          "en": "Web Operation",
+          "zh-CN": "网页操作"
+        },
+        "WebSearch": {
+          "en": "Web Search",
+          "zh-CN": "网页检索"
+        }
+      },
+      "type": {
+        "OSWorld脚本": {
+          "en": "OSWorld Script",
+          "zh-CN": "OSWorld 脚本"
+        },
+        "OSWorld脚本改造": {
+          "en": "Adapted OSWorld Script",
+          "zh-CN": "OSWorld 脚本改造"
+        },
+        "QA": {
+          "en": "Question Answering",
+          "zh-CN": "问答"
+        },
+        "self": {
+          "en": "Self-defined",
+          "zh-CN": "自定义"
+        },
+        "unspecified": {
+          "en": "Unspecified",
+          "zh-CN": "未标注"
+        }
+      }
+    }
+  },
+  "schema_version": 1,
+  "summary": {
+    "asset_status_counts": {
+      "legacy_remote_reference": 64,
+      "no_task_assets_declared": 168,
+      "pinned_download_manifest": 1
+    },
+    "benchmark_group_counts": {
+      "FileOperation": 42,
+      "FileSearch": 12,
+      "OnlineShopping": 91,
+      "SearchAndWrite": 10,
+      "WebNavigation": 13,
+      "WebSearch": 65
+    },
+    "blocker_code_counts": {
+      "legacy_asset_manifest_not_migrated": 64,
+      "legacy_evaluator_not_migrated": 155,
+      "live_validation_not_completed": 232
+    },
+    "category_counts": {
+      "InformationRetrieval": 77,
+      "Operation": 156
+    },
+    "environment_protocol_counts": {
+      "osworld.chrome.v1": 78,
+      "osworld.desktop.v1": 64,
+      "webmall.browser.v1": 91
+    },
+    "evaluation_protocol_counts": {
+      "legacy.operation.eval-rules.v1": 32,
+      "legacy.osworld.state.v1": 17,
+      "legacy.pipeline-implicit.v1": 4,
+      "legacy.webmall.bookmark-url-set.v1": 67,
+      "legacy.webmall.cart.v1": 8,
+      "legacy.webmall.checkout.v1": 16,
+      "legacy.webnavigate.bookmark.v1": 11,
+      "paraguibench.answer.exact.v1": 39,
+      "paraguibench.answer.implicit-structured.v1": 8,
+      "paraguibench.answer.keyed-numeric-set.v1": 1,
+      "paraguibench.answer.numeric.v1": 28,
+      "paraguibench.answer.ordered-structured.v1": 2
+    },
+    "source_counts": {
+      "OSWorld": 28,
+      "VeriGUI": 29,
+      "WebMall": 91,
+      "self": 57,
+      "unspecified": 28
+    },
+    "support_status_counts": {
+      "blocked": 232,
+      "live_validated": 1
+    },
+    "tag_counts": {
+      "AddToCart": 7,
+      "CheapestOfferSpecificRequirements": 10,
+      "CheapestOfferVagueRequirements": 6,
+      "CheapestProductSearch": 12,
+      "Checkout": 8,
+      "EndToEnd": 8,
+      "FileOperate": 51,
+      "FileSearch": 12,
+      "FindCompatibleProducts": 5,
+      "FindSubstitutes": 4,
+      "ProductsFulfillingSpecificRequirements": 11,
+      "ProductsSatisfyingVagueRequirements": 8,
+      "SingleProductSearch": 12,
+      "VisualSearch": 1,
+      "WebOperate": 14,
+      "WebSearch": 64
+    },
+    "task_count": 233,
+    "type_counts": {
+      "OSWorld脚本": 18,
+      "OSWorld脚本改造": 10,
+      "QA": 169,
+      "self": 32,
+      "unspecified": 4
+    }
+  },
+  "tasks": [
+    {
+      "asset_status": "pinned_download_manifest",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "live_validated",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-Readonly-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-Readonly-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-Readonly-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.keyed-numeric-set.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileSearch",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileSearch",
+      "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "VisualSearch",
+      "task_id": "InformationRetrieval-VisualSearch-Video-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.ordered-structured.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-008",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-009",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-010",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-008",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-009",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-010",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-011",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-012",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-013",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-014",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-015",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-016",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-017",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-018",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-019",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-020",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-021",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-022",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-024",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-025",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-026",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-027",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-028",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.ordered-structured.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-029",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "VeriGUI",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-StatisticSearch-030",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-009",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-010",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-013",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-017",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-018",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-019",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-020",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-021",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-022",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-023",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-024",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-025",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebSearch",
+      "blocker_codes": [
+        "live_validation_not_completed"
+      ],
+      "category": "InformationRetrieval",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "WebSearch",
+      "task_id": "InformationRetrieval-WebSearch-VisualSearch-026",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperation-001",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperation-003",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationExcel-001",
+      "type": "unspecified"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationExcel-002",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationExcel-003",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationExcel-004",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationExcel-005",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationExcel-006",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationExcel-007",
+      "type": "OSWorld脚本改造"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationExcel-008",
+      "type": "OSWorld脚本改造"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationExcel-009",
+      "type": "OSWorld脚本改造"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationPPT-001",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationPPT-002",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationPPT-003",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-001",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-002",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-003",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-004",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-005",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-006",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-007",
+      "type": "OSWorld脚本改造"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-008",
+      "type": "OSWorld脚本改造"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-009",
+      "type": "OSWorld脚本改造"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-010",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-011",
+      "type": "unspecified"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-BatchOperationWord-012",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-001",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-002",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-003",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-005",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-006",
+      "type": "unspecified"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-007",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-008",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-009",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-010",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-011",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-012",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-013",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-014",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-CombinationDocs-015",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-SearchAndWrite-001",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-SearchAndWrite-002",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-SearchAndWrite-003",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-SearchAndWrite-004",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-SearchAndWrite-005",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-SearchAndWrite-006",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-SearchAndWrite-007",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "source": "self",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-SearchAndWrite-008",
+      "type": "unspecified"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-SearchAndWrite-009",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "FileOperation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.desktop.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "FileOperate",
+      "task_id": "Operation-FileOperate-Settings-001",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "AddToCart",
+      "task_id": "Operation-OnlineShopping-AddToCart-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "AddToCart",
+      "task_id": "Operation-OnlineShopping-AddToCart-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "AddToCart",
+      "task_id": "Operation-OnlineShopping-AddToCart-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "AddToCart",
+      "task_id": "Operation-OnlineShopping-AddToCart-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "AddToCart",
+      "task_id": "Operation-OnlineShopping-AddToCart-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "AddToCart",
+      "task_id": "Operation-OnlineShopping-AddToCart-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "AddToCart",
+      "task_id": "Operation-OnlineShopping-AddToCart-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-008",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-009",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-010",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferVagueRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferVagueRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferVagueRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferVagueRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferVagueRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestOfferVagueRequirements",
+      "task_id": "Operation-OnlineShopping-CheapestOfferVagueRequirements-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-008",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-009",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-010",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-011",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "CheapestProductSearch",
+      "task_id": "Operation-OnlineShopping-CheapestProductSearch-012",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "Checkout",
+      "task_id": "Operation-OnlineShopping-Checkout-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "Checkout",
+      "task_id": "Operation-OnlineShopping-Checkout-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "Checkout",
+      "task_id": "Operation-OnlineShopping-Checkout-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "Checkout",
+      "task_id": "Operation-OnlineShopping-Checkout-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "Checkout",
+      "task_id": "Operation-OnlineShopping-Checkout-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "Checkout",
+      "task_id": "Operation-OnlineShopping-Checkout-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "Checkout",
+      "task_id": "Operation-OnlineShopping-Checkout-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "Checkout",
+      "task_id": "Operation-OnlineShopping-Checkout-008",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "EndToEnd",
+      "task_id": "Operation-OnlineShopping-EndToEnd-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "EndToEnd",
+      "task_id": "Operation-OnlineShopping-EndToEnd-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "EndToEnd",
+      "task_id": "Operation-OnlineShopping-EndToEnd-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "EndToEnd",
+      "task_id": "Operation-OnlineShopping-EndToEnd-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "EndToEnd",
+      "task_id": "Operation-OnlineShopping-EndToEnd-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "EndToEnd",
+      "task_id": "Operation-OnlineShopping-EndToEnd-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "EndToEnd",
+      "task_id": "Operation-OnlineShopping-EndToEnd-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "EndToEnd",
+      "task_id": "Operation-OnlineShopping-EndToEnd-008",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "FindCompatibleProducts",
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "FindCompatibleProducts",
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "FindCompatibleProducts",
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "FindCompatibleProducts",
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "FindCompatibleProducts",
+      "task_id": "Operation-OnlineShopping-FindCompatibleProducts-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "FindSubstitutes",
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "FindSubstitutes",
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "FindSubstitutes",
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "FindSubstitutes",
+      "task_id": "Operation-OnlineShopping-FindSubstitutes-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-008",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-009",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-010",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsFulfillingSpecificRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-011",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsSatisfyingVagueRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsSatisfyingVagueRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsSatisfyingVagueRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsSatisfyingVagueRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsSatisfyingVagueRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsSatisfyingVagueRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsSatisfyingVagueRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "ProductsSatisfyingVagueRequirements",
+      "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-008",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-001",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-002",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-003",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-004",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-005",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-006",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-007",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-008",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-009",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-010",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-011",
+      "type": "QA"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "OnlineShopping",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "webmall.browser.v1",
+      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "source": "WebMall",
+      "support_status": "blocked",
+      "tag": "SingleProductSearch",
+      "task_id": "Operation-OnlineShopping-SingleProductSearch-012",
+      "type": "QA"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "SearchAndWrite",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-SearchAndWrite-001",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-Settings-001",
+      "type": "OSWorld脚本改造"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-Settings-002",
+      "type": "self"
+    },
+    {
+      "asset_status": "legacy_remote_reference",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_asset_manifest_not_migrated",
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-Settings-003",
+      "type": "OSWorld脚本"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-001",
+      "type": "self"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-002",
+      "type": "self"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-003",
+      "type": "self"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-004",
+      "type": "self"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-005",
+      "type": "self"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-007",
+      "type": "self"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "unspecified",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-008",
+      "type": "self"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.osworld.state.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-009",
+      "type": "OSWorld脚本改造"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-010",
+      "type": "OSWorld脚本改造"
+    },
+    {
+      "asset_status": "no_task_assets_declared",
+      "benchmark_group": "WebNavigation",
+      "blocker_codes": [
+        "legacy_evaluator_not_migrated",
+        "live_validation_not_completed"
+      ],
+      "category": "Operation",
+      "environment_protocol": "osworld.chrome.v1",
+      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "source": "OSWorld",
+      "support_status": "blocked",
+      "tag": "WebOperate",
+      "task_id": "Operation-WebOperate-WebNavigate-011",
+      "type": "OSWorld脚本改造"
+    }
+  ]
+}

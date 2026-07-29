@@ -1,0 +1,95 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages-production
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  build:
+    name: Build trusted Pages artifact
+    if: >-
+      github.repository == 'pkgunboat/ParaGUIBench' &&
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pages: read
+
+    steps:
+      - name: Check out source without persisted credentials
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Test the static artifact validator
+        run: node --test website/scripts/validate-static-site.test.mjs
+
+      - name: Verify that the public site dataset is current
+        run: python3 scripts/site/generate_site_data.py --check
+
+      - name: Install website dependencies from the lockfile
+        working-directory: website
+        run: npm ci
+
+      - name: Run website tests when defined
+        working-directory: website
+        run: npm test --if-present
+
+      - name: Build for the ParaGUIBench project path
+        working-directory: website
+        run: npm run build -- --base "${{ steps.pages.outputs.base_path }}/"
+
+      - name: Validate the exact production artifact
+        run: >-
+          node website/scripts/validate-static-site.mjs
+          website/dist
+          --base "${{ steps.pages.outputs.base_path }}/"
+
+      - name: Upload the validated Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: website/dist
+
+  deploy:
+    name: Deploy trusted Pages artifact
+    if: >-
+      github.repository == 'pkgunboat/ParaGUIBench' &&
+      github.ref == 'refs/heads/main'
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
