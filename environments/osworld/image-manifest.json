@@ -43,7 +43,7 @@
     "output_sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313"
   },
   "container": {
-    "image": "happysixd/osworld-docker-sshfs@sha256:3be783bbe5dc770f99a3d7d485511844744f4259abd49f949b641dca873a3d1e",
+    "image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
     "distribution_policy": "pull_only",
     "build_recipe_status": "pending_upstream_audit"
   }

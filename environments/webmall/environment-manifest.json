@@ -10,7 +10,7 @@
   "browser_runtime": {
     "kind": "osworld_chrome",
     "image_manifest_ref": "../osworld/image-manifest.json",
-    "image_manifest_sha256": "b1a7e2d4f8c1e6778befcd24a728b167edc9325a7bd47f0d4c0c659fccba215d",
+    "image_manifest_sha256": "7a5970575aee310593d8c177f5f36aa769b49f42ca369e73821a510210ed8359",
     "required_protocol_id": "osworld.chrome.v1"
   },
   "service_images": {
