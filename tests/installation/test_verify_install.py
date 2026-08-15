@@ -55,7 +55,7 @@ def test_core_profile_reports_only_stable_pass_lines() -> None:
 
 
 def test_live_osworld_profile_verifies_declared_optional_dependencies() -> None:
-    """功能：确认 live-osworld profile 验证三个已声明的可选运行依赖。
+    """功能：确认 live-osworld profile 验证四个已声明的可选运行依赖。
 
     输入参数：
         无；当前项目测试环境已安装 ``pyproject.toml`` 的 live 依赖。
@@ -87,6 +87,7 @@ def test_live_osworld_profile_verifies_declared_optional_dependencies() -> None:
         "PASS dependency-openai",
         "PASS dependency-pillow",
         "PASS dependency-requests",
+        "PASS dependency-playwright",
         "PASS profile-live-osworld",
     ]
     assert completed.stderr == ""
@@ -147,15 +148,11 @@ def test_dependency_import_output_is_suppressed(
 
     sentinel = "SYNTHETIC_IMPORT_OUTPUT_DO_NOT_PRINT"
     (tmp_path / "openai.py").write_text(
-        "import sys\n"
-        f"print({sentinel!r})\n"
-        f"sys.stderr.write({sentinel!r})\n",
+        f"import sys\nprint({sentinel!r})\nsys.stderr.write({sentinel!r})\n",
         encoding="utf-8",
     )
     environment = os.environ.copy()
-    environment["PYTHONPATH"] = os.pathsep.join(
-        (str(tmp_path), str(REPO_ROOT / "src"))
-    )
+    environment["PYTHONPATH"] = os.pathsep.join((str(tmp_path), str(REPO_ROOT / "src")))
 
     completed = subprocess.run(
         [
@@ -179,6 +176,7 @@ def test_dependency_import_output_is_suppressed(
         "PASS dependency-openai",
         "PASS dependency-pillow",
         "PASS dependency-requests",
+        "PASS dependency-playwright",
         "PASS profile-live-osworld",
     ]
     assert completed.stderr == ""

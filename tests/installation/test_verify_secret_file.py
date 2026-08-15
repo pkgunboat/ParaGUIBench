@@ -2,16 +2,13 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 import subprocess
 import sys
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-VERIFY_SCRIPT = (
-    REPO_ROOT / "scripts" / "installation" / "verify_secret_file.py"
-)
+VERIFY_SCRIPT = REPO_ROOT / "scripts" / "installation" / "verify_secret_file.py"
 
 
 def test_secure_external_secret_file_passes_without_reading_its_value(

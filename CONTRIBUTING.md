@@ -1,8 +1,9 @@
 # Contributing to ParaGUIBench
 
 ParaGUIBench is currently a `0.1` preview. Contributions are welcome, but a new task
-definition is not considered runnable until its assets, environment protocol, evaluator,
-and live evidence are all declared independently.
+definition is not considered locally runnable until its assets, environment protocol,
+and evaluator are declared independently. `live_validated` additionally requires
+versioned live evidence; its absence must not be confused with local executability.
 
 ## Before opening a pull request
 
@@ -17,8 +18,14 @@ python -m pip install -e '.[dev]'
 python -m pytest
 python scripts/benchmark/validate_release.py --repo-root .
 python scripts/benchmark/validate_runtime_support.py --repo-root .
+# Classify scanner results according to REVIEW_POLICY.md.
 python scripts/security/scan_repository.py --root .
 ```
+
+The scanner currently includes both default secret checks and legacy strict checks for
+private addresses and developer paths. A strict-only hit should be fixed in the scanner,
+fixture, or CI profile; it is not a reason to add defensive behavior to the runtime.
+Actual credentials or private assets in repository or release candidates always block.
 
 Website changes additionally require Node.js 22:
 
@@ -38,8 +45,9 @@ node scripts/validate-static-site.mjs dist --base /ParaGUIBench/
 - Do not let Agent implementations import evaluators.
 - Keep canonical task definitions, runtime-support declarations, and live evidence as
   separate artifacts.
-- Do not add credentials, endpoint values, private network addresses, user-specific
-  absolute paths, raw model responses, or unredacted run logs.
+- Do not commit real credentials or private assets. Public examples should use obvious
+  placeholders and portable paths; model responses or run logs may be added only as
+  intentionally sanitized public fixtures.
 - Do not redistribute VM images, datasets, or task assets until their licenses and
   redistribution terms have been reviewed.
 
@@ -61,6 +69,10 @@ Never mark a task `live_validated` from schema checks, evaluator parity tests, o
 successful installation alone.
 
 ## Review scope
+
+Reviewers and contributors must follow [REVIEW_POLICY.md](REVIEW_POLICY.md). It defines
+the default ordinary-evaluation acceptance boundary and separates optional official
+audit hardening from blocking correctness work.
 
 Keep pull requests focused. Describe the affected module boundary, tests run, public-data
 impact, and whether the change alters runtime support. Maintainers may ask for a smaller

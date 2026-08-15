@@ -1,6 +1,6 @@
 # Security Policy / 安全政策
 
-ParaGUIBench 会启动容器或虚拟机、连接模型服务并保存 GUI Agent 运行记录，因此凭据隔离和运行日志脱敏属于发布门禁，而不是可选配置。当前开发阶段仅维护最新的 `main` 分支；正式版本发布后，受支持范围将在这里按版本列出。
+ParaGUIBench 会启动容器或虚拟机、连接模型服务并保存 GUI Agent 运行记录，因此本文给出凭据隔离和运行日志脱敏的严格推荐实践。普通开源评测的默认合并门槛及其与官方严格审计的边界，以 [REVIEW_POLICY.md](REVIEW_POLICY.md) 为准；真实凭据或私有资产进入 Git、GitHub release 或公开构建产物始终属于阻塞问题。当前开发阶段仅维护最新的 `main` 分支；正式版本发布后，受支持范围将在这里按版本列出。
 
 ## Reporting a vulnerability / 报告漏洞
 
@@ -32,4 +32,4 @@ Please use **Private vulnerability reporting** on the repository Security page w
 python scripts/security/scan_repository.py --root .
 ```
 
-扫描器只检查 Git tracked 与非忽略的 untracked 候选文件，不读取进程环境变量，也不在报告中回显命中值。它用于发现高置信度 token、私钥、固定私网地址和开发者绝对路径，不能替代托管平台 secret scanning、依赖漏洞检查、Git 历史审计、许可证审计或人工复核。
+扫描器只检查 Git tracked 与非忽略的 untracked 候选文件，不读取进程环境变量，也不在报告中回显命中值。它用于发现高置信度 token、私钥、固定私网地址和开发者绝对路径，不能替代托管平台 secret scanning、依赖漏洞检查、Git 历史审计、许可证审计或人工复核。普通评审中，真实凭据或私有资产命中必须修复；仅涉及私网地址或开发者路径且不影响公开可移植性的规则，按 [REVIEW_POLICY.md](REVIEW_POLICY.md) 归入 legacy strict 检查，后续应从默认 CI 失败条件中拆分。

@@ -4,6 +4,7 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+.venv-*/
 
 .env
 .env.*
@@ -24,6 +25,19 @@ configs/deploy.yaml
 /asset-cache/
 /downloads/
 *.log
+
+# 本地 live-validation 执行计划包含尚未授权的证据编排，不进入发布闭集。
+/PARAGUIBENCH_LIVE_VALIDATION_EXECUTION_PLAN.local.md
+
+# OnlyOffice 单实例的本地 compose 环境与误建在仓库内的运行状态。
+/deploy/onlyoffice/.env
+/onlyoffice-state/
+
+# WebMall 分布式租约协调器的本地运行状态，不属于可发布源码。
+/webmall-lease.sqlite3
+/webmall-lease.sqlite3-journal
+/webmall-lease.sqlite3-shm
+/webmall-lease.sqlite3-wal
 
 *.qcow2
 *.img

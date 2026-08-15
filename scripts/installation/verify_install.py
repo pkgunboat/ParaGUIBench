@@ -126,6 +126,7 @@ def verify_profile(profile: str) -> tuple[CheckResult, ...]:
             _check_dependency("openai", "dependency-openai"),
             _check_dependency("PIL", "dependency-pillow"),
             _check_dependency("requests", "dependency-requests"),
+            _check_dependency("playwright", "dependency-playwright"),
         )
         results += dependency_checks
     return results + (

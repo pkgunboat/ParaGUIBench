@@ -76,7 +76,9 @@ class RepositorySecurityScannerTests(unittest.TestCase):
         输出返回值：无；断言失败时由 unittest 报告。
         """
 
-        internal_path = "".join(("/", "home", "/", "example-developer", "/", "workspace"))
+        internal_path = "".join(
+            ("/", "home", "/", "example-developer", "/", "workspace")
+        )
         with tempfile.TemporaryDirectory() as temporary_directory:
             source_file = Path(temporary_directory) / "config.yaml"
             source_file.write_text(f"workspace: {internal_path}\n", encoding="utf-8")
@@ -132,14 +134,30 @@ class RepositorySecurityScannerTests(unittest.TestCase):
             {
                 "PARAGUIBENCH_MODEL_API_KEY",
                 "PARAGUIBENCH_MODEL_BASE_URL",
+                "PARAGUIBENCH_MODEL_ID",
                 "PARAGUIBENCH_RUNS_ROOT",
                 "PARAGUIBENCH_ASSET_CACHE_ROOT",
+                "PARAGUIBENCH_GOLD_CACHE_ROOT",
+                "PARAGUIBENCH_WEBMALL_STORE_1_ORIGIN",
+                "PARAGUIBENCH_WEBMALL_STORE_2_ORIGIN",
+                "PARAGUIBENCH_WEBMALL_STORE_3_ORIGIN",
+                "PARAGUIBENCH_WEBMALL_STORE_4_ORIGIN",
+                "PARAGUIBENCH_WEBMALL_STORE_1_READER_TARGET",
+                "PARAGUIBENCH_WEBMALL_STORE_2_READER_TARGET",
+                "PARAGUIBENCH_WEBMALL_STORE_3_READER_TARGET",
+                "PARAGUIBENCH_WEBMALL_STORE_4_READER_TARGET",
+                "PARAGUIBENCH_WEBMALL_LEASE_COORDINATOR_URL",
+                "PARAGUIBENCH_WEBMALL_LEASE_TOKEN",
+                "PARAGUIBENCH_WEBMALL_LEASE_BEARER_TOKEN",
+                "WP_CLI_DOCKER_NO_TTY",
             },
             set(assignments),
         )
 
     @unittest.skipUnless(shutil.which("git"), "需要 git 验证忽略规则")
-    def test_candidate_collection_does_not_read_gitignored_environment_file(self) -> None:
+    def test_candidate_collection_does_not_read_gitignored_environment_file(
+        self,
+    ) -> None:
         """功能：确认 Git 忽略的本地 ``.env`` 不进入静态扫描候选集。
 
         输入参数：无；测试在临时 Git 仓库中创建不含真实凭据的哨兵文件。
