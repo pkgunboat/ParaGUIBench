@@ -1,6 +1,6 @@
 # ADR-0003：WebMall checkout 的版本化合成 fixture
 
-- 状态：Accepted
+- 状态：Accepted（部分评分条款后续由 ADR-0005 取代）
 - 日期：2026-07-29
 
 ## 背景
@@ -80,3 +80,10 @@ benchmark/schemas/webmall-checkout-task-v1.schema.json
   数据替换或误配置时的风险。
 - runtime 在支持这 16 个任务前必须实现 fixture resolution、模板渲染与三个
   投影；直接把 `instruction_template` 作为 Agent instruction 属于协议错误。
+
+> 后续说明：本 ADR 只决定 fixture、projection 与 profile 不参与评分的边界。
+> 其中“评价协议不变”是 2026-07-29 的当时事实；Checkout 与 EndToEnd 的订单
+> 闭集及报告 AND 语义现由 ADR-0004 取代并版本化，本文不再定义两者协议 ID。
+>
+> 2026-08-04 的 [ADR-0005](0005-webmall-checkout-state-and-billing.md) 进一步取代本文
+> “profile 不参与评分”的条款；fixture 身份、投影和不持久化原值的决定仍有效。

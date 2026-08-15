@@ -1,5 +1,9 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "protocol_ids": [
+    "osworld.desktop.v1",
+    "osworld.chrome.v1"
+  ],
   "environment_id": "osworld-ubuntu-x86_64",
   "vm_archive": {
     "provider": "huggingface_dataset",
@@ -12,8 +16,31 @@
   },
   "extracted_image": {
     "path": "Ubuntu.qcow2",
-    "sha256": "6d8056d8b8ea15578969d60c16be2b89f46a41f6dc86ba201e3037902aaca97e",
-    "status": "verified_on_reference_deployment"
+    "size": 24460197888,
+    "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+    "status": "verified_reproducible_materialization"
+  },
+  "materialization": {
+    "protocol_id": "paraguibench.osworld.qcow2-zip-materializer.v1",
+    "protocol_version": 1,
+    "platform": "linux",
+    "publication_method": "o_tmpfile_linkat_noreplace_with_procfd_fallback",
+    "archive_path": "Ubuntu.qcow2.zip",
+    "archive_size": 12273896463,
+    "archive_sha256": "b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712",
+    "member_path": "Ubuntu.qcow2",
+    "member_compression_method": 8,
+    "member_flags": 0,
+    "member_creator_system": 3,
+    "member_external_attributes": 2175008768,
+    "member_local_extra_hex": "555409000325f2916825f2916875780b000104000000000400000000010010000000f1b105000000edca94db02000000",
+    "member_central_extra_hex": "555405000325f2916875780b000104000000000400000000010010000000f1b105000000edca94db02000000",
+    "member_compressed_size": 12273896173,
+    "member_uncompressed_size": 24460197888,
+    "member_crc32": 3184026217,
+    "output_path": "Ubuntu.qcow2",
+    "output_size": 24460197888,
+    "output_sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313"
   },
   "container": {
     "image": "happysixd/osworld-docker-sshfs@sha256:3be783bbe5dc770f99a3d7d485511844744f4259abd49f949b641dca873a3d1e",

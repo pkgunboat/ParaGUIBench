@@ -12,7 +12,10 @@ from threading import Barrier
 import pytest
 
 from paraguibench.runstore import RunStore, RunStoreConflictError
-from tests.runstore._audit import synthetic_task_audit
+from tests.runstore._audit import (
+    synthetic_run_version_vector,
+    synthetic_task_audit,
+)
 
 
 def test_json_artifact_is_sanitized_and_described_by_manifest(
@@ -29,7 +32,11 @@ def test_json_artifact_is_sanitized_and_described_by_manifest(
 
     sentinel = "artifact-secret-must-not-reach-disk"
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-artifact-001", run_record={"test": True})
+    store.start_run(
+        run_id="run-artifact-001",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     attempt = store.start_attempt(
         run_id="run-artifact-001",
         task_id="InformationRetrieval-FileSearch-Readonly-001",
@@ -61,9 +68,7 @@ def test_json_artifact_is_sanitized_and_described_by_manifest(
     assert payload["provider"]["api_key"] == sentinel
 
     manifest = json.loads(
-        (attempt.path / "artifacts" / "manifest.json").read_text(
-            encoding="utf-8"
-        )
+        (attempt.path / "artifacts" / "manifest.json").read_text(encoding="utf-8")
     )
     assert manifest["artifacts"] == [
         {
@@ -89,7 +94,11 @@ def test_multiple_artifacts_are_preserved_in_one_attempt_manifest(
     """
 
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-artifact-002", run_record={"test": True})
+    store.start_run(
+        run_id="run-artifact-002",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     attempt = store.start_attempt(
         run_id="run-artifact-002",
         task_id="InformationRetrieval-FileSearch-Readonly-001",
@@ -115,17 +124,14 @@ def test_multiple_artifacts_are_preserved_in_one_attempt_manifest(
     )
 
     assert (attempt.path / "artifacts" / "agent" / "answer.json").is_file()
-    assert (
-        attempt.path / "artifacts" / "evaluation" / "result.json"
-    ).is_file()
+    assert (attempt.path / "artifacts" / "evaluation" / "result.json").is_file()
     manifest = json.loads(
-        (attempt.path / "artifacts" / "manifest.json").read_text(
-            encoding="utf-8"
-        )
+        (attempt.path / "artifacts" / "manifest.json").read_text(encoding="utf-8")
     )
-    assert [
-        entry["logical_name"] for entry in manifest["artifacts"]
-    ] == ["agent-answer", "evaluator-result"]
+    assert [entry["logical_name"] for entry in manifest["artifacts"]] == [
+        "agent-answer",
+        "evaluator-result",
+    ]
 
 
 def test_artifact_relative_path_cannot_traverse_outside_artifact_directory(
@@ -141,7 +147,11 @@ def test_artifact_relative_path_cannot_traverse_outside_artifact_directory(
     """
 
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-artifact-path-001", run_record={"test": True})
+    store.start_run(
+        run_id="run-artifact-path-001",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     attempt = store.start_attempt(
         run_id="run-artifact-path-001",
         task_id="InformationRetrieval-FileSearch-Readonly-001",
@@ -180,6 +190,7 @@ def test_artifact_logical_name_cannot_be_rebound_to_another_path(
     store.start_run(
         run_id="run-artifact-conflict-001",
         run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
     )
     attempt = store.start_attempt(
         run_id="run-artifact-conflict-001",
@@ -206,9 +217,7 @@ def test_artifact_logical_name_cannot_be_rebound_to_another_path(
             media_type="application/json",
         )
 
-    assert not (
-        attempt.path / "artifacts" / "agent" / "rebound.json"
-    ).exists()
+    assert not (attempt.path / "artifacts" / "agent" / "rebound.json").exists()
 
 
 def test_concurrent_artifact_logical_name_conflict_has_one_winner(
@@ -227,6 +236,7 @@ def test_concurrent_artifact_logical_name_conflict_has_one_winner(
     store.start_run(
         run_id="run-artifact-race-001",
         run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
     )
     attempt = store.start_attempt(
         run_id="run-artifact-race-001",
@@ -272,9 +282,7 @@ def test_concurrent_artifact_logical_name_conflict_has_one_winner(
     )
     assert len(persisted_candidates) == 1
     manifest = json.loads(
-        (attempt.path / "artifacts" / "manifest.json").read_text(
-            encoding="utf-8"
-        )
+        (attempt.path / "artifacts" / "manifest.json").read_text(encoding="utf-8")
     )
     assert len(manifest["artifacts"]) == 1
     assert (
@@ -305,6 +313,7 @@ def test_artifact_manifest_symlink_is_rejected_before_content_write(
     store.start_run(
         run_id="run-artifact-symlink-001",
         run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
     )
     attempt = store.start_attempt(
         run_id="run-artifact-symlink-001",
@@ -348,6 +357,7 @@ def test_artifact_cannot_claim_reserved_manifest_path(
     store.start_run(
         run_id="run-artifact-reserved-001",
         run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
     )
     attempt = store.start_attempt(
         run_id="run-artifact-reserved-001",
@@ -386,6 +396,7 @@ def test_structured_artifact_rejects_non_json_media_type(
     store.start_run(
         run_id="run-artifact-media-001",
         run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
     )
     attempt = store.start_attempt(
         run_id="run-artifact-media-001",
@@ -424,6 +435,7 @@ def test_artifact_directories_and_files_use_private_permissions(
     store.start_run(
         run_id="run-artifact-mode-001",
         run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
     )
     attempt = store.start_attempt(
         run_id="run-artifact-mode-001",

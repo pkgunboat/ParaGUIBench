@@ -7,7 +7,10 @@ from pathlib import Path
 import pytest
 
 from paraguibench.runstore import RunStore, RunStoreConflictError
-from tests.runstore._audit import synthetic_task_audit
+from tests.runstore._audit import (
+    synthetic_run_version_vector,
+    synthetic_task_audit,
+)
 
 
 def test_task_attempt_is_scoped_and_secrets_never_reach_disk(tmp_path: Path) -> None:
@@ -31,6 +34,7 @@ def test_task_attempt_is_scoped_and_secrets_never_reach_disk(tmp_path: Path) -> 
                 "headers": {"Authorization": f"Bearer {sentinel}"},
             },
         },
+        version_vector=synthetic_run_version_vector(),
     )
 
     attempt = store.start_attempt(
@@ -88,6 +92,7 @@ def test_task_attempt_redacts_provider_keys_and_url_credentials(
                 f"?api_key={sentinel}&view=compact"
             ),
         },
+        version_vector=synthetic_run_version_vector(),
     )
 
     store.start_attempt(
@@ -109,6 +114,68 @@ def test_task_attempt_redacts_provider_keys_and_url_credentials(
     assert "reader@" not in persisted_text
 
 
+def test_order_url_bare_key_access_token_never_reaches_disk(
+    tmp_path: Path,
+) -> None:
+    """验证订单 URL 中名为 ``key`` 的访问令牌会被脱敏。
+
+    输入参数：
+        tmp_path：pytest 提供的临时 RunStore 根目录。
+    输出返回值：
+        无；通过公开 ``RunStore.start_run`` 界面验证访问令牌
+        不会落盘，同一 URL 中的非敏感 query 仍可用于复现。
+    """
+
+    sentinel = "pb-order-url-bare-key-sentinel"
+    store = RunStore(tmp_path)
+    run = store.start_run(
+        run_id="run-order-url-key",
+        run_record={
+            "order_url": (
+                "https://shop.example.test/order-received/42/"
+                f"?key={sentinel}&view=compact"
+            )
+        },
+        version_vector=synthetic_run_version_vector(),
+    )
+
+    manifest_text = (run.path / "run.json").read_text(encoding="utf-8")
+    assert sentinel not in manifest_text
+    assert "key=%5BREDACTED%5D" in manifest_text
+    assert "view=compact" in manifest_text
+
+
+def test_order_url_order_key_access_token_never_reaches_disk(
+    tmp_path: Path,
+) -> None:
+    """验证订单 URL 中名为 ``order_key`` 的访问令牌会被脱敏。
+
+    输入参数：
+        tmp_path：pytest 提供的临时 RunStore 根目录。
+    输出返回值：
+        无；通过公开 ``RunStore.start_run`` 界面验证别名访问令牌
+        不会落盘，同一 URL 中的非敏感 query 仍保留。
+    """
+
+    sentinel = "pb-order-url-order-key-sentinel"
+    store = RunStore(tmp_path)
+    run = store.start_run(
+        run_id="run-order-url-order-key",
+        run_record={
+            "order_url": (
+                "https://shop.example.test/order-received/43/"
+                f"?order_key={sentinel}&page=receipt"
+            )
+        },
+        version_vector=synthetic_run_version_vector(),
+    )
+
+    manifest_text = (run.path / "run.json").read_text(encoding="utf-8")
+    assert sentinel not in manifest_text
+    assert "order_key=%5BREDACTED%5D" in manifest_text
+    assert "page=receipt" in manifest_text
+
+
 def test_task_snapshot_cannot_be_overwritten_by_later_attempt(
     tmp_path: Path,
 ) -> None:
@@ -121,7 +188,11 @@ def test_task_snapshot_cannot_be_overwritten_by_later_attempt(
     """
 
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-003", run_record={"test": True})
+    store.start_run(
+        run_id="run-003",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     common_identity = {
         "run_id": "run-003",
         "task_id": "InformationRetrieval-FileSearch-Readonly-001",
@@ -156,7 +227,11 @@ def test_attempt_identity_can_only_be_started_once(tmp_path: Path) -> None:
     """
 
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-004", run_record={"test": True})
+    store.start_run(
+        run_id="run-004",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     start_arguments = {
         "run_id": "run-004",
         "task_id": "InformationRetrieval-FileSearch-Readonly-001",

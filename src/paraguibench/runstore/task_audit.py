@@ -20,6 +20,7 @@ _OPTIONAL_FIELDS = {
     "task_type",
     "task_source",
     "task_tag",
+    "webmall_environment",
 }
 _MATERIALIZATION_FIELDS = {
     "schema_version",
@@ -34,6 +35,12 @@ _FIXTURE_REFERENCE_FIELDS = {
     "task_storage_policy",
     "sha256",
 }
+_WEBMALL_ENVIRONMENT_FIELDS = {
+    "manifest_id",
+    "store_universe_id",
+    "origin_binding_names",
+}
+_PUBLIC_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{0,127}$")
 
 
 def validate_task_audit_record(
@@ -57,9 +64,7 @@ def validate_task_audit_record(
         raise TypeError("task audit record 必须是 Mapping")
     fields = set(task_record)
     allowed_fields = _REQUIRED_FIELDS | _OPTIONAL_FIELDS
-    if not _REQUIRED_FIELDS.issubset(fields) or not fields.issubset(
-        allowed_fields
-    ):
+    if not _REQUIRED_FIELDS.issubset(fields) or not fields.issubset(allowed_fields):
         raise ValueError("task audit fields 不符合 allowlist")
     if task_record.get("task_id") != expected_task_id:
         raise ValueError("task audit identity 与 Attempt 不一致")
@@ -72,11 +77,13 @@ def validate_task_audit_record(
         or _SHA256_PATTERN.fullmatch(canonical_sha256) is None
     ):
         raise ValueError("task audit canonical digest 无效")
-    for field in _OPTIONAL_FIELDS:
+    for field in _OPTIONAL_FIELDS - {"webmall_environment"}:
         if field in task_record and not isinstance(task_record[field], str):
             raise TypeError("task audit identity field 类型无效")
 
     _validate_materialization(task_record.get("materialization"))
+    if "webmall_environment" in task_record:
+        _validate_webmall_environment(task_record["webmall_environment"])
     return deepcopy(dict(task_record))
 
 
@@ -102,8 +109,7 @@ def _validate_materialization(value: Any) -> None:
         not isinstance(binding_names, list)
         or binding_names != sorted(set(binding_names))
         or not all(
-            isinstance(name, str)
-            and _BINDING_PATTERN.fullmatch(name) is not None
+            isinstance(name, str) and _BINDING_PATTERN.fullmatch(name) is not None
             for name in binding_names
         )
     ):
@@ -142,10 +148,46 @@ def _validate_fixture_reference(value: Any) -> None:
     if value.get("schema_version") != 1:
         raise ValueError("task audit fixture schema 无效")
     if (
-        value.get("data_classification")
-        != "synthetic_public_test_data"
+        value.get("data_classification") != "synthetic_public_test_data"
         or value.get("task_storage_policy") != "reference_only"
     ):
         raise ValueError("task audit fixture policy 无效")
     if _SHA256_PATTERN.fullmatch(value["sha256"]) is None:
         raise ValueError("task audit fixture digest 无效")
+
+
+def _validate_webmall_environment(value: Any) -> None:
+    """校验 WebMall task audit 只保存环境身份与 origin 变量名。
+
+    输入参数：
+        value：``materialize_webmall_prepared_task`` 产生的部署审计
+            object；不应包含 origin 值、凭据或 task 正文。
+    输出返回值：
+        无；严格字段、公开 identity 和四个环境变量名合法时
+        正常返回。
+    异常：
+        ValueError/TypeError：字段闭包、identity 或绑定名列表无效。
+    """
+
+    if not isinstance(value, Mapping):
+        raise TypeError("task audit WebMall environment 必须是 Mapping")
+    if set(value) != _WEBMALL_ENVIRONMENT_FIELDS:
+        raise ValueError("task audit WebMall environment fields 无效")
+    for field in ("manifest_id", "store_universe_id"):
+        field_value = value.get(field)
+        if (
+            not isinstance(field_value, str)
+            or _PUBLIC_ID_PATTERN.fullmatch(field_value) is None
+        ):
+            raise ValueError("task audit WebMall environment identity 无效")
+    binding_names = value.get("origin_binding_names")
+    if (
+        not isinstance(binding_names, list)
+        or len(binding_names) != 4
+        or binding_names != sorted(set(binding_names))
+        or not all(
+            isinstance(name, str) and _BINDING_PATTERN.fullmatch(name) is not None
+            for name in binding_names
+        )
+    ):
+        raise ValueError("task audit WebMall origin binding names 无效")

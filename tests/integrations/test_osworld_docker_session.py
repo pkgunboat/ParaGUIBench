@@ -66,6 +66,7 @@ def test_session_starts_new_loopback_container_and_removes_only_owned_id(
         qcow2_path=qcow2_path,
         server_port=55001,
         vnc_port=58001,
+        chromium_port=59222,
         ram_size="8G",
         cpu_cores=4,
     )
@@ -79,6 +80,7 @@ def test_session_starts_new_loopback_container_and_removes_only_owned_id(
     assert run_command[:3] == ["docker", "run", "-d"]
     assert "127.0.0.1:55001:5000" in run_command
     assert "127.0.0.1:58001:8006" in run_command
+    assert "127.0.0.1:59222:9222" in run_command
     assert f"{qcow2_path.resolve()}:/System.qcow2:ro" in run_command
     assert run_command[-1] == image
     assert runner.commands[1] == ["docker", "rm", "-fv", "a" * 64]

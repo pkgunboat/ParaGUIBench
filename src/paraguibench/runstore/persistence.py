@@ -78,17 +78,13 @@ def read_private_json_if_exists(path: Path) -> Any | None:
         return None
     except OSError as error:
         if path.is_symlink():
-            raise ValueError(
-                f"RunStore JSON path is a symlink: {path}"
-            ) from error
+            raise ValueError(f"RunStore JSON path is a symlink: {path}") from error
         raise
 
     try:
         file_status = os.fstat(file_descriptor)
         if not stat.S_ISREG(file_status.st_mode):
-            raise ValueError(
-                f"RunStore JSON path is not a regular file: {path}"
-            )
+            raise ValueError(f"RunStore JSON path is not a regular file: {path}")
         with os.fdopen(file_descriptor, "r", encoding="utf-8") as file_handle:
             file_descriptor = -1
             return json.load(file_handle)
@@ -171,12 +167,22 @@ def append_private_json_line(path: Path, payload: Any) -> None:
         )
         + "\n"
     ).encode("utf-8")
-    file_descriptor = os.open(
-        path,
-        os.O_WRONLY | os.O_CREAT | os.O_APPEND,
-        0o600,
-    )
+    if path.is_symlink():
+        raise ValueError(f"RunStore JSONL path is a symlink: {path}")
+    open_flags = os.O_WRONLY | os.O_CREAT | os.O_APPEND
+    if hasattr(os, "O_NOFOLLOW"):
+        open_flags |= os.O_NOFOLLOW
     try:
+        file_descriptor = os.open(path, open_flags, 0o600)
+    except OSError as error:
+        if path.is_symlink():
+            raise ValueError(f"RunStore JSONL path is a symlink: {path}") from error
+        raise
+    try:
+        file_status = os.fstat(file_descriptor)
+        if not stat.S_ISREG(file_status.st_mode):
+            raise ValueError(f"RunStore JSONL path is not a regular file: {path}")
+        os.fchmod(file_descriptor, 0o600)
         remaining = memoryview(serialized)
         while remaining:
             written = os.write(file_descriptor, remaining)
@@ -186,7 +192,6 @@ def append_private_json_line(path: Path, payload: Any) -> None:
         os.fsync(file_descriptor)
     finally:
         os.close(file_descriptor)
-    os.chmod(path, 0o600)
 
 
 def write_private_json_atomic(path: Path, payload: Any) -> None:

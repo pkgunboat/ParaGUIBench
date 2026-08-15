@@ -39,6 +39,18 @@ class WebMallURLRegistry:
                 )
             self._stores_by_origin[origin_key] = store_id
 
+    @property
+    def logical_store_ids(self) -> tuple[str, ...]:
+        """返回构造 registry 时固定的 logical store 有序闭集。
+
+        输入参数：
+            无。
+        输出返回值：
+            不含 runtime origin 值的 store identity 元组。
+        """
+
+        return tuple(self._origins)
+
     def materialize_url(self, logical_url: str) -> str:
         """把一个 ``webmall://`` logical URL 转为当前部署 URL。
 
@@ -127,9 +139,7 @@ def _origin_key(parts: SplitResult) -> str:
         scheme 与 authority 小写化后的 origin 字符串；不含 path 和查询。
     """
 
-    return urlunsplit(
-        (parts.scheme.lower(), parts.netloc.lower(), "", "", "")
-    )
+    return urlunsplit((parts.scheme.lower(), parts.netloc.lower(), "", "", ""))
 
 
 def _validate_origin(parts: SplitResult) -> None:

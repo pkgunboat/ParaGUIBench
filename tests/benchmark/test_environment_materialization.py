@@ -27,8 +27,7 @@ def test_materialization_replaces_bindings_across_the_whole_task() -> None:
             "GUEST_SHARED_DIR",
         ],
         "instruction": (
-            "Read ${GUEST_SHARED_DIR}/paper.pdf and "
-            "${GUEST_SHARED_DIR}/notes.txt"
+            "Read ${GUEST_SHARED_DIR}/paper.pdf and ${GUEST_SHARED_DIR}/notes.txt"
         ),
         "input_files": [
             "${GUEST_SHARED_DIR}/paper.pdf",
@@ -138,34 +137,29 @@ def test_materialization_rejects_unsafe_directory_binding(
         )
 
 
-def test_settings_task_uses_one_guest_shared_directory_binding() -> None:
-    """验证 Settings-003 的题面与启动上下文共享同一目录绑定。
+def test_settings_task_uses_relative_asset_context_without_early_binding() -> None:
+    """验证 Settings-003 在 VM 前可以直接物化且不硬编码 guest home。
 
     输入参数：
         无；读取 release-v1 中已知需要 guest 文件的正式任务。
     输出返回值：
-        无；canonical task 不保存镜像用户名路径，物化后两个入口必须一致。
+        无；canonical task 不保存镜像用户名或运行前无法
+        提供的 binding，environment 将在上传后使用相对文件名构造路径。
     """
 
     task_path = (
-        REPO_ROOT
-        / "benchmark"
-        / "tasks"
-        / "Operation-WebOperate-Settings-003.json"
+        REPO_ROOT / "benchmark" / "tasks" / "Operation-WebOperate-Settings-003.json"
     )
     canonical_task = json.loads(task_path.read_text(encoding="utf-8"))
 
-    assert canonical_task["required_environment_bindings"] == [
-        "GUEST_SHARED_DIR"
-    ]
-    assert canonical_task["agent_start_context"]["guest_path"].startswith(
-        "${GUEST_SHARED_DIR}/"
-    )
-    assert "${GUEST_SHARED_DIR}/" in canonical_task["instruction"]
+    assert "required_environment_bindings" not in canonical_task
+    assert canonical_task["agent_start_context"] == {
+        "type": "local_pdf",
+        "asset_relative_path": "2206.08853.pdf",
+        "open_with": "chrome",
+        "target": "all_vms",
+    }
+    assert "${" not in canonical_task["instruction"]
 
-    materialized = materialize_task(
-        canonical_task,
-        {"GUEST_SHARED_DIR": "/mnt/paraguibench/shared"},
-    )
-    guest_path = materialized["agent_start_context"]["guest_path"]
-    assert guest_path in materialized["instruction"]
+    materialized = materialize_task(canonical_task, {})
+    assert materialized == canonical_task

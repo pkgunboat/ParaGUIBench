@@ -8,7 +8,10 @@ from pathlib import Path
 from threading import Barrier
 
 from paraguibench.runstore import RunStore, RunStoreConflictError
-from tests.runstore._audit import synthetic_task_audit
+from tests.runstore._audit import (
+    synthetic_run_version_vector,
+    synthetic_task_audit,
+)
 
 
 def test_concurrent_conflicting_task_snapshots_have_one_winner(
@@ -24,7 +27,11 @@ def test_concurrent_conflicting_task_snapshots_have_one_winner(
     """
 
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-race-001", run_record={"test": True})
+    store.start_run(
+        run_id="run-race-001",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     barrier = Barrier(2)
 
     def start(attempt_id: str, instruction: str) -> str:
@@ -72,9 +79,7 @@ def test_concurrent_conflicting_task_snapshots_have_one_winner(
         / "tasks"
         / "InformationRetrieval-FileSearch-Readonly-001"
     )
-    task_snapshot = json.loads(
-        (task_path / "task.json").read_text(encoding="utf-8")
-    )
+    task_snapshot = json.loads((task_path / "task.json").read_text(encoding="utf-8"))
     assert task_snapshot["task"]["task_tag"] in {
         "First immutable instruction.",
         "Second conflicting instruction.",

@@ -78,6 +78,12 @@ _SENSITIVE_FIELD_SUFFIXES = (
     "_ssh_password",
     "_token",
 )
+_SENSITIVE_QUERY_PARAMETER_NAMES = frozenset(
+    {
+        "key",
+        "order_key",
+    }
+)
 _SAFE_HEADER_NAMES = frozenset(
     {
         "accept",
@@ -114,9 +120,7 @@ def sanitize_record(value: Any) -> Any:
                 sanitized[key] = sanitize_record(raw_value)
         return sanitized
 
-    if isinstance(value, Sequence) and not isinstance(
-        value, (str, bytes, bytearray)
-    ):
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
         return [sanitize_record(item) for item in value]
 
     if isinstance(value, str):
@@ -173,9 +177,7 @@ def _sanitize_environment(value: Any) -> Any:
             sanitized[key] = sanitize_record(raw_value)
         elif _is_sensitive_field(normalized_key):
             sanitized[key] = (
-                PRESENT
-                if raw_value is not None and raw_value != ""
-                else ABSENT
+                PRESENT if raw_value is not None and raw_value != "" else ABSENT
             )
     return sanitized
 
@@ -192,9 +194,7 @@ def _normalize_field_name(name: str) -> str:
     normalized_chars = [
         character.lower() if character.isalnum() else "_" for character in name
     ]
-    return "_".join(
-        part for part in "".join(normalized_chars).split("_") if part
-    )
+    return "_".join(part for part in "".join(normalized_chars).split("_") if part)
 
 
 def _is_sensitive_field(normalized_name: str) -> bool:
@@ -210,6 +210,22 @@ def _is_sensitive_field(normalized_name: str) -> bool:
     if normalized_name in _SENSITIVE_FIELD_NAMES:
         return True
     return normalized_name.endswith(_SENSITIVE_FIELD_SUFFIXES)
+
+
+def _is_sensitive_query_parameter(normalized_name: str) -> bool:
+    """判断规范化 URL query 参数名是否承载访问凭据。
+
+    输入参数：
+        normalized_name：由 ``_normalize_field_name`` 生成的 query
+        参数名。
+    输出返回值：
+        已知访问令牌参数或通用敏感字段返回 ``True``；
+        可用于复现的普通 query 参数返回 ``False``。
+    """
+
+    return normalized_name in _SENSITIVE_QUERY_PARAMETER_NAMES or _is_sensitive_field(
+        normalized_name
+    )
 
 
 def _sanitize_text(value: str) -> str:
@@ -246,7 +262,7 @@ def _sanitize_text(value: str) -> str:
             (
                 query_name,
                 REDACTED
-                if _is_sensitive_field(_normalize_field_name(query_name))
+                if _is_sensitive_query_parameter(_normalize_field_name(query_name))
                 else query_value,
             )
             for query_name, query_value in parse_qsl(

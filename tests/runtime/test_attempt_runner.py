@@ -15,6 +15,7 @@ from paraguibench.runtime.attempt_runner import (
     AttemptRunner,
     RuntimeEvaluation,
 )
+from tests.runstore._audit import synthetic_run_version_vector
 
 
 class _Environment:
@@ -177,6 +178,41 @@ class _FailingAgent:
         raise RuntimeError("synthetic agent failure")
 
 
+class _FailingEvaluator:
+    """模拟订单证据或评价契约异常的可信 evaluator。"""
+
+    def __init__(self, calls: list[str]) -> None:
+        """保存共享调用记录。
+
+        输入参数：
+            calls：生命周期记录列表。
+        输出返回值：
+            无。
+        """
+
+        self.calls = calls
+
+    def evaluate(
+        self,
+        task: dict[str, Any],
+        final_output: str,
+        environment: _Environment,
+    ) -> RuntimeEvaluation:
+        """在评价阶段抛出含敏感哨兵值的合成异常。
+
+        输入参数：
+            task：可信 canonical task。
+            final_output：Agent 最终文本。
+            environment：仍存活的任务环境。
+        输出返回值：
+            不返回；始终抛出 ``RuntimeError``。
+        """
+
+        del task, final_output, environment
+        self.calls.append("evaluator.evaluate")
+        raise RuntimeError("private-evidence-sentinel")
+
+
 def _prepare_synthetic_task(task: dict[str, Any]) -> PreparedTask:
     """为 runtime 单元测试构造显式三投影。
 
@@ -227,7 +263,11 @@ def test_attempt_runner_orders_lifecycle_and_persists_separate_outcomes(
     }
     prepared_task = _prepare_synthetic_task(task)
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-runtime-001", run_record={"test": True})
+    store.start_run(
+        run_id="run-runtime-001",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     attempt = store.start_attempt(
         run_id="run-runtime-001",
         task_id=task["task_id"],
@@ -253,9 +293,7 @@ def test_attempt_runner_orders_lifecycle_and_persists_separate_outcomes(
         "environment.close",
     ]
     assert result.score == 1.0
-    summary = json.loads(
-        (attempt.path / "summary.json").read_text(encoding="utf-8")
-    )
+    summary = json.loads((attempt.path / "summary.json").read_text(encoding="utf-8"))
     assert summary["execution"]["outcome"] == "SUCCEEDED"
     assert summary["evaluation"]["outcome"] == "PASSED"
     assert summary["evaluation"]["score"] == 1.0
@@ -285,7 +323,11 @@ def test_attempt_runner_cleans_environment_and_marks_agent_failure(
     }
     prepared_task = _prepare_synthetic_task(task)
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-failure-001", run_record={"test": True})
+    store.start_run(
+        run_id="run-failure-001",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     attempt = store.start_attempt(
         run_id="run-failure-001",
         task_id=task["task_id"],
@@ -309,10 +351,67 @@ def test_attempt_runner_cleans_environment_and_marks_agent_failure(
         "agent.run",
         "environment.close",
     ]
-    summary = json.loads(
-        (attempt.path / "summary.json").read_text(encoding="utf-8")
-    )
+    summary = json.loads((attempt.path / "summary.json").read_text(encoding="utf-8"))
     assert summary["execution"]["outcome"] == "FAILED"
     assert summary["evaluation"]["outcome"] == "NOT_REQUESTED"
     assert summary["evaluation"]["score"] is None
     assert "synthetic agent failure" not in json.dumps(summary)
+
+
+def test_attempt_runner_maps_evaluator_error_without_zero_score_or_message(
+    tmp_path: Path,
+) -> None:
+    """验证证据/evaluator 异常落为 ERROR/null，且不泄漏异常消息。
+
+    输入参数：
+        tmp_path：pytest 提供的隔离 RunStore 根目录。
+    输出返回值：
+        无；Agent execution 保持 SUCCEEDED，评价为 ERROR、score 为 null，
+        环境仍被关闭，summary 只保留异常类型。
+    """
+
+    task = {
+        "task_id": "synthetic-evaluator-failure",
+        "instruction": "Complete the task.",
+        "answer": "private-gold",
+        "accepted_answers": [],
+        "answer_match_mode": "exact",
+    }
+    prepared_task = _prepare_synthetic_task(task)
+    store = RunStore(tmp_path)
+    store.start_run(
+        run_id="run-evaluator-failure-001",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
+    attempt = store.start_attempt(
+        run_id="run-evaluator-failure-001",
+        task_id=task["task_id"],
+        attempt_id="attempt-001",
+        task_record=prepared_task.audit_metadata,
+    )
+    calls: list[str] = []
+
+    with pytest.raises(RuntimeError, match="private-evidence-sentinel"):
+        AttemptRunner(store).run(
+            attempt=attempt,
+            prepared_task=prepared_task,
+            environment=_Environment(calls),
+            agent=_Agent(calls),
+            evaluator=_FailingEvaluator(calls),
+        )
+
+    assert calls == [
+        "environment.start",
+        "environment.prepare",
+        "agent.run",
+        "evaluator.evaluate",
+        "environment.close",
+    ]
+    summary_text = (attempt.path / "summary.json").read_text(encoding="utf-8")
+    summary = json.loads(summary_text)
+    assert summary["execution"]["outcome"] == "SUCCEEDED"
+    assert summary["evaluation"]["outcome"] == "ERROR"
+    assert summary["evaluation"]["score"] is None
+    assert summary["failure_stage"] == "evaluator.evaluate"
+    assert "private-evidence-sentinel" not in summary_text

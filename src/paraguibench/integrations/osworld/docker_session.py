@@ -2,16 +2,14 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 import re
 import subprocess
 from typing import Any
 
-_CONTAINER_NAME_PATTERN = re.compile(
-    r"^paraguibench-[a-z0-9][a-z0-9_.-]{0,100}$"
-)
+_CONTAINER_NAME_PATTERN = re.compile(r"^paraguibench-[a-z0-9][a-z0-9_.-]{0,100}$")
 _DIGEST_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 _CONTAINER_ID_PATTERN = re.compile(r"^[0-9a-f]{12,64}$")
 _RAM_SIZE_PATTERN = re.compile(r"^[1-9][0-9]*[GM]$")
@@ -30,6 +28,7 @@ class OSWorldDockerConfig:
     qcow2_path: Path
     server_port: int
     vnc_port: int
+    chromium_port: int
     ram_size: str = "8G"
     cpu_cores: int = 4
 
@@ -57,15 +56,18 @@ class OSWorldDockerConfig:
             raise OSWorldDockerSessionError(
                 "qcow2_path 必须是绝对、普通且非符号链接文件"
             )
-        for port in (self.server_port, self.vnc_port):
+        ports = (self.server_port, self.vnc_port, self.chromium_port)
+        for port in ports:
             if (
                 not isinstance(port, int)
                 or isinstance(port, bool)
                 or not 1024 <= port <= 65535
             ):
                 raise OSWorldDockerSessionError("Docker 映射端口范围无效")
-        if self.server_port == self.vnc_port:
-            raise OSWorldDockerSessionError("server 与 VNC 端口不得相同")
+        if len(set(ports)) != len(ports):
+            raise OSWorldDockerSessionError(
+                "server、VNC 与 Chromium 主机端口必须互不相同"
+            )
         if not _RAM_SIZE_PATTERN.fullmatch(self.ram_size):
             raise OSWorldDockerSessionError("RAM_SIZE 格式无效")
         if (
@@ -241,6 +243,8 @@ def _docker_run_command(config: OSWorldDockerConfig) -> list[str]:
         f"127.0.0.1:{config.server_port}:5000",
         "-p",
         f"127.0.0.1:{config.vnc_port}:8006",
+        "-p",
+        f"127.0.0.1:{config.chromium_port}:9222",
         "-e",
         f"RAM_SIZE={config.ram_size}",
         "-e",

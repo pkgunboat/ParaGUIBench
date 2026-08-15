@@ -10,11 +10,24 @@ from typing import Any, Protocol
 from paraguibench.agents import AgentRunResult
 from paraguibench.benchmark import PreparedTask
 from paraguibench.runstore import (
+    AttemptFailureStage,
     EvaluationOutcome,
     ExecutionOutcome,
     RunStore,
     TaskAttempt,
 )
+
+_ALLOWED_AGENT_TERMINATIONS = frozenset(
+    {
+        "call_user",
+        "finished",
+        "infeasible",
+        "max_steps",
+        "partial",
+        "terminal",
+    }
+)
+
 
 @dataclass(frozen=True)
 class RuntimeEvaluation:
@@ -145,6 +158,7 @@ class AttemptRunner:
         summary_details: dict[str, Any] = {}
         primary_error: BaseException | None = None
         stage = "environment.start"
+        failure_stage = AttemptFailureStage.NOT_FAILED
         agent_result: AgentRunResult | None = None
 
         runtime_events.append(
@@ -212,9 +226,9 @@ class AttemptRunner:
         except BaseException as error:
             primary_error = error
             summary_details = {
-                "failure_stage": stage,
                 "exception_type": type(error).__name__,
             }
+            failure_stage = AttemptFailureStage(stage)
             if stage == "agent.run":
                 execution_outcome = ExecutionOutcome.FAILED
                 evaluation_outcome = EvaluationOutcome.NOT_REQUESTED
@@ -244,10 +258,10 @@ class AttemptRunner:
                     level="ERROR",
                 )
                 execution_outcome = ExecutionOutcome.INFRA_ERROR
+                failure_stage = AttemptFailureStage.ENVIRONMENT_CLOSE
                 if primary_error is None:
                     primary_error = cleanup_error
                     summary_details = {
-                        "failure_stage": "environment.close",
                         "exception_type": type(cleanup_error).__name__,
                     }
 
@@ -256,6 +270,7 @@ class AttemptRunner:
             execution_outcome=execution_outcome,
             evaluation_outcome=evaluation_outcome,
             score=score,
+            failure_stage=failure_stage,
             details=summary_details,
         )
         runtime_events.append(
@@ -296,8 +311,11 @@ def _validate_agent_result(result: AgentRunResult) -> None:
         or result.step_count < 0
     ):
         raise ValueError("Agent step_count 必须是非负整数")
-    if not isinstance(result.termination, str) or not result.termination:
-        raise ValueError("Agent termination 必须是非空字符串")
+    if (
+        not isinstance(result.termination, str)
+        or result.termination not in _ALLOWED_AGENT_TERMINATIONS
+    ):
+        raise ValueError("Agent termination 必须是固定终止类型")
 
 
 def _validate_runtime_evaluation(evaluation: RuntimeEvaluation) -> None:

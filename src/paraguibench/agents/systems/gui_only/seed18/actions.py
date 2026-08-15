@@ -40,13 +40,21 @@ _SCROLL_STATEMENTS = {
     "left": "pyautogui.hscroll(-5)",
     "right": "pyautogui.hscroll(5)",
 }
-_FORBIDDEN_LAUNCHER_HOTKEYS = frozenset(
+_FORBIDDEN_HOTKEY_SUBSETS = frozenset(
     {
-        ("command", "space"),
-        ("ctrl", "alt", "t"),
-        ("win", "r"),
+        frozenset({"alt", "f1"}),
+        frozenset({"alt", "f2"}),
+        frozenset({"command", "space"}),
+        frozenset({"ctrl", "alt", "t"}),
+        frozenset({"ctrl", "shift", "c"}),
+        frozenset({"ctrl", "shift", "i"}),
+        frozenset({"ctrl", "shift", "j"}),
+        frozenset({"ctrl", "shift", "k"}),
+        frozenset({"win", "r"}),
     }
 )
+_FORBIDDEN_LAUNCHER_KEYS = frozenset({"command", "win"})
+_FORBIDDEN_SINGLE_KEYS = frozenset({"f12"})
 
 
 class SeedActionError(ValueError):
@@ -122,11 +130,7 @@ def compile_seed_action(
             image_width=image_width,
             image_height=image_height,
         )
-        method = (
-            "doubleClick"
-            if action.name == "left_double"
-            else "rightClick"
-        )
+        method = "doubleClick" if action.name == "left_double" else "rightClick"
         return _python_action(f"pyautogui.{method}({x}, {y})")
     if action.name == "drag":
         start_x, start_y = _scaled_point(
@@ -154,10 +158,7 @@ def compile_seed_action(
         direction = action.parameters.get("direction")
         if not isinstance(direction, str) or direction not in _SCROLL_STATEMENTS:
             raise SeedActionError("scroll direction 必须是 up/down/left/right")
-        statement = (
-            f"pyautogui.moveTo({x}, {y}); "
-            f"{_SCROLL_STATEMENTS[direction]}"
-        )
+        statement = f"pyautogui.moveTo({x}, {y}); {_SCROLL_STATEMENTS[direction]}"
         return _python_action(statement)
     if action.name in {"hotkey", "press"}:
         keys = _validated_keys(
@@ -238,10 +239,7 @@ def _python_action(statement: str) -> CompiledSeedAction:
         ``guest_command`` 类型的不可变结果。
     """
 
-    code = (
-        "import pyautogui; "
-        f"{statement}"
-    )
+    code = f"import pyautogui; {statement}"
     return CompiledSeedAction(
         kind="guest_command",
         command=("python", "-c", code),
@@ -269,12 +267,21 @@ def _validated_keys(raw_key: Any, *, allow_multiple: bool) -> tuple[str, ...]:
     for key in keys:
         is_single_character = len(key) == 1 and key.isascii() and key.isalnum()
         is_function_key = (
-            key.startswith("f")
-            and key[1:].isdigit()
-            and 1 <= int(key[1:]) <= 12
+            key.startswith("f") and key[1:].isdigit() and 1 <= int(key[1:]) <= 12
         )
         if key not in _NAMED_KEYS and not is_single_character and not is_function_key:
             raise SeedActionError("key 包含未允许的键名")
-    if allow_multiple and keys in _FORBIDDEN_LAUNCHER_HOTKEYS:
-        raise SeedActionError("GUI-only 策略禁止命令启动器快捷键")
+    if any(key in _FORBIDDEN_LAUNCHER_KEYS for key in keys):
+        raise SeedActionError("GUI-only 策略禁止系统启动器按键")
+    if any(key in _FORBIDDEN_SINGLE_KEYS for key in keys):
+        raise SeedActionError("GUI-only 策略禁止开发者工具按键")
+    key_set = frozenset(keys)
+    opens_tty = {"ctrl", "alt"}.issubset(key_set) and any(
+        key.startswith("f") and key[1:].isdigit() for key in key_set
+    )
+    if allow_multiple and (
+        opens_tty
+        or any(pattern.issubset(key_set) for pattern in _FORBIDDEN_HOTKEY_SUBSETS)
+    ):
+        raise SeedActionError("GUI-only 策略禁止终端、启动器或开发者工具快捷键")
     return keys

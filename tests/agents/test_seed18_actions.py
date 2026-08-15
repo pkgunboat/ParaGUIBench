@@ -156,7 +156,15 @@ def test_supported_gui_actions_compile_to_bounded_execution(
 
 @pytest.mark.parametrize(
     "launcher_hotkey",
-    ["ctrl alt t", "win r", "command space"],
+    [
+        "ctrl alt t",
+        "ctrl alt f1",
+        "ctrl alt f12",
+        "ctrl shift i",
+        "ctrl shift j",
+        "win r",
+        "command space",
+    ],
 )
 def test_gui_only_policy_rejects_common_command_launcher_hotkeys(
     launcher_hotkey: str,
@@ -172,6 +180,23 @@ def test_gui_only_policy_rejects_common_command_launcher_hotkeys(
     with pytest.raises(ValueError):
         compile_seed_action(
             SeedAction("hotkey", {"key": launcher_hotkey}),
+            image_width=1920,
+            image_height=1080,
+        )
+
+
+def test_gui_only_policy_rejects_f12_devtools_key() -> None:
+    """验证单独 F12 不能直接打开浏览器开发者工具。
+
+    输入参数：
+        无；构造 Seed18 ``press f12`` 动作。
+    输出返回值：
+        无；动作在 guest 执行前 fail-closed。
+    """
+
+    with pytest.raises(ValueError):
+        compile_seed_action(
+            SeedAction("press", {"key": "f12"}),
             image_width=1920,
             image_height=1080,
         )

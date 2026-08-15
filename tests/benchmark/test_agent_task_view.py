@@ -25,6 +25,7 @@ def test_agent_task_view_excludes_all_evaluation_and_gold_fields() -> None:
         "answer": "private-gold",
         "accepted_answers": ["alias"],
         "expected_urls": ["webmall://store-1/product/gold"],
+        "gold_manifest": "benchmark/gold/manifests/private.json",
         "evaluator_path": "evaluation/hidden.py",
         "answer_match_mode": "exact",
     }

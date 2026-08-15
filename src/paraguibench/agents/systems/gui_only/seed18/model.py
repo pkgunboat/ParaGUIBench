@@ -8,13 +8,13 @@ import json
 import os
 import re
 from typing import Any
-from urllib.parse import urlsplit
 
 from paraguibench.agents.systems.gui_only.seed18.actions import SeedAction
 from paraguibench.agents.systems.gui_only.seed18.prompts import (
     SEED18_TOOLS,
     build_step_messages,
 )
+from paraguibench.integrations.model_endpoint import validate_model_base_url
 
 _ENV_NAME_PATTERN = re.compile(r"[A-Z][A-Z0-9_]{1,127}")
 _MAX_SCREENSHOT_BYTES = 25 * 1024 * 1024
@@ -34,7 +34,7 @@ class Seed18ModelConfig:
     max_output_tokens: int = 512
 
     def __post_init__(self) -> None:
-        """验证配置不携带 secret 且 endpoint 使用 HTTPS。
+        """验证配置不携带 secret，且 endpoint 满足模型 URL 约定。
 
         输入参数：
             无；读取 dataclass 已初始化字段。
@@ -55,16 +55,7 @@ class Seed18ModelConfig:
             or _ENV_NAME_PATTERN.fullmatch(self.api_key_env) is None
         ):
             raise ValueError("api_key_env 必须是大写环境变量名")
-        parts = urlsplit(self.base_url)
-        if (
-            parts.scheme != "https"
-            or not parts.hostname
-            or parts.username is not None
-            or parts.password is not None
-            or parts.query
-            or parts.fragment
-        ):
-            raise ValueError("base_url 必须是无凭据、query 和 fragment 的 HTTPS URL")
+        validate_model_base_url(self.base_url)
         if (
             not isinstance(self.max_output_tokens, int)
             or isinstance(self.max_output_tokens, bool)
@@ -85,7 +76,7 @@ class Seed18OpenAIModel:
         """保存非敏感配置，不在构造阶段读取 API key。
 
         输入参数：
-            config：只含模型名、HTTPS endpoint 和 key 环境变量名的配置。
+            config：只含模型名、已校验 endpoint 和 key 环境变量名的配置。
             client_factory：可选 client 工厂；测试可注入 fake。
         输出返回值：
             无；API key 与 OpenAI SDK 均延迟到首个请求才读取。
@@ -186,7 +177,7 @@ def _create_openai_client(*, api_key: str, base_url: str) -> Any:
 
     输入参数：
         api_key：仅来自调用进程环境变量的 secret。
-        base_url：已验证的无凭据 HTTPS endpoint。
+        base_url：已验证的无凭据模型 endpoint。
     输出返回值：
         OpenAI SDK client；调用者仅在内存中缓存。
     """

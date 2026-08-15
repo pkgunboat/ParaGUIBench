@@ -1,9 +1,14 @@
-# 参考真实运行：2026-07-29
+# 历史无版本冒烟运行：2026-07-29
 
 本文档记录 ParaGUIBench 0.1 preview 的首个成功端到端门禁。记录已移除主机、
 网络、开发者路径、模型 endpoint 和凭据值，只保留公开复现所需的稳定身份与
-结果。它证明一个具体任务—Agent—环境—评价器组合能够真实运行，不代表 233
+结果。它证明当时的一个具体任务—Agent—环境—评价器组合曾能真实运行，不代表 233
 个 canonical 任务都已获得 runtime 支持。
+
+> [!WARNING]
+> 该 Run 早于 RunStore v2，没有 source/Agent/evaluator/protocol/environment
+> 版本向量。它现已从当前 `live_validated` 计数中降级，只作为
+> `LEGACY_UNVERSIONED` 历史冒烟证据，不能用于当前发布就绪或论文复现声明。
 
 | 字段 | 参考结果 |
 |---|---|
@@ -26,7 +31,10 @@
 开始，安装 `.[live,dev]` 后执行完整自动化测试、release validator、runtime
 support validator 和 repository secret scanner。OSWorld qcow2 位于 checkout
 外部缓存；该次验证没有重新下载大型归档，而是在容器启动前对全文件重新计算
-SHA-256，并与 `environments/osworld/image-manifest.json` 中已固定的摘要一致。
+SHA-256，并与当时历史 manifest 中记录的 6d reference 摘要一致。
+当前 `environments/osworld/image-manifest.json` 已因上游 ZIP 直接解压的
+6bf 镜像与该 6d 环境内容不同而改为 fail-closed；本记录不能为当前
+manifest 提供可重现来源证据。
 任务的四个 download-only 资产同样按逐文件大小和 SHA-256 闭集校验。
 
 `doctor` 在真实运行前同时验证：
@@ -53,7 +61,7 @@ key、endpoint 值、模型原始响应或完整 final output。执行结束后�
 `finished`，exact 模式经显式别名匹配通过。紧邻该 run 的一次默认 18 步尝试
 已完成环境和 Agent 生命周期，但以 `max_steps` 终止并得到正常的
 `FAILED / 0.0` 评价；它没有发生基础设施或评价器错误。该对照说明 live 模型
-轨迹具有随机性，`live_validated` 表示部署链已真实成功闭环，不表示每次采样
+轨迹具有随机性；该记录在当时曾表示部署链成功闭环，但不表示每次采样
 必然通过。
 
 ## 结论及其限制
@@ -74,8 +82,8 @@ key、endpoint 值、模型原始响应或完整 final output。执行结束后�
 
 - 233 个 canonical task definition 已迁入；
 - 逐任务 runtime support manifest 已覆盖 233 个任务；
-- 其中 1 个任务为 `live_validated`，其余 232 个为 `blocked`；
-- 上表所列组合已取得 `SUCCEEDED` / `PASSED` / `1.0` 的真实结果。
+- 上表所列组合在当时取得 `SUCCEEDED` / `PASSED` / `1.0` 的真实结果；
+- 因缺少 RunStore v2 版本向量，当前 233 个任务均为 `blocked`，其中 0 个为 `live_validated`。
 
 当前不能据此声称完整 ParaGUI 多 worker 系统、其余任务类别、全部 evaluator、
 完整 WebMall 或论文汇总指标已经复现。后续每增加一个 `live_validated` 条目，

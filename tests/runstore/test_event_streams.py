@@ -5,8 +5,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from paraguibench.runstore import RunStore
-from tests.runstore._audit import synthetic_task_audit
+from tests.runstore._audit import (
+    synthetic_run_version_vector,
+    synthetic_task_audit,
+)
 
 
 def test_each_worker_owns_a_sanitized_event_stream(tmp_path: Path) -> None:
@@ -21,7 +26,11 @@ def test_each_worker_owns_a_sanitized_event_stream(tmp_path: Path) -> None:
 
     sentinel = "pb-worker-event-secret"
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-events-001", run_record={"test": True})
+    store.start_run(
+        run_id="run-events-001",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     attempt = store.start_attempt(
         run_id="run-events-001",
         task_id="InformationRetrieval-FileSearch-Readonly-001",
@@ -76,7 +85,11 @@ def test_event_stream_makes_every_intermediate_directory_private(
     """
 
     store = RunStore(tmp_path)
-    store.start_run(run_id="run-events-private", run_record={"test": True})
+    store.start_run(
+        run_id="run-events-private",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
     attempt = store.start_attempt(
         run_id="run-events-private",
         task_id="synthetic-private-directories",
@@ -100,3 +113,41 @@ def test_event_stream_makes_every_intermediate_directory_private(
         )
         assert stream.path.parent.stat().st_mode & 0o777 == 0o700
         assert stream.path.parent.parent.stat().st_mode & 0o777 == 0o700
+
+
+def test_event_append_rejects_symlink_file_without_touching_target(
+    tmp_path: Path,
+) -> None:
+    """验证事件 JSONL 追加不会跟随预置的符号链接。
+
+    输入参数：
+        tmp_path：pytest 提供的 RunStore 与外部诱饵文件根目录。
+    输出返回值：
+        无；追加必须失败关闭，外部文件字节保持不变。
+    """
+
+    outside = tmp_path / "outside.jsonl"
+    outside.write_text("sentinel\n", encoding="utf-8")
+    store = RunStore(tmp_path / "runs")
+    store.start_run(
+        run_id="run-event-link",
+        run_record={"test": True},
+        version_vector=synthetic_run_version_vector(),
+    )
+    attempt = store.start_attempt(
+        run_id="run-event-link",
+        task_id="synthetic-task",
+        attempt_id="attempt-001",
+        task_record=synthetic_task_audit("synthetic-task"),
+    )
+    stream = store.open_event_stream(
+        attempt=attempt,
+        producer_kind="runtime",
+        producer_id="attempt-runner",
+    )
+    stream.path.symlink_to(outside)
+
+    with pytest.raises((OSError, ValueError), match="symlink|regular"):
+        stream.append(event_type="attempt.started", data={})
+
+    assert outside.read_text(encoding="utf-8") == "sentinel\n"
