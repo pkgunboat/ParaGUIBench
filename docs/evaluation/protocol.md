@@ -344,5 +344,5 @@ Each attempt stores execution and evaluation summaries under one stable
 (`runtime`, `environment`, `worker`, or `evaluator`), while persisted payloads use
 allowlists and sanitization.
 
-See [the RunStore ADR](../adr/0002-task-scoped-runstore.md) and the
-[sanitized reference run](../reproduction/reference-run-20260729.md).
+See [the RunStore ADR](../adr/0002-task-scoped-runstore.md).
+The public 0.1 package does not include historical smoke-run logs.

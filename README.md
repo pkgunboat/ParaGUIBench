@@ -168,8 +168,6 @@ not mark those tasks `live_validated`. See
 For the pinned VM, task input assets, evaluator-only gold provisioning, complete `doctor`
 gate, live command, and safe inspection workflow, follow
 [the OSWorld Linux deployment guide](docs/deployment/osworld-linux.md).
-The sanitized historical deployment record is
-[reference-run-20260729.md](docs/reproduction/reference-run-20260729.md).
 
 ## Run records and privacy
 
@@ -207,9 +205,6 @@ fail-closed.
 - [OSWorld Linux deployment](docs/deployment/osworld-linux.md)
 - [WebMall Linux deployment and Checkout run](docs/deployment/webmall-linux.md)
 - [OnlyOffice single-instance deployment](docs/deployment/onlyoffice.md)
-- [Historical unversioned smoke run](docs/reproduction/reference-run-20260729.md)
-- [Kimi+Qwen experimental run](docs/reproduction/kimi-qwen-single-vm-20260801.md)
-- [Paper result lineage ledger](docs/reproduction/paper-lineage-v1.md)
 - [Qwen 3.7 GUI worker and validation boundary](docs/agents/qwen.md)
 - [Kimi + Qwen sequential single-VM ParaGUI](docs/agents/kimi-qwen-single-vm.md)
 - [Architecture and dependency directions](docs/architecture/dependency-tree.md)
@@ -238,6 +233,6 @@ archive-derived 6bf image is now the open-source default identity, while the his
 output digest are fixed, and frozen cleanroom code has produced independently reviewed
 reproducible materialization evidence. Per-task live gates remain fail-closed;
 redistribution and layered licensing review also remain open. See
-[the image-lineage audit](docs/reproduction/osworld-image-lineage-20260810.md) and
+[the OSWorld environment boundary](environments/osworld/README.md) and
 [third-party-sources.md](docs/licenses/third-party-sources.md) before running, packaging,
 or redistributing any external asset.

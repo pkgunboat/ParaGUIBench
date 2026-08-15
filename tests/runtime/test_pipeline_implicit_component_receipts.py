@@ -189,7 +189,7 @@ def test_checked_in_ppt003_receipt_is_optional_audit_artifact() -> None:
 def test_ppt003_receipt_documentation_matches_the_formal_trust_boundary() -> None:
     """确认公开文档把 PPT-003 receipt 写成可选审计物，而不是普通评测门禁。
 
-    输入参数：无；读取 provenance、pipeline evidence 与总架构树。
+    输入参数：无；读取 provenance README 与总架构树。
     输出返回值：文档仍记录历史 1173 字节 receipt，但明确普通
         runtime-support / run 不消费它；四项 pipeline-live 均保留。
     """
@@ -197,9 +197,6 @@ def test_ppt003_receipt_documentation_matches_the_formal_trust_boundary() -> Non
     provenance = (REPO_ROOT / "benchmark/provenance/README.md").read_text(
         encoding="utf-8"
     )
-    evidence_tree = (
-        REPO_ROOT / "docs/evaluation/pipeline-implicit-evidence-dependency-tree.md"
-    ).read_text(encoding="utf-8")
     architecture_tree = (REPO_ROOT / "docs/architecture/dependency-tree.md").read_text(
         encoding="utf-8"
     )
@@ -212,13 +209,6 @@ def test_ppt003_receipt_documentation_matches_the_formal_trust_boundary() -> Non
         "exactly four pipeline-live blockers remain",
     ):
         assert required in provenance
-    for required in (
-        "历史 797 receipt 仅供可选官方审计",
-        "普通 runtime-support 仍保留 pipeline live + versioned live",
-        "1173 B / cbf1f356…8144",
-        "不使用 Agent final text",
-    ):
-        assert required in evidence_tree
     assert (
         "BatchOperationPPT-003   [local ready; optional audit receipt "
         "not a production gate; pipeline-live + versioned-live remain]"

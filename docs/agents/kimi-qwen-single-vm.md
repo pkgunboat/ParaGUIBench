@@ -62,8 +62,5 @@ RunStore 只记录 planner/worker 模型 ID、环境变量名、成本上限与�
 计分。所以 `execution=SUCCEEDED` 只表示链路执行完成，不表示答案正确；只有
 `evaluation=PASSED` 与 `score=1.0` 才表示该任务、模型和配置组合在该次
 Attempt 中命中评价协议，仍不能推导整体 benchmark 准确率。
-
-本次实机结果为 `execution=SUCCEEDED`、`termination=partial`、
-`evaluation=FAILED`、`score=0.0`，匹配类型是 `strict_exact_no_match`。
-详细脱敏证据见
-[`kimi-qwen-single-vm-20260801.md`](../reproduction/kimi-qwen-single-vm-20260801.md)。
+公开 0.1 不附带历史冒烟运行日志；一次实验 Attempt 的终态也不能把任务晋升为
+`live_validated`。

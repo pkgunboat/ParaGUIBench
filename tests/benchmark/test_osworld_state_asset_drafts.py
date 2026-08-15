@@ -24,7 +24,6 @@ GOLD_DRAFT_ROOT = (
 )
 XLANG_REVISION = "711e0811642364e7aa8f10a8918367d0b626d578"
 DRAFT_TOOL_PATH = REPO_ROOT / "scripts" / "benchmark" / "osworld_state_asset_drafts.py"
-DEPENDENCY_DOC_PATH = REPO_ROOT / "docs" / "evaluation" / "osworld-state-assets.md"
 ARCHITECTURE_DEPENDENCY_PATH = (
     REPO_ROOT / "docs" / "architecture" / "dependency-tree.md"
 )
@@ -380,43 +379,6 @@ def test_all_thirteen_state_tasks_have_exact_71_input_and_15_gold_entries() -> N
                 )
 
     assert observed_totals == {"input": 71, "gold": 15}
-
-
-def test_state_asset_dependency_doc_has_exact_download_matrix_and_gates() -> None:
-    """验证依赖说明公开 13-task 矩阵与诚实晋升门禁。
-
-    输入参数：
-        无；读取专属依赖与待下载说明。
-    输出返回值：
-        无；每个任务均出现且逐项计数可核对，文档明确历史 remote
-        草案的 85 条 integrity-verified 与 1 条未验证 gold，同时声明
-        Settings 正式 schema-v2 私有派生身份和 12-task candidate 边界。
-    """
-
-    content = DEPENDENCY_DOC_PATH.read_text(encoding="utf-8")
-    normalized_content = " ".join(content.split())
-    for task_id, (input_count, gold_count) in TASK_ENTRY_COUNTS.items():
-        assert f"| `{task_id}` | {input_count} | {gold_count} |" in content
-    for required_text in (
-        "71 个 input",
-        "15 个 remote gold 引用",
-        "71 个 input 与 14 个 gold 已完成 size/SHA-256 核验",
-        "1 个历史 remote gold 仍为 `integrity_unverified`",
-        "共 85 条 `integrity_verified`",
-        "raw_book.zip",
-        "1,091,801 bytes",
-        "gold `book.zip` 为 2,935,633 bytes",
-        "3 个 source start-context 歧义也已",
-        "711e0811642364e7aa8f10a8918367d0b626d578",
-        "xlang 数据卡声明 `Apache-2.0`",
-        "Settings-001",
-        "0.7960269769984115",
-        "private derived v2 gold",
-        "13 个任务同时闭合正式 gold 身份",
-        "13 个任务已完成 input 资产切换",
-        "osworld_state_asset_drafts.py check",
-    ):
-        assert required_text in normalized_content
 
 
 def test_architecture_tree_separates_input_closure_from_semantic_gates() -> None:

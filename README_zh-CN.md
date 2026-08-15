@@ -145,8 +145,7 @@ WP-CLI reader target、coordinator URL 和租约 credential；coordinator 在独
 完整变量表与命令见 WebMall 部署说明。
 
 固定 VM、任务输入资产、evaluator-only gold 预置、完整 `doctor` 门禁、真实运行命令和安全查看流程见
-[OSWorld Linux 部署说明](docs/deployment/osworld-linux.md)；经过脱敏的历史部署证据见
-[reference-run-20260729.md](docs/reproduction/reference-run-20260729.md)。
+[OSWorld Linux 部署说明](docs/deployment/osworld-linux.md)。
 
 ## 运行记录与隐私边界
 
@@ -186,9 +185,6 @@ DocumentServer 与 ParaGUIBench share service；其余 6 项仍走 OSWorld / Lib
 - [OSWorld Linux 部署](docs/deployment/osworld-linux.md)
 - [WebMall Linux 部署与 Checkout 运行](docs/deployment/webmall-linux.md)
 - [OnlyOffice 单实例部署](docs/deployment/onlyoffice.md)
-- [历史无版本冒烟运行](docs/reproduction/reference-run-20260729.md)
-- [Kimi+Qwen 实验运行](docs/reproduction/kimi-qwen-single-vm-20260801.md)
-- [论文结果血缘台账](docs/reproduction/paper-lineage-v1.md)
 - [Qwen 3.7 GUI worker 与验证边界](docs/agents/qwen.md)
 - [Kimi + Qwen 单 VM 串行 ParaGUI](docs/agents/kimi-qwen-single-vm.md)
 - [架构与依赖方向](docs/architecture/dependency-tree.md)
@@ -215,5 +211,5 @@ ParaGUIBench 适配了 OSWorld 的部分评价协议，并使用来源于或改�
 源码形成的可重现物化证据已经独立审核；每任务 live 门禁仍保持失败关闭，再分发边界与
 分层许可也仍在审计。
 运行、打包或重新分发外部资产前，请先查看
-[镜像来源链核查](docs/reproduction/osworld-image-lineage-20260810.md)与
+[OSWorld 环境边界](environments/osworld/README.md)与
 [third-party-sources.md](docs/licenses/third-party-sources.md)。

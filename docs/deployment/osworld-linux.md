@@ -288,9 +288,10 @@ materialization-at-evidence-time，不表示 pathname 此后持续可信。
 `doctor` 的 `qcow2_digest` 可以验证当次物化产物的字节摘要，但该单项
 PASS 不等于正式物化证据，也不构成任务 live 授权。当前正式 manifest 已在
 受控回执经独立审核后更新为 `live_run_ready=True`；CLI 仍必须继续执行
-每任务 component、doctor、版本向量与 receipt 门禁。完整来源链、两份镜像
+每任务 component、doctor、版本向量与 receipt 门禁。固定镜像身份、两份
 摘要与环境分层见
-[`../reproduction/osworld-image-lineage-20260810.md`](../reproduction/osworld-image-lineage-20260810.md)。
+[`environments/osworld/README.md`](../../environments/osworld/README.md)
+与同目录 `image-manifest.json`。
 文件名、大小、mtime、“镜像未变”或某台机器上存在旧缓存都不能替代该回执。
 
 > [!WARNING]
@@ -636,5 +637,7 @@ RunStore 目录固定为 `0700`、文件固定为 `0600`，并按
 docker ps --filter label=paraguibench.owned=true --format '{{.ID}}'
 ```
 
-参考部署的真实结果与验证边界见
-[`docs/reproduction/reference-run-20260729.md`](../reproduction/reference-run-20260729.md)。
+运行记录与评价结果边界见
+[`docs/evaluation/protocol.md`](../evaluation/protocol.md)
+与 [`docs/adr/0002-task-scoped-runstore.md`](../adr/0002-task-scoped-runstore.md)。
+公开 0.1 不附带历史冒烟运行日志。

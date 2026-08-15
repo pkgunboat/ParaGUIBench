@@ -24,8 +24,9 @@ schema v2，固定 archive→ZIP local/central member→output 的路径、
 2026-08-12 受控主机只读 recipe 实证 ID 为
 `20260812_114_ubuntu_qcow2_zip_recipe_v1`，脱敏证据摘要为
 `a146640259a85b054ea40cee512bd46eb9fe2393db8fbc70c2eddb227946511c`；
-原始证据含部署元数据，不进入仓库或发布包。详细来源链见
-`docs/reproduction/osworld-image-lineage-20260810.md`。
+原始证据含部署元数据，不进入仓库或发布包。固定身份见同目录
+`image-manifest.json`，许可与再分发边界见
+`docs/licenses/third-party-sources.md`。
 正式物化外置审计 evidence ID 为
 `osworld-v2-pending-78d36680-formal-materialization`，SHA-256 为
 `855f4dd73021a21e8d8a60b4d8de1d571131492865b62b851cc2000ce3d08b82`；
