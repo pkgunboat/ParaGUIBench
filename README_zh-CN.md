@@ -179,6 +179,7 @@ DocumentServer 与 ParaGUIBench share service；其余 6 项仍走 OSWorld / Lib
 
 ## 文档
 
+- [用户手册](docs/README.md)
 - [安装说明](INSTALL.md)
 - [中文安装说明](docs/installation/zh-CN.md)
 - [安装排障](docs/installation/troubleshooting.md)

@@ -334,8 +334,8 @@ are complete.
 商品、订单、支付、billing 与 URL 原值只在可信内存中比较，RunStore 仅保存固定原因码、
 布尔值与汇总计数。生产 WP-CLI 证据源尚未接入，
 16 个任务仍保持 `blocked`。
-See [ADR-0004](../adr/0004-webmall-checkout-closed-world.md) and its versioned
-[ADR-0005 state/billing upgrade](../adr/0005-webmall-checkout-state-and-billing.md).
+Deployment commands are in
+[the WebMall Linux guide](../deployment/webmall-linux.md).
 
 ## Evidence storage
 
@@ -344,5 +344,4 @@ Each attempt stores execution and evaluation summaries under one stable
 (`runtime`, `environment`, `worker`, or `evaluator`), while persisted payloads use
 allowlists and sanitization.
 
-See [the RunStore ADR](../adr/0002-task-scoped-runstore.md).
 The public 0.1 package does not include historical smoke-run logs.

@@ -75,8 +75,8 @@ Task preparation resolves the fixed fixture into three projections:
    digest—not the profile values or rendered instruction.
 
 The transformation and idempotency check live in
-`scripts/benchmark/migrate_checkout_fixture.py`. ADR-0003 and the two WebMall
-schemas define the projection and logging contracts. These canonical and task-
+`scripts/benchmark/migrate_checkout_fixture.py`. The versioned checkout fixture
+and the two WebMall schemas define the projection and logging contracts. These canonical and task-
 preparation migrations are complete, but the full WebMall service and checkout
 evaluator are not yet `live_validated`.
 

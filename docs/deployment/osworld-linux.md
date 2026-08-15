@@ -638,6 +638,5 @@ docker ps --filter label=paraguibench.owned=true --format '{{.ID}}'
 ```
 
 运行记录与评价结果边界见
-[`docs/evaluation/protocol.md`](../evaluation/protocol.md)
-与 [`docs/adr/0002-task-scoped-runstore.md`](../adr/0002-task-scoped-runstore.md)。
+[`docs/evaluation/protocol.md`](../evaluation/protocol.md)。
 公开 0.1 不附带历史冒烟运行日志。

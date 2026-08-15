@@ -200,6 +200,7 @@ fail-closed.
 
 ## Documentation
 
+- [User handbook](docs/README.md)
 - [Installation guide](INSTALL.md)
 - [Installation troubleshooting](docs/installation/troubleshooting.md)
 - [OSWorld Linux deployment](docs/deployment/osworld-linux.md)

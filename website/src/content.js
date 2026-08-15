@@ -17,7 +17,7 @@ export const sharedLinks = {
   architecture: repositoryDocumentUrl("docs/architecture/dependency-tree.md"),
   tasks: repositoryDocumentUrl("benchmark/provenance/README.md"),
   evaluator: repositoryDocumentUrl("docs/evaluation/protocol.md"),
-  artifacts: repositoryDocumentUrl("docs/adr/0002-task-scoped-runstore.md"),
+  artifacts: repositoryDocumentUrl("docs/evaluation/protocol.md") + "#evidence-storage",
   contributing: `${repositoryUrl}/blob/main/CONTRIBUTING.md`,
   license: `${repositoryUrl}/blob/main/LICENSE`,
   deployment: repositoryDocumentUrl("docs/deployment/osworld-linux.md"),
