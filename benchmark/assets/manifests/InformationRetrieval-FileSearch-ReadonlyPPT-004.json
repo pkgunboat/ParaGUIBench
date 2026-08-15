@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "InformationRetrieval-FileSearch-ReadonlyPPT-004",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/cf706a4b-01a8-40be-92b9-539e77024928",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "mechine learning.pptx",
+      "size": 97411,
+      "sha256": "fb688cacaf7bbb1227447fe5e43eeed6c0783d378ca1184d09c3015e5f08f264",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    }
+  ]
+}

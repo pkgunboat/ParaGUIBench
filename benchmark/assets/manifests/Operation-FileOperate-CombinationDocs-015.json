@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-015",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/df67aebb-fb3a-44fd-b75b-51b6012df509",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "references.docx",
+      "size": 14104,
+      "sha256": "b72891462fe583aebd9c48bdaf431fa0ce20047b2de47b2249ac925fa221e7ef"
+    }
+  ]
+}

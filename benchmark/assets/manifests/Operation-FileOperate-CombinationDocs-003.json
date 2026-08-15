@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-003",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/2654f880-dd6b-4f8c-9f88-aebe2bfa51be",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "McDonalds_Monthly_Data.xlsx",
+      "size": 9545,
+      "sha256": "ce00b8df3c48ebb8711a477af2de10053affe0e4a2327c485e8d93ea6ad86e5d",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "McDonalds_powerpoint_report.pptx",
+      "size": 41099,
+      "sha256": "c30c3cfeee0c32dd80ea06d54f36d46237af325f4491c975d6d2464b0d08fcc0",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "store1.xlsx",
+      "size": 9258,
+      "sha256": "1a5a69985b303f96d18d29d73b2c47653f662403484a36b5761f5635d4153a70",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "store2.xlsx",
+      "size": 9278,
+      "sha256": "fe5bbc48c80cec38568b71a42508cb9df83a6c5b6388701445f1cf4170e3d1d8",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

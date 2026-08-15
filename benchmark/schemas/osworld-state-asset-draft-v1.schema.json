@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pkgunboat.github.io/ParaGUIBench/schemas/osworld-state-asset-draft-v1.schema.json",
+  "title": "ParaGUIBench legacy OSWorld state asset/gold draft v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "manifest_role",
+    "draft_status",
+    "distribution_policy",
+    "task_id",
+    "task_uid",
+    "source_task_id",
+    "source_evaluator_id",
+    "source_contract_sha256",
+    "source",
+    "license",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,159}$"
+    },
+    "manifest_role": {"enum": ["input", "gold"]},
+    "draft_status": {
+      "enum": ["integrity_unverified", "integrity_verified"]
+    },
+    "distribution_policy": {"const": "download_only"},
+    "task_id": {
+      "enum": [
+        "Operation-FileOperate-BatchOperation-003",
+        "Operation-FileOperate-CombinationDocs-009",
+        "Operation-FileOperate-CombinationDocs-010",
+        "Operation-FileOperate-CombinationDocs-011",
+        "Operation-FileOperate-CombinationDocs-012",
+        "Operation-FileOperate-CombinationDocs-013",
+        "Operation-FileOperate-CombinationDocs-014",
+        "Operation-FileOperate-SearchAndWrite-001",
+        "Operation-FileOperate-SearchAndWrite-003",
+        "Operation-FileOperate-SearchAndWrite-005",
+        "Operation-FileOperate-SearchAndWrite-009",
+        "Operation-FileOperate-Settings-001",
+        "Operation-WebOperate-SearchAndWrite-001"
+      ]
+    },
+    "task_uid": {"$ref": "#/$defs/uuid"},
+    "source_task_id": {"$ref": "#/$defs/uuid"},
+    "source_evaluator_id": {"$ref": "#/$defs/uuid"},
+    "source_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "source": {"$ref": "#/$defs/source"},
+    "license": {"$ref": "#/$defs/license"},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"manifest_role": {"const": "input"}},
+        "required": ["manifest_role"]
+      },
+      "then": {
+        "properties": {
+          "entries": {"items": {"$ref": "#/$defs/inputEntry"}}
+        }
+      },
+      "else": {
+        "properties": {
+          "entries": {"items": {"$ref": "#/$defs/goldEntry"}}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[\\\\\\u0000-\\u001F\\u007F])[^/]+(?:/[^/]+)*$"
+    },
+    "mediaType": {
+      "enum": [
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/zip",
+        "image/png",
+        "text/csv",
+        "text/plain",
+        "video/mp4"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "repository", "revision"],
+      "properties": {
+        "provider": {"const": "huggingface_dataset"},
+        "repository": {
+          "enum": [
+            "leeLegendary/Parallel_benchmark",
+            "xlangai/ubuntu_osworld_file_cache"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "license": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "spdx_expression",
+            "evidence_ref",
+            "distribution"
+          ],
+          "properties": {
+            "status": {"const": "verified"},
+            "spdx_expression": {"const": "Apache-2.0"},
+            "evidence_ref": {"type": "string", "format": "uri"},
+            "distribution": {"const": "download_only"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "spdx_expression",
+            "evidence_ref",
+            "distribution"
+          ],
+          "properties": {
+            "status": {"const": "unverified"},
+            "spdx_expression": {"type": "null"},
+            "evidence_ref": {"type": "null"},
+            "distribution": {"const": "download_only"}
+          }
+        }
+      ]
+    },
+    "integrity": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "size_bytes", "sha256", "evidence_ref"],
+          "properties": {
+            "status": {"const": "verified"},
+            "size_bytes": {"type": "integer", "minimum": 0},
+            "sha256": {"$ref": "#/$defs/sha256"},
+            "evidence_ref": {"type": "string", "minLength": 1}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "size_bytes", "sha256", "evidence_ref"],
+          "properties": {
+            "status": {"const": "unverified"},
+            "size_bytes": {"type": "null"},
+            "sha256": {"type": "null"},
+            "evidence_ref": {"type": "null"}
+          }
+        }
+      ]
+    },
+    "inputEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "remote_relative_path",
+        "guest_relative_path",
+        "path_status",
+        "path_evidence_ref",
+        "purpose",
+        "expected_media_type",
+        "integrity"
+      ],
+      "properties": {
+        "remote_relative_path": {"$ref": "#/$defs/relativePath"},
+        "guest_relative_path": {"$ref": "#/$defs/relativePath"},
+        "path_status": {"enum": ["verified", "inferred"]},
+        "path_evidence_ref": {"type": "string", "minLength": 1},
+        "purpose": {
+          "enum": [
+            "context_input",
+            "editable_target",
+            "reference_input",
+            "task_input_bundle"
+          ]
+        },
+        "expected_media_type": {"$ref": "#/$defs/mediaType"},
+        "integrity": {"$ref": "#/$defs/integrity"}
+      }
+    },
+    "goldEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logical_key",
+        "expected_index",
+        "remote_relative_path",
+        "path_status",
+        "path_evidence_ref",
+        "purpose",
+        "expected_media_type",
+        "integrity"
+      ],
+      "properties": {
+        "logical_key": {
+          "type": "string",
+          "pattern": "^osworld-gold:[0-9a-f-]{36}:expected:[0-9]+:v1$"
+        },
+        "expected_index": {"type": "integer", "minimum": 0, "maximum": 15},
+        "remote_relative_path": {"$ref": "#/$defs/relativePath"},
+        "path_status": {"const": "verified"},
+        "path_evidence_ref": {"type": "string", "minLength": 1},
+        "purpose": {"const": "evaluator_gold"},
+        "expected_media_type": {"$ref": "#/$defs/mediaType"},
+        "integrity": {"$ref": "#/$defs/integrity"}
+      }
+    }
+  }
+}

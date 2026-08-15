@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "manifest_id": "Operation-WebOperate-SearchAndWrite-001-gold-draft-v1",
+  "manifest_role": "gold",
+  "draft_status": "integrity_verified",
+  "distribution_policy": "download_only",
+  "task_id": "Operation-WebOperate-SearchAndWrite-001",
+  "task_uid": "d017201e-a098-46ab-86be-6c99d263ecff",
+  "source_task_id": "d1acdb87-bb67-4f30-84aa-990e56a09c92",
+  "source_evaluator_id": "d017201e-a098-46ab-86be-6c99d263ecff",
+  "source_contract_sha256": "2262ca74a553975a89efff303a8731a9cafee598f9a0e2174562fa2f034e35c4",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578"
+  },
+  "license": {
+    "status": "verified",
+    "spdx_expression": "Apache-2.0",
+    "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache",
+    "distribution": "download_only"
+  },
+  "entries": [
+    {
+      "logical_key": "osworld-gold:d1acdb87-bb67-4f30-84aa-990e56a09c92:expected:0:v1",
+      "expected_index": 0,
+      "remote_relative_path": "multi_apps/d1acdb87-bb67-4f30-84aa-990e56a09c92/MUST_VISIT_gold.xlsx",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld:evaluator:d017201e-a098-46ab-86be-6c99d263ecff:expected:0",
+      "purpose": "evaluator_gold",
+      "expected_media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 12620,
+        "sha256": "fd60eecfc60cac1be90b81aa83c5a3322f321e39ac1e516bc023d967195bdd54",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/d1acdb87-bb67-4f30-84aa-990e56a09c92/MUST_VISIT_gold.xlsx"
+      }
+    }
+  ]
+}

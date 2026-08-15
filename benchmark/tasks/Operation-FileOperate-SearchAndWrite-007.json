@@ -6,7 +6,7 @@
     "instruction": "I now want to count the host cities of these three machine learning conferences over the past decade, from 2013 to 2019 (including 2013 and 2019). I have already listed the conference names and years in Excel. Please fill in the blank locations.",
     "task_source": "OSWorld",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/6f4073b8-d8ea-4ade-8a18-c5d1d5d5aa9a/Conference.xlsx",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-SearchAndWrite-007.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Search&write-004",
     "eval_rules": [

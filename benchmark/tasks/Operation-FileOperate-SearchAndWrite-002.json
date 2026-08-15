@@ -6,7 +6,7 @@
     "instruction": "There is a column of company names in the Excel document. Search online and fill in the founding year, headquarters city, and official website domain for each company according to the table headers.",
     "task_source": "self",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/31d84d8d-8c61-4181-b321-44b83adc03f9",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-SearchAndWrite-002.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-SearchAndWrite-001",
     "eval_rules": [

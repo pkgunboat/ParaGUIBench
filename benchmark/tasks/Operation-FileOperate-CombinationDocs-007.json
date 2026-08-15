@@ -6,7 +6,7 @@
     "instruction": "The folder contains many Word, PPT, and Excel files. Create different subfolders based on themes and content, and classify them into the subfolders.",
     "task_source": "",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/eebc7ed2-5c7d-4df5-ab71-b53040167536",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-CombinationDocs-007.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Combinationdocs-007",
     "eval_rules": [

@@ -6,7 +6,7 @@
     "instruction": "Some data is missing in the table. Please search online to find and fill it in as much as possible. Use 'N/A' for data that cannot be found. If a conference presented multiple best paper awards in a given year, filling in any one of the winning paper titles is acceptable.",
     "task_source": "self",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/19ed62a3-9df0-4879-a685-0681acc1c708",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-SearchAndWrite-004.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-SearchAndWrite-002",
     "eval_rules": [

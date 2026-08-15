@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "manifest_id": "Operation-FileOperate-CombinationDocs-015-gold-v1",
+  "distribution_policy": "download_only",
+  "entries": [
+    {
+      "logical_key": "osworld-gold:df67aebb-fb3a-44fd-b75b-51b6012df509:expected:0:v1",
+      "source_locator": {
+        "provider": "huggingface_dataset",
+        "repository": "xlangai/ubuntu_osworld_file_cache",
+        "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+        "path": "multi_apps/df67aebb-fb3a-44fd-b75b-51b6012df509/references.bib"
+      },
+      "runtime_locator": {
+        "kind": "cache-relative-path",
+        "value": "blobs/0000"
+      },
+      "size": 9081,
+      "sha256": "056bde761437cad00b0207133f32ccbe6186decdbd621c6890c7b2c9ae373580",
+      "media_type": "application/x-bibtex",
+      "license": {
+        "status": "verified",
+        "spdx_expression": "Apache-2.0",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache",
+        "distribution": "download_only"
+      },
+      "provenance": {
+        "source_benchmark": "OSWorld",
+        "source_task_id": "df67aebb-fb3a-44fd-b75b-51b6012df509",
+        "source_evaluator_id": "9f55fdb6-a749-4170-91a2-bebddd3492d7",
+        "expected_index": 0,
+        "source_contract_sha256": "4d4066fddd043a3840c84816445e8727e397691cc1a0ab3f733518a11b510e7c",
+        "evidence_ref": "osworld:evaluator:9f55fdb6-a749-4170-91a2-bebddd3492d7:expected:0"
+      }
+    }
+  ]
+}

@@ -6,7 +6,7 @@
     "instruction": "The folder contains multiple Word documents. Mark all vowel letters in red.",
     "task_source": "OSWorld",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/8ff7afec-e238-43df-a240-c4d16807f8b4",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationWord-007.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-BatchoperationWord-007",
     "eval_rules": [

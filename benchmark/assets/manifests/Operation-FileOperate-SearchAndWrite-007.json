@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-SearchAndWrite-007",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/6f4073b8-d8ea-4ade-8a18-c5d1d5d5aa9a",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Conference.xlsx",
+      "size": 9235,
+      "sha256": "955f438f95a176a5d8e96ed3ec32ac11924ad44dc68c7e4d2480f10fe4fd4bab",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:paraguibench:schema:pipeline-implicit-component-receipt:v1",
+  "title": "ParaGUIBench pipeline implicit component receipt v1",
+  "$ref": "#/$defs/receipt",
+  "$defs": {
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "receipt_kind",
+        "task_id",
+        "run_id",
+        "attempt_id",
+        "execution_outcome",
+        "evaluation_outcome",
+        "score",
+        "candidate_protocol",
+        "task_evaluation_protocol",
+        "environment_protocol",
+        "attempt_version_vector_sha256",
+        "task_identity_sha256",
+        "environment_identity_sha256",
+        "component_identity_sha256",
+        "component_checks"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "receipt_kind": {
+          "const": "paraguibench.pipeline-implicit.component.v1"
+        },
+        "task_id": {
+          "enum": [
+            "Operation-FileOperate-BatchOperationExcel-008",
+            "Operation-FileOperate-BatchOperationPPT-003",
+            "Operation-FileOperate-CombinationDocs-002"
+          ]
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "attempt_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "execution_outcome": {
+          "const": "SUCCEEDED"
+        },
+        "evaluation_outcome": {
+          "const": "PASSED"
+        },
+        "score": {
+          "type": "number",
+          "const": 1
+        },
+        "candidate_protocol": {
+          "const": "paraguibench.pipeline-implicit.component-validation.v1"
+        },
+        "task_evaluation_protocol": {
+          "enum": [
+            "paraguibench.operation.cross-document-facts.v1",
+            "paraguibench.operation.image-classification.sha256.v1",
+            "paraguibench.operation.xlsx.hide-na-rows.v1"
+          ]
+        },
+        "environment_protocol": {
+          "const": "osworld.desktop.v1"
+        },
+        "attempt_version_vector_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "task_identity_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "environment_identity_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "component_identity_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "component_checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "image_manifest_held",
+            "qcow2_snapshot_verified",
+            "container_image_verified",
+            "task_prepare_completed",
+            "reference_bundle_materialized",
+            "typed_observation_captured",
+            "task_evaluator_completed",
+            "owned_environment_closed"
+          ],
+          "properties": {
+            "image_manifest_held": {"const": "passed"},
+            "qcow2_snapshot_verified": {"const": "passed"},
+            "container_image_verified": {"const": "passed"},
+            "task_prepare_completed": {"const": "passed"},
+            "reference_bundle_materialized": {"const": "passed"},
+            "typed_observation_captured": {"const": "passed"},
+            "task_evaluator_completed": {"const": "passed"},
+            "owned_environment_closed": {"const": "passed"}
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "task_id": {"const": "Operation-FileOperate-BatchOperationExcel-008"}
+            },
+            "required": ["task_id"]
+          },
+          "then": {
+            "properties": {
+              "task_evaluation_protocol": {"const": "paraguibench.operation.xlsx.hide-na-rows.v1"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "task_id": {"const": "Operation-FileOperate-BatchOperationPPT-003"}
+            },
+            "required": ["task_id"]
+          },
+          "then": {
+            "properties": {
+              "task_evaluation_protocol": {"const": "paraguibench.operation.image-classification.sha256.v1"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "task_id": {"const": "Operation-FileOperate-CombinationDocs-002"}
+            },
+            "required": ["task_id"]
+          },
+          "then": {
+            "properties": {
+              "task_evaluation_protocol": {"const": "paraguibench.operation.cross-document-facts.v1"}
+            }
+          }
+        }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

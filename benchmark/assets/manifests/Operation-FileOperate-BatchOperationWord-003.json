@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-003",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/c36d8396-4dc7-4390-a661-9bb8c54bee9f",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "test3_txt1.docx",
+      "size": 13832,
+      "sha256": "166f10b282d16f2d43f2ec9e08a4e64e7d407b7135bedb6cda871cafa1388fbb",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "test3_txt2.docx",
+      "size": 13725,
+      "sha256": "be1ea1ac473b75cb1b93c6c09df991edf153d48e604527f32574b8e2ab7f21d9",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "test3_txt3.docx",
+      "size": 13736,
+      "sha256": "1f3521b2d337c2ef24a97e9c900d223bfee658553dbacef2abfa348146089468",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

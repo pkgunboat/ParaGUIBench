@@ -8,7 +8,7 @@
     "answer": "no",
     "answer_match_mode": "exact",
     "skip_eval": false,
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/04a0b25e-f726-40a0-a88d-69bbf538f634",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-CombinationDocs-004.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Combinationdocs-004"
 }

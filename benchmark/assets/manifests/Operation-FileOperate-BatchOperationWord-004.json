@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-004",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/6ed5298a-16d6-44fb-9c0c-35e87d3f13c0",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "center.docx",
+      "size": 13836,
+      "sha256": "0ea61b19aab35f065fc76e99885d16ece502236d443f7ca78a71319dec8ae2ee",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "episode.docx",
+      "size": 13840,
+      "sha256": "0dba0922c2a836cdd96ce9e2a9a748d6a63cee63490894db3f53c71baaa2f3c5",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "experience.docx",
+      "size": 13861,
+      "sha256": "4157efd87ca21a8b2d580eeeb98a7e975cd21347f3fe19603b202c5c658f0db3",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "hall.docx",
+      "size": 13799,
+      "sha256": "94e39cdc999f5824e17dd30a8739bf7daa8411d1a66f37aca1361c148c5e6da7",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "travel.docx",
+      "size": 13919,
+      "sha256": "90b65ad748a328c000fde15af24bbf95b862790d02744b5cd585ae96263189d5",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

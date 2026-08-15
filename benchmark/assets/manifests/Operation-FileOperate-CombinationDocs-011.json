@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-011",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Bank-Statement.pdf",
+      "size": 122969,
+      "sha256": "4c2fcda1e52bfd4e6d81d241f8a380aafcb5f6e735a7a9d77ea7e8fb62d7f4e7",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "Invoice # 243729.pdf",
+      "size": 15655,
+      "sha256": "39c23a5792795583184c3694de5b0187d895e6ef75d2e2cbfbdd16b23f1c3594",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "Invoice # GES-20220215-82.pdf",
+      "size": 42896,
+      "sha256": "729939cc631fccecaed8a5583a9beee0971d8d01724afcca899627f7c9b98c6f",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "invoice TII-20220301-90.pdf",
+      "size": 64410,
+      "sha256": "6d116abe3eaac051dfe4f484ab5d3a5b1298601dc6026ffc1c683172463ebcb1",
+      "media_type": "application/pdf"
+    }
+  ]
+}

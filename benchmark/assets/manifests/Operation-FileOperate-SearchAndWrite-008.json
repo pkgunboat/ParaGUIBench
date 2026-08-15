@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-SearchAndWrite-008",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/65a4848d-b4b2-4173-8308-a0213fdafbd0",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "UK_Universities_Group1.xlsx",
+      "size": 8908,
+      "sha256": "df08dc5e24d04a9587c21154b363511e01bc2ec18e9411d179e29e9231188e27",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "UK_Universities_Group2.xlsx",
+      "size": 8900,
+      "sha256": "7936c66869e26be9e787e703e801c74b7034afd22f934ca3b166a3d4b021caaa",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

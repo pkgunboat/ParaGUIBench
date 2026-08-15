@@ -11,7 +11,7 @@
         "paper2.pdf",
         "Generative Agents: Interactive Simulacra of Human Behavior"
     ],
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/134a34d3-9f52-44f6-b7bd-12945c2479f2",
+    "asset_manifest": "benchmark/assets/manifests/InformationRetrieval-FileSearch-ReadonlyWord-004.json",
     "evaluator_path": "eval/file_search_readonly_evaluator.py",
     "original_task_id": "InformationRetrieval-FileSearch-ReadonlyWord-004"
 }

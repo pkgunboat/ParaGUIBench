@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-007",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/8ff7afec-e238-43df-a240-c4d16807f8b4",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "AI.docx",
+      "size": 13715,
+      "sha256": "9724e04b41145d924056bebe533f626878c94da45194e383e72e44a72ea78fc4",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "agent.docx",
+      "size": 13800,
+      "sha256": "7956888a572709ac39587bcf15ca71f501e4b18f2ee47770be5a8f8a4c80dfb4",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "education.docx",
+      "size": 13694,
+      "sha256": "595db8729b780e3384ad09ba3ef82ee08c889fba358ae8d777a50bcf57c1a620",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "idea.docx",
+      "size": 13696,
+      "sha256": "c0acfafaec0c8eaf42c9a6bb89444079c6b7a42124e90437d269f6bf48f21d3f",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "software engineering.docx",
+      "size": 13828,
+      "sha256": "77e304f07b5b8fe2d745bda739f1f40bec708a8f87b57a33f881ec762e497921",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

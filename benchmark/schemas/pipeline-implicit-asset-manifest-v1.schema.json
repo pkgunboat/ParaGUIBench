@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pkgunboat.github.io/ParaGUIBench/schemas/pipeline-implicit-asset-manifest-v1.schema.json",
+  "title": "ParaGUIBench pipeline-implicit pinned asset manifest draft v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "manifest_role",
+    "draft_status",
+    "distribution_policy",
+    "tasks"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "manifest_role": {
+      "enum": [
+        "input",
+        "gold"
+      ]
+    },
+    "draft_status": {
+      "const": "metadata_unverified"
+    },
+    "distribution_policy": {
+      "const": "download_only"
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "$ref": "#/$defs/task"
+      }
+    }
+  },
+  "$defs": {
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "source",
+        "license",
+        "entries"
+      ],
+      "properties": {
+        "task_id": {
+          "enum": [
+            "Operation-FileOperate-BatchOperationExcel-008",
+            "Operation-FileOperate-BatchOperationPPT-003",
+            "Operation-FileOperate-CombinationDocs-002",
+            "Operation-FileOperate-SearchAndWrite-008"
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "license": {
+          "$ref": "#/$defs/license"
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/entry"
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "repository",
+        "revision",
+        "base_path"
+      ],
+      "properties": {
+        "provider": {
+          "const": "huggingface_dataset"
+        },
+        "repository": {
+          "const": "leeLegendary/Parallel_benchmark"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "base_path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^(?:benchmark_dataset|answer_files)/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "spdx_expression",
+        "evidence_ref",
+        "distribution"
+      ],
+      "properties": {
+        "status": {
+          "const": "unverified"
+        },
+        "spdx_expression": {
+          "type": "null"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "distribution": {
+          "const": "download_only"
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size",
+        "media_type"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[\\\\%?#\\u0000-\\u001F\\u007F])[^/]+(?:/[^/]+)*$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "size": {
+          "$ref": "#/$defs/verification"
+        },
+        "media_type": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "verification": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "value"
+          ],
+          "properties": {
+            "status": {
+              "const": "verified"
+            },
+            "value": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "value"
+          ],
+          "properties": {
+            "status": {
+              "const": "unverified"
+            },
+            "value": {
+              "type": "null"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

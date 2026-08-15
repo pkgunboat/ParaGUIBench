@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-Settings-001",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Robotic_Workshop_Infographics.pptx",
+      "size": 381651,
+      "sha256": "48860d92c6cd10e3492abad596fc15c5eb56a1d6d9508c886a75b8757bcad06d",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "landscape.mp4",
+      "size": 9362831,
+      "sha256": "d39162e1d519e978261ad4ae824d4446f511936c80d5ce2e085cf617eae04c35",
+      "media_type": "video/mp4"
+    }
+  ]
+}

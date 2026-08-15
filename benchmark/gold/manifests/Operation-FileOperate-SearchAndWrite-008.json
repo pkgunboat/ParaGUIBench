@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "manifest_id": "Operation-FileOperate-SearchAndWrite-008-gold-v1",
+  "task_id": "Operation-FileOperate-SearchAndWrite-008",
+  "task_uid": "65a4848d-b4b2-4173-8308-a0213fdafbd0",
+  "manifest_role": "gold",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "answer_files/65a4848d-b4b2-4173-8308-a0213fdafbd0"
+  },
+  "license": {
+    "status": "unverified",
+    "spdx_expression": null,
+    "evidence_ref": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark",
+    "distribution": "download_only"
+  },
+  "distribution_policy": "download_only",
+  "entries": [
+    {
+      "path": "UK_Universities_Group1.xlsx",
+      "size_bytes": 5877,
+      "sha256": "0170c5dab6a6062c610517b297708ad496a8bfa53699915ad6c3ff3948bf81cd",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "UK_Universities_Group2.xlsx",
+      "size_bytes": 5895,
+      "sha256": "b19a72eb28ad9a55ed956247dd8fb97f59ec5ede751ece25ac963614631ef257",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

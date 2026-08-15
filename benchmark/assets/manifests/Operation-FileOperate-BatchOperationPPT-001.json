@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationPPT-001",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/a7ba9165-a65f-45a3-8449-ac2f358d3a9d",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "ML.pptx",
+      "size": 37695,
+      "sha256": "e044e7ebeafd18dbe789a346cb95f2a1a230b62c6330ae19f0e9517921a6f241",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "The source of AI.pptx",
+      "size": 37433,
+      "sha256": "f342a5152b2cfca9cc3117f6b5a681ad56e662fce0e0e3bb84af63ab960da11d",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "welcome.pptx",
+      "size": 37657,
+      "sha256": "77bafb3ac9bc92d5fdd287b2d9987d814b8bb87f90402cc3fbc8b4a4a438c6c8",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    }
+  ]
+}

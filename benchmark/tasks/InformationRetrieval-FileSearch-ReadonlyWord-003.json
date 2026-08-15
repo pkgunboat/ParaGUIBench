@@ -11,7 +11,7 @@
         "meeting1.docx",
         "Agentic Workflow Optimization"
     ],
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/b568284e-3675-4352-a2ff-4a8305c99388",
+    "asset_manifest": "benchmark/assets/manifests/InformationRetrieval-FileSearch-ReadonlyWord-003.json",
     "evaluator_path": "eval/file_search_readonly_evaluator.py",
     "original_task_id": "InformationRetrieval-FileSearch-ReadonlyWord-003"
 }

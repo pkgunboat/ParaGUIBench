@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-002",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/f9d27527-85a2-4b64-99e9-7f3199cb1cd5",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "apology_letter.docx",
+      "size": 14428,
+      "sha256": "4c80b5f0459bcb376b912263d771bb28d8fca37c34aab2111514c2f0a01b1dd8",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "climite_news.docx",
+      "size": 14503,
+      "sha256": "1cdc95c06e69d95da53466bbd0ef576cf4bcfd8a0dc1dac80424b0864c32c559",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "project_update.docx",
+      "size": 14470,
+      "sha256": "848cc633ce83034440b34afb075be11d88f802479717104c2ecce929038f6bc0",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "sci-fi_narrative.docx",
+      "size": 14372,
+      "sha256": "f56462942a5160e5f61913fd4db48160cd0c5252aa88d062c0ed1f502c2ab0bb",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

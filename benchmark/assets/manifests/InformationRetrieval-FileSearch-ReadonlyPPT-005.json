@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "InformationRetrieval-FileSearch-ReadonlyPPT-005",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/1fad9312-f060-4a1e-8208-2e65f6e950a0",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "164_3.pptx",
+      "size": 321773,
+      "sha256": "7b808cd7699e1384a1b55d36a2f75c7446b67f6339d5381477ae980180cf26c5",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "24_8.pptx",
+      "size": 327494,
+      "sha256": "dbad3e3205aaf38eb428868c6f1db659754fa79d9e1bbcc306683c57f640175a",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "MLA_Workshop_061X_Works_Cited.pptx",
+      "size": 595572,
+      "sha256": "15c5875d7731c3459a2b54e0934a53770e8c84fd206917ad280001bd821ff008",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    }
+  ]
+}

@@ -3,19 +3,18 @@
     "task_uid": "2654f880-dd6b-4f8c-9f88-aebe2bfa51be",
     "task_type": "self",
     "task_tag": "FileOperate",
-    "instruction": "Insert existing charts from Excel into corresponding slides in PPT, maintaining the style.",
+    "instruction": "Insert the existing table from McDonalds_Monthly_Data.xlsx (Monthly Data!A1:F16) into slide 3 of McDonalds_powerpoint_report.pptx, preserving its readable source style. The inserted content may be an editable PowerPoint table or an image. Do not modify any Excel file or any other slide content.",
     "task_source": "",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/2654f880-dd6b-4f8c-9f88-aebe2bfa51be",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-CombinationDocs-003.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Combinationdocs-003",
     "eval_rules": [
         {
-            "check": "check_ppt_has_images_or_tables",
-            "file_pattern": "*.pptx",
-            "params": {"check_images": true, "check_tables": false, "threshold": 0.5},
+            "check": "check_combinationdocs003_source_table_insert",
+            "params": {},
             "weight": 1.0,
-            "description": "PPT中包含从Excel插入的图表/图片"
+            "description": "第3页包含与固定源表格内容和可读样式一致的可编辑表格或图片，其他输入与幻灯片内容保持不变"
         }
     ]
 }

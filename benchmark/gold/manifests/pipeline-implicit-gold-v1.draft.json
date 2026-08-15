@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "manifest_id": "pipeline-implicit-gold-v1-draft",
+  "manifest_role": "gold",
+  "draft_status": "metadata_unverified",
+  "distribution_policy": "download_only",
+  "tasks": [
+    {
+      "task_id": "Operation-FileOperate-BatchOperationExcel-008",
+      "source": {
+        "provider": "huggingface_dataset",
+        "repository": "leeLegendary/Parallel_benchmark",
+        "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+        "base_path": "answer_files/1c73128f-a5ef-4a97-97ce-ef427d6d46b4"
+      },
+      "license": {
+        "status": "unverified",
+        "spdx_expression": null,
+        "evidence_ref": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark",
+        "distribution": "download_only"
+      },
+      "entries": [
+        {"path": "KFC_Monthly_Data.xlsx", "sha256": "35d4144ed899fdbb14ccb07a99d18d042190027718a1467f852355e09491e60e", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "McDonalds_Monthly_Data.xlsx", "sha256": "db90397c5afcdcbfc280c18afd694d9802c05327b93f079cb34742d4ca398f04", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "Mixue_Monthly_Data.xlsx", "sha256": "e7f7bd52d195f878fc94c3845c10acef0f1c0e570afdd9de0a342212cf2e19d2", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "PizzaHut_Monthly_Data.xlsx", "sha256": "f6c67a77d417484174eede29b173774dc158d0f25229abc6f8db6fac8d00572b", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "Subway_Monthly_Data.xlsx", "sha256": "322c97248f024c5cbac031736caae5b450e1c51c6ddb44e4f0f59398428dfa13", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}}
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-BatchOperationPPT-003",
+      "source": {
+        "provider": "huggingface_dataset",
+        "repository": "leeLegendary/Parallel_benchmark",
+        "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+        "base_path": "answer_files/e544ee0f-90e6-43a4-9958-6b74e88d94a6"
+      },
+      "license": {
+        "status": "unverified",
+        "spdx_expression": null,
+        "evidence_ref": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark",
+        "distribution": "download_only"
+      },
+      "entries": [
+        {"path": "basketball/Unknown-1.jpeg", "sha256": "920c257be076389b03fe784a05181d91d45f3f679b554d4717b5786880b8ccba", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "basketball/Unknown-2.jpeg", "sha256": "67cc896c74124417543c367b28a136539a7e218f4c2249f12c86d7b8aa4e89ee", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "basketball/Unknown.jpeg", "sha256": "df28be039df8fe12f6edba1654ba9a239cd463bfdba5189d4530d3de74a44d1d", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "esport/Unknown-10.jpeg", "sha256": "0ab17ba065b88996a05bd6176a4626a16a02f1db4048fd6f92da83046f86b058", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "esport/Unknown-11.jpeg", "sha256": "d5dfa19f5270f6005b33eca0afe95509c9a5b5c317db26cdb4abc40a2d2fbbe4", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "esport/Unknown-9.jpeg", "sha256": "8f43a7206becfb714d8e978124fa3416e684a804a2d225d27d3795c15bb1b0f0", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "ppt1.pptx", "sha256": "9482822e725c18c7aca918d244888353442d77ce9d0962c7652d6bb9eaf5b7fe", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "ppt2.pptx", "sha256": "3ace91b9f45521a96857c94db36fa5a21d0f90f7401636c08b2d12d691166c05", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "ppt3.pptx", "sha256": "2ad2b30684b8e8fe690b8b5d94b27878b41266b7b945870d30273effdb9c6cf0", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "ppt4.pptx", "sha256": "0d5080eacc501d8c5e67e32ef1a8bc8535fedfb420df1e9d31b3ad961c12cdfc", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "soccer/Unknown-3.jpeg", "sha256": "98e6eb3d5cfe30a7918ddefea122353451639a515421d8234e2944424f9f8dd5", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "soccer/Unknown-4.jpeg", "sha256": "87260c5b287cb41013b590b46360ee35ceb3e64a0fb1b3aa5db4c00d7c9d47ae", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "soccer/Unknown-5.jpeg", "sha256": "dfcd32b378a7f9e585036373c5a24d4cb92bb0360d0714f4afb3dfd13ee6ebdf", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "soccer/Unknown-6.jpeg", "sha256": "1b20d8c30349856b961b870391dfb4a50e19af652295fd9b24a00d7ae39a8593", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "volleyball/Unknown-7.jpeg", "sha256": "4ecc1ed717d25250dcb9ff12b92cb8361ad0d88d90f06d0fc3a606e1a0506485", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "volleyball/Unknown-8.jpeg", "sha256": "5eabea4b59197f829ed7fb12e8c5a220d87b12427baeb79551126cff69389032", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}}
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-CombinationDocs-002",
+      "source": {
+        "provider": "huggingface_dataset",
+        "repository": "leeLegendary/Parallel_benchmark",
+        "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+        "base_path": "answer_files/6bf5b1c9-a2a2-4901-bbe3-631a33da45e8"
+      },
+      "license": {
+        "status": "unverified",
+        "spdx_expression": null,
+        "evidence_ref": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark",
+        "distribution": "download_only"
+      },
+      "entries": [
+        {"path": "McDonald_finacial_report.docx", "sha256": "8ae14dbe3e701e8671bfdd17b24e1b9e098cd42d0f08c2e9ea584908d21dd9fa", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "McDonalds_Monthly_Data.xlsx", "sha256": "abaf2d2622354d6c8a1cd6115cda4b1e5b82ccdcd01565d739e75aa606e750b9", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "McDonalds_powerpoint_report.pptx", "sha256": "963617e29c37f7b653f40d4616dd636d6f756d64dcb24afe4bb68e3a4447c635", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}}
+      ]
+    },
+    {
+      "task_id": "Operation-FileOperate-SearchAndWrite-008",
+      "source": {
+        "provider": "huggingface_dataset",
+        "repository": "leeLegendary/Parallel_benchmark",
+        "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+        "base_path": "answer_files/65a4848d-b4b2-4173-8308-a0213fdafbd0"
+      },
+      "license": {
+        "status": "unverified",
+        "spdx_expression": null,
+        "evidence_ref": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark",
+        "distribution": "download_only"
+      },
+      "entries": [
+        {"path": "UK_Universities_Group1.xlsx", "sha256": "0170c5dab6a6062c610517b297708ad496a8bfa53699915ad6c3ff3948bf81cd", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}},
+        {"path": "UK_Universities_Group2.xlsx", "sha256": "b19a72eb28ad9a55ed956247dd8fb97f59ec5ede751ece25ac963614631ef257", "size": {"status": "unverified", "value": null}, "media_type": {"status": "unverified", "value": null}}
+      ]
+    }
+  ]
+}

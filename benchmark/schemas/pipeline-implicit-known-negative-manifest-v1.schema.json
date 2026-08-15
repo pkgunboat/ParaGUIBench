@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pkgunboat.github.io/ParaGUIBench/schemas/pipeline-implicit-known-negative-manifest-v1.schema.json",
+  "title": "ParaGUIBench pipeline-implicit audit-only known-negative manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "task_id",
+    "task_uid",
+    "manifest_role",
+    "use_as_pass_oracle",
+    "source",
+    "license",
+    "distribution_policy",
+    "expected_evaluation",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "manifest_id": {
+      "const": "Operation-FileOperate-CombinationDocs-002-hf-answer-known-negative-v1"
+    },
+    "task_id": {"const": "Operation-FileOperate-CombinationDocs-002"},
+    "task_uid": {"const": "6bf5b1c9-a2a2-4901-bbe3-631a33da45e8"},
+    "manifest_role": {"const": "audit_known_negative"},
+    "use_as_pass_oracle": {"const": false},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "repository", "revision", "base_path"],
+      "properties": {
+        "provider": {"const": "huggingface_dataset"},
+        "repository": {"const": "leeLegendary/Parallel_benchmark"},
+        "revision": {"const": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa"},
+        "base_path": {"const": "answer_files/6bf5b1c9-a2a2-4901-bbe3-631a33da45e8"}
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "spdx_expression", "evidence_ref", "distribution"],
+      "properties": {
+        "status": {"const": "unverified"},
+        "spdx_expression": {"type": "null"},
+        "evidence_ref": {"const": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark"},
+        "distribution": {"const": "download_only"}
+      }
+    },
+    "distribution_policy": {"const": "download_only"},
+    "expected_evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_id",
+        "passed",
+        "score",
+        "required_fact_count",
+        "matched_fact_count",
+        "reason_codes"
+      ],
+      "properties": {
+        "protocol_id": {"const": "paraguibench.operation.cross-document-facts.v1"},
+        "passed": {"const": false},
+        "score": {"const": 0.6667},
+        "required_fact_count": {"const": 3},
+        "matched_fact_count": {"const": 2},
+        "reason_codes": {
+          "type": "array",
+          "prefixItems": [{"const": "DOCX_PROFIT_ORDER_INCORRECT"}],
+          "items": false,
+          "minItems": 1,
+          "maxItems": 1
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "size_bytes", "sha256", "media_type"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[\\\\%?#\\u0000-\\u001F\\u007F])[^/]+(?:/[^/]+)*$"
+          },
+          "size_bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "media_type": {
+            "enum": [
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

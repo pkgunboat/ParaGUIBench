@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-012",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/0857689f-8976-49a3-9314-d2b194f9d629",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Clinical Procedure.docx",
+      "size": 13971,
+      "sha256": "ccbec2ce1c0ea1df920f08676d3b9bf42b9397543b0d013b8a0f5416cfc40e08",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Hardware Review.docx",
+      "size": 13998,
+      "sha256": "2fdde89b1789626f2e71826b1a0acf1260a54c620597273dcf30d6fb7f53223a",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Infrastructure Log.docx",
+      "size": 14071,
+      "sha256": "51378bf4bb9058631f40a155226d7403425166cca1740aace5d016656943e1e0",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Security Protocol.docx",
+      "size": 13934,
+      "sha256": "02718839e2eb6681c092ff1b2347eb0ce83047772332890f0bd9a435c94ca1ad",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

@@ -6,7 +6,7 @@
     "instruction": "Using LibreOffice Calc, convert each provided .xlsx file to an .html file. Save every .html file in the same directory as its source .xlsx file and use the same base name.",
     "task_source": "OSWorld",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/c2ec79c0-bb7c-4f45-b5e5-437d15d518cb",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-CombinationDocs-001.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Combinationdocs-001",
     "eval_rules": [

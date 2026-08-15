@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:paraguibench:schema:webmall-environment-manifest:v1",
+  "title": "ParaGUIBench WebMall environment manifest v1",
+  "description": "Pinned four-store WooCommerce environment and evaluator binding names.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "manifest_id",
+    "environment_id",
+    "protocol_ids",
+    "store_universe_id",
+    "browser_runtime",
+    "service_images",
+    "software",
+    "stores",
+    "order_reader",
+    "cart_reader",
+    "lease",
+    "reset"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../../benchmark/schemas/webmall-environment-manifest-v1.schema.json"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "manifest_id": {
+      "const": "webmall.reference-four-stores.v1"
+    },
+    "environment_id": {
+      "const": "webmall-woocommerce-four-stores"
+    },
+    "protocol_ids": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "webmall.browser.v1"
+        }
+      ],
+      "items": false,
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "store_universe_id": {
+      "const": "webmall.four-stores.v1"
+    },
+    "browser_runtime": {
+      "$ref": "#/$defs/browser_runtime"
+    },
+    "service_images": {
+      "$ref": "#/$defs/service_images"
+    },
+    "software": {
+      "$ref": "#/$defs/software"
+    },
+    "stores": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/store"
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "order_reader": {
+      "$ref": "#/$defs/order_reader"
+    },
+    "cart_reader": {
+      "$ref": "#/$defs/cart_reader"
+    },
+    "lease": {
+      "$ref": "#/$defs/lease"
+    },
+    "reset": {
+      "$ref": "#/$defs/reset"
+    }
+  },
+  "$defs": {
+    "browser_runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "image_manifest_ref",
+        "image_manifest_sha256",
+        "required_protocol_id"
+      ],
+      "properties": {
+        "kind": {
+          "const": "osworld_chrome"
+        },
+        "image_manifest_ref": {
+          "const": "../osworld/image-manifest.json"
+        },
+        "image_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "required_protocol_id": {
+          "const": "osworld.chrome.v1"
+        }
+      }
+    },
+    "service_images": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "wordpress",
+        "mariadb"
+      ],
+      "properties": {
+        "wordpress": {
+          "type": "string",
+          "pattern": "^[^\\s@]+@sha256:[0-9a-f]{64}$"
+        },
+        "mariadb": {
+          "type": "string",
+          "pattern": "^[^\\s@]+@sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "software": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "wordpress_version",
+        "woocommerce_version",
+        "order_storage"
+      ],
+      "properties": {
+        "wordpress_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "woocommerce_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "order_storage": {
+          "const": "hpos"
+        }
+      }
+    },
+    "store": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logical_store_id",
+        "origin_env",
+        "reader_target_env",
+        "credit_card_payment_method_ids"
+      ],
+      "properties": {
+        "logical_store_id": {
+          "type": "string",
+          "pattern": "^store-[1-4]$"
+        },
+        "origin_env": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{1,127}$"
+        },
+        "reader_target_env": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{1,127}$"
+        },
+        "credit_card_payment_method_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]{1,64}$"
+          },
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true
+        }
+      }
+    },
+    "order_reader": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_id",
+        "script_path",
+        "script_sha256",
+        "max_stdout_bytes",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "protocol_id": {
+          "const": "paraguibench.webmall.wp-cli-orders.v2"
+        },
+        "script_path": {
+          "const": "wp-order-evidence.php"
+        },
+        "script_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "max_stdout_bytes": {
+          "type": "integer",
+          "const": 4194304
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300
+        }
+      }
+    },
+    "cart_reader": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_id",
+        "evidence_protocol_id",
+        "reader_kind",
+        "endpoint_path",
+        "same_browser_context_required",
+        "stability_read_count",
+        "max_response_bytes",
+        "max_items",
+        "max_quantity",
+        "timeout_seconds",
+        "reference_live_validation_status"
+      ],
+      "properties": {
+        "protocol_id": {
+          "const": "paraguibench.webmall.woocommerce-store-api-cart.v1"
+        },
+        "evidence_protocol_id": {
+          "const": "paraguibench.webmall.cart-authoritative-state.v1"
+        },
+        "reader_kind": {
+          "const": "woocommerce_store_api"
+        },
+        "endpoint_path": {
+          "const": "/wp-json/wc/store/v1/cart"
+        },
+        "same_browser_context_required": {
+          "const": true
+        },
+        "stability_read_count": {
+          "type": "integer",
+          "const": 2
+        },
+        "max_response_bytes": {
+          "type": "integer",
+          "const": 2097152
+        },
+        "max_items": {
+          "type": "integer",
+          "const": 1024
+        },
+        "max_quantity": {
+          "type": "integer",
+          "const": 10000
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "const": 10
+        },
+        "reference_live_validation_status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "live_validated"
+          ]
+        }
+      }
+    },
+    "lease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_id",
+        "coordinator_url_env",
+        "credential_env",
+        "namespace",
+        "ttl_seconds"
+      ],
+      "properties": {
+        "protocol_id": {
+          "const": "paraguibench.webmall.distributed-lease.v1"
+        },
+        "coordinator_url_env": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{1,127}$"
+        },
+        "credential_env": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{1,127}$"
+        },
+        "namespace": {
+          "const": "paraguibench-reference-four-stores"
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 86400
+        }
+      }
+    },
+    "reset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_id",
+        "strategy"
+      ],
+      "properties": {
+        "protocol_id": {
+          "const": "paraguibench.webmall.baseline-delta.v1"
+        },
+        "strategy": {
+          "const": "attempt_order_baseline_delta"
+        }
+      }
+    }
+  }
+}

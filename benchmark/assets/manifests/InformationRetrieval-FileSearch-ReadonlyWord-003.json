@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "InformationRetrieval-FileSearch-ReadonlyWord-003",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/b568284e-3675-4352-a2ff-4a8305c99388",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "meeting1.docx",
+      "size": 13835,
+      "sha256": "f68244511394ea5dbb4fe63509b8bf5030b3639b9a0633bb3afeb26222535700",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "meeting2.docx",
+      "size": 13875,
+      "sha256": "b4fbc3e995099b033772045f3e3ea20cf4e09223a0b32eee5ecb9ccf51027d17",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "meeting3.docx",
+      "size": 14027,
+      "sha256": "993bd7bde2e8a6b7c051916de2b682e91af5aa8373f8898df5c30be2378a2fed",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "meeting4.docx",
+      "size": 13986,
+      "sha256": "f9b543512fa478524e39834a3c131070c59ce9a9415e5a80b435fcd049384214",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "meeting5.docx",
+      "size": 13817,
+      "sha256": "fe67a0b1270f9e0a53e7d49facfe49abc4f4b440963e372594c30cf3d56a9221",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

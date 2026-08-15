@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "manifest_id": "Operation-FileOperate-CombinationDocs-002-hf-answer-known-negative-v1",
+  "task_id": "Operation-FileOperate-CombinationDocs-002",
+  "task_uid": "6bf5b1c9-a2a2-4901-bbe3-631a33da45e8",
+  "manifest_role": "audit_known_negative",
+  "use_as_pass_oracle": false,
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "answer_files/6bf5b1c9-a2a2-4901-bbe3-631a33da45e8"
+  },
+  "license": {
+    "status": "unverified",
+    "spdx_expression": null,
+    "evidence_ref": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark",
+    "distribution": "download_only"
+  },
+  "distribution_policy": "download_only",
+  "expected_evaluation": {
+    "protocol_id": "paraguibench.operation.cross-document-facts.v1",
+    "passed": false,
+    "score": 0.6667,
+    "required_fact_count": 3,
+    "matched_fact_count": 2,
+    "reason_codes": [
+      "DOCX_PROFIT_ORDER_INCORRECT"
+    ]
+  },
+  "entries": [
+    {
+      "path": "McDonald_finacial_report.docx",
+      "size_bytes": 10974,
+      "sha256": "8ae14dbe3e701e8671bfdd17b24e1b9e098cd42d0f08c2e9ea584908d21dd9fa",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "McDonalds_Monthly_Data.xlsx",
+      "size_bytes": 9545,
+      "sha256": "abaf2d2622354d6c8a1cd6115cda4b1e5b82ccdcd01565d739e75aa606e750b9",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "McDonalds_powerpoint_report.pptx",
+      "size_bytes": 49687,
+      "sha256": "963617e29c37f7b653f40d4616dd636d6f756d64dcb24afe4bb68e3a4447c635",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    }
+  ]
+}

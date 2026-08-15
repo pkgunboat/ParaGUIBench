@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paraguibench.example/schemas/webmall-cart-reference-component-receipt-v1.schema.json",
+  "title": "ParaGUIBench WebMall Cart reference component receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_kind",
+    "outcome",
+    "component_revision",
+    "webmall_manifest_id",
+    "webmall_manifest_sha256",
+    "webmall_environment_id",
+    "store_universe_id",
+    "browser_environment_id",
+    "browser_image_manifest_sha256",
+    "browser_extracted_sha256",
+    "browser_container_image",
+    "cart_reader_protocol_id",
+    "cart_evidence_protocol_id",
+    "browser_context_continuity_verified",
+    "sweep_store_ids",
+    "normalized_universe_match"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "receipt_kind": {
+      "const": "paraguibench.webmall.cart-reader-reference-validation.v1"
+    },
+    "outcome": {
+      "const": "PASSED"
+    },
+    "component_revision": {
+      "$ref": "#/$defs/sha256"
+    },
+    "webmall_manifest_id": {
+      "const": "webmall.reference-four-stores.v1"
+    },
+    "webmall_manifest_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "webmall_environment_id": {
+      "const": "webmall-woocommerce-four-stores"
+    },
+    "store_universe_id": {
+      "const": "webmall.four-stores.v1"
+    },
+    "browser_environment_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "browser_image_manifest_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "browser_extracted_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "browser_container_image": {
+      "type": "string",
+      "pattern": "^[^\\s]+@sha256:[0-9a-f]{64}$",
+      "maxLength": 512
+    },
+    "cart_reader_protocol_id": {
+      "const": "paraguibench.webmall.woocommerce-store-api-cart.v1"
+    },
+    "cart_evidence_protocol_id": {
+      "const": "paraguibench.webmall.cart-authoritative-state.v1"
+    },
+    "browser_context_continuity_verified": {
+      "const": true
+    },
+    "sweep_store_ids": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/store_sweep"
+        },
+        {
+          "$ref": "#/$defs/store_sweep"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "normalized_universe_match": {
+      "const": true
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "store_sweep": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "store-1"
+        },
+        {
+          "const": "store-2"
+        },
+        {
+          "const": "store-3"
+        },
+        {
+          "const": "store-4"
+        }
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    }
+  }
+}

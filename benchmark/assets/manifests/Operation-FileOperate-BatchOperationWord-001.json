@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-001",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/1dd4c724-6930-42ae-b9c6-d219083f3480",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "2026 Q1 Product Development Plan.docx",
+      "size": 16844,
+      "sha256": "238f5fe6b9445cf7e0a977e380bd253ae93e9731f5b30cc0cc88d2d0d1eb9597",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Application of Deep Reinforcement Learning in Robotic Arm Control.docx",
+      "size": 16053,
+      "sha256": "578ff6efb57c6ba29c425fca6b2da7590d2bc54a0eed9284646077275923a288",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Remote Work Policy v2.0.docx",
+      "size": 16244,
+      "sha256": "3d11f5639803d2223fb4ba51c08f33d2d05f7c7c42f143ea337d9506a9505f3d",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

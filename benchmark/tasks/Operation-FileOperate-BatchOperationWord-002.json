@@ -6,7 +6,7 @@
     "instruction": "Please properly indent these documents and remove consecutive blank lines exceeding one line.",
     "task_source": "self",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/f9d27527-85a2-4b64-99e9-7f3199cb1cd5",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationWord-002.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-BatchoperationWord-002",
     "eval_rules": [

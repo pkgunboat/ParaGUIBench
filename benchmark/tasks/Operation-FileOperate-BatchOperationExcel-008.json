@@ -6,7 +6,8 @@
     "instruction": "Some data in these files is currently missing and temporarily filled with 'N/A'. Please temporarily hide them in the table.",
     "task_source": "OSWorld",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/1c73128f-a5ef-4a97-97ce-ef427d6d46b4",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationExcel-008.json",
+    "gold_manifest": "benchmark/gold/manifests/Operation-FileOperate-BatchOperationExcel-008.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Batchoperationexcel-008"
 }

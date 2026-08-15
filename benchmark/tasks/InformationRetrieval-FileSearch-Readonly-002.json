@@ -10,7 +10,7 @@
     "accepted_answers": [
         "smartphone"
     ],
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/1dcb866c-9a32-452b-a398-59785ddba699",
+    "asset_manifest": "benchmark/assets/manifests/InformationRetrieval-FileSearch-Readonly-002.json",
     "evaluator_path": "eval/file_search_readonly_evaluator.py",
     "original_task_id": "InformationRetrieval-FileSearch-Readonly-002"
 }

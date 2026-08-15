@@ -6,7 +6,7 @@
     "instruction": "Set the transition effect of the first page of all PPTs in the folder to Dissolve.",
     "task_source": "self",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/a7ba9165-a65f-45a3-8449-ac2f358d3a9d",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationPPT-001.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Batchoperationppt-001",
     "eval_rules": [

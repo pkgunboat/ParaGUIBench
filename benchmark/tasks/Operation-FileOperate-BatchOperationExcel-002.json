@@ -6,7 +6,7 @@
     "instruction": "Bold all Excel headers and right-align numeric columns.",
     "task_source": "",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/a1510a05-9fca-46ba-b95d-451dd5779194",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationExcel-002.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Batchoperationexcel-002",
     "eval_rules": [

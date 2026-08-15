@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-006",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/186a98aa-ada2-44e3-9187-558ddee9153b",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "2025年重点城市房地产市场活跃度分析.docx",
+      "size": 14400,
+      "sha256": "8e84ae9cfcb2af690e0fb84c8123d576245e2f899abba84991dbb29ff1762bd5",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "城市平均房价.docx",
+      "size": 13774,
+      "sha256": "35c786bad594c07926148d9051297c5344a0c5a22ac5236e0b4fa344f3f16eaa",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "设备名称单价.docx",
+      "size": 13944,
+      "sha256": "882061bf39f85b9675468589a074d529f05130ddf72902415a81e45206d1f5fc",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

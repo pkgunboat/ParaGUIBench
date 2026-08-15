@@ -6,7 +6,8 @@
     "instruction": "The document records information about UK universities. Please search for missing information and complete it.",
     "task_source": "self",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/65a4848d-b4b2-4173-8308-a0213fdafbd0",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-SearchAndWrite-008.json",
+    "gold_manifest": "benchmark/gold/manifests/Operation-FileOperate-SearchAndWrite-008.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-SearchAndWrite-004"
 }

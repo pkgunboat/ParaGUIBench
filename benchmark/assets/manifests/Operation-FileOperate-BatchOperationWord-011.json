@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-011",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/248add77-e3c1-4a59-b98e-03752238dc81",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Doc_A.docx",
+      "size": 14149,
+      "sha256": "9d94b0b9a42da4f9fb467dc6b108d0b434e16588cdc7bf4ee7b9e052ce57b8bc",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Doc_B.docx",
+      "size": 13989,
+      "sha256": "b37273f61005229c898d38f19a082213f68a74bcdb24ec8cf511fd32678411f8",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Doc_C.docx",
+      "size": 13957,
+      "sha256": "0d8dc5e595bd47d9a56ffe197b7d70e2c7417ed7eabf579127188925d42d177f",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Doc_D.docx",
+      "size": 13972,
+      "sha256": "b52a5eb1d88c27354e27d766c5a1b50af94337d7a71032fce1a5fca714c25644",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Doc_E.docx",
+      "size": 13959,
+      "sha256": "c1b56a1e389757e664a7b9658a2f143671b75b08b02511279621310e9dbc8088",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

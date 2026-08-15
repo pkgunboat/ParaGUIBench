@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-005",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/58870403-ea44-4f4c-8941-b2a57f170cd1",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Business_Report.txt",
+      "size": 1175,
+      "sha256": "f9c53ba0b46d5eb4f2141c0f7ef21f83e2e3820fd0220155082a37803031f1a0",
+      "media_type": "text/plain"
+    },
+    {
+      "path": "Development_Guide.md",
+      "size": 3147,
+      "sha256": "7cf1463ce297ba1cabcd07c5b79fc132e72810c2dc6a278abb3fbf7d139eb678",
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "Employee_Directory.csv",
+      "size": 4274,
+      "sha256": "7231ba8f905a57726ef5ebbd722be4308c31a776572458cd93ca36c367178ba4",
+      "media_type": "text/csv"
+    },
+    {
+      "path": "Product_Catalog.html",
+      "size": 3228,
+      "sha256": "b4aab3be17aa747ae6d4ed0fe52909e75b7d43843541d493e2073de9df02c346",
+      "media_type": "text/html"
+    },
+    {
+      "path": "Training_Program.docx",
+      "size": 37740,
+      "sha256": "d71ba36cf46912b1c708810bbb85129f974a484d522af32e48e5ff2b84ace514",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

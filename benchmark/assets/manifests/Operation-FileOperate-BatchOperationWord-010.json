@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-010",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/6e55deaf-c95d-49e9-91b2-b0155fe1dc45",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Cats.docx",
+      "size": 13874,
+      "sha256": "8ac5b07a61c07cb8f7774d17497a08556786a5df0e5f9f8a01e57f4fa0935503",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Dogs.docx",
+      "size": 13971,
+      "sha256": "e140ed48d16d4d970419e9ed60f0afd6305575646056bbd1ab7aa2786e40010e",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Foxes.docx",
+      "size": 13955,
+      "sha256": "c0cfdacf3dff8f4804b6767cd8448f3155d58909bd8330cb2e658a7adb746de2",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Hamsters.docx",
+      "size": 13898,
+      "sha256": "711688f693e014a1172af1fa3e27f7128bd5eb6483dca25de9ee5ee3363bcd5d",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Tigers.docx",
+      "size": 13938,
+      "sha256": "13889f2886526779bf391a39258f2bba495a04ff04a5409334636cb475754be1",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "images/Cats.jpeg",
+      "size": 5841,
+      "sha256": "516a5dc48b50aaf03bd7aeb3f9fd0f20de44d624c9e8f9de66b46d92a36db5b5",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Dogs.jpeg",
+      "size": 8111,
+      "sha256": "13d12502a8c626efbf4dc053f73f2c56a7c3de8955d26d2c7fe2bb9282cbd17a",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Foxes.jpeg",
+      "size": 7257,
+      "sha256": "5bbc110037d4e937516295531e53cf8dac0f7d4a72100d8457a8f1064a0b643d",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Hamsters.jpeg",
+      "size": 5900,
+      "sha256": "c4bc248ca159adc2278a62ccab8314222d22c7378848186468da507532a34469",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Tigers.jpeg",
+      "size": 10111,
+      "sha256": "6efffea249b289eb42e416eb67257b894d5f2e8f1ca33949cdd9c0dd1af2a5d4",
+      "media_type": "image/jpeg"
+    }
+  ]
+}

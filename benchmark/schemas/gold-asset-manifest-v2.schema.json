@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pkgunboat.github.io/ParaGUIBench/schemas/gold-asset-manifest-v2.schema.json",
+  "title": "ParaGUIBench evaluator-only derived gold manifest v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "manifest_role",
+    "derivation_kind",
+    "distribution_policy",
+    "license",
+    "derived_from_input",
+    "derivation",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "manifest_id": {"const": "Operation-FileOperate-Settings-001-gold-v2"},
+    "manifest_role": {"const": "gold"},
+    "derivation_kind": {"const": "derived_from_input"},
+    "distribution_policy": {"const": "private_materialization_only"},
+    "license": {"$ref": "#/$defs/derived_license"},
+    "derived_from_input": {"$ref": "#/$defs/derived_from_input"},
+    "derivation": {"$ref": "#/$defs/derivation"},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {"$ref": "#/$defs/entry"}
+    }
+  },
+  "$defs": {
+    "derived_from_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_manifest",
+        "asset_manifest_sha256",
+        "asset_set_id",
+        "input"
+      ],
+      "properties": {
+        "asset_manifest": {
+          "const": "benchmark/assets/manifests/Operation-FileOperate-Settings-001.json"
+        },
+        "asset_manifest_sha256": {
+          "const": "8de1a8fa801bc0aa26cca86033a6f8370f1efe011369229ad821f8240922f6cf"
+        },
+        "asset_set_id": {"const": "Operation-FileOperate-Settings-001"},
+        "input": {"$ref": "#/$defs/source_input"}
+      }
+    },
+    "source_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "size", "sha256", "media_type"],
+      "properties": {
+        "path": {"const": "landscape.mp4"},
+        "size": {"const": 9362831},
+        "sha256": {
+          "const": "d39162e1d519e978261ad4ae824d4446f511936c80d5ce2e085cf617eae04c35"
+        },
+        "media_type": {"const": "video/mp4"}
+      }
+    },
+    "derivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_id",
+        "stream_selector",
+        "timestamp_field",
+        "frame_order",
+        "index_origin",
+        "timestamp_decimal_places",
+        "requested_pts",
+        "selected_frame_index",
+        "selected_pts",
+        "previous_pts",
+        "source_frame_count",
+        "toolchain"
+      ],
+      "properties": {
+        "protocol_id": {"const": "paraguibench.gold.first-video-frame-pts-gte.v1"},
+        "stream_selector": {"const": "v:0"},
+        "timestamp_field": {"const": "best_effort_timestamp_time"},
+        "frame_order": {"const": "ffprobe_emitted_display_order"},
+        "index_origin": {"const": 0},
+        "timestamp_decimal_places": {"const": 6},
+        "requested_pts": {"const": "8.000000"},
+        "selected_frame_index": {"const": 240},
+        "selected_pts": {"const": "8.008000"},
+        "previous_pts": {"const": "7.974633"},
+        "source_frame_count": {"const": 419},
+        "toolchain": {"$ref": "#/$defs/toolchain"}
+      }
+    },
+    "toolchain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ffmpeg_version",
+        "ffprobe_version",
+        "protocol_whitelist",
+        "threads",
+        "software_only"
+      ],
+      "properties": {
+        "ffmpeg_version": {"const": "8.1.1"},
+        "ffprobe_version": {"const": "8.1.1"},
+        "protocol_whitelist": {"const": "pipe"},
+        "threads": {"const": 1},
+        "software_only": {"const": true}
+      }
+    },
+    "derived_license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "spdx_expression",
+        "evidence_ref",
+        "basis",
+        "distribution"
+      ],
+      "properties": {
+        "status": {"const": "verified"},
+        "spdx_expression": {"const": "Apache-2.0"},
+        "evidence_ref": {
+          "const": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache"
+        },
+        "basis": {"const": "derived_from_source_input"},
+        "distribution": {"const": "private_materialization_only"}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logical_key",
+        "runtime_locator",
+        "size",
+        "sha256",
+        "decoded_rgb_sha256",
+        "width",
+        "height",
+        "media_type",
+        "provenance"
+      ],
+      "properties": {
+        "logical_key": {
+          "const": "osworld-gold:47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5:expected:0:v2"
+        },
+        "runtime_locator": {"$ref": "#/$defs/runtime_locator"},
+        "size": {"const": 2216858},
+        "sha256": {
+          "const": "b383ffccf666a2dfe83100b392e1d4e2dbb744e1034b2e200be72621cbe52fc3"
+        },
+        "decoded_rgb_sha256": {
+          "const": "70138e557d112dfb79e890c42311a5037ee99b014b2facd13b4e2a78a631cd7c"
+        },
+        "width": {"const": 1920},
+        "height": {"const": 1080},
+        "media_type": {"const": "image/png"},
+        "provenance": {"$ref": "#/$defs/provenance"}
+      }
+    },
+    "runtime_locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"const": "cache-relative-path"},
+        "value": {"const": "landscape.png"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_benchmark",
+        "source_task_id",
+        "source_evaluator_id",
+        "expected_index",
+        "source_contract_sha256",
+        "evidence_ref"
+      ],
+      "properties": {
+        "source_benchmark": {"const": "OSWorld"},
+        "source_task_id": {"const": "47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5"},
+        "source_evaluator_id": {"const": "9b5220d5-f1f0-4db9-902d-ad41aae4d775"},
+        "expected_index": {"const": 0},
+        "source_contract_sha256": {
+          "const": "5f3ebcf626c74ac25b31c54c186166064c8a62edec23a87efbf1655a854ff66d"
+        },
+        "evidence_ref": {
+          "const": "osworld:evaluator:9b5220d5-f1f0-4db9-902d-ad41aae4d775:expected:0"
+        }
+      }
+    }
+  }
+}

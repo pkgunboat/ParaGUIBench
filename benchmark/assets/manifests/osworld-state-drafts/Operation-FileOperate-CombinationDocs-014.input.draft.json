@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "manifest_id": "Operation-FileOperate-CombinationDocs-014-input-draft-v1",
+  "manifest_role": "input",
+  "draft_status": "integrity_verified",
+  "distribution_policy": "download_only",
+  "task_id": "Operation-FileOperate-CombinationDocs-014",
+  "task_uid": "f5e1b40b-ea38-4d9f-9cf6-11f1dff5f2cc",
+  "source_task_id": "881deb30-9549-4583-a841-8270c65f2a17",
+  "source_evaluator_id": "881deb30-9549-4583-a841-8270c65f2a17",
+  "source_contract_sha256": "f8bb09a70d6733f65bbe1e03e6d8c7a7366671cff70bf688450bba34fbcd809d",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578"
+  },
+  "license": {
+    "status": "verified",
+    "spdx_expression": "Apache-2.0",
+    "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache",
+    "distribution": "download_only"
+  },
+  "entries": [
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/customer-information-sheet-for-inward-payments-to-hong-kong.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/customer-information-sheet-for-inward-payments-to-hong-kong.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 325824,
+        "sha256": "6917e48e10e0e97d681f821f7c3ec3556ff2917901bf14f5d49727c5bbc3a8b3",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/customer-information-sheet-for-inward-payments-to-hong-kong.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs15.pdf",
+      "guest_relative_path": "Documents/Fundings/ecs/ecs15.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 142850,
+        "sha256": "83f5aa554bb129b431733ac9157fb0024b3d17a0ccb193e557fd6b9deead3a7d",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs15.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs16.pdf",
+      "guest_relative_path": "Documents/Fundings/ecs/ecs16.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 83414,
+        "sha256": "b495e549d5920a7e01fd09ea1d73630442ba57a4686ffb2e5507658ad22a3cd4",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs16.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs17.pdf",
+      "guest_relative_path": "Documents/Fundings/ecs/ecs17.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 61563,
+        "sha256": "c069c5beae098968b894d2995230ef318efcf55646fe66b14fae69c347afa435",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs17.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs18.pdf",
+      "guest_relative_path": "Documents/Fundings/ecs/ecs18.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 34295,
+        "sha256": "ed32fe82f027b74f7f15ddba998c5fb9e596495823a071cecc8fa66395b54377",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs18.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs19.pdf",
+      "guest_relative_path": "Documents/Fundings/ecs/ecs19.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 52415,
+        "sha256": "ee4a6059222c436a10fad59859f26086466f4c35fcf0e8ae8f1114b858603936",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs19.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs20.pdf",
+      "guest_relative_path": "Documents/Fundings/ecs/ecs20.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 71781,
+        "sha256": "1235e7542c5d5f11e07f5091f9103d84094c56938880604d813d557a7358b013",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs20.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs21.pdf",
+      "guest_relative_path": "Documents/Fundings/ecs/ecs21.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 60133,
+        "sha256": "c31e5e282176184d3c89d89bd5ee301a668dd8d04eb993447b3fce06ed464ffd",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs21.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs22.pdf",
+      "guest_relative_path": "Documents/Fundings/ecs/ecs22.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 34505,
+        "sha256": "23f870f0d7844bf4e33d5e3e75be699d16d46d147273ee24cc5483fb41362b3b",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs22.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs23.pdf",
+      "guest_relative_path": "Documents/Fundings/ecs/ecs23.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 39866,
+        "sha256": "813ccb13a3293f4506998b0c0041099b8d6827ec9090942adcdb61292dd2da07",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs23.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf15.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/grf15.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 104127,
+        "sha256": "8b261f7626f6a8ba9cc18d829353e5b179d377e7249dd72ac514ea068ce7bfae",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf15.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf16.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/grf16.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 65416,
+        "sha256": "8bae643fe33fba98aa467619d9278caa5d2693ffa5a19dda758714a700265253",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf16.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf17.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/grf17.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 62448,
+        "sha256": "fe9c5a6272791118a94386ecd70e0198a5b1daff7757816dbafafaf1e0a88d03",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf17.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf18.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/grf18.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 36777,
+        "sha256": "75aabf4ac6be1810f56e49c4b8ffe2e54cd242cab02c8cdcb7e178d63f79965f",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf18.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf19.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/grf19.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 53233,
+        "sha256": "f4259b1dd297d7402fa5b59c23216c91b5a3b93dd1fdf4eb16aedefb639fc904",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf19.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf20.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/grf20.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 59534,
+        "sha256": "992efbaf69d2a8215dbfd79d35a6351e81ffba93f498c6db2213c14ac568048d",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf20.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf21.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/grf21.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 61448,
+        "sha256": "c5f4561313fa63a1510a0b9f8aff3945626db5014022f7a4706ab29a721e4292",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf21.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf22.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/grf22.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 35734,
+        "sha256": "9dd404f1617523ba087fbc9fba6dbbbb1ed093b992072f22d197966e6ec4dab1",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf22.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf23.pdf",
+      "guest_relative_path": "Documents/Fundings/grf/grf23.pdf",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "reference_input",
+      "expected_media_type": "application/pdf",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 40536,
+        "sha256": "b41ae005ed3a09f73dc2a1cfb406a1e6b14423293e49f8c00729cc89cdf5bba5",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf23.pdf"
+      }
+    },
+    {
+      "remote_relative_path": "multi_apps/881deb30-9549-4583-a841-8270c65f2a17/supported_rate.xlsx",
+      "guest_relative_path": "Documents/Fundings/supported_rate.xlsx",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:881deb30-9549-4583-a841-8270c65f2a17:config",
+      "purpose": "editable_target",
+      "expected_media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 6122,
+        "sha256": "f827b1b621e44d1be49e742766b0f20659bad1ae067ab6ee8c2d2f510b22576e",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/supported_rate.xlsx"
+      }
+    }
+  ]
+}

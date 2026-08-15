@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-SearchAndWrite-005",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/67890eb6-6ce5-4c00-9e3d-fb4972699b06",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "best_awards_acl.xlsx",
+      "size": 9234,
+      "sha256": "3d4c12f50a5e42cf1a27d009faad14218796bd20c0004c3908df35a0eb9c1d94",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

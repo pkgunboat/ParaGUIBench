@@ -3,10 +3,10 @@
     "task_uid": "3f600f5d-a835-4c59-9fae-b9139365d03e",
     "task_type": "self",
     "task_tag": "FileOperate",
-    "instruction": "Based on the project numbers in Excel and the naming conventions in txt, rename the Word and PPT files.",
+    "instruction": "Task-level requirements in this instruction take precedence. Treat the conflicting examples in Naming_rules.txt as stale: use the actual Project_Information.xlsx, the .pptx reference does not apply, and strip the leading v from Version before adding exactly one rev prefix (for example, v1.0 becomes rev1.0). Rename the three Word (.docx) files only: match each source document title to the Project Title, lowercase the Project ID and title, replace title spaces with underscores, do not modify document contents, and move the renamed documents into the root-level output folder. Keep Project_Information.xlsx and Naming_rules.txt unchanged.",
     "task_source": "",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/3f600f5d-a835-4c59-9fae-b9139365d03e",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-CombinationDocs-008.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Combinationdocs-008",
     "eval_rules": [
@@ -17,20 +17,53 @@
                 "filenames": [
                     "p-2026-001_multi_modal_agent_rev1.0.docx",
                     "p-2026-002_gui_benchmark_study_rev2.1.docx",
-                    "p-2026-003_parallel_execution_rev3.5.docx",
-                    "p-2026-001_multi_modal_agent_rev1.0.pptx",
-                    "p-2026-002_gui_benchmark_study_rev2.1.pptx",
-                    "p-2026-003_parallel_execution_rev3.5.pptx"
+                    "p-2026-003_parallel_execution_rev3.5.docx"
                 ],
+                "output_directory": "output",
+                "expected_document_count": 3,
                 "validate_format": true,
                 "forbidden_filenames": [
                     "GUI Benchmark Study.docx",
                     "Multi Modal Agent.docx",
                     "Parallel Execution.docx"
-                ]
+                ],
+                "rename_contract": {
+                    "documents": [
+                        {
+                            "source_filename": "Multi Modal Agent.docx",
+                            "output_filename": "p-2026-001_multi_modal_agent_rev1.0.docx",
+                            "source_size": 13762,
+                            "source_sha256": "5eb752b06f039498aa1e5061e078e2b58ca600e0e3cadfe10c60df4a0cab6ebe"
+                        },
+                        {
+                            "source_filename": "GUI Benchmark Study.docx",
+                            "output_filename": "p-2026-002_gui_benchmark_study_rev2.1.docx",
+                            "source_size": 13779,
+                            "source_sha256": "a24dcc85a88e547af1cc4753f34deea75f5a67c4a1f5e50a7162601d66b6cd09"
+                        },
+                        {
+                            "source_filename": "Parallel Execution.docx",
+                            "output_filename": "p-2026-003_parallel_execution_rev3.5.docx",
+                            "source_size": 13771,
+                            "source_sha256": "ed8759887f7f12b04981dc6bc713e0ecc32eb81696de5bfdc2ebb40548127663"
+                        }
+                    ],
+                    "preserved_files": [
+                        {
+                            "path": "Project_Information.xlsx",
+                            "size": 8899,
+                            "sha256": "26b97f507b0bf0958b9bb9dd9c2fe0a221312489bdc5f6dced56d03ddce39c21"
+                        },
+                        {
+                            "path": "Naming_rules.txt",
+                            "size": 911,
+                            "sha256": "dba136f226431c75e2d9b5ad2cf580d86dccb318b7a5e15a71cc0797fe9668c3"
+                        }
+                    ]
+                }
             },
             "weight": 1.0,
-            "description": "Word 和 PPT 均按项目编号和命名规则正确重命名"
+            "description": "三份 Word 文档按项目编号和单 rev 规则重命名到 output 目录，且文档与元数据内容保持不变"
         }
     ]
 }

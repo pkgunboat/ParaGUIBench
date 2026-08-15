@@ -6,7 +6,7 @@
     "instruction": "Sort this Excel file separately by date, name, order ID, and sales amount, and save as four separate copies.",
     "task_source": "OSWorld",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/7e6bdc0a-b1dd-47c5-98a7-baafd3f5fd0f",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationExcel-007.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Batchoperationexcel-007",
     "eval_rules": [

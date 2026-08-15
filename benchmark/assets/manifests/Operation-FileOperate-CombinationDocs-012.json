@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-012",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Course Timetable.xlsx",
+      "size": 10118,
+      "sha256": "be24552315b6709a1eb8532439f05c6ff5e4376653fef1ba99bda231e9a8c9c3",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "Photo Ethics in Journalism.docx",
+      "size": 76468,
+      "sha256": "9a1f810d97356fc2d8181889e6f54986ed669ca5d6091ef065f189f5061b529d",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Public Lecture Teaching Plan.docx",
+      "size": 13987,
+      "sha256": "68b07805dbb9859a705948903cc8efd6c6af28d86b35735c57385524bbbe2a3e",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Q1&2&3.docx",
+      "size": 170816,
+      "sha256": "43d2efb9f0b3f9fc460f6fd0eff96c36e658909fc734ea686d98af4fed7fa269",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "The British Justice System.docx",
+      "size": 15153,
+      "sha256": "97161ddf0050e35fb7205a1d2878fae6e1cb776f94b0aec2cc88efcd4b18da79",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "The literature reviews of weekly readings.docx",
+      "size": 17954,
+      "sha256": "6c1dad342cf9269260a1a1ea00a5debe3851123a851e4e2c27fddd27ca8f973f",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Zheng He .docx",
+      "size": 22443,
+      "sha256": "1cd5478b23ca18bf9f4711213fdfc2ab6f07412b5646a284247f38aa7d7a7ebc",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "case study.docx",
+      "size": 16470,
+      "sha256": "3f5c324a1cc3a42e6b39fe31434f1c14f3afcffe6b57f9d34baec193006e897b",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "cassie.docx",
+      "size": 285893,
+      "sha256": "ba92e595b3a2d2147e7fa2bda12d5eb439d4d703ec37262d7ddc15a8e6d65799",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "csfsrules.pdf",
+      "size": 262735,
+      "sha256": "2ba19089498561dcdfb1255e0c5bd81aa1704dc4021cf518c094150d27fd3dfa",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "fragrules.pdf",
+      "size": 351429,
+      "sha256": "ca7dfa501f1deb9b08a3bf7e80e5dffb8c5f393c5e883c84b8a8cf40b9ad40b4",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "irregularrules01.pdf",
+      "size": 418815,
+      "sha256": "cf622918f45eb399a2159ab07c2f93a2919b49a9ab553549cf6c3f3d831b96ef",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "irregularrules02.pdf",
+      "size": 247493,
+      "sha256": "8bc8de47fda4dbf497eb63c14565fa6296dc5dcfe18dae5f052ee189738ca6e1",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "quiz.docx",
+      "size": 466557,
+      "sha256": "78054d1275f32edaa19f45b49fca6d03f53d2962df9aa809771874951a506207",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "quiz2.docx",
+      "size": 14888,
+      "sha256": "58ea885c3d8e768e17a30ad7360f4d851417831c1f45bb1ee489260a412c29ed",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

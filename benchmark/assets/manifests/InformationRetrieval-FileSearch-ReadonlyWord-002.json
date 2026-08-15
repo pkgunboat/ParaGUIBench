@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "InformationRetrieval-FileSearch-ReadonlyWord-002",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/d2783609-b215-457d-99bb-3e3153b286cb",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Currencies_1.docx",
+      "size": 802247,
+      "sha256": "cbff03364a83fb76f2272415b0c98d287bd995e10254a3124cb5b3372799ebaf",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Currencies_2.docx",
+      "size": 976969,
+      "sha256": "517c60a51bbca48d9ca19880d6a5aa14632c6289f31ea82572a024a2c5a71584",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Currencies_3.docx",
+      "size": 980835,
+      "sha256": "1bfc57fcac94936842f0b8a476a3b6c90c49dd5574518488cbfb4db7e1cb6423",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Currencies_4.docx",
+      "size": 658012,
+      "sha256": "9a04d0096d9cd1b6d0803b24a3068772084196f198a2f8cfe073d73014d1e147",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

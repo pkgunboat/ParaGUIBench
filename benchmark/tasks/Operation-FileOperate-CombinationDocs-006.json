@@ -6,7 +6,7 @@
     "instruction": "In the Word document, each cue references a PPT file and a page number. Add a hyperlink in every cue paragraph to the referenced .pptx file. The hyperlink only needs to target the correct .pptx file; it does not need to open the specified slide.",
     "task_source": "",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/d5999c0f-ff61-476d-8e98-9c5f1b91fed9",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-CombinationDocs-006.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Combinationdocs-006",
     "eval_rules": [

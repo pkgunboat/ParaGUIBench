@@ -6,7 +6,7 @@
     "instruction": "Unify all monetary units in all Excel files to ten thousand yuan.",
     "task_source": "",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/cccf5baf-e392-47af-a605-65401ef56fe5",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationExcel-005.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Batchoperationexcel-005",
     "eval_rules": [

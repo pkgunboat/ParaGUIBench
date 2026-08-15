@@ -6,8 +6,7 @@
     "instruction": "There are several Word documents in the folder. Please highlight place names (excluding university names) in yellow bold text.",
     "task_source": "self",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/c36d8396-4dc7-4390-a661-9bb8c54bee9f",
-    "prepare_exclude_patterns": ["*_answer.docx"],
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationWord-003.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-BatchoperationWord-003",
     "eval_rules": [

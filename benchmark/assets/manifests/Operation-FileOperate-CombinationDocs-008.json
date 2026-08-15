@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-008",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/3f600f5d-a835-4c59-9fae-b9139365d03e",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "GUI Benchmark Study.docx",
+      "size": 13779,
+      "sha256": "a24dcc85a88e547af1cc4753f34deea75f5a67c4a1f5e50a7162601d66b6cd09",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Multi Modal Agent.docx",
+      "size": 13762,
+      "sha256": "5eb752b06f039498aa1e5061e078e2b58ca600e0e3cadfe10c60df4a0cab6ebe",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Naming_rules.txt",
+      "size": 911,
+      "sha256": "dba136f226431c75e2d9b5ad2cf580d86dccb318b7a5e15a71cc0797fe9668c3",
+      "media_type": "text/plain"
+    },
+    {
+      "path": "Parallel Execution.docx",
+      "size": 13771,
+      "sha256": "ed8759887f7f12b04981dc6bc713e0ecc32eb81696de5bfdc2ebb40548127663",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Project_Information.xlsx",
+      "size": 8899,
+      "sha256": "26b97f507b0bf0958b9bb9dd9c2fe0a221312489bdc5f6dced56d03ddce39c21",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

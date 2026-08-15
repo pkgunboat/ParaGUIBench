@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "manifest_id": "Operation-FileOperate-SearchAndWrite-001-input-draft-v1",
+  "manifest_role": "input",
+  "draft_status": "integrity_verified",
+  "distribution_policy": "download_only",
+  "task_id": "Operation-FileOperate-SearchAndWrite-001",
+  "task_uid": "e9e7bcf6-92da-4ff0-aaea-821099370093",
+  "source_task_id": "c7c1e4c3-9e92-4eba-a4b8-689953975ea4",
+  "source_evaluator_id": "e9e7bcf6-92da-4ff0-aaea-821099370093",
+  "source_contract_sha256": "8ff91da03ef3013c0abe4bac318a6c9ddaa5a6271cf6ed4652ffe7f8b6f73539",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578"
+  },
+  "license": {
+    "status": "verified",
+    "spdx_expression": "Apache-2.0",
+    "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache",
+    "distribution": "download_only"
+  },
+  "entries": [
+    {
+      "remote_relative_path": "multi_apps/c7c1e4c3-9e92-4eba-a4b8-689953975ea4/Professor_Contact.xlsx",
+      "guest_relative_path": "Desktop/Professor_Contact.xlsx",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld-task:c7c1e4c3-9e92-4eba-a4b8-689953975ea4:config",
+      "purpose": "editable_target",
+      "expected_media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 5910,
+        "sha256": "85e526d49bf00541382fd0e6469e7cd4ccce7f8dca7b947d412f22cf478eeccc",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/c7c1e4c3-9e92-4eba-a4b8-689953975ea4/Professor_Contact.xlsx"
+      }
+    }
+  ]
+}

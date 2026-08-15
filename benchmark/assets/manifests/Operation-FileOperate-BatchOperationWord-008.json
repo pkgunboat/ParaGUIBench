@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationWord-008",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/b9929f12-d179-450a-922a-22afb361bad3",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Introduction to Artificial Intelligence.docx",
+      "size": 16208,
+      "sha256": "e5b051ab0a028470e5a88bb719a7978be290014c6289320448219fe02b8d4717",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "The Quiet Station.docx",
+      "size": 16333,
+      "sha256": "fa8bc8777c99551244b412088233b38ac8afaba6cb6efc65957add591c8abb9d",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "The Silent Library.docx",
+      "size": 14323,
+      "sha256": "f1d3966648e4888176de9515dfcda26a3e504e1e73592d1686e88c78d753064f",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "software engineering.docx",
+      "size": 13828,
+      "sha256": "77e304f07b5b8fe2d745bda739f1f40bec708a8f87b57a33f881ec762e497921",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

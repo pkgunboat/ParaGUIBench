@@ -6,7 +6,7 @@
     "instruction": "Export all documents in the folder to PDF with the same filenames.",
     "task_source": "",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/58870403-ea44-4f4c-8941-b2a57f170cd1",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-CombinationDocs-005.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Combinationdocs-005",
     "eval_rules": [

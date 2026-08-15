@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationExcel-009",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/0f045849-d0e4-48d5-9010-ece2534c2b8c",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Company_Invoices.xlsx",
+      "size": 6068,
+      "sha256": "c8cc204b631b1640ff6f7c9a62c9051e843c2cd0c2bc8c201e022753ac852c5e",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "Electronics_Orders.xlsx",
+      "size": 5626,
+      "sha256": "306733299e609a65570a3e066222176dfeee2c6a1756a4360e272ce3ad041016",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "Food_Delivery_Orders.xlsx",
+      "size": 5859,
+      "sha256": "93847919ad9b11fc5a478f47c0ec48c12cd55b1896ede98c66d2c19e3554a571",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "Hotel_Bookings.xlsx",
+      "size": 5686,
+      "sha256": "360c2ef6edcab10fed2a6a1413441ce3db87755c05ad9c4d8e1b0488cb1e2bf2",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "Warehouse_Shipments.xlsx",
+      "size": 5770,
+      "sha256": "edc654d7e0c31621d80d9f9d3f8a97b2f03a10488b94c63004c68bfa19083b32",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

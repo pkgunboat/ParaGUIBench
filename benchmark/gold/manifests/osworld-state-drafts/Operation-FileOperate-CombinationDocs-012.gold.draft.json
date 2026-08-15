@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "manifest_id": "Operation-FileOperate-CombinationDocs-012-gold-draft-v1",
+  "manifest_role": "gold",
+  "draft_status": "integrity_verified",
+  "distribution_policy": "download_only",
+  "task_id": "Operation-FileOperate-CombinationDocs-012",
+  "task_uid": "a92f8e87-36b0-4da1-aa72-f7b753011488",
+  "source_task_id": "2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e",
+  "source_evaluator_id": "2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e",
+  "source_contract_sha256": "4780cfb96a299a1e8b30ab369fe767150164ee6140dd747ca7e017ecbe8bc948",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578"
+  },
+  "license": {
+    "status": "verified",
+    "spdx_expression": "Apache-2.0",
+    "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache",
+    "distribution": "download_only"
+  },
+  "entries": [
+    {
+      "logical_key": "osworld-gold:2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e:expected:0:v1",
+      "expected_index": 0,
+      "remote_relative_path": "multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/case study gold.docx",
+      "path_status": "verified",
+      "path_evidence_ref": "osworld:evaluator:2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e:expected:0",
+      "purpose": "evaluator_gold",
+      "expected_media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "integrity": {
+        "status": "verified",
+        "size_bytes": 16501,
+        "sha256": "8dee945aea1932a50da5600e6eedd37316b5cc70ef944a991e9f0666d763cd57",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/711e0811642364e7aa8f10a8918367d0b626d578/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/case study gold.docx"
+      }
+    }
+  ]
+}

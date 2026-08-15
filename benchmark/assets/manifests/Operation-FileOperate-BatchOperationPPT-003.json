@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationPPT-003",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/e544ee0f-90e6-43a4-9958-6b74e88d94a6",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "images/Unknown-1.jpeg",
+      "size": 8476,
+      "sha256": "920c257be076389b03fe784a05181d91d45f3f679b554d4717b5786880b8ccba",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-10.jpeg",
+      "size": 13430,
+      "sha256": "0ab17ba065b88996a05bd6176a4626a16a02f1db4048fd6f92da83046f86b058",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-11.jpeg",
+      "size": 14094,
+      "sha256": "d5dfa19f5270f6005b33eca0afe95509c9a5b5c317db26cdb4abc40a2d2fbbe4",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-12.jpeg",
+      "size": 9698,
+      "sha256": "56691d1a2e16c1f02a69f6451ea0cf36800943b15cf1e3f8cf9ac5ba452fc343",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-13.jpeg",
+      "size": 12825,
+      "sha256": "7b0c75780124245d509ab97373c52c90f9d337519babbaafab02cabb4ad6562d",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-14.jpeg",
+      "size": 11521,
+      "sha256": "4a3f86e36920a19a5ee7922d24fe45c795b597f8bd4b8f1224c869c0a5abe7f8",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-15.jpeg",
+      "size": 8269,
+      "sha256": "66a6116e2912dcaed8864256dc77826e50e5f9f104f41feb7b6460d0ac50981a",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-2.jpeg",
+      "size": 11549,
+      "sha256": "67cc896c74124417543c367b28a136539a7e218f4c2249f12c86d7b8aa4e89ee",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-3.jpeg",
+      "size": 9775,
+      "sha256": "98e6eb3d5cfe30a7918ddefea122353451639a515421d8234e2944424f9f8dd5",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-4.jpeg",
+      "size": 8555,
+      "sha256": "87260c5b287cb41013b590b46360ee35ceb3e64a0fb1b3aa5db4c00d7c9d47ae",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-5.jpeg",
+      "size": 9783,
+      "sha256": "dfcd32b378a7f9e585036373c5a24d4cb92bb0360d0714f4afb3dfd13ee6ebdf",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-6.jpeg",
+      "size": 6007,
+      "sha256": "1b20d8c30349856b961b870391dfb4a50e19af652295fd9b24a00d7ae39a8593",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-7.jpeg",
+      "size": 15961,
+      "sha256": "4ecc1ed717d25250dcb9ff12b92cb8361ad0d88d90f06d0fc3a606e1a0506485",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-8.jpeg",
+      "size": 15828,
+      "sha256": "5eabea4b59197f829ed7fb12e8c5a220d87b12427baeb79551126cff69389032",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown-9.jpeg",
+      "size": 11562,
+      "sha256": "8f43a7206becfb714d8e978124fa3416e684a804a2d225d27d3795c15bb1b0f0",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "images/Unknown.jpeg",
+      "size": 13540,
+      "sha256": "df28be039df8fe12f6edba1654ba9a239cd463bfdba5189d4530d3de74a44d1d",
+      "media_type": "image/jpeg"
+    },
+    {
+      "path": "ppt1.pptx",
+      "size": 37888,
+      "sha256": "9482822e725c18c7aca918d244888353442d77ce9d0962c7652d6bb9eaf5b7fe",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "ppt2.pptx",
+      "size": 36341,
+      "sha256": "3ace91b9f45521a96857c94db36fa5a21d0f90f7401636c08b2d12d691166c05",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "ppt3.pptx",
+      "size": 35522,
+      "sha256": "2ad2b30684b8e8fe690b8b5d94b27878b41266b7b945870d30273effdb9c6cf0",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "ppt4.pptx",
+      "size": 36928,
+      "sha256": "0d5080eacc501d8c5e67e32ef1a8bc8535fedfb420df1e9d31b3ad961c12cdfc",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    }
+  ]
+}

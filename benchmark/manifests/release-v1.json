@@ -29,67 +29,67 @@
       "task_id": "InformationRetrieval-FileSearch-Readonly-002",
       "task_uid": "1dcb866c-9a32-452b-a398-59785ddba699",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-Readonly-002.json",
-      "sha256": "f15ab2c57e49efb83344abcb82871386ed505d9223c1b9ad131278a180518119"
+      "sha256": "6ef3d18b8e8f1c6f000b961d12ba6604a7c9864e4243b5b7e1b8aec020395788"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-Readonly-003",
       "task_uid": "04aad45f-ff78-4508-9403-b60cb8f357ff",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-Readonly-003.json",
-      "sha256": "1047df63ce37535e414fdda02a5f8aad296863ac2d844a3e16f1a9ad13e13052"
+      "sha256": "21a57a64cf877590a703c05275f1dffa6f7872427edb448f20ec10abbe1c3be6"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-001",
       "task_uid": "06b65a9a-7fe5-4fa0-a8b7-27275d8c29e9",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-001.json",
-      "sha256": "012197f9f294905d9598a8206922a340e6a855fde900aec5f96df4e377908cc4"
+      "sha256": "3f2ecb2796666281f380590caeb454f643a3a749984b598623573f468f53dbd8"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-002",
       "task_uid": "c65ead66-0dca-40e9-993f-affc35bde5bc",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-002.json",
-      "sha256": "54ac514b9da1809c958a593e82cdcca4332507e658c1d717f96b33e439dd22f5"
+      "sha256": "119eb62b6cd7bb326d762a3a8c8816c4ef6b1fe03304ff5b60ccc7bd4f731bef"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-003",
       "task_uid": "163c86bd-de63-4311-8da5-ff750e8f7961",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-003.json",
-      "sha256": "8506e9923819882ceaf00231ec5a82c80e8bbfac57d7f8c50571c609e21dbeeb"
+      "sha256": "faeb3861175bce4bb1fb0fc0d4183fbe41dc60ebcf8d2f0462a9e212f7eee86e"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-004",
       "task_uid": "cf706a4b-01a8-40be-92b9-539e77024928",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-004.json",
-      "sha256": "940e8624232e9a695e85f0b01ab13ce8b7460f20e0141ca502f25edaacf7af03"
+      "sha256": "2764afaeb59acb76d1b8d1d75a486ddc159b78ce3b8545a569786aabc0935981"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-005",
       "task_uid": "1fad9312-f060-4a1e-8208-2e65f6e950a0",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyPPT-005.json",
-      "sha256": "e90e6c0fcccf521a19c44c86c28ec5bd65de26fa29ec76219fb97002e98196b0"
+      "sha256": "018400051d7a5c31db4a8f24b53fc8cc2409b8257c76d6f678121f37fafc31bc"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-001",
       "task_uid": "4f870c1f-b01c-4a10-90c3-1e3f0eab0373",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyWord-001.json",
-      "sha256": "d2898a8e8adcc54a962f8de7da559c483ad2da7bd63968ecec33d503f02803ba"
+      "sha256": "054e616443813648ca83ae5c608f3d4928ecb7103a10f071b8c5492ad56bfe4a"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-002",
       "task_uid": "d2783609-b215-457d-99bb-3e3153b286cb",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyWord-002.json",
-      "sha256": "fbeccede568d0cbc76f3fe487f5a3f5fc4b768f7bdedd655c226c222acb045e9"
+      "sha256": "097d098867a50e6b530868e4c0f86fc562d344b2c03ccb9e9d449c5c153df084"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-003",
       "task_uid": "b568284e-3675-4352-a2ff-4a8305c99388",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyWord-003.json",
-      "sha256": "ec4ece5eb40948df3228cf5938933684d9cfe16fcc0b02a108ac2207c989a67d"
+      "sha256": "290bda02a1a44ccf119a8e38480a47e32cf172847c807171cee808984319750c"
     },
     {
       "task_id": "InformationRetrieval-FileSearch-ReadonlyWord-004",
       "task_uid": "134a34d3-9f52-44f6-b7bd-12945c2479f2",
       "path": "benchmark/tasks/InformationRetrieval-FileSearch-ReadonlyWord-004.json",
-      "sha256": "54ba6e6fa9c253e9a560abfcb05f5db6e4bca98cf1d4195b230f3ba09ed9bade"
+      "sha256": "9200fa390264a75b9cd90ad7900c04e9eafb857f452f346681697f2398004d78"
     },
     {
       "task_id": "InformationRetrieval-VisualSearch-Video-001",
@@ -485,307 +485,307 @@
       "task_id": "Operation-FileOperate-BatchOperation-001",
       "task_uid": "4b987de4-a022-4078-8f50-8f34a39115e6",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperation-001.json",
-      "sha256": "20d67ad992e5debe33f524cb1e6f4cebc5c50e4bc690217e6312759a0b2096a9"
+      "sha256": "ec1e5ebddf6458f58e970c51e15aec9e54ec9b416c032faa2c4d7e324bf710f3"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperation-003",
       "task_uid": "c919165f-cdfb-413a-8e00-424a0a133620",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperation-003.json",
-      "sha256": "c5dc113a82cac6e32cfaad0590343968cc86982b832072de6b0b408bb38bb0f3"
+      "sha256": "69a08540695eb1cafa85db68b50b54a93a30cd8919bf3f811ab94934052cc6e8"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationExcel-001",
       "task_uid": "5e573e33-135a-4b45-b398-f85c0f7fea0a",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-001.json",
-      "sha256": "877e0eba3e79ac2a58cb60150824d471f8950a28f4f4d4eafb5f3452213a9067"
+      "sha256": "1a16bf8158dc1ee6b879d00cfd77cca6147bae321a0784926b87067daa45c941"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationExcel-002",
       "task_uid": "a1510a05-9fca-46ba-b95d-451dd5779194",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-002.json",
-      "sha256": "a33b035cb27fed34dac66c5283d8d1c42b5c1e7df7963263742dd84f619dccb9"
+      "sha256": "b4e21a1950b69a68a55c0e54dcaa4e21432d518c8671034e5c6097aa7c9beac8"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationExcel-003",
       "task_uid": "fdb089b8-070f-4ccc-9612-e4599db799be",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-003.json",
-      "sha256": "9454d810af7533ce2fefdd8c2c2975c719f36488f5bb9683c68c9dd428d953ef"
+      "sha256": "41608a9da3f5082011c31b9ac023af10a06880c2a2aad43959521f4bcb6c1016"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationExcel-004",
       "task_uid": "086f42e6-d412-4a4b-9702-0ef374e38c2b",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-004.json",
-      "sha256": "0490aa1fc67957c33e086fbc904b323f13996c7c79c438abf04c5e346b0a20eb"
+      "sha256": "ae6def6386fbc1f53398f4c6d19493c010e0a783982f87ac7ce697bb63fc4904"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationExcel-005",
       "task_uid": "cccf5baf-e392-47af-a605-65401ef56fe5",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-005.json",
-      "sha256": "2442095a11fdfa799e129e53fa93b2a107aeae529581970cb2cc83ed4ba6dc1c"
+      "sha256": "3617080d727a9a90ef32eaeac1843bf39cf1fd9914391f322e28fe8df4fb8f15"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationExcel-006",
       "task_uid": "ed04e7b5-a2c6-449a-a493-b22999919008",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-006.json",
-      "sha256": "8259049865c6cce325632e6f65a9f12674da57b70d40956dec16fb4f22065efd"
+      "sha256": "40ca28e6b9393ac8205dd6ce3d2f8e82b01191e299faa2a3a5588fd2f52a1489"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationExcel-007",
       "task_uid": "7e6bdc0a-b1dd-47c5-98a7-baafd3f5fd0f",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-007.json",
-      "sha256": "1b02115c9e8b945ce3f049ef29ba8cb4fab840a6599aaa791648114ebcdde991"
+      "sha256": "c8e5e742bca9d2a332808a522502b43d8a6f96e670fe2e0547dc32d495c59603"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationExcel-008",
       "task_uid": "1c73128f-a5ef-4a97-97ce-ef427d6d46b4",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-008.json",
-      "sha256": "e079aa6eacf37f0c952b814c2d74de82fbfc325f945b31dfe44f0b355411133e"
+      "sha256": "dd9bbe9d8aaca0a57ea33687b8814010ed02fac84134768a47fa56b8fd58285e"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationExcel-009",
       "task_uid": "0f045849-d0e4-48d5-9010-ece2534c2b8c",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationExcel-009.json",
-      "sha256": "fc297db1e7aaf4939256953d421944770957295d5f6300d194a3d0a1340bed86"
+      "sha256": "c63597b3e39246024e00cf24d6d488ad0058b14901e495218ef039eac676650b"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationPPT-001",
       "task_uid": "a7ba9165-a65f-45a3-8449-ac2f358d3a9d",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationPPT-001.json",
-      "sha256": "8a7813440129f419fc59f38f26ca60503f5aea0aee40c786287f8c6951a7a866"
+      "sha256": "aadcda4ad02858d1ef5bd409589da26f54d5cad8787c080f898c410e60be187e"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationPPT-002",
       "task_uid": "85da5285-4ba1-4550-8f5a-00ea07fca510",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationPPT-002.json",
-      "sha256": "a0a5bcc7e9d0feb110ff01644877035f422f63ce1b6a5b91779ced2c46aa664f"
+      "sha256": "a150b872e998fed8d26b05ac4bc0c652c923a8f4e3eaeed3582b6efc9315df89"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationPPT-003",
       "task_uid": "e544ee0f-90e6-43a4-9958-6b74e88d94a6",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationPPT-003.json",
-      "sha256": "f987ec9eca91d34bbc5b809da5afbd7440e5e01573cd42ccb59323884f1f549a"
+      "sha256": "73949d911bc17205e1c2ec2ce373968e3a338c4f99c7fcf5e1d295434164f958"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-001",
       "task_uid": "1dd4c724-6930-42ae-b9c6-d219083f3480",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-001.json",
-      "sha256": "6b0092ef6fde5d9c3458ebe7c9b4d0b446bae5dfd72e4b42f8b1b86373f29b3f"
+      "sha256": "5067b8f4a1e8406e24a97b23b93aaf12bbbdf470c0cf20bc286f0c3b14069e21"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-002",
       "task_uid": "f9d27527-85a2-4b64-99e9-7f3199cb1cd5",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-002.json",
-      "sha256": "4ab5e6451cf81f208b4ab2405e5109ea5132bda6a2997744ef9c5d6c4bca2a96"
+      "sha256": "a16971ae42c9ef91cfe5fa8d9da015ce0d689dcd022b8fc1c3fbd4b15a8bf832"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-003",
       "task_uid": "c36d8396-4dc7-4390-a661-9bb8c54bee9f",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-003.json",
-      "sha256": "79f0fdeef18c9b3b5f624178eed5fbe8514e98a40972afdecaae46a506094f7c"
+      "sha256": "89fcd083ab6a901592f87c12f9749fc9a8738cfb2bc98e8da106c48094d8bb8f"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-004",
       "task_uid": "6ed5298a-16d6-44fb-9c0c-35e87d3f13c0",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-004.json",
-      "sha256": "e4602313635d5616d80dc15ab2c376c6be1ff916125b2767e156a6142cbcb10e"
+      "sha256": "5f815f3c6706be89cd37c3e5e6357ece83a1616390062e6d48e451c297e1e3c0"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-005",
       "task_uid": "0ae169d8-aeb9-4c78-ab11-a182444c8eed",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-005.json",
-      "sha256": "00ec9f3ce1788685af50262817a32eac45e45a420e5007941048ee1d3e247ac5"
+      "sha256": "aac93bc564155a7242ffcc78889d32b8a5baa40770440305bba26e2532056c36"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-006",
       "task_uid": "186a98aa-ada2-44e3-9187-558ddee9153b",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-006.json",
-      "sha256": "0e0debe4d59e38ba21388566b164f01552c1838811c5b67be4cebfb0cab27f1d"
+      "sha256": "5cb8601ee2bc6decbe30700b6e720958e6d1d34e21c024870045b86b2d28690f"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-007",
       "task_uid": "8ff7afec-e238-43df-a240-c4d16807f8b4",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-007.json",
-      "sha256": "1c2c09e50478cef840fdad7743ce05b4c235ed4ed010777e80fb0ad095018120"
+      "sha256": "1a1bcab264909e9686daf75bd5aff41e895ba25808ee9b7d8323beed341e935d"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-008",
       "task_uid": "b9929f12-d179-450a-922a-22afb361bad3",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-008.json",
-      "sha256": "6b0993ecc288fc05b3de08c9d9fcb6cc4a175d368ea6ecd25754294d85896756"
+      "sha256": "e4cbb8dcf4bab6e01a7ba378cea1890fd9a808d173043626e23c507cbfd1f380"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-009",
       "task_uid": "6af0b589-eec2-4b76-a0dd-b18a06ff705b",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-009.json",
-      "sha256": "3432ee97f969e0f11d059dbcf63ecd8a9deef91816189f1362c796a36abd5b5b"
+      "sha256": "0196ddaf51704df325deaee67cda265c5871aaf65455b47148c23a59386bd25e"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-010",
       "task_uid": "6e55deaf-c95d-49e9-91b2-b0155fe1dc45",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-010.json",
-      "sha256": "1e88d1b0f3c268ba555a20e46b99b3ee9b71c22c977f616047eecbc203562ada"
+      "sha256": "74a6aa3d205c61edd7c8076c3bc73773c9cfdd1fdf0c84f9b896f71b3c473de4"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-011",
       "task_uid": "248add77-e3c1-4a59-b98e-03752238dc81",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-011.json",
-      "sha256": "bb0910c920e950ce6a21eacab2207afa315a595460cbf72fee33dcac8d0fedad"
+      "sha256": "7729a587a2cd0ff452ce66d0eb4ba15de5770c53819aeb24f0ac01429872c6e2"
     },
     {
       "task_id": "Operation-FileOperate-BatchOperationWord-012",
       "task_uid": "0857689f-8976-49a3-9314-d2b194f9d629",
       "path": "benchmark/tasks/Operation-FileOperate-BatchOperationWord-012.json",
-      "sha256": "9bb9b3eb813e7b4e3dd9ad9d3d55226afca5a7ae793a5fbff3ff8b1596ad5d2f"
+      "sha256": "6b8d6e991c62232a1b814cd52119d3b038f247467483e0db7d66255e4a552448"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-001",
       "task_uid": "c2ec79c0-bb7c-4f45-b5e5-437d15d518cb",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-001.json",
-      "sha256": "c25d63c700e925d8eb108aed9eac11b47852665e7405c9f12e159fcdc2f67836"
+      "sha256": "2e20da682374b61e5c2341f6409a01006cbc052ed33257ac65aea1a132992ae1"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-002",
       "task_uid": "6bf5b1c9-a2a2-4901-bbe3-631a33da45e8",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-002.json",
-      "sha256": "9edf9789486e871bf3fc94445851269e5d0e78a748c10dc0aba35dd2c051c945"
+      "sha256": "0a02bf0a966bfe2ea28d71f8023e8217402a8ef4bf45f8159b5b4dbf4acd8612"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-003",
       "task_uid": "2654f880-dd6b-4f8c-9f88-aebe2bfa51be",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-003.json",
-      "sha256": "ecd90672b9c91e451f077601bc680ef444335137b90bcd668c0b1102a0248613"
+      "sha256": "91d0af0af5d3d1d6340aeccc74c35b47529b1a589542ee6e110da71ed0815754"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-004",
       "task_uid": "04a0b25e-f726-40a0-a88d-69bbf538f634",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-004.json",
-      "sha256": "c512ef575f741525a09a41bbd9b662b2ed6e4313581a8baaeab82ad86f6a3a3a"
+      "sha256": "d623f17118153ea049ae8a3b43eed82bd782d0c17acc0b9196f4b10757c0c9cd"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-005",
       "task_uid": "58870403-ea44-4f4c-8941-b2a57f170cd1",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-005.json",
-      "sha256": "3b241d239ce150da6a2ee379f54f3a7ce0310df623de0000292f3d4242ecde5d"
+      "sha256": "59ebe6708cbd6779f470d54ffe2552b344632562395f95db7875acb2055c4fc8"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-006",
       "task_uid": "d5999c0f-ff61-476d-8e98-9c5f1b91fed9",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-006.json",
-      "sha256": "0374619cbb148c06742d511a44b2c24ba6fc152543017327e762aaf7fb385607"
+      "sha256": "775ec7207949b0f21688c7b0709cdb7805ffddfa6cd93ed1a6750e5e4e02b4b5"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-007",
       "task_uid": "eebc7ed2-5c7d-4df5-ab71-b53040167536",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-007.json",
-      "sha256": "01fdc9dd73e3017d911169147bcc25b980fd2a8a0d2aca29eb90122a98214e83"
+      "sha256": "86394e34257fe359746f8807a0733608cafd8db5603ae0833c64b321e167f332"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-008",
       "task_uid": "3f600f5d-a835-4c59-9fae-b9139365d03e",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-008.json",
-      "sha256": "0444080f796f89f611cf4ea4f2749d43e39939510a0d83e87dd1847791c7763b"
+      "sha256": "841c6f25b9d42da2188fd849ddd4c16298537a186dadf9724dbcf72fe20f014b"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-009",
       "task_uid": "4fb43529-485f-4385-a6e8-b861bb562b5f",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-009.json",
-      "sha256": "ce0b56cd5bdffe2650cf16acd7aca677b1e4aa9d84910b6463e54edae8f55f1b"
+      "sha256": "7f4fe0c4df73bb1745e4870a7e98eee7d68be52680af55663ba2070733956a94"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-010",
       "task_uid": "a1cd6a49-f077-4ae0-88db-5414ef18089c",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-010.json",
-      "sha256": "6fa7d67d027ff93562079026e56d1a9c7a548c4c170ba3fb16c618971783d1cd"
+      "sha256": "9b6a25d71a3b7ae3cef8ad2c67aa5385e466568beb319caa34514a50876472f9"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-011",
       "task_uid": "60ed834a-2f51-4e3b-9b0b-6ed9c24249a4",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-011.json",
-      "sha256": "283981518445f6d71cb1456711eada7332c6a3cf8dca387e38e1a5fe348a2161"
+      "sha256": "2912461a53b06086e814d4a05fc97d48dc2c8c23a3cd4469b3a3374b1f209376"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-012",
       "task_uid": "a92f8e87-36b0-4da1-aa72-f7b753011488",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-012.json",
-      "sha256": "7d890f55371d190ff820ade1d9b1f36d8c2774c3530c69ea27f64326d8449e2f"
+      "sha256": "ec0899620dec4473c86c17f2ba7f703a47ef83f7ba8925dce70c3342eff414c4"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-013",
       "task_uid": "3d514057-efd2-44b9-98dd-4b092ac2828a",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-013.json",
-      "sha256": "1d9387c0f31c39a4a159da7e66f584cba8f2bd7400a239e9b7e87a3ddffefd5e"
+      "sha256": "96affd3920785bfdb6f490e5715c232857afce91c7b2a338ad0f64ab85733298"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-014",
       "task_uid": "f5e1b40b-ea38-4d9f-9cf6-11f1dff5f2cc",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-014.json",
-      "sha256": "aea975bafbc9645cea1be79c350962c5e3a0279dbb0cfff4388995cc7702c801"
+      "sha256": "eed14b114147e8b236ae65b5dc48cf7841eaffdc40b350bf40987c02fad27380"
     },
     {
       "task_id": "Operation-FileOperate-CombinationDocs-015",
       "task_uid": "9f55fdb6-a749-4170-91a2-bebddd3492d7",
       "path": "benchmark/tasks/Operation-FileOperate-CombinationDocs-015.json",
-      "sha256": "a546589ba0bc08a2b0d67c7ceeaeb2e5526ba9b1edb39dcc681a73ab64d50da1"
+      "sha256": "c8fa1216aeef0cdb1a1398d793fca546a745d9aa87148f5f16456461c4dfe2b6"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-001",
       "task_uid": "e9e7bcf6-92da-4ff0-aaea-821099370093",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-001.json",
-      "sha256": "ca8a828b3c0c7fe6baa33af559ec860e627950f2eb61ebce7ba04d31bfab5f69"
+      "sha256": "2084eae7b20f2d75fb3681b20de900332ae07554ff59485f415c6c981451e360"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-002",
       "task_uid": "31d84d8d-8c61-4181-b321-44b83adc03f9",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-002.json",
-      "sha256": "93cdf47e1a93ec34e0c51e2794fd9b6b0567e3b1370c6ca2b9eb7ece845ab3e8"
+      "sha256": "537e79206b25003d8866762a903eeee4cf189d7248bc8fe49b5c3e5af476e35f"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-003",
       "task_uid": "51d7a7fe-e659-4de0-8345-c2c04da90373",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-003.json",
-      "sha256": "eb3131d2d6cec46e9d5265d0c9f8469960a68b0ccb167f1d3f19252d6f7d4de7"
+      "sha256": "9c07f676af91dc7d1510c4457f4ec2ae0774e3d2b4c5fdaecc7eb94d4604309b"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-004",
       "task_uid": "19ed62a3-9df0-4879-a685-0681acc1c708",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-004.json",
-      "sha256": "855a15c17e1e5c416b8d3e62d23c9518737dbca96cb9f1103aa5755d2c5d1065"
+      "sha256": "46987cd9912fbd6d7e2825cf498824880d0964f79db8306dbe34a3437f149ddd"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-005",
       "task_uid": "dce61462-cf48-42d9-9466-5a0171aa5d12",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-005.json",
-      "sha256": "9681e54a66ed787ca316959ecfab4e14f7d6cc8889c5fb4014f91dfbb44f337b"
+      "sha256": "169067b4417ad09d3d650990730e724beb22ceb07163d321ae8ec97e65bf5bcc"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-006",
       "task_uid": "d624fd2f-f184-4041-a33c-678f6fa10744",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-006.json",
-      "sha256": "2f6131ecf67b69054b67852ad1b427e374effaf9c7110490584afa47254af006"
+      "sha256": "6fb3200a5253a4886319762a6734fdfb2e53057edcb5ca3a7a373057e2583edf"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-007",
       "task_uid": "6f137b26-6efd-45e7-bd3c-034c81ddc790",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-007.json",
-      "sha256": "dccb8a4fe13a3260fd200f298fb3cdea521c9c3a808ed05b91e4252f72a0e286"
+      "sha256": "0b026f9adca4bc26b0a9c7e91fd53b9fc5957956b68c1771321b71211c171812"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-008",
       "task_uid": "65a4848d-b4b2-4173-8308-a0213fdafbd0",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-008.json",
-      "sha256": "acdec8a0efb8ca8185b4462dda8a7b2bfe3cbd396c6cb60e5e67f33e18075fa3"
+      "sha256": "8d5903bc62af480054ec7ad34f7c0833048c44106ae32fd3bdb48a023e6b9e82"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-009",
       "task_uid": "14b28a49-e101-4458-835e-2067823ddefb",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-009.json",
-      "sha256": "27d11ee9bce54bcce81824c14c1411a59e336bfa590606a4e771d23550ea8165"
+      "sha256": "9f9f6ef3eb901489e34edd1f978af297ce123c8d15e0616a7d362ffcb7b2ccb8"
     },
     {
       "task_id": "Operation-FileOperate-Settings-001",
       "task_uid": "9b5220d5-f1f0-4db9-902d-ad41aae4d775",
       "path": "benchmark/tasks/Operation-FileOperate-Settings-001.json",
-      "sha256": "64369235cfb2d26b1817114348b584880cdcfed98b4c38a2266ceb5e7756f290"
+      "sha256": "6c83d684ecf7ac739ed4e16c33befa992269c6a5bc372fa6ab909531f29c8d06"
     },
     {
       "task_id": "Operation-OnlineShopping-AddToCart-001",
@@ -1337,7 +1337,7 @@
       "task_id": "Operation-WebOperate-SearchAndWrite-001",
       "task_uid": "d017201e-a098-46ab-86be-6c99d263ecff",
       "path": "benchmark/tasks/Operation-WebOperate-SearchAndWrite-001.json",
-      "sha256": "de4231f6bcd38e424fff198c4166dfb4c355137c95c03dc09ae3d2660ec0e61b"
+      "sha256": "7c8a5522ed0153c79fed64d566fd40bb95ae1d385537c3d3194b7a47531e8c95"
     },
     {
       "task_id": "Operation-WebOperate-Settings-001",
@@ -1355,7 +1355,7 @@
       "task_id": "Operation-WebOperate-Settings-003",
       "task_uid": "bc69ee94-cf90-4cc4-a6ed-4266daa71706",
       "path": "benchmark/tasks/Operation-WebOperate-Settings-003.json",
-      "sha256": "ad7c699b12fe6b4aadaf5357a78ad51134b39df99b2380f3bb0e3162d5b04895"
+      "sha256": "b2ab8935900d3636bbcfd7434e5880028457133919912c92c993c57a3fd43ae7"
     },
     {
       "task_id": "Operation-WebOperate-WebNavigate-001",

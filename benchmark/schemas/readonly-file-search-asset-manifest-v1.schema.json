@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pkgunboat.github.io/ParaGUIBench/schemas/readonly-file-search-asset-manifest-v1.schema.json",
+  "title": "ParaGUIBench FileSearch Readonly asset manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "asset_set_id",
+    "source",
+    "distribution_policy",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "asset_set_id": {
+      "enum": [
+        "InformationRetrieval-FileSearch-Readonly-002",
+        "InformationRetrieval-FileSearch-Readonly-003",
+        "InformationRetrieval-FileSearch-ReadonlyPPT-001",
+        "InformationRetrieval-FileSearch-ReadonlyPPT-002",
+        "InformationRetrieval-FileSearch-ReadonlyPPT-003",
+        "InformationRetrieval-FileSearch-ReadonlyPPT-004",
+        "InformationRetrieval-FileSearch-ReadonlyPPT-005",
+        "InformationRetrieval-FileSearch-ReadonlyWord-001",
+        "InformationRetrieval-FileSearch-ReadonlyWord-002",
+        "InformationRetrieval-FileSearch-ReadonlyWord-003",
+        "InformationRetrieval-FileSearch-ReadonlyWord-004"
+      ]
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "distribution_policy": {
+      "const": "download_only"
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/file"
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "repository",
+        "revision",
+        "base_path",
+        "license_status"
+      ],
+      "properties": {
+        "provider": {
+          "const": "huggingface_dataset"
+        },
+        "repository": {
+          "const": "leeLegendary/Parallel_benchmark"
+        },
+        "revision": {
+          "const": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa"
+        },
+        "base_path": {
+          "type": "string",
+          "pattern": "^benchmark_dataset/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "license_status": {
+          "const": "unverified"
+        }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "size",
+        "sha256",
+        "media_type"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "enum": [
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          ]
+        }
+      }
+    }
+  }
+}

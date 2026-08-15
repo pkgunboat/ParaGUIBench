@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "manifest_id": "Operation-FileOperate-CombinationDocs-009-gold-v1",
+  "distribution_policy": "download_only",
+  "entries": [
+    {
+      "logical_key": "osworld-gold:eb303e01-261e-4972-8c07-c9b4e7a4922a:expected:0:v1",
+      "source_locator": {
+        "provider": "huggingface_dataset",
+        "repository": "xlangai/ubuntu_osworld_file_cache",
+        "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+        "path": "multi_apps/eb303e01-261e-4972-8c07-c9b4e7a4922a/lecture1-2021-with-ink_Gold.pptx"
+      },
+      "runtime_locator": {
+        "kind": "cache-relative-path",
+        "value": "blobs/0000"
+      },
+      "size": 119034,
+      "sha256": "dbefcaa98ecf1511016ac3063cba1c2ca70ac7e51d5e590d773afa95cb7591e0",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "license": {
+        "status": "verified",
+        "spdx_expression": "Apache-2.0",
+        "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache",
+        "distribution": "download_only"
+      },
+      "provenance": {
+        "source_benchmark": "OSWorld",
+        "source_task_id": "eb303e01-261e-4972-8c07-c9b4e7a4922a",
+        "source_evaluator_id": "eb303e01-261e-4972-8c07-c9b4e7a4922a",
+        "expected_index": 0,
+        "source_contract_sha256": "bc73a485042a3878b972e5fa14b9841cef85cfc79ef6c42274c5b68aaef1670b",
+        "evidence_ref": "osworld:evaluator:eb303e01-261e-4972-8c07-c9b4e7a4922a:expected:0"
+      }
+    }
+  ]
+}

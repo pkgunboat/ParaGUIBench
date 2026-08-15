@@ -6,7 +6,7 @@
     "instruction": "Insert images from the folder into Word documents with matching filenames, insert them after the placeholder named image Slot, and set the image width to 5cm.",
     "task_source": "",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/6e55deaf-c95d-49e9-91b2-b0155fe1dc45",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationWord-010.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-BatchoperationWord-010",
     "eval_rules": [

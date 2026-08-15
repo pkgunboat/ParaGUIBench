@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-004",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/04a0b25e-f726-40a0-a88d-69bbf538f634",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "McDonald_finacial_report.docx",
+      "size": 14355,
+      "sha256": "ef78a03c87b452e6c29c1e1fc317ee375fff311b5b7cc8b38b84e0f49ddf10a6",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "McDonalds_powerpoint_report.pptx",
+      "size": 217737,
+      "sha256": "997c1a757865abba05c568fa4249629905ae75cccc48d9837225f23c486559ea",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    }
+  ]
+}

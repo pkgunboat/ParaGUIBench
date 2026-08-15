@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "InformationRetrieval-FileSearch-Readonly-002",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/1dcb866c-9a32-452b-a398-59785ddba699",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Xiaomi Corp_23Q1_ER_ENG_vF_Upload.pdf",
+      "size": 2494687,
+      "sha256": "2d2a956098e98b9718384e63b2e8f395e3dd1e707e1238eddd9f0dcd124c88d3",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "announcement.pdf",
+      "size": 929454,
+      "sha256": "f9f140951d1a3cf0933bc2513694998f3f9d077a245851359b92b68ae3870f23",
+      "media_type": "application/pdf"
+    }
+  ]
+}

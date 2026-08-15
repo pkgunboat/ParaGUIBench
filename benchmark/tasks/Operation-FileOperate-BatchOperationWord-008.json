@@ -6,7 +6,7 @@
     "instruction": "Change the font of all Word documents to Times New Roman.",
     "task_source": "OSWorld",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/b9929f12-d179-450a-922a-22afb361bad3",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationWord-008.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-BatchoperationWord-008",
     "eval_rules": [

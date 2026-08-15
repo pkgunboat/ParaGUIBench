@@ -6,7 +6,7 @@
     "instruction": "These Word documents have disordered heading hierarchy issues. Please fix them to: chapter headings → Heading 1, section headings → Heading 2.",
     "task_source": "self",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/1dd4c724-6930-42ae-b9c6-d219083f3480",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationWord-001.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-BatchoperationWord-001",
     "eval_rules": [

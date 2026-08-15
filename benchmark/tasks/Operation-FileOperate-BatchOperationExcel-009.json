@@ -6,7 +6,7 @@
     "instruction": "In the Seq No. column of these Excel files, fill in serial numbers starting from 0 in the format No.#.",
     "task_source": "OSWorld",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/0f045849-d0e4-48d5-9010-ece2534c2b8c",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationExcel-009.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-Batchoperationexcel-009",
     "eval_rules": [

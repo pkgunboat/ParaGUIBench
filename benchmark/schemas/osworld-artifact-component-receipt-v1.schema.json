@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:paraguibench:schema:osworld-artifact-component-receipt:v1",
+  "title": "ParaGUIBench OSWorld artifact component receipt v1",
+  "$ref": "#/$defs/receipt",
+  "$defs": {
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "receipt_kind",
+        "task_id",
+        "run_id",
+        "attempt_id",
+        "execution_outcome",
+        "evaluation_outcome",
+        "score",
+        "candidate_evaluation_protocol",
+        "task_evaluation_protocol",
+        "environment_protocol",
+        "attempt_version_vector_sha256",
+        "task_identity_sha256",
+        "environment_identity_sha256",
+        "setup_component_sha256",
+        "getter_component_sha256",
+        "gold_component_sha256",
+        "component_checks"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "receipt_kind": {
+          "const": "paraguibench.osworld.artifact-component.v1"
+        },
+        "task_id": {
+          "enum": [
+            "Operation-FileOperate-BatchOperation-003",
+            "Operation-FileOperate-CombinationDocs-009",
+            "Operation-FileOperate-CombinationDocs-010",
+            "Operation-FileOperate-CombinationDocs-011",
+            "Operation-FileOperate-CombinationDocs-012",
+            "Operation-FileOperate-CombinationDocs-013",
+            "Operation-FileOperate-CombinationDocs-014",
+            "Operation-FileOperate-SearchAndWrite-001",
+            "Operation-FileOperate-SearchAndWrite-003",
+            "Operation-FileOperate-SearchAndWrite-005",
+            "Operation-FileOperate-SearchAndWrite-009",
+            "Operation-WebOperate-SearchAndWrite-001"
+          ]
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "attempt_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "execution_outcome": {
+          "const": "SUCCEEDED"
+        },
+        "evaluation_outcome": {
+          "const": "PASSED"
+        },
+        "score": {
+          "type": "number",
+          "const": 1
+        },
+        "candidate_evaluation_protocol": {
+          "const": "paraguibench.osworld.artifact-component-validation.v1"
+        },
+        "task_evaluation_protocol": {
+          "const": "paraguibench.osworld.artifact-state.v1"
+        },
+        "environment_protocol": {
+          "enum": [
+            "osworld.chrome.v1",
+            "osworld.desktop.v1"
+          ]
+        },
+        "attempt_version_vector_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "task_identity_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "environment_identity_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "setup_component_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "getter_component_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "gold_component_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "component_checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "task_setup",
+            "artifact_getter",
+            "evaluator_gold"
+          ],
+          "properties": {
+            "task_setup": {
+              "const": "passed"
+            },
+            "artifact_getter": {
+              "const": "passed"
+            },
+            "evaluator_gold": {
+              "const": "passed"
+            }
+          }
+        }
+      }
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

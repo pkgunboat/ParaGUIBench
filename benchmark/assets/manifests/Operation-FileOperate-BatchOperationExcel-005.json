@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationExcel-005",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/cccf5baf-e392-47af-a605-65401ef56fe5",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "store1.xlsx",
+      "size": 9258,
+      "sha256": "1a5a69985b303f96d18d29d73b2c47653f662403484a36b5761f5635d4153a70",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "store2.xlsx",
+      "size": 9278,
+      "sha256": "fe5bbc48c80cec38568b71a42508cb9df83a6c5b6388701445f1cf4170e3d1d8",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "store3.xlsx",
+      "size": 9211,
+      "sha256": "5eb434afffc3ccf5d903802b77be409ad0dd4dea73e6a2c738ceee17d939adbf",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "store4.xlsx",
+      "size": 9222,
+      "sha256": "5e3590b023745ffbfe26293061cddd45de5b5657380439b010a37bd89e539f67",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

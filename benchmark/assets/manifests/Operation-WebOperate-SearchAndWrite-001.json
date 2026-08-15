@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-WebOperate-SearchAndWrite-001",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/d1acdb87-bb67-4f30-84aa-990e56a09c92",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "MUST_VISIT.xlsx",
+      "size": 11615,
+      "sha256": "986743e746dcfc3683eea8fffabb820217021a29689d8ae7909b31a0eee75207",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "restaurants.txt",
+      "size": 77,
+      "sha256": "9c76c729e04c7e7bf1c495013221d764db68f18fc359844d1a91ae7bc1e953d4",
+      "media_type": "text/plain"
+    }
+  ]
+}

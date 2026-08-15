@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "InformationRetrieval-FileSearch-ReadonlyWord-001",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/4f870c1f-b01c-4a10-90c3-1e3f0eab0373",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Fair.docx",
+      "size": 13797,
+      "sha256": "d992e2f5ed1d130dd213750d7d09a81b8e4753f5210885bc4be80972a1eb3c54",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Seminar.docx",
+      "size": 13869,
+      "sha256": "a394f35c459a9252a54eae9ab790607d7f64310e7b8ceb967237db341d359cee",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "WorkShop.docx",
+      "size": 14081,
+      "sha256": "6920b96732571a3acfe7aab9e86323a806c24b7b83cc1744120646e2e92dae70",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "meeting.docx",
+      "size": 13780,
+      "sha256": "1511b37b9807e992c4bf5cc4a03203088dee1b7ca7545ca5b5422c1b5ed78273",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

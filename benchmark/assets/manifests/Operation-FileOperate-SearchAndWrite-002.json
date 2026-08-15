@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-SearchAndWrite-002",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/31d84d8d-8c61-4181-b321-44b83adc03f9",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "company_info.xlsx",
+      "size": 5016,
+      "sha256": "fa428d1185fb7b8a02420b09f08e12fb65e0da233815b413f5dc26a7717388f5",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

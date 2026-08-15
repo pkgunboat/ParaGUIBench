@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "manifest_id": "Operation-FileOperate-BatchOperationExcel-008-gold-v1",
+  "task_id": "Operation-FileOperate-BatchOperationExcel-008",
+  "task_uid": "1c73128f-a5ef-4a97-97ce-ef427d6d46b4",
+  "manifest_role": "gold",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "answer_files/1c73128f-a5ef-4a97-97ce-ef427d6d46b4"
+  },
+  "license": {
+    "status": "unverified",
+    "spdx_expression": null,
+    "evidence_ref": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark",
+    "distribution": "download_only"
+  },
+  "distribution_policy": "download_only",
+  "entries": [
+    {
+      "path": "KFC_Monthly_Data.xlsx",
+      "size_bytes": 7313,
+      "sha256": "35d4144ed899fdbb14ccb07a99d18d042190027718a1467f852355e09491e60e",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "McDonalds_Monthly_Data.xlsx",
+      "size_bytes": 7326,
+      "sha256": "db90397c5afcdcbfc280c18afd694d9802c05327b93f079cb34742d4ca398f04",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "Mixue_Monthly_Data.xlsx",
+      "size_bytes": 5866,
+      "sha256": "e7f7bd52d195f878fc94c3845c10acef0f1c0e570afdd9de0a342212cf2e19d2",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "PizzaHut_Monthly_Data.xlsx",
+      "size_bytes": 7326,
+      "sha256": "f6c67a77d417484174eede29b173774dc158d0f25229abc6f8db6fac8d00572b",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "Subway_Monthly_Data.xlsx",
+      "size_bytes": 7354,
+      "sha256": "322c97248f024c5cbac031736caae5b450e1c51c6ddb44e4f0f59398428dfa13",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationPPT-002",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/85da5285-4ba1-4550-8f5a-00ea07fca510",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "beijing.pptx",
+      "size": 36477,
+      "sha256": "7eeb0abd901c78c2d304e9d49fdd47399a1ccd9e3a85f8b6d749703f23b6d83a",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "introduction.pptx",
+      "size": 35876,
+      "sha256": "f40cda30c0fac98d2520acb2b223b5c9582c97fa78fcf5ebb630a374e6ed1459",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "powerPoint.pptx",
+      "size": 35333,
+      "sha256": "f066b77602a6713991feb718c91154f8f4fd8ddf81e3d4f5895481a0bc095e54",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "traveling.pptx",
+      "size": 38339,
+      "sha256": "7fa356e17150dd881b9a86673de6d027af75cd6450384fc81d9ee49a3a040399",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    }
+  ]
+}

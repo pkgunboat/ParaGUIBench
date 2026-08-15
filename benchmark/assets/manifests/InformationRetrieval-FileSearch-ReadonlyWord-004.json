@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "InformationRetrieval-FileSearch-ReadonlyWord-004",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/134a34d3-9f52-44f6-b7bd-12945c2479f2",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "paper1.pdf",
+      "size": 5296750,
+      "sha256": "54bcd2dd05dc618849e8a94d8b88fe3eeb37f80e96e200600d38f1f733931678",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "paper2.pdf",
+      "size": 11947867,
+      "sha256": "1b31e77fb24d25d7598f2c49e955d12a28b95a6dabad34acdac40f44bfb7a139",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "paper3.pdf",
+      "size": 2215244,
+      "sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+      "media_type": "application/pdf"
+    },
+    {
+      "path": "paper4.pdf",
+      "size": 1609513,
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+      "media_type": "application/pdf"
+    }
+  ]
+}

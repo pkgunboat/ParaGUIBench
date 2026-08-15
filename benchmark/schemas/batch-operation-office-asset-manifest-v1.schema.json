@@ -1,0 +1,337 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pkgunboat.github.io/ParaGUIBench/schemas/batch-operation-office-asset-manifest-v1.schema.json",
+  "title": "ParaGUIBench Operation FileOperate fixed asset manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "asset_set_id",
+    "source",
+    "distribution_policy",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "asset_set_id": {
+      "enum": [
+        "Operation-FileOperate-BatchOperation-001",
+        "Operation-FileOperate-BatchOperationExcel-001",
+        "Operation-FileOperate-BatchOperationExcel-002",
+        "Operation-FileOperate-BatchOperationExcel-003",
+        "Operation-FileOperate-BatchOperationExcel-004",
+        "Operation-FileOperate-BatchOperationExcel-005",
+        "Operation-FileOperate-BatchOperationExcel-006",
+        "Operation-FileOperate-BatchOperationExcel-007",
+        "Operation-FileOperate-BatchOperationExcel-009",
+        "Operation-FileOperate-BatchOperationPPT-001",
+        "Operation-FileOperate-BatchOperationPPT-002",
+        "Operation-FileOperate-BatchOperationWord-001",
+        "Operation-FileOperate-BatchOperationWord-002",
+        "Operation-FileOperate-BatchOperationWord-003",
+        "Operation-FileOperate-BatchOperationWord-004",
+        "Operation-FileOperate-BatchOperationWord-005",
+        "Operation-FileOperate-BatchOperationWord-006",
+        "Operation-FileOperate-BatchOperationWord-007",
+        "Operation-FileOperate-BatchOperationWord-008",
+        "Operation-FileOperate-BatchOperationWord-009",
+        "Operation-FileOperate-BatchOperationWord-010",
+        "Operation-FileOperate-BatchOperationWord-011",
+        "Operation-FileOperate-BatchOperationWord-012",
+        "Operation-FileOperate-CombinationDocs-001",
+        "Operation-FileOperate-CombinationDocs-003",
+        "Operation-FileOperate-CombinationDocs-004",
+        "Operation-FileOperate-CombinationDocs-005",
+        "Operation-FileOperate-CombinationDocs-006",
+        "Operation-FileOperate-CombinationDocs-007",
+        "Operation-FileOperate-CombinationDocs-008",
+        "Operation-FileOperate-SearchAndWrite-002",
+        "Operation-FileOperate-SearchAndWrite-004",
+        "Operation-FileOperate-SearchAndWrite-006",
+        "Operation-FileOperate-SearchAndWrite-007"
+      ]
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "distribution_policy": {
+      "const": "download_only"
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/file"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "asset_set_id": {
+            "const": "Operation-FileOperate-SearchAndWrite-007"
+          }
+        },
+        "required": [
+          "asset_set_id"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source": {
+            "$ref": "#/$defs/xlang_source"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "source": {
+            "$ref": "#/$defs/lee_source"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "source": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/lee_source"
+        },
+        {
+          "$ref": "#/$defs/xlang_source"
+        }
+      ]
+    },
+    "lee_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "repository",
+        "revision",
+        "base_path",
+        "license_status"
+      ],
+      "properties": {
+        "provider": {
+          "const": "huggingface_dataset"
+        },
+        "repository": {
+          "const": "leeLegendary/Parallel_benchmark"
+        },
+        "revision": {
+          "const": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa"
+        },
+        "base_path": {
+          "type": "string",
+          "pattern": "^benchmark_dataset/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "license_status": {
+          "const": "unverified"
+        }
+      }
+    },
+    "xlang_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "repository",
+        "revision",
+        "base_path",
+        "license_status"
+      ],
+      "properties": {
+        "provider": {
+          "const": "huggingface_dataset"
+        },
+        "repository": {
+          "const": "xlangai/ubuntu_osworld_file_cache"
+        },
+        "revision": {
+          "const": "711e0811642364e7aa8f10a8918367d0b626d578"
+        },
+        "base_path": {
+          "const": "multi_apps/6f4073b8-d8ea-4ade-8a18-c5d1d5d5aa9a"
+        },
+        "license_status": {
+          "const": "unverified"
+        }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "size",
+        "sha256",
+        "media_type"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^(?!/)(?!.*\\\\)(?!.*//)(?!.*(?:^|/)\\.)(?!.*(?:^|/)~\\$).+\\.(?:pptx|docx|xlsx|jpe?g|txt|md|csv|html)$"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "enum": [
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "image/jpeg",
+            "text/plain",
+            "text/markdown",
+            "text/csv",
+            "text/html"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.pptx$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.docx$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.xlsx$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.jpe?g$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "image/jpeg"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.txt$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "text/plain"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.md$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "text/markdown"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.csv$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "text/csv"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.html$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "text/html"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

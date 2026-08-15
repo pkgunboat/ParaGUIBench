@@ -6,7 +6,8 @@
     "instruction": "I am collecting contact information for some professors. Their homepage links are listed here. Please help me fill in the form by adding their respective email addresses.",
     "task_source": "OSWorld",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/c7c1e4c3-9e92-4eba-a4b8-689953975ea4/Professor_Contact.xlsx",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-SearchAndWrite-001.json",
+    "gold_manifest": "benchmark/gold/manifests/Operation-FileOperate-SearchAndWrite-001.json",
     "evaluator_path": "eval/osworld_scripts/e9e7bcf6-92da-4ff0-aaea-821099370093.json",
     "original_task_id": "Operation-FileOperate-Search&write-001"
 }

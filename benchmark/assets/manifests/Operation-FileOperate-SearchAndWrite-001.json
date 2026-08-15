@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-SearchAndWrite-001",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/c7c1e4c3-9e92-4eba-a4b8-689953975ea4",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Professor_Contact.xlsx",
+      "size": 5910,
+      "sha256": "85e526d49bf00541382fd0e6469e7cd4ccce7f8dca7b947d412f22cf478eeccc",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

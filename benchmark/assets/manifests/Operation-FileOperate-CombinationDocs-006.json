@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-006",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/d5999c0f-ff61-476d-8e98-9c5f1b91fed9",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Conference.pptx",
+      "size": 37017,
+      "sha256": "f3d71a2212039c93928883a1ce059679d29db9f34670b6d28e64868a596d2803",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    },
+    {
+      "path": "Eval_framework.docx",
+      "size": 14364,
+      "sha256": "737f13011a878a92740c8781d370dfbb3505509d8c0b1b770a5f974cea9e7f66",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    {
+      "path": "Presentation_Strategy.pptx",
+      "size": 38013,
+      "sha256": "e461cb2eb21edeb7f279b9643d304d6115820fca42d2d6bc146085cb631d98fc",
+      "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    }
+  ]
+}

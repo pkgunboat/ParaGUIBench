@@ -6,7 +6,7 @@
     "instruction": "Please insert tables after data descriptions in Word documents to display the described data.",
     "task_source": "self",
     "answer": "",
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/186a98aa-ada2-44e3-9187-558ddee9153b",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-BatchOperationWord-006.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-BatchoperationWord-006",
     "eval_rules": [

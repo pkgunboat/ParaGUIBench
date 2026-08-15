@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:paraguibench:schema:runtime-support:v1",
   "title": "ParaGUIBench Runtime Support Manifest v1",
-  "description": "Separates canonical task publication from preview runtime readiness.",
+  "description": "Separates canonical publication, local component readiness, and formal live validation.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -12,6 +12,7 @@
     "release_id",
     "release_manifest_sha256",
     "canonical_task_count",
+    "local_readiness_status_counts",
     "tasks"
   ],
   "properties": {
@@ -34,6 +35,26 @@
     "canonical_task_count": {
       "const": 233
     },
+    "local_readiness_status_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "local_components_incomplete",
+        "local_ready"
+      ],
+      "properties": {
+        "local_components_incomplete": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 233
+        },
+        "local_ready": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 233
+        }
+      }
+    },
     "tasks": {
       "type": "array",
       "minItems": 233,
@@ -53,6 +74,7 @@
         "environment_protocol",
         "evaluation_protocol",
         "asset_status",
+        "local_readiness_status",
         "support_status",
         "support_reason_code",
         "blocker_codes"
@@ -80,6 +102,21 @@
             "paraguibench.answer.keyed-numeric-set.v1",
             "paraguibench.answer.ordered-structured.v1",
             "paraguibench.answer.implicit-structured.v1",
+            "paraguibench.webmall.checkout.closed-world.v1",
+            "paraguibench.webmall.find-and-order.closed-world.v1",
+            "paraguibench.webmall.checkout.closed-world.v2",
+            "paraguibench.webmall.find-and-order.closed-world.v2",
+            "paraguibench.webmall.url-multiset.v1",
+            "paraguibench.webmall.cart.closed-world.v1",
+            "paraguibench.osworld.chrome-profile-name.v1",
+            "paraguibench.osworld.google-shopping-active-tab.v1",
+            "paraguibench.osworld.chrome-bookmarks.v1",
+            "paraguibench.osworld.artifact-state.v1",
+            "paraguibench.operation.eval-rules.v1",
+            "paraguibench.operation.xlsx.hide-na-rows.v1",
+            "paraguibench.operation.image-classification.sha256.v1",
+            "paraguibench.operation.cross-document-facts.v1",
+            "paraguibench.operation.searchwrite-xlsx.v1",
             "legacy.file-search-readonly.v1",
             "legacy.webnavigate.bookmark.v1",
             "legacy.webmall.bookmark-url-set.v1",
@@ -101,6 +138,12 @@
             "no_task_assets_declared"
           ]
         },
+        "local_readiness_status": {
+          "enum": [
+            "local_ready",
+            "local_components_incomplete"
+          ]
+        },
         "support_status": {
           "enum": [
             "live_validated",
@@ -110,6 +153,7 @@
         "support_reason_code": {
           "enum": [
             "live_validation_passed",
+            "live_validation_pending",
             "runtime_components_incomplete"
           ]
         },
@@ -120,7 +164,25 @@
             "enum": [
               "legacy_evaluator_not_migrated",
               "legacy_asset_manifest_not_migrated",
-              "live_validation_not_completed"
+              "osworld_vm_image_materialization_unverified",
+              "osworld_bookmark_start_context_not_migrated",
+              "osworld_artifact_getter_live_validation_not_completed",
+              "osworld_artifact_gold_live_validation_not_completed",
+              "osworld_artifact_finalize_not_migrated",
+              "osworld_task_setup_live_validation_not_completed",
+              "osworld_source_start_context_ambiguous",
+              "osworld_artifact_input_path_inferred",
+              "osworld_artifact_input_license_unverified",
+              "webmall_cart_reader_reference_live_validation_not_completed",
+              "pipeline_implicit_input_asset_metadata_unverified",
+              "pipeline_implicit_gold_asset_metadata_unverified",
+              "pipeline_implicit_typed_observation_parser_not_migrated",
+              "pipeline_implicit_live_validation_not_completed",
+              "pipeline_implicit_combination_gold_conflict_unresolved",
+              "operation_word009_010_writer_live_validation_not_completed",
+              "operation_word012_abbreviation_semantics_not_migrated",
+              "combinationdocs003_real_render_validation_not_completed",
+              "versioned_live_validation_not_completed"
             ]
           }
         }
@@ -150,12 +212,314 @@
           "else": {
             "properties": {
               "support_reason_code": {
-                "const": "runtime_components_incomplete"
+                "enum": [
+                  "live_validation_pending",
+                  "runtime_components_incomplete"
+                ]
               },
               "blocker_codes": {
                 "minItems": 1
               }
             }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "support_reason_code": {
+                "const": "live_validation_pending"
+              }
+            },
+            "required": [
+              "support_reason_code"
+            ]
+          },
+          "then": {
+            "properties": {
+              "support_status": {
+                "const": "blocked"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "evaluation_protocol": {
+                      "const": "paraguibench.webmall.cart.closed-world.v1"
+                    }
+                  },
+                  "required": [
+                    "evaluation_protocol"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "blocker_codes": {
+                      "items": {
+                        "enum": [
+                          "webmall_cart_reader_reference_live_validation_not_completed",
+                          "versioned_live_validation_not_completed"
+                        ]
+                      },
+                      "prefixItems": [
+                        {
+                          "enum": [
+                            "webmall_cart_reader_reference_live_validation_not_completed",
+                            "versioned_live_validation_not_completed"
+                          ]
+                        },
+                        {
+                          "const": "versioned_live_validation_not_completed"
+                        }
+                      ],
+                      "contains": {
+                        "const": "versioned_live_validation_not_completed"
+                      },
+                      "minContains": 1,
+                      "maxContains": 1,
+                      "minItems": 1,
+                      "maxItems": 2
+                    }
+                  }
+                },
+                "else": {
+                  "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "evaluation_protocol": {
+                            "const": "paraguibench.osworld.artifact-state.v1"
+                          }
+                        },
+                        "required": [
+                          "evaluation_protocol"
+                        ]
+                      },
+                      "then": {
+                        "properties": {
+                          "blocker_codes": {
+                            "items": {
+                              "enum": [
+                                "osworld_artifact_getter_live_validation_not_completed",
+                                "osworld_artifact_gold_live_validation_not_completed",
+                                "osworld_task_setup_live_validation_not_completed",
+                                "versioned_live_validation_not_completed"
+                              ]
+                            },
+                            "contains": {
+                              "const": "versioned_live_validation_not_completed"
+                            },
+                            "minContains": 1,
+                            "maxContains": 1,
+                            "minItems": 1,
+                            "maxItems": 4,
+                            "allOf": [
+                              {
+                                "if": {
+                                  "minItems": 4
+                                },
+                                "then": {
+                                  "prefixItems": [
+                                    {
+                                      "const": "osworld_artifact_getter_live_validation_not_completed"
+                                    },
+                                    {
+                                      "const": "osworld_artifact_gold_live_validation_not_completed"
+                                    },
+                                    {
+                                      "const": "osworld_task_setup_live_validation_not_completed"
+                                    },
+                                    {
+                                      "const": "versioned_live_validation_not_completed"
+                                    }
+                                  ],
+                                  "minItems": 4,
+                                  "maxItems": 4
+                                },
+                                "else": {
+                                  "if": {
+                                    "minItems": 2
+                                  },
+                                  "then": {
+                                    "prefixItems": [
+                                      {
+                                        "const": "osworld_artifact_getter_live_validation_not_completed"
+                                      },
+                                      {
+                                        "const": "versioned_live_validation_not_completed"
+                                      }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                  },
+                                  "else": {
+                                    "prefixItems": [
+                                      {
+                                        "const": "versioned_live_validation_not_completed"
+                                      }
+                                    ],
+                                    "minItems": 1,
+                                    "maxItems": 1
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "allOf": [
+                          {
+                            "if": {
+                              "properties": {
+                                "evaluation_protocol": {
+                                  "enum": [
+                                    "paraguibench.operation.xlsx.hide-na-rows.v1",
+                                    "paraguibench.operation.image-classification.sha256.v1",
+                                    "paraguibench.operation.cross-document-facts.v1",
+                                    "paraguibench.operation.searchwrite-xlsx.v1"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "evaluation_protocol"
+                              ]
+                            },
+                            "then": {
+                              "properties": {
+                                "blocker_codes": {
+                                  "items": {
+                                    "enum": [
+                                      "pipeline_implicit_live_validation_not_completed",
+                                      "versioned_live_validation_not_completed"
+                                    ]
+                                  },
+                                  "contains": {
+                                    "const": "versioned_live_validation_not_completed"
+                                  },
+                                  "minContains": 1,
+                                  "maxContains": 1,
+                                  "minItems": 1,
+                                  "maxItems": 2,
+                                  "allOf": [
+                                    {
+                                      "if": {
+                                        "minItems": 2
+                                      },
+                                      "then": {
+                                        "prefixItems": [
+                                          {
+                                            "const": "pipeline_implicit_live_validation_not_completed"
+                                          },
+                                          {
+                                            "const": "versioned_live_validation_not_completed"
+                                          }
+                                        ],
+                                        "minItems": 2,
+                                        "maxItems": 2
+                                      },
+                                      "else": {
+                                        "prefixItems": [
+                                          {
+                                            "const": "versioned_live_validation_not_completed"
+                                          }
+                                        ],
+                                        "minItems": 1,
+                                        "maxItems": 1
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            "else": {
+                              "allOf": [
+                                {
+                                  "if": {
+                                    "properties": {
+                                      "task_id": {
+                                        "enum": [
+                                          "Operation-FileOperate-BatchOperationWord-009",
+                                          "Operation-FileOperate-BatchOperationWord-010"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "task_id"
+                                    ]
+                                  },
+                                  "then": {
+                                    "properties": {
+                                      "blocker_codes": {
+                                        "prefixItems": [
+                                          {
+                                            "const": "operation_word009_010_writer_live_validation_not_completed"
+                                          },
+                                          {
+                                            "const": "versioned_live_validation_not_completed"
+                                          }
+                                        ],
+                                        "minItems": 2,
+                                        "maxItems": 2
+                                      }
+                                    }
+                                  },
+                                  "else": {
+                                    "allOf": [
+                                      {
+                                        "if": {
+                                          "properties": {
+                                            "task_id": {
+                                              "const": "Operation-FileOperate-CombinationDocs-003"
+                                            }
+                                          },
+                                          "required": [
+                                            "task_id"
+                                          ]
+                                        },
+                                        "then": {
+                                          "properties": {
+                                            "blocker_codes": {
+                                              "prefixItems": [
+                                                {
+                                                  "const": "combinationdocs003_real_render_validation_not_completed"
+                                                },
+                                                {
+                                                  "const": "versioned_live_validation_not_completed"
+                                                }
+                                              ],
+                                              "minItems": 2,
+                                              "maxItems": 2
+                                            }
+                                          }
+                                        },
+                                        "else": {
+                                          "properties": {
+                                            "blocker_codes": {
+                                              "prefixItems": [
+                                                {
+                                                  "const": "versioned_live_validation_not_completed"
+                                                }
+                                              ],
+                                              "minItems": 1,
+                                              "maxItems": 1
+                                            }
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         }
       ]

@@ -56,12 +56,16 @@ def main() -> int:
 
     result = validate_runtime_support_manifest(repo_root, manifest_path)
     if result.ok:
-        counts = ", ".join(
+        local_counts = ", ".join(
             f"{status}={count}"
-            for status, count in result.status_counts.items()
+            for status, count in result.local_readiness_status_counts.items()
+        )
+        support_counts = ", ".join(
+            f"{status}={count}" for status, count in result.status_counts.items()
         )
         print(
-            f"runtime-support-v1 valid: tasks={result.task_count}; {counts}"
+            f"runtime-support-v1 valid: tasks={result.task_count}; "
+            f"local_readiness: {local_counts}; support_status: {support_counts}"
         )
         return 0
 

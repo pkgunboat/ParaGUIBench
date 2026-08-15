@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-001",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/c2ec79c0-bb7c-4f45-b5e5-437d15d518cb",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "KFC_Monthly_Data.xlsx",
+      "size": 5849,
+      "sha256": "4d9bcff171a5ae61bdb6b5c6b2b16a3d6fcb9af09b3ea639049b2c5457b68e1a",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "McDonalds_Monthly_Data.xlsx",
+      "size": 5858,
+      "sha256": "7c527377555479618e964962b756a7028564ed059f9273fbd16526b2170a6596",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "Mixue_Monthly_Data.xlsx",
+      "size": 5866,
+      "sha256": "e7f7bd52d195f878fc94c3845c10acef0f1c0e570afdd9de0a342212cf2e19d2",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "PizzaHut_Monthly_Data.xlsx",
+      "size": 5859,
+      "sha256": "d7c9ce0987a9c2b829d9943ead8894099b3b9664aeec4e2360b1bac3896750a2",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "Subway_Monthly_Data.xlsx",
+      "size": 5849,
+      "sha256": "0aeb94ba9eecf8135c6cfda2f83e8c7d9f4e40b102431a8c55e4c315cfd4f898",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

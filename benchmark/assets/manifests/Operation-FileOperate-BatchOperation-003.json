@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperation-003",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/5df7b33a-9f77-4101-823e-02f863e1c1ae",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "raw_book.zip",
+      "size": 1091801,
+      "sha256": "f4c410119a88653225d8016d2594ae395d5b020e7b40067af0e72f0754b3c22e",
+      "media_type": "application/zip"
+    }
+  ]
+}

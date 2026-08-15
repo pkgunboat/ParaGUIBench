@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-SearchAndWrite-003",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/da52d699-e8d2-4dc5-9191-a2199e0b6a9b",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "2023_validation_Book_Reading_Rate.xlsx",
+      "size": 9080,
+      "sha256": "8882c25c4195105a0735b83b1294e200f75bd3cf7e75b358ba6fe8e2ce5ba029",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    {
+      "path": "book_list_result.docx",
+      "size": 4679,
+      "sha256": "594044dfbe3a7e468a18d2b6624d41c3391cb38e37b017483b05e997a559092d",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+  ]
+}

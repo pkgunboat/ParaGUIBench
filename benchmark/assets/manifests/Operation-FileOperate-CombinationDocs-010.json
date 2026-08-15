@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-CombinationDocs-010",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "xlangai/ubuntu_osworld_file_cache",
+    "revision": "711e0811642364e7aa8f10a8918367d0b626d578",
+    "base_path": "multi_apps/aceb0368-56b8-4073-b70e-3dc9aee184e0",
+    "license_status": "apache-2.0"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "exam.zip",
+      "size": 387112,
+      "sha256": "10d6ef9c161b2bbb6eb6515f0e0c1717c39f675d7b569fcac55477f176b1c7c1",
+      "media_type": "application/zip"
+    }
+  ]
+}

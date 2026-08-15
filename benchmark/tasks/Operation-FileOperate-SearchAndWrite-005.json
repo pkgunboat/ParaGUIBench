@@ -7,7 +7,8 @@
     "task_source": "OSWorld",
     "answer": "",
     "skip_eval": false,
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/dce61462-cf48-42d9-9466-5a0171aa5d12",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-SearchAndWrite-005.json",
+    "gold_manifest": "benchmark/gold/manifests/Operation-FileOperate-SearchAndWrite-005.json",
     "evaluator_path": "eval/osworld_scripts/dce61462-cf48-42d9-9466-5a0171aa5d12.json",
     "original_task_id": "Operation-FileOperate-Search&write-003"
 }

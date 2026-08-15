@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pkgunboat.github.io/ParaGUIBench/schemas/pipeline-implicit-gold-asset-manifest-v1.schema.json",
+  "title": "ParaGUIBench verified pipeline-implicit gold manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "task_id",
+    "task_uid",
+    "manifest_role",
+    "source",
+    "license",
+    "distribution_policy",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "manifest_id": {
+      "enum": [
+        "Operation-FileOperate-BatchOperationExcel-008-gold-v1",
+        "Operation-FileOperate-BatchOperationPPT-003-gold-v1",
+        "Operation-FileOperate-SearchAndWrite-008-gold-v1"
+      ]
+    },
+    "task_id": {
+      "enum": [
+        "Operation-FileOperate-BatchOperationExcel-008",
+        "Operation-FileOperate-BatchOperationPPT-003",
+        "Operation-FileOperate-SearchAndWrite-008"
+      ]
+    },
+    "task_uid": {
+      "enum": [
+        "1c73128f-a5ef-4a97-97ce-ef427d6d46b4",
+        "e544ee0f-90e6-43a4-9958-6b74e88d94a6",
+        "65a4848d-b4b2-4173-8308-a0213fdafbd0"
+      ]
+    },
+    "manifest_role": {"const": "gold"},
+    "source": {"$ref": "#/$defs/source"},
+    "license": {"$ref": "#/$defs/license"},
+    "distribution_policy": {"const": "download_only"},
+    "entries": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/entry"}
+    }
+  },
+  "oneOf": [
+    {
+      "required": ["manifest_id", "task_id", "task_uid", "source", "entries"],
+      "properties": {
+        "manifest_id": {
+          "const": "Operation-FileOperate-BatchOperationExcel-008-gold-v1"
+        },
+        "task_id": {
+          "const": "Operation-FileOperate-BatchOperationExcel-008"
+        },
+        "task_uid": {
+          "const": "1c73128f-a5ef-4a97-97ce-ef427d6d46b4"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "base_path": {
+              "const": "answer_files/1c73128f-a5ef-4a97-97ce-ef427d6d46b4"
+            }
+          }
+        },
+        "entries": {
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "properties": {
+              "media_type": {
+                "const": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "required": ["manifest_id", "task_id", "task_uid", "source", "entries"],
+      "properties": {
+        "manifest_id": {
+          "const": "Operation-FileOperate-BatchOperationPPT-003-gold-v1"
+        },
+        "task_id": {
+          "const": "Operation-FileOperate-BatchOperationPPT-003"
+        },
+        "task_uid": {
+          "const": "e544ee0f-90e6-43a4-9958-6b74e88d94a6"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "base_path": {
+              "const": "answer_files/e544ee0f-90e6-43a4-9958-6b74e88d94a6"
+            }
+          }
+        },
+        "entries": {
+          "minItems": 32,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "properties": {
+              "media_type": {
+                "enum": [
+                  "image/jpeg",
+                  "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "required": ["manifest_id", "task_id", "task_uid", "source", "entries"],
+      "properties": {
+        "manifest_id": {
+          "const": "Operation-FileOperate-SearchAndWrite-008-gold-v1"
+        },
+        "task_id": {
+          "const": "Operation-FileOperate-SearchAndWrite-008"
+        },
+        "task_uid": {
+          "const": "65a4848d-b4b2-4173-8308-a0213fdafbd0"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "base_path": {
+              "const": "answer_files/65a4848d-b4b2-4173-8308-a0213fdafbd0"
+            }
+          }
+        },
+        "entries": {
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "properties": {
+              "media_type": {
+                "const": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "repository", "revision", "base_path"],
+      "properties": {
+        "provider": {"const": "huggingface_dataset"},
+        "repository": {"const": "leeLegendary/Parallel_benchmark"},
+        "revision": {
+          "const": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa"
+        },
+        "base_path": {
+          "enum": [
+            "answer_files/1c73128f-a5ef-4a97-97ce-ef427d6d46b4",
+            "answer_files/e544ee0f-90e6-43a4-9958-6b74e88d94a6",
+            "answer_files/65a4848d-b4b2-4173-8308-a0213fdafbd0"
+          ]
+        }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "spdx_expression",
+        "evidence_ref",
+        "distribution"
+      ],
+      "properties": {
+        "status": {"const": "unverified"},
+        "spdx_expression": {"type": "null"},
+        "evidence_ref": {
+          "const": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark"
+        },
+        "distribution": {"const": "download_only"}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "size_bytes", "sha256", "media_type"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[\\\\%?#\\u0000-\\u001F\\u007F])[^/]+(?:/[^/]+)*$"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "enum": [
+            "image/jpeg",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          ]
+        }
+      }
+    }
+  }
+}

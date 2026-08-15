@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_set_id": "Operation-FileOperate-BatchOperationExcel-007",
+  "source": {
+    "provider": "huggingface_dataset",
+    "repository": "leeLegendary/Parallel_benchmark",
+    "revision": "13bf942dfab6f9d71f16f0958f1edd8b436c7afa",
+    "base_path": "benchmark_dataset/7e6bdc0a-b1dd-47c5-98a7-baafd3f5fd0f",
+    "license_status": "unverified"
+  },
+  "distribution_policy": "download_only",
+  "files": [
+    {
+      "path": "Company_Sales_Data.xlsx",
+      "size": 6944,
+      "sha256": "f5ce5597c021c0cd118b0b2bf4a96836baf9c87cbc4bb50de7b78e6a5abe7d88",
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  ]
+}

@@ -7,7 +7,7 @@
     "task_source": "self",
     "answer": "",
     "skip_eval": false,
-    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/d624fd2f-f184-4041-a33c-678f6fa10744",
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-SearchAndWrite-006.json",
     "evaluator_path": "",
     "original_task_id": "Operation-FileOperate-SearchAndWrite-003",
     "eval_rules": [

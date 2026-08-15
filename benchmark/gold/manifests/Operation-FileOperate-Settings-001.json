@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "manifest_id": "Operation-FileOperate-Settings-001-gold-v2",
+  "manifest_role": "gold",
+  "derivation_kind": "derived_from_input",
+  "distribution_policy": "private_materialization_only",
+  "license": {
+    "status": "verified",
+    "spdx_expression": "Apache-2.0",
+    "evidence_ref": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache",
+    "basis": "derived_from_source_input",
+    "distribution": "private_materialization_only"
+  },
+  "derived_from_input": {
+    "asset_manifest": "benchmark/assets/manifests/Operation-FileOperate-Settings-001.json",
+    "asset_manifest_sha256": "8de1a8fa801bc0aa26cca86033a6f8370f1efe011369229ad821f8240922f6cf",
+    "asset_set_id": "Operation-FileOperate-Settings-001",
+    "input": {
+      "path": "landscape.mp4",
+      "size": 9362831,
+      "sha256": "d39162e1d519e978261ad4ae824d4446f511936c80d5ce2e085cf617eae04c35",
+      "media_type": "video/mp4"
+    }
+  },
+  "derivation": {
+    "protocol_id": "paraguibench.gold.first-video-frame-pts-gte.v1",
+    "stream_selector": "v:0",
+    "timestamp_field": "best_effort_timestamp_time",
+    "frame_order": "ffprobe_emitted_display_order",
+    "index_origin": 0,
+    "timestamp_decimal_places": 6,
+    "requested_pts": "8.000000",
+    "selected_frame_index": 240,
+    "selected_pts": "8.008000",
+    "previous_pts": "7.974633",
+    "source_frame_count": 419,
+    "toolchain": {
+      "ffmpeg_version": "8.1.1",
+      "ffprobe_version": "8.1.1",
+      "protocol_whitelist": "pipe",
+      "threads": 1,
+      "software_only": true
+    }
+  },
+  "entries": [
+    {
+      "logical_key": "osworld-gold:47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5:expected:0:v2",
+      "runtime_locator": {
+        "kind": "cache-relative-path",
+        "value": "landscape.png"
+      },
+      "size": 2216858,
+      "sha256": "b383ffccf666a2dfe83100b392e1d4e2dbb744e1034b2e200be72621cbe52fc3",
+      "decoded_rgb_sha256": "70138e557d112dfb79e890c42311a5037ee99b014b2facd13b4e2a78a631cd7c",
+      "width": 1920,
+      "height": 1080,
+      "media_type": "image/png",
+      "provenance": {
+        "source_benchmark": "OSWorld",
+        "source_task_id": "47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5",
+        "source_evaluator_id": "9b5220d5-f1f0-4db9-902d-ad41aae4d775",
+        "expected_index": 0,
+        "source_contract_sha256": "5f3ebcf626c74ac25b31c54c186166064c8a62edec23a87efbf1655a854ff66d",
+        "evidence_ref": "osworld:evaluator:9b5220d5-f1f0-4db9-902d-ad41aae4d775:expected:0"
+      }
+    }
+  ]
+}
