@@ -20,9 +20,11 @@
 
 | Concept decision | Production implementation |
 |---|---|
-| Planner → parallel workers → evaluator as the primary visual | Responsive HTML/CSS diagram in `Hero.jsx`; no raster dependency |
+| Current preview and paper ParaGUI shown as separate execution states | Responsive semantic HTML/CSS diagram in `RuntimeArchitectureDiagram.jsx`; no raster dependency |
+| Generic GUI workers connected to isolated desktops | Browser, desktop apps, task assets, and the shared directory remain environment capabilities/resources |
+| Adaptive round-based ParaGUI | Planner dispatches a batch, receives summaries at a round barrier, updates history, and either starts another round or terminates |
 | Six benchmark categories in a structured legend | Counts generated from the canonical taxonomy and rendered by `BenchmarkOverview.jsx` |
-| Framework, Agent Systems, and Evaluation as separate layers | Layered dependency diagram in `Architecture.jsx` |
+| Public source ownership distinct from runtime flow | Module-boundary cards in `Architecture.jsx`; Framework contains contracts/scheduling but not Planner, VM creation, or evaluator logic |
 | Dense task table rather than cards | Searchable, filterable, paginated table in `TaskExplorer.jsx`; stacked rows on narrow screens |
 | Core and OSWorld installation tracks | Accessible tabs and copyable commands in `Quickstart.jsx` |
 | Paper results separated from package readiness | Two-column evidence section in `Results.jsx` |

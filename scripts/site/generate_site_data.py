@@ -14,9 +14,7 @@ from typing import Any
 
 
 RELEASE_MANIFEST = Path("benchmark/manifests/release-v1.json")
-RUNTIME_SUPPORT_MANIFEST = Path(
-    "benchmark/manifests/runtime-support-v1.json"
-)
+RUNTIME_SUPPORT_MANIFEST = Path("benchmark/manifests/runtime-support-v1.json")
 RELEASE_ID = "release-v1"
 RUNTIME_SUPPORT_ID = "runtime-support-v1"
 CANONICAL_TASK_ROOT = Path("benchmark/tasks")
@@ -31,6 +29,7 @@ PUBLIC_TASK_FIELDS = (
     "environment_protocol",
     "evaluation_protocol",
     "asset_status",
+    "local_readiness_status",
     "support_status",
     "blocker_codes",
 )
@@ -62,9 +61,13 @@ FIELD_LABELS = {
         "zh-CN": "评价协议",
     },
     "asset_status": {"en": "Asset status", "zh-CN": "资产状态"},
+    "local_readiness_status": {
+        "en": "Local readiness",
+        "zh-CN": "本地就绪度",
+    },
     "support_status": {
-        "en": "Support status",
-        "zh-CN": "支持状态",
+        "en": "Live support status",
+        "zh-CN": "真实环境支持状态",
     },
     "blocker_codes": {"en": "Blockers", "zh-CN": "阻塞项"},
 }
@@ -171,6 +174,26 @@ VALUE_LABELS: dict[str, dict[str, dict[str, str]]] = {
         },
     },
     "evaluation_protocol": {
+        "paraguibench.operation.eval-rules.v1": {
+            "en": "ParaGUIBench Operation Artifact Rules",
+            "zh-CN": "ParaGUIBench 操作产物规则评价",
+        },
+        "paraguibench.operation.xlsx.hide-na-rows.v1": {
+            "en": "Spreadsheet NA Row Hiding",
+            "zh-CN": "表格 NA 行隐藏评价",
+        },
+        "paraguibench.operation.image-classification.sha256.v1": {
+            "en": "SHA-256 Image Classification",
+            "zh-CN": "SHA-256 图像分类评价",
+        },
+        "paraguibench.operation.cross-document-facts.v1": {
+            "en": "Cross-Document Fact Consistency",
+            "zh-CN": "跨文档事实一致性评价",
+        },
+        "paraguibench.operation.searchwrite-xlsx.v1": {
+            "en": "Search-to-Spreadsheet",
+            "zh-CN": "检索写入表格评价",
+        },
         "legacy.operation.eval-rules.v1": {
             "en": "Legacy Operation Rules",
             "zh-CN": "旧版操作规则评价",
@@ -219,6 +242,46 @@ VALUE_LABELS: dict[str, dict[str, dict[str, str]]] = {
             "en": "Ordered Structured Answer",
             "zh-CN": "有序结构化答案评价",
         },
+        "paraguibench.osworld.chrome-profile-name.v1": {
+            "en": "OSWorld Chrome Profile Name",
+            "zh-CN": "OSWorld Chrome Profile 名称评价",
+        },
+        "paraguibench.osworld.chrome-bookmarks.v1": {
+            "en": "OSWorld Chrome Bookmarks",
+            "zh-CN": "OSWorld Chrome 书签评价",
+        },
+        "paraguibench.osworld.google-shopping-active-tab.v1": {
+            "en": "OSWorld Google Shopping Active Tab",
+            "zh-CN": "OSWorld Google Shopping 活动页评价",
+        },
+        "paraguibench.osworld.artifact-state.v1": {
+            "en": "OSWorld Artifact State",
+            "zh-CN": "OSWorld 产物状态评价",
+        },
+        "paraguibench.webmall.checkout.closed-world.v1": {
+            "en": "WebMall Closed-World Checkout",
+            "zh-CN": "WebMall 结账闭集评价",
+        },
+        "paraguibench.webmall.find-and-order.closed-world.v1": {
+            "en": "WebMall Find-and-Order Closed World",
+            "zh-CN": "WebMall 报告与订单闭集评价",
+        },
+        "paraguibench.webmall.checkout.closed-world.v2": {
+            "en": "WebMall Checkout + Billing Closed World",
+            "zh-CN": "WebMall 结账与账单资料闭集评价",
+        },
+        "paraguibench.webmall.find-and-order.closed-world.v2": {
+            "en": "WebMall Find-and-Order + Billing Closed World",
+            "zh-CN": "WebMall 报告、订单与账单资料闭集评价",
+        },
+        "paraguibench.webmall.url-multiset.v1": {
+            "en": "WebMall URL Multiset",
+            "zh-CN": "WebMall URL 多集合评价",
+        },
+        "paraguibench.webmall.cart.closed-world.v1": {
+            "en": "WebMall Cart Closed World",
+            "zh-CN": "WebMall 购物车闭集评价",
+        },
     },
     "asset_status": {
         "legacy_remote_reference": {
@@ -241,7 +304,24 @@ VALUE_LABELS: dict[str, dict[str, dict[str, str]]] = {
             "zh-CN": "真实环境已验证",
         },
     },
+    "local_readiness_status": {
+        "local_components_incomplete": {
+            "en": "Local components incomplete",
+            "zh-CN": "本地组件未闭合",
+        },
+        "local_ready": {
+            "en": "Local components ready (not live-validated)",
+            "zh-CN": "本地组件已闭合（非实机验证）",
+        },
+    },
     "blocker_codes": {
+        "osworld_vm_image_materialization_unverified": {
+            "en": (
+                "Verified VM image recipe is awaiting a reproducible "
+                "materialization receipt."
+            ),
+            "zh-CN": "已验证的虚拟机镜像 recipe 正等待可重现物化回执。",
+        },
         "legacy_asset_manifest_not_migrated": {
             "en": "Legacy asset manifest not migrated",
             "zh-CN": "旧版资产清单尚未迁移",
@@ -250,9 +330,77 @@ VALUE_LABELS: dict[str, dict[str, dict[str, str]]] = {
             "en": "Legacy evaluator not migrated",
             "zh-CN": "旧版评价器尚未迁移",
         },
-        "live_validation_not_completed": {
-            "en": "Live validation not completed",
-            "zh-CN": "尚未完成真实环境验证",
+        "osworld_bookmark_start_context_not_migrated": {
+            "en": "OSWorld bookmark start context not migrated",
+            "zh-CN": "OSWorld 书签任务启动上下文尚未迁移",
+        },
+        "osworld_artifact_getter_live_validation_not_completed": {
+            "en": "OSWorld artifact getter live validation not completed",
+            "zh-CN": "OSWorld 产物读取器尚未完成真实环境验证",
+        },
+        "osworld_artifact_gold_live_validation_not_completed": {
+            "en": "OSWorld evaluator gold live validation not completed",
+            "zh-CN": "OSWorld 评价器 gold 尚未完成真实环境验证",
+        },
+        "osworld_artifact_finalize_not_migrated": {
+            "en": "OSWorld artifact finalize action not migrated",
+            "zh-CN": "OSWorld 产物收尾动作尚未迁移",
+        },
+        "osworld_task_setup_live_validation_not_completed": {
+            "en": "OSWorld task setup live validation not completed",
+            "zh-CN": "OSWorld 任务准备协议尚未完成真实环境验证",
+        },
+        "osworld_source_start_context_ambiguous": {
+            "en": "OSWorld source start context is ambiguous",
+            "zh-CN": "OSWorld 来源任务启动上下文存在歧义",
+        },
+        "osworld_artifact_input_path_inferred": {
+            "en": "OSWorld artifact input location is inferred",
+            "zh-CN": "OSWorld 产物输入位置仅为推断",
+        },
+        "osworld_artifact_input_license_unverified": {
+            "en": "OSWorld artifact input license is unverified",
+            "zh-CN": "OSWorld 产物输入许可尚未核验",
+        },
+        "webmall_cart_reader_reference_live_validation_not_completed": {
+            "en": ("WebMall cart reader reference live validation not completed"),
+            "zh-CN": "WebMall 购物车读取器尚未完成参考环境真实验证",
+        },
+        "pipeline_implicit_input_asset_metadata_unverified": {
+            "en": "Pipeline input asset metadata unverified",
+            "zh-CN": "隐式流水线输入资产元数据未核验",
+        },
+        "pipeline_implicit_gold_asset_metadata_unverified": {
+            "en": "Pipeline gold asset metadata unverified",
+            "zh-CN": "隐式流水线 gold 资产元数据未核验",
+        },
+        "pipeline_implicit_typed_observation_parser_not_migrated": {
+            "en": "Pipeline typed observation parser not migrated",
+            "zh-CN": "隐式流水线强类型观测解析器尚未迁移",
+        },
+        "pipeline_implicit_live_validation_not_completed": {
+            "en": "Pipeline implicit live validation not completed",
+            "zh-CN": "隐式流水线尚未完成真实环境验证",
+        },
+        "pipeline_implicit_combination_gold_conflict_unresolved": {
+            "en": "CombinationDocs gold conflict unresolved",
+            "zh-CN": "CombinationDocs gold 冲突尚未解决",
+        },
+        "operation_word009_010_writer_live_validation_not_completed": {
+            "en": "Word-009/010 Writer live validation not completed",
+            "zh-CN": "Word-009/010 Writer 真实环境验证尚未完成",
+        },
+        "operation_word012_abbreviation_semantics_not_migrated": {
+            "en": "Word-012 abbreviation semantics contract not migrated",
+            "zh-CN": "Word-012 缩写语义契约尚未迁移",
+        },
+        "combinationdocs003_real_render_validation_not_completed": {
+            "en": "CombinationDocs-003 real render validation not completed",
+            "zh-CN": "CombinationDocs-003 真实渲染验证尚未完成",
+        },
+        "versioned_live_validation_not_completed": {
+            "en": "Versioned live validation not completed",
+            "zh-CN": "未完成带版本向量的真实环境验证",
         },
     },
 }
@@ -297,9 +445,7 @@ def build_site_data(repo_root: Path) -> dict[str, Any]:
     )
     release_sha256 = _sha256_file(root / RELEASE_MANIFEST)
     if runtime.get("release_manifest_sha256") != release_sha256:
-        raise SiteDataError(
-            "runtime support 引用的 release 摘要与当前来源不一致"
-        )
+        raise SiteDataError("runtime support 引用的 release 摘要与当前来源不一致")
     release_by_id = _index_by_task_id(release_entries, "release task")
     runtime_by_id = _index_by_task_id(
         runtime_entries,
@@ -320,9 +466,7 @@ def build_site_data(repo_root: Path) -> dict[str, Any]:
         if not isinstance(blocker_codes, list) or not all(
             isinstance(code, str) and code for code in blocker_codes
         ):
-            raise SiteDataError(
-                "runtime support task 缺少有效的 blocker_codes"
-            )
+            raise SiteDataError("runtime support task 缺少有效的 blocker_codes")
         if len(blocker_codes) != len(set(blocker_codes)):
             raise SiteDataError("runtime support task 含重复 blocker code")
         for blocker_code in blocker_codes:
@@ -368,6 +512,11 @@ def build_site_data(repo_root: Path) -> dict[str, Any]:
                     "asset_status",
                     "runtime support task",
                 ),
+                "local_readiness_status": _require_public_record_value(
+                    support,
+                    "local_readiness_status",
+                    "runtime support task",
+                ),
                 "support_status": _require_public_record_value(
                     support,
                     "support_status",
@@ -378,6 +527,13 @@ def build_site_data(repo_root: Path) -> dict[str, Any]:
         )
 
     _validate_benchmark_group_counts(tasks)
+    summary = _build_summary(tasks)
+    _require_declared_status_counts(
+        runtime,
+        "local_readiness_status_counts",
+        summary["local_readiness_status_counts"],
+        "runtime support manifest",
+    )
     return {
         "schema_version": 1,
         "dataset_id": "paraguibench-site-data-v1",
@@ -397,14 +553,12 @@ def build_site_data(repo_root: Path) -> dict[str, Any]:
                     "manifest_id",
                     "runtime support manifest",
                 ),
-                "sha256": _sha256_file(
-                    root / RUNTIME_SUPPORT_MANIFEST
-                ),
+                "sha256": _sha256_file(root / RUNTIME_SUPPORT_MANIFEST),
                 "task_count": len(runtime_entries),
             },
         },
         "labels": _build_labels(tasks),
-        "summary": _build_summary(tasks),
+        "summary": summary,
         "tasks": tasks,
     }
 
@@ -616,9 +770,7 @@ def _validate_benchmark_group_counts(
         无；任一分组数量漂移时抛出不回显任务内容的 ``SiteDataError``。
     """
 
-    actual = dict(
-        sorted(Counter(task["benchmark_group"] for task in tasks).items())
-    )
+    actual = dict(sorted(Counter(task["benchmark_group"] for task in tasks).items()))
     if actual != EXPECTED_BENCHMARK_GROUP_COUNTS:
         raise SiteDataError("论文任务分组计数偏离固定 release 口径")
 
@@ -680,6 +832,7 @@ def _build_summary(tasks: list[dict[str, Any]]) -> dict[str, Any]:
         "environment_protocol",
         "evaluation_protocol",
         "asset_status",
+        "local_readiness_status",
         "support_status",
     )
     summary: dict[str, Any] = {"task_count": len(tasks)}
@@ -687,6 +840,16 @@ def _build_summary(tasks: list[dict[str, Any]]) -> dict[str, Any]:
         summary[f"{dimension}_counts"] = _sorted_counts(
             task[dimension] for task in tasks
         )
+    support_counts = summary["support_status_counts"]
+    summary["support_status_counts"] = {
+        status: support_counts.get(status, 0)
+        for status in sorted(VALUE_LABELS["support_status"])
+    }
+    local_counts = summary["local_readiness_status_counts"]
+    summary["local_readiness_status_counts"] = {
+        status: local_counts.get(status, 0)
+        for status in sorted(VALUE_LABELS["local_readiness_status"])
+    }
     summary["blocker_code_counts"] = _sorted_counts(
         code for task in tasks for code in task["blocker_codes"]
     )
@@ -718,35 +881,25 @@ def _build_labels(
 
     observed = {
         "category": {task["category"] for task in tasks},
-        "benchmark_group": {
-            task["benchmark_group"] for task in tasks
-        },
+        "benchmark_group": {task["benchmark_group"] for task in tasks},
         "source": {task["source"] for task in tasks},
         "tag": {task["tag"] for task in tasks},
         "type": {task["type"] for task in tasks},
-        "environment_protocol": {
-            task["environment_protocol"] for task in tasks
-        },
-        "evaluation_protocol": {
-            task["evaluation_protocol"] for task in tasks
-        },
+        "environment_protocol": {task["environment_protocol"] for task in tasks},
+        "evaluation_protocol": {task["evaluation_protocol"] for task in tasks},
         "asset_status": {task["asset_status"] for task in tasks},
+        "local_readiness_status": {task["local_readiness_status"] for task in tasks},
         "support_status": {task["support_status"] for task in tasks},
-        "blocker_codes": {
-            code for task in tasks for code in task["blocker_codes"]
-        },
+        "blocker_codes": {code for task in tasks for code in task["blocker_codes"]},
     }
     value_labels = {
         dimension: {
-            value: _label_for_value(dimension, value)
-            for value in sorted(values)
+            value: _label_for_value(dimension, value) for value in sorted(values)
         }
         for dimension, values in observed.items()
     }
     return {
-        "fields": {
-            field: FIELD_LABELS[field] for field in PUBLIC_TASK_FIELDS
-        },
+        "fields": {field: FIELD_LABELS[field] for field in PUBLIC_TASK_FIELDS},
         "values": value_labels,
     }
 
@@ -847,6 +1000,34 @@ def _require_declared_count(
         or declared_count != actual_count
     ):
         raise SiteDataError(f"{label} 的 {field} 与任务条目不一致")
+
+
+def _require_declared_status_counts(
+    manifest: dict[str, Any],
+    field: str,
+    actual_counts: dict[str, int],
+    label: str,
+) -> None:
+    """校验清单根状态计数与每任务安全投影完全一致。
+
+    输入参数：
+        manifest：待校验的 runtime-support 清单。
+        field：清单根计数字段名。
+        actual_counts：从 233 个任务条目重新汇总的完整计数。
+        label：可安全显示的来源名称。
+    输出返回值：
+        无；字段缺失、键闭集、整数类型或计数任一漂移时
+        抛出 ``SiteDataError``。
+    """
+
+    declared_counts = manifest.get(field)
+    if (
+        not isinstance(declared_counts, dict)
+        or set(declared_counts) != set(actual_counts)
+        or any(type(value) is not int for value in declared_counts.values())
+        or declared_counts != actual_counts
+    ):
+        raise SiteDataError(f"{label} 的 local-readiness 根计数与任务投影不一致")
 
 
 def _require_string(

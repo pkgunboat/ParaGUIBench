@@ -3,12 +3,12 @@
   "input_manifests": {
     "release": {
       "id": "release-v1",
-      "sha256": "913b74e3f39fcb65bc1ea807db7633d02a4c473504378950b8d474a5bf4e7e8a",
+      "sha256": "af0f2939bd50518e38de211795c1874494e3b64049d6242e1c5228f8609f9a5d",
       "task_count": 233
     },
     "runtime_support": {
       "id": "runtime-support-v1",
-      "sha256": "17b3716ab4351262019184f1536e3d9780978e68a399b32e9c577c049386e7cb",
+      "sha256": "06570e163e0b6bbc7159b0b2b132b801dba4f4dd32adc32669ece54fba0e4b26",
       "task_count": 233
     }
   },
@@ -38,13 +38,17 @@
         "en": "Evaluation",
         "zh-CN": "评价协议"
       },
+      "local_readiness_status": {
+        "en": "Local readiness",
+        "zh-CN": "本地就绪度"
+      },
       "source": {
         "en": "Source",
         "zh-CN": "任务来源"
       },
       "support_status": {
-        "en": "Support status",
-        "zh-CN": "支持状态"
+        "en": "Live support status",
+        "zh-CN": "真实环境支持状态"
       },
       "tag": {
         "en": "Tag",
@@ -61,10 +65,6 @@
     },
     "values": {
       "asset_status": {
-        "legacy_remote_reference": {
-          "en": "Legacy remote reference",
-          "zh-CN": "旧版远程资产引用"
-        },
         "no_task_assets_declared": {
           "en": "No task assets declared",
           "zh-CN": "未声明任务资产"
@@ -101,17 +101,37 @@
         }
       },
       "blocker_codes": {
-        "legacy_asset_manifest_not_migrated": {
-          "en": "Legacy asset manifest not migrated",
-          "zh-CN": "旧版资产清单尚未迁移"
+        "combinationdocs003_real_render_validation_not_completed": {
+          "en": "CombinationDocs-003 real render validation not completed",
+          "zh-CN": "CombinationDocs-003 真实渲染验证尚未完成"
         },
-        "legacy_evaluator_not_migrated": {
-          "en": "Legacy evaluator not migrated",
-          "zh-CN": "旧版评价器尚未迁移"
+        "operation_word009_010_writer_live_validation_not_completed": {
+          "en": "Word-009/010 Writer live validation not completed",
+          "zh-CN": "Word-009/010 Writer 真实环境验证尚未完成"
         },
-        "live_validation_not_completed": {
-          "en": "Live validation not completed",
-          "zh-CN": "尚未完成真实环境验证"
+        "osworld_artifact_getter_live_validation_not_completed": {
+          "en": "OSWorld artifact getter live validation not completed",
+          "zh-CN": "OSWorld 产物读取器尚未完成真实环境验证"
+        },
+        "osworld_artifact_gold_live_validation_not_completed": {
+          "en": "OSWorld evaluator gold live validation not completed",
+          "zh-CN": "OSWorld 评价器 gold 尚未完成真实环境验证"
+        },
+        "osworld_task_setup_live_validation_not_completed": {
+          "en": "OSWorld task setup live validation not completed",
+          "zh-CN": "OSWorld 任务准备协议尚未完成真实环境验证"
+        },
+        "pipeline_implicit_live_validation_not_completed": {
+          "en": "Pipeline implicit live validation not completed",
+          "zh-CN": "隐式流水线尚未完成真实环境验证"
+        },
+        "versioned_live_validation_not_completed": {
+          "en": "Versioned live validation not completed",
+          "zh-CN": "未完成带版本向量的真实环境验证"
+        },
+        "webmall_cart_reader_reference_live_validation_not_completed": {
+          "en": "WebMall cart reader reference live validation not completed",
+          "zh-CN": "WebMall 购物车读取器尚未完成参考环境真实验证"
         }
       },
       "category": {
@@ -139,34 +159,6 @@
         }
       },
       "evaluation_protocol": {
-        "legacy.operation.eval-rules.v1": {
-          "en": "Legacy Operation Rules",
-          "zh-CN": "旧版操作规则评价"
-        },
-        "legacy.osworld.state.v1": {
-          "en": "Legacy OSWorld State",
-          "zh-CN": "旧版 OSWorld 状态评价"
-        },
-        "legacy.pipeline-implicit.v1": {
-          "en": "Legacy Implicit Pipeline",
-          "zh-CN": "旧版隐式流水线评价"
-        },
-        "legacy.webmall.bookmark-url-set.v1": {
-          "en": "Legacy WebMall Bookmark Set",
-          "zh-CN": "旧版 WebMall 书签集合评价"
-        },
-        "legacy.webmall.cart.v1": {
-          "en": "Legacy WebMall Cart",
-          "zh-CN": "旧版 WebMall 购物车评价"
-        },
-        "legacy.webmall.checkout.v1": {
-          "en": "Legacy WebMall Checkout",
-          "zh-CN": "旧版 WebMall 结账评价"
-        },
-        "legacy.webnavigate.bookmark.v1": {
-          "en": "Legacy Web Navigation Bookmark",
-          "zh-CN": "旧版网页导航书签评价"
-        },
         "paraguibench.answer.exact.v1": {
           "en": "Exact Answer",
           "zh-CN": "精确答案评价"
@@ -186,6 +178,64 @@
         "paraguibench.answer.ordered-structured.v1": {
           "en": "Ordered Structured Answer",
           "zh-CN": "有序结构化答案评价"
+        },
+        "paraguibench.operation.cross-document-facts.v1": {
+          "en": "Cross-Document Fact Consistency",
+          "zh-CN": "跨文档事实一致性评价"
+        },
+        "paraguibench.operation.eval-rules.v1": {
+          "en": "ParaGUIBench Operation Artifact Rules",
+          "zh-CN": "ParaGUIBench 操作产物规则评价"
+        },
+        "paraguibench.operation.image-classification.sha256.v1": {
+          "en": "SHA-256 Image Classification",
+          "zh-CN": "SHA-256 图像分类评价"
+        },
+        "paraguibench.operation.searchwrite-xlsx.v1": {
+          "en": "Search-to-Spreadsheet",
+          "zh-CN": "检索写入表格评价"
+        },
+        "paraguibench.operation.xlsx.hide-na-rows.v1": {
+          "en": "Spreadsheet NA Row Hiding",
+          "zh-CN": "表格 NA 行隐藏评价"
+        },
+        "paraguibench.osworld.artifact-state.v1": {
+          "en": "OSWorld Artifact State",
+          "zh-CN": "OSWorld 产物状态评价"
+        },
+        "paraguibench.osworld.chrome-bookmarks.v1": {
+          "en": "OSWorld Chrome Bookmarks",
+          "zh-CN": "OSWorld Chrome 书签评价"
+        },
+        "paraguibench.osworld.chrome-profile-name.v1": {
+          "en": "OSWorld Chrome Profile Name",
+          "zh-CN": "OSWorld Chrome Profile 名称评价"
+        },
+        "paraguibench.osworld.google-shopping-active-tab.v1": {
+          "en": "OSWorld Google Shopping Active Tab",
+          "zh-CN": "OSWorld Google Shopping 活动页评价"
+        },
+        "paraguibench.webmall.cart.closed-world.v1": {
+          "en": "WebMall Cart Closed World",
+          "zh-CN": "WebMall 购物车闭集评价"
+        },
+        "paraguibench.webmall.checkout.closed-world.v2": {
+          "en": "WebMall Checkout + Billing Closed World",
+          "zh-CN": "WebMall 结账与账单资料闭集评价"
+        },
+        "paraguibench.webmall.find-and-order.closed-world.v2": {
+          "en": "WebMall Find-and-Order + Billing Closed World",
+          "zh-CN": "WebMall 报告、订单与账单资料闭集评价"
+        },
+        "paraguibench.webmall.url-multiset.v1": {
+          "en": "WebMall URL Multiset",
+          "zh-CN": "WebMall URL 多集合评价"
+        }
+      },
+      "local_readiness_status": {
+        "local_ready": {
+          "en": "Local components ready (not live-validated)",
+          "zh-CN": "本地组件已闭合（非实机验证）"
         }
       },
       "source": {
@@ -214,10 +264,6 @@
         "blocked": {
           "en": "Blocked",
           "zh-CN": "尚未闭环"
-        },
-        "live_validated": {
-          "en": "Live validated",
-          "zh-CN": "真实环境已验证"
         }
       },
       "tag": {
@@ -313,9 +359,8 @@
   "schema_version": 1,
   "summary": {
     "asset_status_counts": {
-      "legacy_remote_reference": 64,
       "no_task_assets_declared": 168,
-      "pinned_download_manifest": 1
+      "pinned_download_manifest": 65
     },
     "benchmark_group_counts": {
       "FileOperation": 42,
@@ -326,9 +371,14 @@
       "WebSearch": 65
     },
     "blocker_code_counts": {
-      "legacy_asset_manifest_not_migrated": 64,
-      "legacy_evaluator_not_migrated": 155,
-      "live_validation_not_completed": 232
+      "combinationdocs003_real_render_validation_not_completed": 1,
+      "operation_word009_010_writer_live_validation_not_completed": 2,
+      "osworld_artifact_getter_live_validation_not_completed": 15,
+      "osworld_artifact_gold_live_validation_not_completed": 14,
+      "osworld_task_setup_live_validation_not_completed": 14,
+      "pipeline_implicit_live_validation_not_completed": 4,
+      "versioned_live_validation_not_completed": 233,
+      "webmall_cart_reader_reference_live_validation_not_completed": 8
     },
     "category_counts": {
       "InformationRetrieval": 77,
@@ -340,18 +390,28 @@
       "webmall.browser.v1": 91
     },
     "evaluation_protocol_counts": {
-      "legacy.operation.eval-rules.v1": 32,
-      "legacy.osworld.state.v1": 17,
-      "legacy.pipeline-implicit.v1": 4,
-      "legacy.webmall.bookmark-url-set.v1": 67,
-      "legacy.webmall.cart.v1": 8,
-      "legacy.webmall.checkout.v1": 16,
-      "legacy.webnavigate.bookmark.v1": 11,
       "paraguibench.answer.exact.v1": 39,
       "paraguibench.answer.implicit-structured.v1": 8,
       "paraguibench.answer.keyed-numeric-set.v1": 1,
       "paraguibench.answer.numeric.v1": 28,
-      "paraguibench.answer.ordered-structured.v1": 2
+      "paraguibench.answer.ordered-structured.v1": 2,
+      "paraguibench.operation.cross-document-facts.v1": 1,
+      "paraguibench.operation.eval-rules.v1": 32,
+      "paraguibench.operation.image-classification.sha256.v1": 1,
+      "paraguibench.operation.searchwrite-xlsx.v1": 1,
+      "paraguibench.operation.xlsx.hide-na-rows.v1": 1,
+      "paraguibench.osworld.artifact-state.v1": 15,
+      "paraguibench.osworld.chrome-bookmarks.v1": 11,
+      "paraguibench.osworld.chrome-profile-name.v1": 1,
+      "paraguibench.osworld.google-shopping-active-tab.v1": 1,
+      "paraguibench.webmall.cart.closed-world.v1": 8,
+      "paraguibench.webmall.checkout.closed-world.v2": 8,
+      "paraguibench.webmall.find-and-order.closed-world.v2": 8,
+      "paraguibench.webmall.url-multiset.v1": 67
+    },
+    "local_readiness_status_counts": {
+      "local_components_incomplete": 0,
+      "local_ready": 233
     },
     "source_counts": {
       "OSWorld": 28,
@@ -361,8 +421,8 @@
       "unspecified": 28
     },
     "support_status_counts": {
-      "blocked": 232,
-      "live_validated": 1
+      "blocked": 233,
+      "live_validated": 0
     },
     "tag_counts": {
       "AddToCart": 7,
@@ -395,26 +455,29 @@
     {
       "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
-      "blocker_codes": [],
+      "blocker_codes": [
+        "versioned_live_validation_not_completed"
+      ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
-      "support_status": "live_validated",
+      "support_status": "blocked",
       "tag": "FileSearch",
       "task_id": "InformationRetrieval-FileSearch-Readonly-001",
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -422,15 +485,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -438,15 +501,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -454,15 +517,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -470,15 +533,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -486,15 +549,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.keyed-numeric-set.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -502,15 +565,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -518,15 +581,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -534,15 +597,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -550,15 +613,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -566,15 +629,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileSearch",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileSearch",
@@ -585,11 +648,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "VisualSearch",
@@ -600,11 +664,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -615,11 +680,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -630,11 +696,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -645,11 +712,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.ordered-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -660,11 +728,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -675,11 +744,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -690,11 +760,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -705,11 +776,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -720,11 +792,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -735,11 +808,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -750,11 +824,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -765,11 +840,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -780,11 +856,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -795,11 +872,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -810,11 +888,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -825,11 +904,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -840,11 +920,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -855,11 +936,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -870,11 +952,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -885,11 +968,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -900,11 +984,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -915,11 +1000,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -930,11 +1016,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -945,11 +1032,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -960,11 +1048,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -975,11 +1064,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -990,11 +1080,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1005,11 +1096,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1020,11 +1112,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1035,11 +1128,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1050,11 +1144,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1065,11 +1160,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1080,11 +1176,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1095,11 +1192,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1110,11 +1208,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1125,11 +1224,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1140,11 +1240,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1155,11 +1256,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1170,11 +1272,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1185,11 +1288,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1200,11 +1304,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1215,11 +1320,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1230,11 +1336,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1245,11 +1352,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.ordered-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1260,11 +1368,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "VeriGUI",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1275,11 +1384,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1290,11 +1400,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1305,11 +1416,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1320,11 +1432,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1335,11 +1448,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1350,11 +1464,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1365,11 +1480,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1380,11 +1496,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1395,11 +1512,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1410,11 +1528,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1425,11 +1544,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1440,11 +1560,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1455,11 +1576,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1470,11 +1592,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1485,11 +1608,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1500,11 +1624,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1515,11 +1640,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.numeric.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1530,11 +1656,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1545,11 +1672,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebSearch",
       "blocker_codes": [
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "InformationRetrieval",
       "environment_protocol": "osworld.chrome.v1",
       "evaluation_protocol": "paraguibench.answer.implicit-structured.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "WebSearch",
@@ -1557,16 +1685,16 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1574,16 +1702,18 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1591,16 +1721,15 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1608,16 +1737,15 @@
       "type": "unspecified"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1625,16 +1753,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1642,16 +1769,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1659,16 +1785,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1676,16 +1801,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1693,16 +1817,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1710,16 +1833,16 @@
       "type": "OSWorld脚本改造"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "pipeline_implicit_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "evaluation_protocol": "paraguibench.operation.xlsx.hide-na-rows.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1727,16 +1850,15 @@
       "type": "OSWorld脚本改造"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1744,16 +1866,15 @@
       "type": "OSWorld脚本改造"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1761,16 +1882,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1778,16 +1898,16 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "pipeline_implicit_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "evaluation_protocol": "paraguibench.operation.image-classification.sha256.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1795,16 +1915,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1812,16 +1931,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1829,16 +1947,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1846,16 +1963,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1863,16 +1979,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1880,16 +1995,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1897,16 +2011,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1914,16 +2027,15 @@
       "type": "OSWorld脚本改造"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1931,16 +2043,16 @@
       "type": "OSWorld脚本改造"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "operation_word009_010_writer_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1948,16 +2060,16 @@
       "type": "OSWorld脚本改造"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "operation_word009_010_writer_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1965,16 +2077,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1982,16 +2093,15 @@
       "type": "unspecified"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -1999,16 +2109,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2016,16 +2125,16 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "pipeline_implicit_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "evaluation_protocol": "paraguibench.operation.cross-document-facts.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2033,16 +2142,16 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "combinationdocs003_real_render_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2050,15 +2159,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
       "evaluation_protocol": "paraguibench.answer.exact.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2066,16 +2175,15 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2083,16 +2191,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2100,16 +2207,15 @@
       "type": "unspecified"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2117,16 +2223,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2134,16 +2239,18 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2151,16 +2258,18 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2168,16 +2277,18 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2185,16 +2296,18 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2202,16 +2315,18 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2219,16 +2334,18 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2236,16 +2353,18 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2253,16 +2372,18 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2270,16 +2391,15 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2287,16 +2407,18 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2304,16 +2426,15 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2321,16 +2442,18 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2338,16 +2461,15 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2355,16 +2477,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.operation.eval-rules.v1",
+      "evaluation_protocol": "paraguibench.operation.eval-rules.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2372,16 +2493,16 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "pipeline_implicit_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.pipeline-implicit.v1",
+      "evaluation_protocol": "paraguibench.operation.searchwrite-xlsx.v1",
+      "local_readiness_status": "local_ready",
       "source": "self",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2389,16 +2510,18 @@
       "type": "unspecified"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2406,16 +2529,18 @@
       "type": "OSWorld脚本"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "FileOperation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.desktop.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "FileOperate",
@@ -2426,12 +2551,13 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed",
+        "webmall_cart_reader_reference_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "evaluation_protocol": "paraguibench.webmall.cart.closed-world.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "AddToCart",
@@ -2442,12 +2568,13 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed",
+        "webmall_cart_reader_reference_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "evaluation_protocol": "paraguibench.webmall.cart.closed-world.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "AddToCart",
@@ -2458,12 +2585,13 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed",
+        "webmall_cart_reader_reference_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "evaluation_protocol": "paraguibench.webmall.cart.closed-world.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "AddToCart",
@@ -2474,12 +2602,13 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed",
+        "webmall_cart_reader_reference_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "evaluation_protocol": "paraguibench.webmall.cart.closed-world.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "AddToCart",
@@ -2490,12 +2619,13 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed",
+        "webmall_cart_reader_reference_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "evaluation_protocol": "paraguibench.webmall.cart.closed-world.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "AddToCart",
@@ -2506,12 +2636,13 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed",
+        "webmall_cart_reader_reference_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "evaluation_protocol": "paraguibench.webmall.cart.closed-world.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "AddToCart",
@@ -2522,12 +2653,13 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed",
+        "webmall_cart_reader_reference_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "evaluation_protocol": "paraguibench.webmall.cart.closed-world.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "AddToCart",
@@ -2538,12 +2670,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2554,12 +2686,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2570,12 +2702,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2586,12 +2718,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2602,12 +2734,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2618,12 +2750,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2634,12 +2766,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2650,12 +2782,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2666,12 +2798,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2682,12 +2814,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferSpecificRequirements",
@@ -2698,12 +2830,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferVagueRequirements",
@@ -2714,12 +2846,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferVagueRequirements",
@@ -2730,12 +2862,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferVagueRequirements",
@@ -2746,12 +2878,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferVagueRequirements",
@@ -2762,12 +2894,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferVagueRequirements",
@@ -2778,12 +2910,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestOfferVagueRequirements",
@@ -2794,12 +2926,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2810,12 +2942,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2826,12 +2958,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2842,12 +2974,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2858,12 +2990,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2874,12 +3006,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2890,12 +3022,13 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed",
+        "webmall_cart_reader_reference_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.cart.v1",
+      "evaluation_protocol": "paraguibench.webmall.cart.closed-world.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2906,12 +3039,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2922,12 +3055,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2938,12 +3071,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2954,12 +3087,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2970,12 +3103,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "CheapestProductSearch",
@@ -2986,12 +3119,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.checkout.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "Checkout",
@@ -3002,12 +3135,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.checkout.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "Checkout",
@@ -3018,12 +3151,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.checkout.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "Checkout",
@@ -3034,12 +3167,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.checkout.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "Checkout",
@@ -3050,12 +3183,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.checkout.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "Checkout",
@@ -3066,12 +3199,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.checkout.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "Checkout",
@@ -3082,12 +3215,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.checkout.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "Checkout",
@@ -3098,12 +3231,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.checkout.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "Checkout",
@@ -3114,12 +3247,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.find-and-order.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "EndToEnd",
@@ -3130,12 +3263,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.find-and-order.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "EndToEnd",
@@ -3146,12 +3279,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.find-and-order.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "EndToEnd",
@@ -3162,12 +3295,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.find-and-order.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "EndToEnd",
@@ -3178,12 +3311,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.find-and-order.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "EndToEnd",
@@ -3194,12 +3327,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.find-and-order.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "EndToEnd",
@@ -3210,12 +3343,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.find-and-order.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "EndToEnd",
@@ -3226,12 +3359,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.checkout.v1",
+      "evaluation_protocol": "paraguibench.webmall.find-and-order.closed-world.v2",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "EndToEnd",
@@ -3242,12 +3375,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "FindCompatibleProducts",
@@ -3258,12 +3391,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "FindCompatibleProducts",
@@ -3274,12 +3407,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "FindCompatibleProducts",
@@ -3290,12 +3423,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "FindCompatibleProducts",
@@ -3306,12 +3439,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "FindCompatibleProducts",
@@ -3322,12 +3455,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "FindSubstitutes",
@@ -3338,12 +3471,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "FindSubstitutes",
@@ -3354,12 +3487,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "FindSubstitutes",
@@ -3370,12 +3503,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "FindSubstitutes",
@@ -3386,12 +3519,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3402,12 +3535,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3418,12 +3551,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3434,12 +3567,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3450,12 +3583,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3466,12 +3599,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3482,12 +3615,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3498,12 +3631,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3514,12 +3647,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3530,12 +3663,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3546,12 +3679,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsFulfillingSpecificRequirements",
@@ -3562,12 +3695,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsSatisfyingVagueRequirements",
@@ -3578,12 +3711,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsSatisfyingVagueRequirements",
@@ -3594,12 +3727,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsSatisfyingVagueRequirements",
@@ -3610,12 +3743,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsSatisfyingVagueRequirements",
@@ -3626,12 +3759,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsSatisfyingVagueRequirements",
@@ -3642,12 +3775,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsSatisfyingVagueRequirements",
@@ -3658,12 +3791,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsSatisfyingVagueRequirements",
@@ -3674,12 +3807,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "ProductsSatisfyingVagueRequirements",
@@ -3690,12 +3823,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3706,12 +3839,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3722,12 +3855,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3738,12 +3871,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3754,12 +3887,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3770,12 +3903,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3786,12 +3919,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3802,12 +3935,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3818,12 +3951,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3834,12 +3967,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3850,12 +3983,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3866,12 +3999,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "OnlineShopping",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "webmall.browser.v1",
-      "evaluation_protocol": "legacy.webmall.bookmark-url-set.v1",
+      "evaluation_protocol": "paraguibench.webmall.url-multiset.v1",
+      "local_readiness_status": "local_ready",
       "source": "WebMall",
       "support_status": "blocked",
       "tag": "SingleProductSearch",
@@ -3879,16 +4012,18 @@
       "type": "QA"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "SearchAndWrite",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "osworld_artifact_getter_live_validation_not_completed",
+        "osworld_artifact_gold_live_validation_not_completed",
+        "osworld_task_setup_live_validation_not_completed",
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.artifact-state.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -3899,12 +4034,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-profile-name.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -3915,12 +4050,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -3928,16 +4063,15 @@
       "type": "self"
     },
     {
-      "asset_status": "legacy_remote_reference",
+      "asset_status": "pinned_download_manifest",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_asset_manifest_not_migrated",
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -3948,12 +4082,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -3964,12 +4098,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -3980,12 +4114,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -3996,12 +4130,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -4012,12 +4146,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -4028,12 +4162,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -4044,12 +4178,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "unspecified",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -4060,12 +4194,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.osworld.state.v1",
+      "evaluation_protocol": "paraguibench.osworld.google-shopping-active-tab.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -4076,12 +4210,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "WebOperate",
@@ -4092,12 +4226,12 @@
       "asset_status": "no_task_assets_declared",
       "benchmark_group": "WebNavigation",
       "blocker_codes": [
-        "legacy_evaluator_not_migrated",
-        "live_validation_not_completed"
+        "versioned_live_validation_not_completed"
       ],
       "category": "Operation",
       "environment_protocol": "osworld.chrome.v1",
-      "evaluation_protocol": "legacy.webnavigate.bookmark.v1",
+      "evaluation_protocol": "paraguibench.osworld.chrome-bookmarks.v1",
+      "local_readiness_status": "local_ready",
       "source": "OSWorld",
       "support_status": "blocked",
       "tag": "WebOperate",

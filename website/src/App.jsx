@@ -92,7 +92,7 @@ export default function App() {
         repositoryUrl={sharedLinks.repository}
       />
       <main id="main-content">
-        <Hero copy={copy.hero} />
+        <Hero copy={copy.hero} dataset={dataset} />
         <BenchmarkOverview copy={copy.benchmark} dataset={dataset} language={language} />
         <Architecture copy={copy.architecture} guideUrl={sharedLinks.architecture} />
         <TaskExplorer

@@ -63,10 +63,21 @@ function TaskRow({ task, dataset, language, copy }) {
         {localizedValue(dataset, "asset_status", task.asset_status, language)}
       </td>
       <td data-label={copy.validation}>
-        <StatusBadge
-          label={localizedValue(dataset, "support_status", task.support_status, language)}
-          status={task.support_status}
-        />
+        <div className="validation-statuses">
+          <StatusBadge
+            label={localizedValue(
+              dataset,
+              "local_readiness_status",
+              task.local_readiness_status,
+              language,
+            )}
+            status={task.local_readiness_status}
+          />
+          <StatusBadge
+            label={localizedValue(dataset, "support_status", task.support_status, language)}
+            status={task.support_status}
+          />
+        </div>
         <small className="blocker-text">
           <span className="visually-hidden">{copy.blockers}: </span>
           {blockers}
@@ -120,6 +131,7 @@ export function TaskExplorer({ copy, dataset, language, loading, error }) {
   }
 
   const summary = dataset?.summary;
+  const localReadyCount = summary?.local_readiness_status_counts?.local_ready ?? 0;
   const liveCount = summary?.support_status_counts?.live_validated ?? 0;
   const pendingCount = summary?.support_status_counts?.blocked ?? 0;
 
@@ -215,13 +227,17 @@ export function TaskExplorer({ copy, dataset, language, loading, error }) {
               <strong>{summary?.task_count ?? "—"}</strong>
               {language === "zh-CN" ? "个 canonical 任务" : "canonical tasks"}
             </span>
+            <span className="summary-local">
+              <strong>{localReadyCount}</strong>
+              {copy.localReadySummary}
+            </span>
             <span className="summary-live">
               <strong>{liveCount}</strong>
               {language === "zh-CN" ? "个已真实验证" : "live validated"}
             </span>
             <span className="summary-pending">
               <strong>{pendingCount}</strong>
-              {language === "zh-CN" ? "个等待基础设施" : "infrastructure pending"}
+              {copy.blockedSummary}
             </span>
           </div>
 

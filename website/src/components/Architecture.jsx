@@ -2,43 +2,40 @@ import React from "react";
 
 import { Icon } from "./Icon.jsx";
 
-const layerIcons = ["box", "code", "scales"];
+const moduleIcons = ["database", "box", "planner", "code", "desktop", "scales", "folder"];
 
 /**
- * 渲染单层架构模块及其内部依赖方向。
+ * 渲染一个公开包模块的所有权边界与职责节点。
  *
- * @param {{layer: {name: string, description: string, nodes: string[]}, icon: string, index: number}} props - 层名称、职责、节点和视觉序号。
- * @returns {React.ReactElement} 一行架构层。
+ * @param {{module: {name: string, description: string, nodes: string[]}, icon: string, index: number}} props - 模块文案、图标和视觉序号。
+ * @returns {React.ReactElement} 不暗示运行顺序的模块边界卡片。
  */
-function ArchitectureLayer({ layer, icon, index }) {
+function ArchitectureModule({ module, icon, index }) {
   return (
-    <div className={`architecture-layer architecture-layer-${index + 1}`}>
-      <div className="layer-label">
-        <Icon name={icon} size={26} />
-        <span>
-          <strong>{layer.name}</strong>
-          <small>{layer.description}</small>
+    <article className={`module-card module-card-${(index % 3) + 1}`}>
+      <header>
+        <span className="module-card-icon">
+          <Icon name={icon} size={22} />
         </span>
-      </div>
-      <div className="layer-nodes">
-        {layer.nodes.map((node, nodeIndex) => (
-          <React.Fragment key={node}>
-            <span className="architecture-node">{node}</span>
-            {nodeIndex < layer.nodes.length - 1 ? (
-              <Icon className="node-arrow" name="arrow" size={17} />
-            ) : null}
-          </React.Fragment>
+        <span>
+          <strong>{module.name}</strong>
+          <small>{module.description}</small>
+        </span>
+      </header>
+      <ul>
+        {module.nodes.map((node) => (
+          <li key={node}>{node}</li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </article>
   );
 }
 
 /**
- * 渲染 Framework、Agent Systems 与 Evaluation 的分层架构。
+ * 渲染公开仓库的模块职责与依赖禁区，而非论文 Agent 的执行流程。
  *
- * @param {{copy: object, guideUrl: string}} props - 架构文案和公开说明链接。
- * @returns {React.ReactElement} 架构段落与多机器运行上下文示意。
+ * @param {{copy: object, guideUrl: string}} props - 模块文案和公开说明链接。
+ * @returns {React.ReactElement} 模块所有权卡片、边界规则和架构文档入口。
  */
 export function Architecture({ copy, guideUrl }) {
   return (
@@ -57,35 +54,29 @@ export function Architecture({ copy, guideUrl }) {
           </div>
         </div>
 
-        <div className="architecture-board">
-          <div className="architecture-stack">
-            {copy.layers.map((layer, index) => (
-              <ArchitectureLayer
-                icon={layerIcons[index]}
+        <div className="module-architecture-board">
+          <div className="module-card-grid">
+            {copy.modules.map((module, index) => (
+              <ArchitectureModule
+                icon={moduleIcons[index]}
                 index={index}
-                key={layer.name}
-                layer={layer}
+                key={module.name}
+                module={module}
               />
             ))}
           </div>
 
-          <div className="machine-grid">
-            {copy.machines.map((machine, index) => (
-              <div className="machine-node" key={machine}>
-                <Icon name="desktop" size={18} />
-                <strong>{machine}</strong>
-                <div className="machine-rail" aria-hidden="true">
-                  <i />
-                  <i className={index === 1 ? "active" : ""} />
-                  <i />
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="shared-run-context">
-            <Icon name="database" size={18} />
-            <span>{copy.runId}</span>
-          </div>
+          <aside className="module-boundaries" aria-label={copy.boundaryLabel}>
+            <div className="module-boundaries-heading">
+              <Icon name="warning" size={20} />
+              <strong>{copy.boundaryTitle}</strong>
+            </div>
+            <ul>
+              {copy.boundaries.map((boundary) => (
+                <li key={boundary}>{boundary}</li>
+              ))}
+            </ul>
+          </aside>
         </div>
       </div>
     </section>

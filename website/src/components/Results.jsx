@@ -11,6 +11,7 @@ import { Icon } from "./Icon.jsx";
 export function Results({ copy, dataset }) {
   const summary = dataset?.summary;
   const taskCount = summary?.task_count ?? "—";
+  const localReadyCount = summary?.local_readiness_status_counts?.local_ready ?? "—";
   const liveCount = summary?.support_status_counts?.live_validated ?? "—";
   const pendingCount = summary?.support_status_counts?.blocked ?? "—";
 
@@ -66,6 +67,10 @@ export function Results({ copy, dataset }) {
               <div>
                 <strong>{taskCount}</strong>
                 <span>{copy.definitions}</span>
+              </div>
+              <div className="ledger-local">
+                <strong>{localReadyCount}</strong>
+                <span>{copy.localReady}</span>
               </div>
               <div className="ledger-live">
                 <strong>{liveCount}</strong>
