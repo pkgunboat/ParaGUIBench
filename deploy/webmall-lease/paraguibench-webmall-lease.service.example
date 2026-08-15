@@ -1,0 +1,27 @@
+[Unit]
+Description=ParaGUIBench WebMall distributed lease coordinator
+After=network.target
+
+[Service]
+Type=simple
+User=paraguibench
+Group=paraguibench
+EnvironmentFile=/etc/paraguibench/webmall-lease.env
+StateDirectory=paraguibench-webmall-lease
+StateDirectoryMode=0700
+WorkingDirectory=/opt/paraguibench
+ExecStart=/opt/paraguibench/.venv/bin/python -m paraguibench.integrations.webmall.lease_coordinator --database /var/lib/paraguibench-webmall-lease/leases.sqlite3 --host 127.0.0.1 --port 8765
+Restart=on-failure
+RestartSec=2
+UMask=0077
+TasksMax=64
+MemoryMax=256M
+LimitNOFILE=1024
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/paraguibench-webmall-lease
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,94 @@
+{
+  "$schema": "../../benchmark/schemas/webmall-environment-manifest-v1.schema.json",
+  "schema_version": 1,
+  "manifest_id": "webmall.reference-four-stores.v1",
+  "environment_id": "webmall-woocommerce-four-stores",
+  "protocol_ids": [
+    "webmall.browser.v1"
+  ],
+  "store_universe_id": "webmall.four-stores.v1",
+  "browser_runtime": {
+    "kind": "osworld_chrome",
+    "image_manifest_ref": "../osworld/image-manifest.json",
+    "image_manifest_sha256": "b1a7e2d4f8c1e6778befcd24a728b167edc9325a7bd47f0d4c0c659fccba215d",
+    "required_protocol_id": "osworld.chrome.v1"
+  },
+  "service_images": {
+    "wordpress": "bitnami/wordpress@sha256:c488a2e8380562af365c6c7aeeffe47466f99cef7983e6866b4d457085f872a3",
+    "mariadb": "bitnami/mariadb@sha256:c192707e6bb99702d5fdb924a61c06d82577913a11d85058fc900d4376105fc1"
+  },
+  "software": {
+    "wordpress_version": "7.0.2",
+    "woocommerce_version": "9.8.5",
+    "order_storage": "hpos"
+  },
+  "stores": [
+    {
+      "logical_store_id": "store-1",
+      "origin_env": "PARAGUIBENCH_WEBMALL_STORE_1_ORIGIN",
+      "reader_target_env": "PARAGUIBENCH_WEBMALL_STORE_1_READER_TARGET",
+      "credit_card_payment_method_ids": [
+        "mock_card",
+        "credit_card"
+      ]
+    },
+    {
+      "logical_store_id": "store-2",
+      "origin_env": "PARAGUIBENCH_WEBMALL_STORE_2_ORIGIN",
+      "reader_target_env": "PARAGUIBENCH_WEBMALL_STORE_2_READER_TARGET",
+      "credit_card_payment_method_ids": [
+        "mock_card",
+        "credit_card"
+      ]
+    },
+    {
+      "logical_store_id": "store-3",
+      "origin_env": "PARAGUIBENCH_WEBMALL_STORE_3_ORIGIN",
+      "reader_target_env": "PARAGUIBENCH_WEBMALL_STORE_3_READER_TARGET",
+      "credit_card_payment_method_ids": [
+        "mock_card",
+        "credit_card_onsite"
+      ]
+    },
+    {
+      "logical_store_id": "store-4",
+      "origin_env": "PARAGUIBENCH_WEBMALL_STORE_4_ORIGIN",
+      "reader_target_env": "PARAGUIBENCH_WEBMALL_STORE_4_READER_TARGET",
+      "credit_card_payment_method_ids": [
+        "mock_card",
+        "cc_gateway"
+      ]
+    }
+  ],
+  "order_reader": {
+    "protocol_id": "paraguibench.webmall.wp-cli-orders.v2",
+    "script_path": "wp-order-evidence.php",
+    "script_sha256": "5425d2c6a5660d0127415dced5359613dceaf7a173514adcf1d47375adb0533f",
+    "max_stdout_bytes": 4194304,
+    "timeout_seconds": 30
+  },
+  "cart_reader": {
+    "protocol_id": "paraguibench.webmall.woocommerce-store-api-cart.v1",
+    "evidence_protocol_id": "paraguibench.webmall.cart-authoritative-state.v1",
+    "reader_kind": "woocommerce_store_api",
+    "endpoint_path": "/wp-json/wc/store/v1/cart",
+    "same_browser_context_required": true,
+    "stability_read_count": 2,
+    "max_response_bytes": 2097152,
+    "max_items": 1024,
+    "max_quantity": 10000,
+    "timeout_seconds": 10,
+    "reference_live_validation_status": "pending"
+  },
+  "lease": {
+    "protocol_id": "paraguibench.webmall.distributed-lease.v1",
+    "coordinator_url_env": "PARAGUIBENCH_WEBMALL_LEASE_COORDINATOR_URL",
+    "credential_env": "PARAGUIBENCH_WEBMALL_LEASE_TOKEN",
+    "namespace": "paraguibench-reference-four-stores",
+    "ttl_seconds": 7200
+  },
+  "reset": {
+    "protocol_id": "paraguibench.webmall.baseline-delta.v1",
+    "strategy": "attempt_order_baseline_delta"
+  }
+}

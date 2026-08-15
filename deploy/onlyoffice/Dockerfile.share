@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+COPY --from=onlyoffice_src share_server.py /app/share_server.py
+
+ENV PYTHONUNBUFFERED=1
+ENV ONLYOFFICE_SHARE_DATA_DIR=/var/lib/paraguibench-onlyoffice-share
+
+EXPOSE 5050
+
+CMD ["gunicorn", "-w", "1", "--threads", "16", "--timeout", "120", "-b", "0.0.0.0:5050", "share_server:create_app()"]

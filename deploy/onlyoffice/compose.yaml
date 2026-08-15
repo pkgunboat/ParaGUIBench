@@ -1,0 +1,67 @@
+name: paraguibench-onlyoffice
+
+services:
+  onlyoffice:
+    image: ${ONLYOFFICE_DOCUMENTSERVER_IMAGE:-onlyoffice/documentserver@sha256:b9e3c35eab182d3de822a53b109b0f27070f6eacea3b1388b9c50d1182f638f2}
+    container_name: paraguibench-onlyoffice
+    hostname: paraguibench-onlyoffice
+    restart: unless-stopped
+    mem_limit: 4g
+    cpus: 4
+    ports:
+      - "${PARAGUIBENCH_ONLYOFFICE_DOC_PORT:-8080}:80"
+    environment:
+      JWT_ENABLED: "false"
+      ALLOW_PRIVATE_IP_ADDRESS: "true"
+    volumes:
+      - ${PARAGUIBENCH_ONLYOFFICE_STATE_ROOT:?set PARAGUIBENCH_ONLYOFFICE_STATE_ROOT outside the checkout}/documentserver/data:/var/www/onlyoffice/Data
+      - ${PARAGUIBENCH_ONLYOFFICE_STATE_ROOT}/documentserver/logs:/var/log/onlyoffice
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost/healthcheck || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    networks:
+      - onlyoffice
+
+  onlyoffice-share:
+    build:
+      context: .
+      dockerfile: Dockerfile.share
+      additional_contexts:
+        onlyoffice_src: ../../src/paraguibench/integrations/onlyoffice
+    image: paraguibench-onlyoffice-share:local
+    container_name: paraguibench-onlyoffice-share
+    hostname: paraguibench-onlyoffice-share
+    restart: unless-stopped
+    depends_on:
+      - onlyoffice
+    ports:
+      - "${PARAGUIBENCH_ONLYOFFICE_SHARE_PORT:-5050}:5050"
+    environment:
+      HOST_IP: ${PARAGUIBENCH_ONLYOFFICE_HOST_IP:-127.0.0.1}
+      DOC_SERVER_PORT: ${PARAGUIBENCH_ONLYOFFICE_DOC_PORT:-8080}
+      FLASK_PORT: "5050"
+      DOC_FETCH_HOST: paraguibench-onlyoffice-share
+      DOC_FETCH_PORT: "5050"
+      ONLYOFFICE_SHARE_DATA_DIR: /var/lib/paraguibench-onlyoffice-share
+      ONLYOFFICE_JWT_ENABLED: "false"
+    volumes:
+      - ${PARAGUIBENCH_ONLYOFFICE_STATE_ROOT}/share:/var/lib/paraguibench-onlyoffice-share
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:5050/healthz', timeout=5)\" || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - onlyoffice
+
+networks:
+  onlyoffice:
+    name: paraguibench-onlyoffice
