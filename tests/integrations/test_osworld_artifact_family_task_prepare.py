@@ -371,7 +371,7 @@ class _ArchiveExecutingController(_Controller):
                 returncode = 0
 
             return _Success()
-        if command[:3] == ["python", "-I", "-c"]:
+        if command[:3] == ["python3", "-I", "-c"]:
             return subprocess.run(
                 [sys.executable, *command[1:]],
                 check=False,
@@ -615,7 +615,7 @@ def test_resolved_idle_desktop_prepare_uses_exact_source_order_without_windows(
         )
         verification = controller.calls[call_index + 2]
         assert verification[0] == "execute"
-        assert verification[1][:3] == ("python", "-I", "-c")
+        assert verification[1][:3] == ("python3", "-I", "-c")
         assert verification[1][-2:] == (str(source), str(destination))
         call_index += 3
 
@@ -887,14 +887,14 @@ def test_batch_operation_prepare_uses_verified_assets_and_safe_order() -> None:
     ]
     verify_call = controller.calls[2]
     assert verify_call[0] == "execute"
-    assert verify_call[1][:3] == ("python", "-I", "-c")
+    assert verify_call[1][:3] == ("python3", "-I", "-c")
     assert verify_call[1][-2:] == (
         f"{GUEST_SHARED}/raw_book.zip",
         f"{GUEST_HOME}/Desktop/book.zip",
     )
     extract_call = controller.calls[3]
     assert extract_call[0] == "execute"
-    assert extract_call[1][:3] == ("python", "-I", "-c")
+    assert extract_call[1][:3] == ("python3", "-I", "-c")
     assert extract_call[1][-2:] == (
         f"{GUEST_HOME}/Desktop/book.zip",
         f"{GUEST_HOME}/Desktop",
@@ -1104,7 +1104,7 @@ def test_search_005_prepare_preserves_workbook_then_browser_order() -> None:
     ]
     verify_call = controller.calls[2]
     assert verify_call[0] == "execute"
-    assert verify_call[1][:3] == ("python", "-I", "-c")
+    assert verify_call[1][:3] == ("python3", "-I", "-c")
     assert verify_call[1][-2:] == (
         f"{GUEST_SHARED}/best_awards_acl.xlsx",
         f"{GUEST_HOME}/Desktop/best_awards_acl.xlsx",

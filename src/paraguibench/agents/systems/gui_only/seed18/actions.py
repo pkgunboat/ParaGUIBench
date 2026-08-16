@@ -242,7 +242,7 @@ def _python_action(statement: str) -> CompiledSeedAction:
     code = f"import pyautogui; {statement}"
     return CompiledSeedAction(
         kind="guest_command",
-        command=("python", "-c", code),
+        command=("python3", "-c", code),
     )
 
 

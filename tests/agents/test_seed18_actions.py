@@ -29,7 +29,7 @@ def test_click_coordinates_are_scaled_to_guest_pixels() -> None:
 
     assert compiled.kind == "guest_command"
     assert compiled.command is not None
-    assert compiled.command[:2] == ("python", "-c")
+    assert compiled.command[:2] == ("python3", "-c")
     assert "pyautogui.click(960, 270)" in compiled.command[2]
 
 
@@ -151,7 +151,7 @@ def test_supported_gui_actions_compile_to_bounded_execution(
 
     assert compiled.kind == expected_kind
     if compiled.command is not None:
-        assert compiled.command[:2] == ("python", "-c")
+        assert compiled.command[:2] == ("python3", "-c")
 
 
 @pytest.mark.parametrize(

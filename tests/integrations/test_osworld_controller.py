@@ -223,7 +223,7 @@ def test_controller_uses_loopback_and_shell_false_for_guest_commands() -> None:
     )
 
     assert controller.get_screenshot() == b"synthetic-png"
-    result = controller.execute(["python", "-c", "print('ready')"])
+    result = controller.execute(["python3", "-c", "print('ready')"])
 
     assert result.returncode == 0
     assert result.stdout == "ready\n"
@@ -231,7 +231,7 @@ def test_controller_uses_loopback_and_shell_false_for_guest_commands() -> None:
     assert method == "POST"
     assert url == "http://127.0.0.1:55001/execute"
     assert kwargs["json"] == {
-        "command": ["python", "-c", "print('ready')"],
+        "command": ["python3", "-c", "print('ready')"],
         "shell": False,
     }
 
@@ -499,7 +499,7 @@ def test_controller_waits_for_guest_chrome_cdp_and_activates_window() -> None:
     execute_request = session.requests[-2]
     assert execute_request[1].endswith("/execute")
     probe_argv = execute_request[2]["json"]["command"]
-    assert probe_argv[0] == "python"
+    assert probe_argv[0] == "python3"
     assert probe_argv[-1] == "1337"
     assert "ProxyHandler({})" in probe_argv[2]
     assert execute_request[2]["json"]["shell"] is False
@@ -631,7 +631,7 @@ def test_controller_lists_guest_directory_with_bounded_fixed_argv() -> None:
     assert url == "http://127.0.0.1:55001/execute"
     assert kwargs["json"]["shell"] is False
     argv = kwargs["json"]["command"]
-    assert argv[:3] == ["python", "-I", "-c"]
+    assert argv[:3] == ["python3", "-I", "-c"]
     assert argv[-4:] == [
         "/guest/profile/Desktop/chapters",
         "32",
@@ -1093,7 +1093,7 @@ def test_controller_collects_pixel_hash_from_extensionless_image(
     assert kwargs["timeout"] == 2.5
     assert kwargs["json"]["shell"] is False
     argv = kwargs["json"]["command"]
-    assert argv[:3] == ["python", "-I", "-c"]
+    assert argv[:3] == ["python3", "-I", "-c"]
     assert argv[-10:] == [
         str(directory),
         "8",
@@ -2099,7 +2099,7 @@ def test_controller_collects_bounded_binary_file_with_fixed_guest_argv(
     assert kwargs["timeout"] == 2.5
     assert kwargs["json"]["shell"] is False
     argv = kwargs["json"]["command"]
-    assert argv[:3] == ["python", "-I", "-c"]
+    assert argv[:3] == ["python3", "-I", "-c"]
     assert argv[-4:] == [str(file_path), "1024", "4096", "2.5"]
 
 
@@ -2162,7 +2162,7 @@ def test_controller_collects_complete_bounded_artifact_tree_manifest(
     assert kwargs["timeout"] == 2.5
     assert kwargs["json"]["shell"] is False
     argv = kwargs["json"]["command"]
-    assert argv[:3] == ["python", "-I", "-c"]
+    assert argv[:3] == ["python3", "-I", "-c"]
     assert argv[-9:] == [
         str(tmp_path),
         "8",

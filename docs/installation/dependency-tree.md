@@ -77,7 +77,7 @@ ParaGUIBench source checkout
 │   │   ├── cli.osworld_qcow2_materializer          [唯一正式 python -m 薄入口]
 │   │   │   └── canonical implementation main       [单一 strict type identity]
 │   │   └── audited reproducible materialization evidence [统一 image gate 已清除]
-│   ├── guest Python with Pillow importable under `python -I`
+│   ├── guest Python with Pillow importable under `python3 -I`
 │   │                                      [artifact pixel getter; live-gate prerequisite]
 │   ├── task asset mode
 │   │   ├── NONE: no cache or shared-directory preparation

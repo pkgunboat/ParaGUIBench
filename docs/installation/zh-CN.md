@@ -48,7 +48,7 @@ python3 -m venv .venv-live
 
 该 profile 会额外验证 `openai`、`Pillow`、`requests` 和 `Playwright`。
 Playwright 仅用于连接 guest Chrome 的 CDP 端点，不需要在 host 安装或
-启动浏览器。`BatchOperation-001` 图片 getter 还会在 guest 内通过 `python -I`
+启动浏览器。`BatchOperation-001` 图片 getter 还会在 guest 内通过 `python3 -I`
 导入 Pillow；host 安装 `live` extra 不能替代这一条件，固定 qcow2 镜像必须
 在隔离 Python 中提供 Pillow。`CombinationDocs-015` 的单文件 getter 只使用 guest
 标准库，但两项任务都必须在各自真实 guest 门禁通过前保持 blocked。
@@ -158,17 +158,20 @@ set +x
 `paraguibench` 进程，不创建 checkout 内配置，也不要通过 `env`、
 `printenv` 或 shell tracing 检查值。
 
-贡献者可用同一个 wheel 安装 `live,dev` extra，并运行全部公开门禁：
+贡献者可用同一个 wheel 安装 `live,dev,artifact` extra，并运行全部公开门禁：
 
 ```bash
 python3 -m venv .venv-dev
 .venv-dev/bin/python -m pip install \
-  "paraguibench[live,dev] @ file://${WHEEL_PATH}"
+  "paraguibench[live,dev,artifact] @ file://${WHEEL_PATH}"
 .venv-dev/bin/python -m pytest
 .venv-dev/bin/python scripts/benchmark/validate_release.py --repo-root .
 .venv-dev/bin/python scripts/benchmark/validate_runtime_support.py --repo-root .
 .venv-dev/bin/python scripts/security/scan_repository.py --root .
 ```
+
+`dev` extra 提供 pytest 以及测试套件必需的 `python-docx`、`openpyxl` 导入；
+`artifact` 额外启用文档格式 evaluator 测试，缺省时这些测试会跳过。
 
 公共 CI 会在 Python 3.11、3.12 和 3.13 上重复 wheel-first 安装、CLI、
 测试与三个 validator，但不接收 API key，也不执行真实 GUI E2E。详细依赖

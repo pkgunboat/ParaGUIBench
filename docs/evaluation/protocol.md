@@ -168,7 +168,7 @@ runtime path; Agent final text never participates.
 
 Two production evidence slices are now wired locally. For
 `Operation-FileOperate-BatchOperation-001`, the source uses the shared locator frozen
-during environment preparation, performs one bounded `python -I` guest collection with
+during environment preparation, performs one bounded `python3 -I` guest collection with
 no-follow regular-file checks and Pillow pixel hashing, then evaluates frozen inline
 gold. For `Operation-FileOperate-CombinationDocs-015`, a versioned task-specific setup
 opens DBLP, creates `Desktop/references.bib`, opens the pinned input DOCX in Writer, and
@@ -231,7 +231,7 @@ source、gold binder、typed projector 与 pure evaluator registry 已接成固�
 路径，Agent final text 始终不参与评价。
 
 当前有两个本地 production evidence 纵向切片。`BatchOperation-001` 只使用
-environment prepare 阶段冻结的 shared locator，通过一次有界 `python -I` guest
+environment prepare 阶段冻结的 shared locator，通过一次有界 `python3 -I` guest
 调用执行 no-follow 普通文件检查与 Pillow 像素哈希，再对冻结的 inline gold 评分。
 `CombinationDocs-015` 通过版本化 task-specific setup 打开 DBLP、创建
 `Desktop/references.bib`、在 Writer 打开固定输入 DOCX，并保持 actual 输出与 shared

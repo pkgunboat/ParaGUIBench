@@ -241,7 +241,7 @@ class OSWorldChromeBookmarkEvidenceSource:
             _stop_chrome(controller)
             reset_result = controller.execute(
                 [
-                    "python",
+                    "python3",
                     "-I",
                     "-c",
                     _RESET_BOOKMARKS_GUEST_PROGRAM,

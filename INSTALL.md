@@ -77,7 +77,7 @@ This profile verifies `openai`, `Pillow`, `requests`, and `Playwright` in
 addition to the Core checks. Playwright is used only to attach to the guest
 Chrome CDP endpoint, so this step does not install or launch a host browser.
 The `BatchOperation-001` image getter also imports Pillow inside the guest
-through `python -I`. Installing the host `live` extra does not satisfy that
+through `python3 -I`. Installing the host `live` extra does not satisfy that
 boundary: the pinned qcow2 image must make Pillow importable in isolated Python.
 The `CombinationDocs-015` single-file getter uses only the guest standard
 library, but both tasks remain blocked until their exact guest capabilities pass
@@ -198,19 +198,23 @@ follows the same non-logging boundary as the API key.
 
 ## Contributor validation
 
-Install the same wheel with both declared extras, then run the complete local
+Install the same wheel with the public test extras, then run the complete local
 gates:
 
 ```bash
 python3 -m venv .venv-dev
 .venv-dev/bin/python -m pip install \
-  "paraguibench[live,dev] @ file://${WHEEL_PATH}"
+  "paraguibench[live,dev,artifact] @ file://${WHEEL_PATH}"
 
 .venv-dev/bin/python -m pytest
 .venv-dev/bin/python scripts/benchmark/validate_release.py --repo-root .
 .venv-dev/bin/python scripts/benchmark/validate_runtime_support.py --repo-root .
 .venv-dev/bin/python scripts/security/scan_repository.py --root .
 ```
+
+The `dev` extra carries pytest plus the `python-docx` and `openpyxl` imports the
+test suite requires; `artifact` additionally enables the document-format
+evaluator tests that otherwise skip.
 
 The public workflow repeats this wheel-first process on Python 3.11, 3.12, and
 3.13. It never receives a model or lease credential and never performs Live

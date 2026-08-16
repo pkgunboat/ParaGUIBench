@@ -1560,7 +1560,7 @@ def _execute_action(
                 _execute_checked(
                     controller,
                     [
-                        "python",
+                        "python3",
                         "-I",
                         "-c",
                         _VERIFY_MATERIALIZED_FILE_PROGRAM,
@@ -1575,7 +1575,7 @@ def _execute_action(
             _execute_checked(
                 controller,
                 [
-                    "python",
+                    "python3",
                     "-I",
                     "-c",
                     _SAFE_ZIP_EXTRACT_PROGRAM,

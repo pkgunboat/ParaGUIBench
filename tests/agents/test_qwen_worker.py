@@ -107,7 +107,7 @@ def test_qwen_worker_is_reused_by_gui_only_agent_system() -> None:
     assert result.final_output == "<answer>paper3</answer>"
     assert result.step_count == 2
     assert result.termination == "finished"
-    assert controller.commands[0][:2] == ("python", "-c")
+    assert controller.commands[0][:2] == ("python3", "-c")
     assert model.calls[0]["screenshot_history"] == ()
     assert model.calls[1]["action_history"] == ("click",)
     assert model.calls[1]["screenshot_history"] == (b"synthetic-screenshot",)

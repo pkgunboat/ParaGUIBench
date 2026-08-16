@@ -221,7 +221,7 @@ def test_prepare_resets_fixed_dynamic_profile_before_relaunching_chrome() -> Non
     source.prepare(_task(), controller)
 
     assert controller.executed[0] == ["pkill", "chrome"]
-    assert controller.executed[1][:4] == ["python", "-I", "-c", source.reset_program]
+    assert controller.executed[1][:4] == ["python3", "-I", "-c", source.reset_program]
     assert controller.executed[1][4:] == [
         "/dynamic-user/.config/google-chrome/Default/Bookmarks"
     ]

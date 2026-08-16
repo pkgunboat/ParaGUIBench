@@ -138,7 +138,7 @@ cd ParaGUIBench
 python3.12 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -e '.[live,dev]'
+python -m pip install -e '.[live,dev,artifact]'
 
 python -m pytest
 python scripts/benchmark/validate_release.py --repo-root .

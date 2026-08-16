@@ -254,7 +254,7 @@ def _python_action(statement: str) -> CompiledGUIAction:
 
     return CompiledGUIAction(
         kind="guest_command",
-        command=("python", "-c", f"import pyautogui; {statement}"),
+        command=("python3", "-c", f"import pyautogui; {statement}"),
     )
 
 

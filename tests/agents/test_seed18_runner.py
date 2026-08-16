@@ -111,7 +111,7 @@ def test_runner_executes_bounded_actions_and_returns_terminal_output() -> None:
     assert result.step_count == 2
     assert result.termination == "finished"
     assert len(controller.commands) == 1
-    assert controller.commands[0][:2] == ("python", "-c")
+    assert controller.commands[0][:2] == ("python3", "-c")
     assert waits == [0.25]
     assert model.calls[0]["action_history"] == ()
     assert model.calls[1]["action_history"] == ("click",)

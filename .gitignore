@@ -5,6 +5,8 @@ __pycache__/
 htmlcov/
 .venv/
 .venv-*/
+.build-venv/
+/dist/
 
 .env
 .env.*

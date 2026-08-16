@@ -1245,7 +1245,7 @@ class OSWorldController:
         )
         stdout = self._execute_bounded_json_stdout(
             [
-                "python",
+                "python3",
                 "-I",
                 "-c",
                 _ARTIFACT_TREE_MANIFEST_GUEST_PROGRAM,
@@ -1320,7 +1320,7 @@ class OSWorldController:
         )
         stdout = self._execute_bounded_json_stdout(
             [
-                "python",
+                "python3",
                 "-I",
                 "-c",
                 _SINGLE_FILE_GUEST_PROGRAM,
@@ -1421,7 +1421,7 @@ class OSWorldController:
         try:
             result = self.execute(
                 [
-                    "python",
+                    "python3",
                     "-I",
                     "-c",
                     _DIRECTORY_LISTING_GUEST_PROGRAM,
@@ -1514,7 +1514,7 @@ class OSWorldController:
             )
         )
         command = [
-            "python",
+            "python3",
             "-I",
             "-c",
             _IMAGE_PIXEL_HASH_GUEST_PROGRAM,
@@ -1735,7 +1735,7 @@ class OSWorldController:
         deadline = time.monotonic() + float(timeout)
         while True:
             try:
-                result = self.execute(["python", "-c", probe_code, str(port)])
+                result = self.execute(["python3", "-c", probe_code, str(port)])
                 if result.returncode == 0:
                     return
             except Exception:
