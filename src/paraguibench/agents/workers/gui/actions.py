@@ -94,7 +94,7 @@ def compile_gui_action(
         image_width：当前原始截图像素宽度。
         image_height：当前原始截图像素高度。
     输出返回值：
-        三种互斥结果之一；guest command 始终为 ``python -c`` argv，代码只
+        三种互斥结果之一；guest command 始终为 ``python3 -c`` argv，代码只
         来自本模块的固定模板，调用方不得再经 shell 拼接。
     异常：
         GUIActionError：动作、参数、坐标或截图尺寸不满足安全契约。

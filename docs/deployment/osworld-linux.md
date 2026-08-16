@@ -148,7 +148,7 @@ python scripts/security/scan_repository.py --root .
 
 安装依赖来自 `pyproject.toml`：默认 `core` 不含第三方运行依赖，`live` 安装
 `openai`、`Pillow`、`requests` 和用于 active-tab CDP 采集的 `playwright`，
-`dev` 安装 `pytest`。请不要从旧项目复制
+`dev` 安装 `pytest` 以及测试套件必需的 `python-docx`、`openpyxl`。请不要从旧项目复制
 统一 `requirements.txt` 或私有配置。
 
 ## 外部状态目录与凭据
