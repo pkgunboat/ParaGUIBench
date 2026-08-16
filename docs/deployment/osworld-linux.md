@@ -84,7 +84,7 @@ STAGING="$HOME/paraguibench-release-staging"
 RELEASE_ROOT="$HOME/ParaGUIBench-cleanroom/<source-tree-sha256>"
 VENV_ROOT="$HOME/.local/share/paraguibench/venvs/<source-tree-sha256>"
 
-python -B "$STAGING/release_bundle.py" verify \
+python3 -B "$STAGING/release_bundle.py" verify \
   --archive "$STAGING/paragui-migration.tar.gz" \
   --manifest "$STAGING/paragui-migration.manifest.json" \
   --checksums "$STAGING/paragui-migration.sha256"
