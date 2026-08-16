@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 from typing import Any
 
 from PIL import Image
@@ -162,7 +163,12 @@ class _FakeSession:
 
 
 class _LocalExecuteSession(_FakeSession):
-    """在本地以真实 ``shell=False`` 执行 guest argv。"""
+    """在本地以真实 ``shell=False`` 执行 guest argv。
+
+    guest argv 的 ``python3`` 前缀替换为当前测试解释器：像素哈希程序
+    依赖 Pillow，只有测试环境（live extra）保证安装，宿主 PATH 上的
+    ``python3`` 不保证。
+    """
 
     def __init__(self) -> None:
         """初始化请求记录与最后一次 guest stdout 投影。
@@ -189,8 +195,11 @@ class _LocalExecuteSession(_FakeSession):
         self.requests.append(("POST", url, kwargs))
         request_json = kwargs["json"]
         assert request_json["shell"] is False
+        command = list(request_json["command"])
+        if command[0] == "python3":
+            command[0] = sys.executable
         completed = subprocess.run(
-            request_json["command"],
+            command,
             capture_output=True,
             check=False,
             text=True,

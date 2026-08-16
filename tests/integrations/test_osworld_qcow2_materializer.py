@@ -13,6 +13,7 @@ import secrets
 import stat
 import struct
 import subprocess
+import sys
 import textwrap
 import weakref
 import zipfile
@@ -465,8 +466,7 @@ def _run_materializer_module_subprocess(
     """
 
     repo_root = Path(__file__).resolve().parents[2]
-    python = repo_root / ".venv-dev/bin/python"
-    assert python.is_file()
+    python = Path(sys.executable)
     hook_root = tmp_path / f"subprocess-hook-{len(tuple(tmp_path.iterdir()))}"
     hook_root.mkdir(mode=0o700)
     canonical_path = (
