@@ -50,6 +50,8 @@ METHODS_ZONE_PREFIXES = (
     "src/stages/",
     "src/pipelines/",
     "src/mm_agents/",
+    "src/config_loader.py",
+    "src/__init__.py",
 )
 METHODS_ZONE_EXEMPT_RULE_IDS = frozenset(
     {
