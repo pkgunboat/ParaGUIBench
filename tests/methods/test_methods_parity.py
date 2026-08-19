@@ -20,6 +20,7 @@ LOCKED_ROOTS = (
     "src/pipelines",
     "src/mm_agents",
 )
+LOCKED_FILES = ("src/config_loader.py", "src/__init__.py")
 
 
 def _locked_files() -> dict[str, str]:
@@ -29,7 +30,7 @@ def _locked_files() -> dict[str, str]:
 
 
 def _actual_files() -> set[str]:
-    actual: set[str] = set()
+    actual: set[str] = set(LOCKED_FILES)
     for root in LOCKED_ROOTS:
         for path in (REPO_ROOT / root).rglob("*"):
             if path.is_file() and "__pycache__" not in path.parts:

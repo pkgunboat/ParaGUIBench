@@ -1,6 +1,8 @@
 {
  "baseline": "ParaGUIBench-dev 8d36e157 working tree (2026-08-19 migration)",
  "files": {
+  "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "src/config_loader.py": "94346f34609e6632bb7ef11e54e838c3a5548d132d496d19532ded80c9218ec7",
   "src/desktop_env/README.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "src/desktop_env/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
   "src/desktop_env/actions.py": "b05c599acc4f2c7beca6e9ef3e91c2ddc6fb0d782f4e09b7deb9a8e70c293af9",
