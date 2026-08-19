@@ -55,3 +55,4 @@ configs/deploy.yaml
 
 # ZCode 本地会话目录
 /.zcode/
+/src/parallel_benchmark/tasks_list

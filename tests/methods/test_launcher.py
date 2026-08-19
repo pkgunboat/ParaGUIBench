@@ -57,3 +57,28 @@ def test_launch_passes_argv_verbatim_and_runs_script(
     assert captured["run_name"] == "__main__"
     assert Path(str(captured["path"])).name == "run_QA_pipeline_parallel.py"
     assert captured["argv"][1:] == ["--agent-mode", "gui_only", "-n", "1"]
+
+
+def test_launch_creates_tasks_list_alias(tmp_path, monkeypatch):
+    """缺 tasks_list 时装载器建立指向 tasks 的软链别名。"""
+
+    package_root = tmp_path / "parallel_benchmark"
+    (package_root / "tasks").mkdir(parents=True)
+    monkeypatch.setattr(launcher, "check_environment", lambda: None)
+    monkeypatch.setattr(
+        launcher,
+        "runner_script_path",
+        lambda category: tmp_path / "stages" / "runner.py",
+    )
+    (tmp_path / "stages").mkdir()
+    (tmp_path / "stages" / "runner.py").write_text("print('ok')\n")
+    captured = {}
+    monkeypatch.setattr(
+        launcher.runpy,
+        "run_path",
+        lambda path, run_name: captured.update(path=path),
+    )
+    launcher.launch("qa", [])
+    alias = package_root / "tasks_list"
+    assert alias.is_symlink()
+    assert alias.resolve() == (package_root / "tasks").resolve()

@@ -90,6 +90,26 @@ def check_environment(environ: dict[str, str] | None = None) -> None:
         raise SystemExit(2)
 
 
+def _ensure_tasks_list_alias(package_root: Path) -> None:
+    """原 runner 从未入库的 ``tasks_list`` 目录读任务（见 provenance 记录）。
+
+    迁移基线中任务 JSON 位于 ``tasks/`` 且字段与扫描器过滤条件一致；
+    装载时若 ``tasks_list`` 缺失则建立指向 ``tasks`` 的相对软链，
+    恢复原执行环境布局。链接不进入版本库（.gitignore 已忽略）。
+
+    输入参数：
+        package_root：``src/parallel_benchmark`` 目录。
+    输出返回值：
+        无。
+    """
+
+    tasks = package_root / "tasks"
+    alias = package_root / "tasks_list"
+    if alias.exists() or alias.is_symlink() or not tasks.is_dir():
+        return
+    alias.symlink_to("tasks", target_is_directory=True)
+
+
 def launch(category: str, argv: Sequence[str]) -> None:
     """以原 runner 自己的 argv 原样执行它。
 
@@ -107,5 +127,6 @@ def launch(category: str, argv: Sequence[str]) -> None:
     script_dir = str(script.parent)
     if script_dir not in sys.path:
         sys.path.insert(0, script_dir)
+    _ensure_tasks_list_alias(script.parents[1] / "parallel_benchmark")
     sys.argv = [str(script)] + list(argv)
     runpy.run_path(str(script), run_name="__main__")
