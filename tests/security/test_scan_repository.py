@@ -231,6 +231,54 @@ class RepositorySecurityScannerTests(unittest.TestCase):
         self.assertNotIn(synthetic_secret, stdout.getvalue())
         self.assertIn("secret-token", stdout.getvalue())
 
+    def test_methods_zone_exempts_environment_coupled_rules_only(self) -> None:
+        """功能：方法区内私网地址豁免，但真实凭据规则仍然命中。
+
+        输入参数：无；以临时目录构造方法区文件。
+        输出返回值：无；断言失败时由 unittest 报告。
+        """
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            zone_file = root / "src" / "parallel_benchmark" / "tasks" / "demo.json"
+            zone_file.parent.mkdir(parents=True)
+            internal_address = "192.168" + ".1.10"
+            zone_file.write_text(
+                '{"shop_url": "http://' + internal_address + '/shop"}\n',
+                encoding="utf-8",
+            )
+            findings = self.scanner.scan_file(zone_file, root)
+            self.assertEqual([], findings)
+
+            synthetic_secret = "sk-ant-" + "a" * 20
+            zone_file.write_text(
+                '{"note": "' + synthetic_secret + '"}\n',
+                encoding="utf-8",
+            )
+            findings = self.scanner.scan_file(zone_file, root)
+            self.assertEqual(1, len(findings))
+            self.assertEqual("secret-token", findings[0].category)
+
+    def test_non_zone_files_keep_full_rule_set(self) -> None:
+        """功能：方法区外的私网地址仍然按原规则报告。
+
+        输入参数：无；以临时目录构造普通文件。
+        输出返回值：无；断言失败时由 unittest 报告。
+        """
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            public_file = root / "docs" / "example.md"
+            public_file.parent.mkdir(parents=True)
+            internal_address = "192.168" + ".1.10"
+            public_file.write_text(
+                "server at " + internal_address + "\n",
+                encoding="utf-8",
+            )
+            findings = self.scanner.scan_file(public_file, root)
+            self.assertEqual(1, len(findings))
+            self.assertEqual("internal-host", findings[0].category)
+
 
 if __name__ == "__main__":
     unittest.main()

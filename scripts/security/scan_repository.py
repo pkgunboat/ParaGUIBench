@@ -26,6 +26,7 @@ EXCLUDED_DIRECTORY_NAMES = frozenset(
         ".ruff_cache",
         ".tox",
         ".venv",
+        ".zcode",
         "__pycache__",
         "artifacts",
         "build",
@@ -35,6 +36,26 @@ EXCLUDED_DIRECTORY_NAMES = frozenset(
         "node_modules",
         "results",
         "runs",
+    }
+)
+
+# 迁移的原项目方法区（见 docs/methods-provenance.md）：任务数据按原始口径
+# 引用内网服务地址，方法代码包含 guest 标准路径与模型提示协议 token 字面量，
+# 这些环境耦合内容保持与迁移基线逐字一致，不做改写。方法区仍执行全部
+# 高置信度真实凭据规则；豁免的只有内网地址、开发者路径与宽泛的环境变量
+# 字面量规则。
+METHODS_ZONE_PREFIXES = (
+    "src/parallel_benchmark/",
+    "src/desktop_env/",
+    "src/stages/",
+)
+METHODS_ZONE_EXEMPT_RULE_IDS = frozenset(
+    {
+        "environment-secret-assignment",
+        "private-ipv4",
+        "private-hostname",
+        "developer-home-path",
+        "windows-developer-home-path",
     }
 )
 
@@ -293,6 +314,10 @@ def scan_file(
     except ValueError:
         relative_path = path.name
 
+    if relative_path.startswith(METHODS_ZONE_PREFIXES):
+        rules = tuple(
+            rule for rule in rules if rule.rule_id not in METHODS_ZONE_EXEMPT_RULE_IDS
+        )
     findings: List[Finding] = []
     for line_number, line in enumerate(lines, start=1):
         reported_categories = set()

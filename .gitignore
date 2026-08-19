@@ -47,3 +47,11 @@ configs/deploy.yaml
 
 /website/node_modules/
 /website/dist/
+
+# 迁移的原系统（methods）运行时缓存与数据下载目录
+/src/parallel_benchmark/hf_data/
+/src/parallel_benchmark/logs/
+/src/stages/self_operation_pipeline/gt_cache/
+
+# ZCode 本地会话目录
+/.zcode/

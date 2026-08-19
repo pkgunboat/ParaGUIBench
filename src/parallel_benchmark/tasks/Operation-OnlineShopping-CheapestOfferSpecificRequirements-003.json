@@ -1,0 +1,17 @@
+{
+    "task_id": "Operation-OnlineShopping-CheapestOfferSpecificRequirements-003",
+    "task_uid": "233aa6457c054445a1150694bf6a5a86",
+    "source_task_id": "cheapest_offer_specific_requirements_task_6",
+    "task_type": "QA",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind the cheapest offer for a motherboard with RGB lighting. If multiple offers share the lowest price, return all of them.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9084/product/asrock-b660m-pro-rs-intel-b660-1700-micro-atx-4-ddr4-hdmi-dp-pcie4-rgb-2x-m-2",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9084/product/asrock-b660m-pro-rs-intel-b660-1700-micro-atx-4-ddr4-hdmi-dp-pcie4-rgb-2x-m-2"
+    ],
+    "original_task_id": "InformationRetrieval-MultiShopShopping-CheapestOfferSpecificRequirements-233aa6457c054445a1150694bf6a5a86"
+}

@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-029",
+    "task_uid": "529636d9-fce1-44bd-a6bb-d1c231c8028e",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "List the year between 2018 and 2021 when the proportion of female recipients of the NSF CAREER Award in computer science was highest, and list the names of all female recipients in that year. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Yanfang Ye",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-029"
+}

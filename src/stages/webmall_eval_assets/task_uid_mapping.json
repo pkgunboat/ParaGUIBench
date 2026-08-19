@@ -1,0 +1,1206 @@
+{
+  "f4e2962c142f46c48c05d6173f2e7313": {
+    "task_uid": "f4e2962c142f46c48c05d6173f2e7313",
+    "task_tag": "EndtoEnd",
+    "webmall_task_id": "Webmall_EndToEnd_Task4",
+    "category": "FindAndOrder",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-dual-rtx4070-super-oc-white-pcie4-12gb-ddr6x-hdmi-3-dp-2550mhz-clock-overclocked"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Asus DUAL RTX4070 SUPER OC White, add it to the shopping cart and co"
+  },
+  "a3da1abaa0b8440a9c34ba05cfd7b442": {
+    "task_uid": "a3da1abaa0b8440a9c34ba05cfd7b442",
+    "task_tag": "Checkout",
+    "webmall_task_id": "Webmall_Checkout_Task4",
+    "category": "Checkout",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_4}}/product/spire-matx-tower-pc-fractal-core-1100-case-i5-12400-16gb-3200mhz-512gb-ssd-bequiet-550w-no-optical-kb-mouse-windows-11-pro"
+    ],
+    "match_score": 0.9,
+    "instruction": "Add the product on page {{URL_4}}/product/spire-matx-tower-pc-fractal-core-1100-case-i5-12400-16gb-3"
+  },
+  "2615b7d0426746a4ab055bc13654afdd": {
+    "task_uid": "2615b7d0426746a4ab055bc13654afdd",
+    "task_tag": "ProductsSatisfyingVagueRequirements",
+    "webmall_task_id": "Webmall_Products_Satisfying_Vague_Requirements_Task3",
+    "category": "Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/adata-512gb-xpg-gammix-s70-blade-m-2-nvme-ssd-m-2-2280-pcie-4-0-3d-nand-r-w-7400-2600-mb-s-425k-510k-iops-ps5-compatible-no-heatsink",
+      "{{URL_4}}/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label",
+      "{{URL_1}}/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label"
+    ],
+    "match_score": 0.7777777777777778,
+    "instruction": "Find all offers for SSDs with the highest available data read speed across all shops."
+  },
+  "a2d8477741be4cb59ede7aadf8e6ec91": {
+    "task_uid": "a2d8477741be4cb59ede7aadf8e6ec91",
+    "task_tag": "CheapestOfferVagueRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Vague_Requirements_Task3",
+    "category": "Cheapest_Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asrock-b550m-phantom-gaming-4-amd-b550-am4-micro-atx-4-ddr4-hdmi-dp-xfire-pcie4-m-2",
+      "{{URL_3}}/product/aorus-am4-a520-aorus-elite"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a motherboard designed for gamers with AM4 CPU socket. If multiple offer"
+  },
+  "768238446931424daf6388822e01954e": {
+    "task_uid": "768238446931424daf6388822e01954e",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_Find_Cheapest_Offer_Task10",
+    "category": "Cheapest_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/be-quiet-pure-base-500-gaming-case-with-window-atx-2-x-pure-wings-2-fans-psu-shroud-black"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a Be Quiet! Pure Base 500 Gaming Case. If multiple offers share the lowe"
+  },
+  "3fb27e66bdff4e1d8e0c818c28fa6ba6": {
+    "task_uid": "3fb27e66bdff4e1d8e0c818c28fa6ba6",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_EndToEnd_Task7",
+    "category": "FindAndOrder",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-rog-ryuo-iii-360-argb-360mm-liquid-cpu-cooler-8th-gen-asetek-pump-3-x-argb-fans-anime-matrix-led-display-white-edition",
+      "{{URL_3}}/product/corsair-vengeance-lpx-16gb-kit-2-x-8gb-ddr4-3000mhz-pc4-24000-cl16-xmp-2-0-dimm-memory"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Asus ROG Ryuo III 360 ARGB 360mm Liquid CPU Cooler. If multiple offe"
+  },
+  "b59778e8ac3440818af05ef012d8d1de": {
+    "task_uid": "b59778e8ac3440818af05ef012d8d1de",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task11",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/fractal-design-define-7-compact-dark-tg-gaming-case-w-dark-tint-glass-window-atx-2-fans-sound-dampening-ventilated-psu-shroud-usb-c",
+      "{{URL_2}}/product/fractal-design-define-7-compact-dark-tg-gaming-case-w-dark-tint-glass-window-atx-2-fans-sound-dampening-ventilated-psu-shroud-usb-c",
+      "{{URL_2}}/product/fractal-design-meshify-2-compact-black-solid-gaming-case-atx-angular-mesh-front-3-fans-detachable-front-filter-usb-c",
+      "{{URL_4}}/product/fractal-design-meshify-2-mini-black-tg-gaming-case-w-dark-glass-window-micro-atx-angular-mesh-usb-c-331mm-gpu-280mm-radiator-support",
+      "{{URL_1}}/product/fractal-design-meshify-2-black-solid-gaming-case-e-atx-angular-mesh-front-3-fans-fan-hub-detachable-front-filter-usb-c",
+      "{{URL_1}}/product/fractal-design-meshify-2-mini-black-tg-gaming-case-w-dark-glass-window-micro-atx-angular-mesh-usb-c-331mm-gpu-280mm-radiator-support"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for Fractal Design PC Gaming Cases which support 240mm radiators and 330mm GPUs."
+  },
+  "aaca1ad4c789466d9ec8335ca58ed26d": {
+    "task_uid": "aaca1ad4c789466d9ec8335ca58ed26d",
+    "task_tag": "EndtoEnd",
+    "webmall_task_id": "Webmall_EndToEnd_Task7",
+    "category": "FindAndOrder",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-rog-ryuo-iii-360-argb-360mm-liquid-cpu-cooler-8th-gen-asetek-pump-3-x-argb-fans-anime-matrix-led-display-white-edition",
+      "{{URL_3}}/product/corsair-vengeance-lpx-16gb-kit-2-x-8gb-ddr4-3000mhz-pc4-24000-cl16-xmp-2-0-dimm-memory"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Asus ROG Ryuo III 360 ARGB 360mm Liquid CPU Cooler and the cheapest "
+  },
+  "eb5f7cc68c2349a29a37d799f3bf65b0": {
+    "task_uid": "eb5f7cc68c2349a29a37d799f3bf65b0",
+    "task_tag": "AddtoCart",
+    "webmall_task_id": "Webmall_Add_To_Cart_Task1",
+    "category": "Add_To_Cart",
+    "answer_type": "cart",
+    "expected_urls": [
+      "{{URL_2}}/product/gamemax-iceburg-360mm-argb-liquid-cpu-cooler-12cm-argb-pwm-fans-infinity-mirror-rgb-rotatable-pump-head",
+      "{{URL_3}}/product/gamemax-iceburg-360mm-argb-liquid-cpu-cooler-12cm-argb-pwm-fans-infinity-mirror-rgb-rotatable-pump-head"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for the GameMax Iceburg 360mm ARGB Liquid CPU Cooler and add each of them to the res"
+  },
+  "7f3356a56e0446be84aff1bcbeae7bdc": {
+    "task_uid": "7f3356a56e0446be84aff1bcbeae7bdc",
+    "task_tag": "EndtoEnd",
+    "webmall_task_id": "Webmall_EndToEnd_Task3",
+    "category": "FindAndOrder",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_1}}/product/corsair-vengeance-lpx-32gb-kit-2-x-16gb-ddr4-3000mhz-pc4-24000-cl16-xmp-2-0-dimm-memory"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a DDR4 2x16 GB RAM Kit with exactly 3000MHz, add it to the shopping cart"
+  },
+  "8afcd2bf9ddc438893cafa082b14e2ef": {
+    "task_uid": "8afcd2bf9ddc438893cafa082b14e2ef",
+    "task_tag": "ProductsSatisfyingVagueRequirements",
+    "webmall_task_id": "Webmall_Products_Satisfying_Vague_Requirements_Task5",
+    "category": "Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-prime-a520m-a-ii-csm-corporate-stable-model-amd-a520-am4-micro-atx-4-ddr4-vga-hdmi-dp-m-2",
+      "{{URL_4}}/product/asus-prime-b450m-k-ii-amd-b450-am4-micro-atx-2-ddr4-vga-dvi-hdmi-led-lighting-m-2",
+      "{{URL_3}}/product/asus-prime-b450m-k-ii-amd-b450-am4-micro-atx-2-ddr4-vga-dvi-hdmi-led-lighting-m-2",
+      "{{URL_4}}/product/asus-prime-a520m-a-ii-csm-corporate-stable-model-amd-a520-am4-micro-atx-4-ddr4-vga-hdmi-dp-m-2"
+    ],
+    "match_score": 0.7777777777777778,
+    "instruction": "Find all offers for ASUS PRIME motherboards with AMD sockets older than AM5."
+  },
+  "94191bc954484f90aeb2037c2da2e8a4": {
+    "task_uid": "94191bc954484f90aeb2037c2da2e8a4",
+    "task_tag": "EndtoEnd",
+    "webmall_task_id": "Webmall_EndToEnd_Task1",
+    "category": "FindAndOrder",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_3}}/product/asrock-b550-phantom-gaming-4-amd-b550-am4-atx-4-ddr4-hdmi-xfire-pcie4-m-2"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Asrock B550 PHANTOM GAMING 4, add it to the shopping cart and comple"
+  },
+  "e4023f2a64e74903a7acd081e212cde9": {
+    "task_uid": "e4023f2a64e74903a7acd081e212cde9",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task7",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/asrock-w790-ws-workstation-intel-w790-lga4677-eatx-8-ddr5-wi-fi-6e-wi-fi-6e-2x-10g-lan-usb4-pcie5-4x-m-2",
+      "{{URL_3}}/product/asrock-w790-ws-workstation-intel-w790-lga4677-eatx-8-ddr5-wi-fi-6e-wi-fi-6e-2x-10g-lan-usb4-pcie5-4x-m-2"
+    ],
+    "match_score": 0.75,
+    "instruction": "Find all offers for Asrock motherboards which have 8 DDR5 RAM slots"
+  },
+  "16299858995641daadf4ef40b919f438": {
+    "task_uid": "16299858995641daadf4ef40b919f438",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task9",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/antec-ax61-elite-gaming-case-w-glass-window-atx-mesh-front-4-argb-fans-led-control-button"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a gaming case from Antec with ARGB fans. If multiple offers share the lo"
+  },
+  "79b0cd0861774d4291ce506c43257972": {
+    "task_uid": "79b0cd0861774d4291ce506c43257972",
+    "task_tag": "AddtoCart",
+    "webmall_task_id": "Webmall_Add_To_Cart_Task4",
+    "category": "Add_To_Cart",
+    "answer_type": "cart",
+    "expected_urls": [
+      "{{URL_4}}/product/asus-pro-h610t-d4-csm-corporate-stable-model-intel-h610-1700-thin-mini-itx-2-ddr4-so-dimm-hdmi-dp-lvds-19v-dc-in-1x-m-2",
+      "{{URL_1}}/product/asus-pro-h610t-d4-csm-corporate-stable-model-intel-h610-1700-thin-mini-itx-2-ddr4-so-dimm-hdmi-dp-lvds-19v-dc-in-1x-m-2"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for the motherboard Asus PRO H610T D4-CSM - Corporate Stable Model and add each of t"
+  },
+  "f2cb4a0fa45142b093243f9ff947cc68": {
+    "task_uid": "f2cb4a0fa45142b093243f9ff947cc68",
+    "task_tag": "AddtoCart",
+    "webmall_task_id": "Webmall_Add_To_Cart_Task2",
+    "category": "Add_To_Cart",
+    "answer_type": "cart",
+    "expected_urls": [
+      "{{URL_2}}/product/asus-rog-strix-arion-lite-m-2-nvme-ssd-caddy-usb-3-2-gen2-type-c-aluminium-thermal-pads-rgb-lighting",
+      "{{URL_4}}/product/asus-rog-strix-arion-lite-m-2-nvme-ssd-caddy-usb-3-2-gen2-type-c-aluminium-thermal-pads-rgb-lighting"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for the Asus ROG STRIX ARION LITE M.2 NVMe SSD Caddy and add each of them to the res"
+  },
+  "d122b67ad3964616897f1139473acdd2": {
+    "task_uid": "d122b67ad3964616897f1139473acdd2",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task7",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asrock-b550-phantom-gaming-4-amd-b550-am4-atx-4-ddr4-hdmi-xfire-pcie4-m-2",
+      "{{URL_4}}/product/asrock-b550-phantom-gaming-4-amd-b550-am4-atx-4-ddr4-hdmi-xfire-pcie4-m-2"
+    ],
+    "match_score": 0.6666666666666666,
+    "instruction": "Find all offers for the Asrock B550 PHANTOM GAMING 4."
+  },
+  "2f786b90968c471b8cdf5ef5c3da7e67": {
+    "task_uid": "2f786b90968c471b8cdf5ef5c3da7e67",
+    "task_tag": "CheapestOfferVagueRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Vague_Requirements_Task4",
+    "category": "Cheapest_Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/asus-dual-rtx4060-evo-oc-pcie4-8gb-ddr6-hdmi-3-dp-2535mhz-clock-overclocked",
+      "{{URL_3}}/product/palit-rtx4070-super-dual-oc-12gb-ddr6x-hdmi-3-dp-2550mhz-clock-overclocked-rgb-lighting",
+      "{{URL_1}}/product/palit-rtx4070-super-dual-oc-12gb-ddr6x-hdmi-3-dp-2550mhz-clock-overclocked-rgb-lighting",
+      "{{URL_3}}/product/palit-rtx4070-gamingpro-pcie4-12gb-ddr6x-hdmi-3-dp-2475mhz-clock-rgb-lighting",
+      "{{URL_3}}/product/asus-dual-rtx4070-super-oc-white-pcie4-12gb-ddr6x-hdmi-3-dp-2550mhz-clock-overclocked",
+      "{{URL_3}}/product/asus-dual-rtx4070-super-pcie4-12gb-ddr6x-hdmi-3-dp-2505mhz-clock",
+      "{{URL_3}}/product/asus-proart-rtx4070-super-oc-pcie4-12gb-ddr6x-hdmi-3-dp-2565mhz-clock-overclocked-compact-2-5-slot-design",
+      "{{URL_3}}/product/palit-rtx4070-super-dual-12gb-ddr6x-hdmi-3-dp-2475mhz-clock-rgb-lighting",
+      "{{URL_1}}/product/asus-proart-rtx4070-super-oc-12gb-ddr6x-hdmi-3-dp-2565mhz-clock-overclocked-compact-2-5-slot-design",
+      "{{URL_4}}/product/palit-rtx4070-super-jetstream-oc-12gb-ddr6x-hdmi-3-dp-2640mhz-clock-overclocked"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offers for each model of mid-tier nVidia gaming GPUs in the 4000 series. If multip"
+  },
+  "fcc4d2c9076645a2a0d9b785b7fc1ed9": {
+    "task_uid": "fcc4d2c9076645a2a0d9b785b7fc1ed9",
+    "task_tag": "FindSubstitutes",
+    "webmall_task_id": "Webmall_Find_Substitutes_Task6",
+    "category": "Substitute",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/marvo-k606-gaming-keyboard-with-palm-rest"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest alternative with a gaming aesthetic to this keyboard: {{URL_1}}/product/asus-rog-s"
+  },
+  "5e20f6ab917d4524810d51f0e559a1ff": {
+    "task_uid": "5e20f6ab917d4524810d51f0e559a1ff",
+    "task_tag": "FindCompatibleProducts",
+    "webmall_task_id": "Webmall_Find_Compatible_Products_Task3",
+    "category": "Compatible_Products",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/adata-se880-4tb-pocket-size-external-ssd-usb-3-2-gen2-type-c-type-a-blue",
+      "{{URL_1}}/product/adata-se880-4tb-pocket-size-external-ssd-usb-3-2-gen2-type-c-type-a-blue",
+      "{{URL_2}}/product/adata-se880-4tb-pocket-size-external-ssd-usb-3-2-gen2-type-c-type-a-titanium-grey",
+      "{{URL_1}}/product/adata-se880-4tb-pocket-size-external-ssd-usb-3-2-gen2-type-c-type-a-titanium-grey"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for external SSDs on which I can fully dump the data of this internal SSD for backup"
+  },
+  "528e679576bc4462aeec4a0abae5c414": {
+    "task_uid": "528e679576bc4462aeec4a0abae5c414",
+    "task_tag": "FindCompatibleProducts",
+    "webmall_task_id": "Webmall_Find_Compatible_Products_Task5",
+    "category": "Compatible_Products",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/spire-mini-displayport-male-to-hdmi-male-converter-1-metre"
+    ],
+    "match_score": 0.7777777777777778,
+    "instruction": "Find an HDMI cable to connect my monitor to this GPU: {{URL_1}}/product/pny-t1000-professional-graph"
+  },
+  "8f368ad172f84e7fb46cbcaf4deb9cc2": {
+    "task_uid": "8f368ad172f84e7fb46cbcaf4deb9cc2",
+    "task_tag": "Checkout",
+    "webmall_task_id": "Webmall_Checkout_Task8",
+    "category": "Checkout",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_4}}/product/adata-xpg-lancer-blade-rgb-32gb-kit-2-x-16gb-ddr5-6000mhz-cl30-1-35v-ecc-pmic-xmp-3-0-amd-expo-dimm-memory"
+    ],
+    "match_score": 0.9,
+    "instruction": "Add the product on page {{URL_4}}/product/adata-xpg-lancer-blade-rgb-32gb-kit-2-x-16gb-ddr5-6000mhz-"
+  },
+  "be2c11065a3c424e98c77568c5ce8275": {
+    "task_uid": "be2c11065a3c424e98c77568c5ce8275",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task2",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/smartphone-samsung-galaxy-s24-ultra-5g-12-256gb-black-titanium-black-sm-s928bzkgeue"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a Samsung Galaxy smartphone from the S24 series which has a camera with "
+  },
+  "fdcab038b1e04ef694394e959b1a8a65": {
+    "task_uid": "fdcab038b1e04ef694394e959b1a8a65",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task10",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/nedis-designed-in-netherlands-mechanical-gaming-wired-keyboard-with-multi-color-rgb-modes-and-us-international-layout"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a mechanical keyboard. If multiple offers share the lowest price, return"
+  },
+  "09558c9fab504598b5a762dfeed2f813": {
+    "task_uid": "09558c9fab504598b5a762dfeed2f813",
+    "task_tag": "ProductsSatisfyingVagueRequirements",
+    "webmall_task_id": "Webmall_Products_Satisfying_Vague_Requirements_Task1",
+    "category": "Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_1}}/product/4tb-crucial-mx500-ssd-with-cloning-kit",
+      "{{URL_2}}/product/crucial-mx500-4-tb-2-5-sata-ssd-560-510-mb-s-90-95-k-iops-1000-tbw-aes-256bit-encryption-acronis-true-image-cloning-5yr-wty",
+      "{{URL_3}}/product/crucial-mx500-4tb-2-5-inch-sata-3d-nand-ssd",
+      "{{URL_4}}/product/crucial-mx500-2-5-4-tb-sata-iii-3d-nand-internal-solid-state-drive-ssd-ct4000mx500ssd1"
+    ],
+    "match_score": 0.6666666666666666,
+    "instruction": "Find all offers for the largest available MX500 model by Crucial."
+  },
+  "cd38f9aaf2b448a48c7ff1306fe8684c": {
+    "task_uid": "cd38f9aaf2b448a48c7ff1306fe8684c",
+    "task_tag": "EndtoEnd",
+    "webmall_task_id": "Webmall_EndToEnd_Task6",
+    "category": "FindAndOrder",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_2}}/product/netac-z-slim-1tb-m-2-external-ssd-usb-3-2-gen2-type-c-up-to-550mb-s-aluminium"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Netac Z Slim 1TB M.2 External SSD, add it to the shopping cart and c"
+  },
+  "85a721caec6e45ff877fc5a58451d600": {
+    "task_uid": "85a721caec6e45ff877fc5a58451d600",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task3",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/tablet-samsung-galaxy-tab-s9-ultra-14-6-5g-12gb-256gb-gray-sm-x916bzaaeue-s-pen-stylus",
+      "{{URL_4}}/product/tablet-samsung-galaxy-tab-s9-11-5g-12gb-256gb-gray-sm-x716bzaeeue-s-pen-stylus"
+    ],
+    "match_score": 0.75,
+    "instruction": "Find all offers for Samsung Tablets which support 5G and come with an S-Pen stylus."
+  },
+  "71fe4b7a4054459d97f10285deb5d0b1": {
+    "task_uid": "71fe4b7a4054459d97f10285deb5d0b1",
+    "task_tag": "CheapestOfferVagueRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Vague_Requirements_Task1",
+    "category": "Cheapest_Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/samsung-galaxy-a25-5g-a256b-dual-sim-128gb-blue-android-14-0-smartphone",
+      "{{URL_2}}/product/samsung-galaxy-a35-5g-a356b-dual-sim-256gb-awesome-iceblue-android-14-smartphone",
+      "{{URL_2}}/product/samsung-galaxy-a55-5g-a556b-dual-sim-128gb-ee-navy-android-14-0-smartphone",
+      "{{URL_1}}/product/smartphone-samsung-galaxy-a15-4-128gb-black-sm-a155fzkdeue"
+    ],
+    "match_score": 0.8888888888888888,
+    "instruction": "Find the cheapest offer for each Smartphone model of Samsungs budget-friendly smartphone series. If "
+  },
+  "7ab658aa7c0240d1b4723de8988f7766": {
+    "task_uid": "7ab658aa7c0240d1b4723de8988f7766",
+    "task_tag": "Checkout",
+    "webmall_task_id": "Webmall_Checkout_Task5",
+    "category": "Checkout",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_1}}/product/kingston-128gb-usb-3-2-gen1-type-c-memory-pen-datatraveler-70-cap"
+    ],
+    "match_score": 0.9,
+    "instruction": "Add the product on page {{URL_1}}/product/kingston-128gb-usb-3-2-gen1-type-c-memory-pen-datatraveler"
+  },
+  "76f1863124574f01be1ac89c7fb35461": {
+    "task_uid": "76f1863124574f01be1ac89c7fb35461",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task8",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-dual-rtx4060-evo-oc-pcie4-8gb-ddr6-hdmi-3-dp-2535mhz-clock-overclocked",
+      "{{URL_4}}/product/asus-dual-rtx4060-evo-oc-pcie4-8gb-ddr6-hdmi-3-dp-2535mhz-clock-overclocked",
+      "{{URL_1}}/product/asus-dual-rtx4060-evo-oc-pcie4-8gb-ddr6-hdmi-3-dp-2535mhz-clock-overclocked"
+    ],
+    "match_score": 0.6666666666666666,
+    "instruction": "Find all offers for the ASUS DUAL RTX4060 EVO OC GPU."
+  },
+  "bea3ac2752ca4c9f9dc023a99d0a995b": {
+    "task_uid": "bea3ac2752ca4c9f9dc023a99d0a995b",
+    "task_tag": "CheapestOfferVagueRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Vague_Requirements_Task6",
+    "category": "Cheapest_Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_1}}/product/asus-tuf-gaming-gt501-gaming-case-w-window-e-atx-tempered-smoked-glass-3-x-12cm-rgb-fans-carry-handles",
+      "{{URL_4}}/product/asus-tuf-gaming-gt501-gaming-case-w-window-e-atx-tempered-smoked-glass-3-x-12cm-rgb-fans-carry-handles",
+      "{{URL_4}}/product/asus-tuf-gaming-gt501-white-gaming-case-w-window-e-atx-tempered-smoked-glass-3-x-12cm-rgb-fans-carry-handles"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a large PC case from ASUS that can be easily carried to frequent LAN par"
+  },
+  "36251517df2b4fb780d7851f830b6547": {
+    "task_uid": "36251517df2b4fb780d7851f830b6547",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task10",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-27-rog-strix-wqhd-hdr-gaming-monitor-xg27aq-ips-2560-x-1440-1ms-2-hdmi-displayport-170hz-speakers-vesa",
+      "{{URL_3}}/product/asus-31-5-rog-strix-wqhd-curved-hdr-gaming-monitor-xg32vc-2560-x-1440-1ms-hdmi-displayport-usb-170hz-rgb-lighting-vesa"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for gaming monitors with a resolution higher than 1920x1080, a screen size of at lea"
+  },
+  "e5c6ca4628a64fcca84ac9d2a4b1ea0e": {
+    "task_uid": "e5c6ca4628a64fcca84ac9d2a4b1ea0e",
+    "task_tag": "ProductsSatisfyingVagueRequirements",
+    "webmall_task_id": "Webmall_Products_Satisfying_Vague_Requirements_Task2",
+    "category": "Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/samsung-galaxy-s24-5g-s926b-ds-256gb-amber-yellow-android-14-0-smartphone",
+      "{{URL_2}}/product/samsung-galaxy-s24-ultra-5g-s928b-ds-256gb-titanium-yellow-android-14-smartphone",
+      "{{URL_3}}/product/samsung-galaxy-s24-5g-s921b-ds-256gb-amber-yellow-android-14-0-smartphone",
+      "{{URL_4}}/product/smartphone-samsung-galaxy-s24-5g-12-256gb-yellow-amber-yellow-sm-s926bzydeue",
+      "{{URL_3}}/product/samsung-galaxy-s24-5g-s921b-ds-128gb-cobalt-violet-android-14-0-smartphone",
+      "{{URL_3}}/product/samsung-galaxy-s24-5g-s926b-ds-256gb-cobalt-violet-android-14-0-smartphone",
+      "{{URL_4}}/product/smartphone-samsung-galaxy-s24-5g-12-256gb-purple-cobalt-violet-sm-s926bzvdeue",
+      "{{URL_1}}/product/smartphone-samsung-galaxy-a25-5g-6-128gb-yellow-sm-a256bzydeue"
+    ],
+    "match_score": 0.7142857142857143,
+    "instruction": "Find all offers for Samsung Galaxy smartphones available in bright colors."
+  },
+  "d4d5500f17174ebc98ba70ac04682647": {
+    "task_uid": "d4d5500f17174ebc98ba70ac04682647",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task5",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/crucial-8gb-ddr4-3200-udimm-pc"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for DDR4 RAM clocking higher than 3000 MHz. If multiple offers share the low"
+  },
+  "3d6863788de1466c96d58ecdc6bba73b": {
+    "task_uid": "3d6863788de1466c96d58ecdc6bba73b",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_Find_Cheapest_Offer_Task9",
+    "category": "Cheapest_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/spire-usb-2-0-type-a-cable-male-to-male-1-metre",
+      "{{URL_1}}/product/spire-usb-2-0-type-a-cable-male-to-male-1-metre"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Spire USB 2.0 Type-A Cable, Male to Male, 1 Metre. If multiple offer"
+  },
+  "4b758a34ba7e432294a877dc5c11fe8b": {
+    "task_uid": "4b758a34ba7e432294a877dc5c11fe8b",
+    "task_tag": "CheapestOfferVagueRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Vague_Requirements_Task2",
+    "category": "Cheapest_Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/adata-se880-1tb-pocket-size-external-ssd-usb-3-2-gen2-type-c-type-a-blue"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for an external SSD that is not colored black, white or metallic. If multipl"
+  },
+  "859f25436e3240b492f37100cc0b80cf": {
+    "task_uid": "859f25436e3240b492f37100cc0b80cf",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task3",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/arctic-liquid-freezer-iii-a-rgb-420mm-liquid-cpu-cooler-p14-pwm-pst-argb-fans-amp-argb-pwm-controlled-pump-black"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a liquid CPU cooler with a 420mm radiator. If multiple offers share the "
+  },
+  "71e2f451e6ba44819c3be89fcbe6124f": {
+    "task_uid": "71e2f451e6ba44819c3be89fcbe6124f",
+    "task_tag": "AddtoCart",
+    "webmall_task_id": "Webmall_Add_To_Cart_Task7",
+    "category": "Add_To_Cart",
+    "answer_type": "cart",
+    "expected_urls": [
+      "{{URL_1}}/product/antec-c8-argb-gaming-case-w-glass-side-front-e-atx-3x-argb-fans-argb-pwm-fan-hub-dual-chamber-mesh-panels-usb-c-black",
+      "{{URL_1}}/product/antec-c8-argb-gaming-case-w-glass-side-front-e-atx-3x-argb-fans-argb-pwm-fan-hub-dual-chamber-mesh-panels-usb-c-white"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for the Antec C8 ARGB Gaming Case and add each of them to the respective shopping ca"
+  },
+  "9c4a06f81e0547ed96f6b12b337b7c13": {
+    "task_uid": "9c4a06f81e0547ed96f6b12b337b7c13",
+    "task_tag": "Checkout",
+    "webmall_task_id": "Webmall_Checkout_Task2",
+    "category": "Checkout",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_1}}/product/palit-rtx3050-dual-v2-pcie4-8gb-ddr6-dvi-hdmi-dp-1777mhz-clock-rgb-lighting"
+    ],
+    "match_score": 0.9,
+    "instruction": "Add the product on page {{URL_1}}/product/palit-rtx3050-dual-v2-pcie4-8gb-ddr6-dvi-hdmi-dp-1777mhz-c"
+  },
+  "7b4c474028014cbe9f41c2ab707bb2f3": {
+    "task_uid": "7b4c474028014cbe9f41c2ab707bb2f3",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task1",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/microsoft-xbox-series-s-starter-bundle-xbox-series-s-hvit-10240-mb-gddr6-amd-amd-ryzen-zen-2"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a new Xbox gaming console with at least 512gb disk space in white. If mu"
+  },
+  "f07c156fc7dd4aaaa1bae39027df14a9": {
+    "task_uid": "f07c156fc7dd4aaaa1bae39027df14a9",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task6",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/corsair-vengeance-32gb-kit-2-x-16gb-ddr5-5600mhz-pc5-44800-cl36-1-25v-pmic-amd-optimised-dimm-memory",
+      "{{URL_3}}/product/corsair-vengeance-32gb-kit-2-x-16gb-ddr5-5600mhz-pc5-44800-cl36-1-25v-xmp-3-0-pmic-amd-optimised-dimm-memory",
+      "{{URL_1}}/product/corsair-vengeance-32gb-kit-2-x-16gb-ddr5-5600mhz-pc5-44800-cl36-1-25v-pmic-amd-optimised-dimm-memory",
+      "{{URL_1}}/product/corsair-vengeance-rgb-32gb-kit-2-x-16gb-ddr5-6200mhz-pc5-49600-cl36-1-4v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_1}}/product/corsair-vengeance-rgb-32gb-kit-2-x-16gb-ddr5-5600mhz-pc5-44800-cl40-1-25v-xmp-3-0-pmic-dimm-memory-black",
+      "{{URL_3}}/product/corsair-vengeance-rgb-32gb-kit-2-x-16gb-ddr5-5600mhz-pc5-44800-cl36-1-25v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_3}}/product/corsair-vengeance-rgb-32gb-kit-2-x-16gb-ddr5-6000mhz-pc5-48000-cl36-1-25v-xmp-3-0-pmic-dimm-memory-white",
+      "{{URL_3}}/product/corsair-vengeance-32gb-kit-2-x-16gb-ddr5-6200mhz-pc5-49600-cl36-1-4v-xmp-3-0-dimm-memory",
+      "{{URL_3}}/product/corsair-vengeance-32gb-kit-2-x-16gb-ddr5-6400mhz-pc5-51200-cl32-1-4v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_3}}/product/corsair-vengeance-32gb-kit-2-x-16gb-ddr5-5200mhz-pc5-41600-cl40-1-25v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_1}}/product/corsair-vengeance-32gb-kit-2-x-16gb-ddr5-5200mhz-pc5-41600-cl40-1-25v-amd-optimised-pmic-dimm-memory"
+    ],
+    "match_score": 0.7142857142857143,
+    "instruction": "Find all offers for a Corsair Vengeance 32GB Kit (2 x 16GB) DDR5."
+  },
+  "3e1b77fb22034860af10835c58f54b68": {
+    "task_uid": "3e1b77fb22034860af10835c58f54b68",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task8",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/asus-rog-strix-rtx4080-super-pcie4-16gb-ddr6x-2-hdmi-3-dp-2580mhz-clock-rgb-lighting",
+      "{{URL_1}}/product/asus-rog-strix-rtx4080-super-pcie4-16gb-ddr6x-2-hdmi-3-dp-2580mhz-clock-rgb-lighting",
+      "{{URL_3}}/product/palit-rtx4070-ti-super-gamingpro-oc-16gb-ddr6x-hdmi-3-dp-2610mhz-clock-rgb-lighting-overclocked",
+      "{{URL_1}}/product/palit-rtx4070-ti-super-gamingpro-white-oc-16gb-ddr6x-hdmi-3-dp-2655mhz-clock-rgb-lighting-overclocked",
+      "{{URL_4}}/product/asus-proart-rtx4070-ti-super-oc-16gb-ddr6x-hdmi-3-dp-2670mhz-clock-overlocked-compact-2-5-slot",
+      "{{URL_3}}/product/palit-rtx4080-super-jetstream-oc-pcie4-16gb-ddr6x-hdmi-3-dp-2580mhz-clock-overclocked",
+      "{{URL_4}}/product/palit-rtx4080-super-gamingpro-oc-pcie4-16gb-ddr6x-hdmi-3-dp-2610mhz-clock-rgb-lighting-overclocked",
+      "{{URL_1}}/product/palit-rtx4080-super-gamingpro-pcie4-16gb-ddr6x-hdmi-3-dp-2550mhz-clock-rgb-lighting",
+      "{{URL_1}}/product/nvidia-asus-geforce-rtx-4080-republic-of-gamers-strix-graphics-card",
+      "{{URL_1}}/product/nvidia-asus-geforce-rtx-4080-republic-of-gamers-strix-oc-graphics-card",
+      "{{URL_2}}/product/zotac-gaming-geforce-rtx-4080-16gb-amp-extreme-airo-zt-d40810b-10p",
+      "{{URL_4}}/product/asus-geforce-rtx4080-super-tuf-gaming-16gb-gddr6x"
+    ],
+    "match_score": 0.8,
+    "instruction": "Find all offers for GPUs with over 2500 MHz clocking speed and at least 16GB VRAM"
+  },
+  "c6d833365c824e84a4922052ee1d30bc": {
+    "task_uid": "c6d833365c824e84a4922052ee1d30bc",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task4",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-rog-ryujin-ii-argb-360mm-liquid-cpu-cooler-3-x-12cm-rog-argb-fans-customisable-3-5-lcd-display",
+      "{{URL_2}}/product/asus-rog-ryujin-ii-argb-360mm-liquid-cpu-cooler-3-x-12cm-rog-argb-fans-customisable-3-5-lcd-display"
+    ],
+    "match_score": 0.7777777777777778,
+    "instruction": "Find all offers for the Asus ROG Ryujin II ARGB 360mm Liquid CPU Cooler."
+  },
+  "866f7d2d65544b52afadcf62a6f7b433": {
+    "task_uid": "866f7d2d65544b52afadcf62a6f7b433",
+    "task_tag": "ProductsSatisfyingVagueRequirements",
+    "webmall_task_id": "Webmall_Products_Satisfying_Vague_Requirements_Task8",
+    "category": "Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/asus-rog-falchion-rx-low-profile-compact-65-mechanical-rgb-gaming-keyboard-wireless-usb-rog-rx-red-switches-per-key-rgb-lighting-touch-panel-430-hour-battery-life",
+      "{{URL_1}}/product/asus-rog-falchion-rx-low-profile-compact-65-mechanical-rgb-gaming-keyboard-wireless-usb-rog-rx-red-switches-per-key-rgb-lighting-touch-panel-430-hour-battery-life",
+      "{{URL_3}}/product/apple-wireless-keyboard-mc184ll-a",
+      "{{URL_3}}/product/asus-rog-falchion-nx-red-compact-65-mechanical-rgb-gaming-keyboard-wireless-usb-rog-nx-red-switches-per-key-rgb-lighting-touch-panel-450-hour-battery-life"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for compact keyboards that are best suited for working with a laptop remotely from v"
+  },
+  "3d31169529ed4cd68b093c34816c6018": {
+    "task_uid": "3d31169529ed4cd68b093c34816c6018",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_Find_Cheapest_Offer_Task2",
+    "category": "Cheapest_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_1}}/product/samsung-870-evo-2-5-250-gb-sata-iii-v-nand",
+      "{{URL_1}}/product/samsung-1tb-870-evo-ssd-2-5-sata3-v-nand-r-w-560-530-mb-s-98k-88k-iops-7mm",
+      "{{URL_2}}/product/samsung-870-evo-2tb-2-5-sata-iii-6gb-s-ssd-560r-530w-mb-s-mz-77e2t0bw",
+      "{{URL_3}}/product/samsung-4tb-870-evo-ssd-2-5-sata3-v-nand-r-w-560-530-mb-s-98k-88k-iops-7mm"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for each storage size of the Samsung 870 Evo. If multiple offers share the l"
+  },
+  "866a95cd092f44ca9bab77047c277678": {
+    "task_uid": "866a95cd092f44ca9bab77047c277678",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task4",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/adata-sc610-1tb-pocket-size-external-ssd-usb-3-2-gen2-type-a-capless-retractable-design-key-ring"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for an external SSD with 1TB disc space. If multiple offers share the lowest"
+  },
+  "30fdee8df9174a09b1a4ef89d483605c": {
+    "task_uid": "30fdee8df9174a09b1a4ef89d483605c",
+    "task_tag": "AddtoCart",
+    "webmall_task_id": "Webmall_Add_To_Cart_Task3",
+    "category": "Add_To_Cart",
+    "answer_type": "cart",
+    "expected_urls": [
+      "{{URL_3}}/product/kingston-fury-beast-16gb-ddr5-4800mhz-pc5-38400-cl38-1-1v-ecc-xmp-3-0-amd-expo-pmic-dimm-memory",
+      "{{URL_1}}/product/kingston-fury-beast-16gb-ddr5-5600mhz-pc5-44800-cl40-1-25v-ecc-xmp-3-0-pmic-dimm-memory"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for Kingston Fury Beast 16GB DDR5 and add each of them to the respective shopping ca"
+  },
+  "b6335f7661c943b8b205e010332deb96": {
+    "task_uid": "b6335f7661c943b8b205e010332deb96",
+    "task_tag": "AddtoCart",
+    "webmall_task_id": "Webmall_Add_To_Cart_Task5",
+    "category": "Add_To_Cart",
+    "answer_type": "cart",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-dual-rtx4070-super-oc-white-pcie4-12gb-ddr6x-hdmi-3-dp-2550mhz-clock-overclocked"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for the Asus DUAL RTX4070 SUPER OC White and add each of them to the respective shop"
+  },
+  "03f89eaeaaaa47aaa48f83c5f8a2ff47": {
+    "task_uid": "03f89eaeaaaa47aaa48f83c5f8a2ff47",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_Find_Cheapest_Offer_Task7",
+    "category": "Cheapest_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-prime-b650m-a-wifi-ii-amd-b650-am5-micro-atx-4-ddr5-vga-hdmi-dp-wi-fi-6-2-5g-lan-pcie4-2x-m-2"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for an Asus PRIME B650-A WIFI II. If multiple offers share the lowest price,"
+  },
+  "d9f3746fe10f4ce7bfc9f800fd058f17": {
+    "task_uid": "d9f3746fe10f4ce7bfc9f800fd058f17",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_Find_Cheapest_Offer_Task8",
+    "category": "Cheapest_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-proart-rtx4070-super-oc-pcie4-12gb-ddr6x-hdmi-3-dp-2565mhz-clock-overclocked-compact-2-5-slot-design",
+      "{{URL_1}}/product/asus-proart-rtx4070-super-oc-12gb-ddr6x-hdmi-3-dp-2565mhz-clock-overclocked-compact-2-5-slot-design"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for an ASUS ProArt RTX4070 SUPER OC. If multiple offers share the lowest pri"
+  },
+  "e4a72eb7a5344d70bcb61e379b7f143f": {
+    "task_uid": "e4a72eb7a5344d70bcb61e379b7f143f",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_Find_Cheapest_Offer_Task3",
+    "category": "Cheapest_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/smartphone-samsung-galaxy-s24-5g-12-256gb-purple-cobalt-violet-sm-s926bzvdeue",
+      "{{URL_4}}/product/smartphone-samsung-galaxy-s24-5g-12-256gb-yellow-amber-yellow-sm-s926bzydeue"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Samsung Galaxy S24 Plus. If multiple offers share the lowest price, "
+  },
+  "40d1b025835f49748c39760e864a1b58": {
+    "task_uid": "40d1b025835f49748c39760e864a1b58",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task9",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/hama-high-speed-hdmi-cable-3-metres-supports-4k",
+      "{{URL_1}}/product/hama-high-speed-hdmi-cable-3-metres-supports-4k",
+      "{{URL_2}}/product/hama-high-speed-hdmi-cable-3-metres-supports-4k"
+    ],
+    "match_score": 0.7777777777777778,
+    "instruction": "Find all offers for the Hama High Speed HDMI Cable with a length of exactly 3 Meters."
+  },
+  "d75216bdee0043639d36848bda29fc05": {
+    "task_uid": "d75216bdee0043639d36848bda29fc05",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_Find_Cheapest_Offer_Task1",
+    "category": "Cheapest_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/bose-quietcomfort-ultra-headphone",
+      "{{URL_4}}/product/bose-quietcomfort-ultra-headphones-black"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Bose Quietcomfort Ultra Headphones. If multiple offers share the low"
+  },
+  "9203328311c7430aaedb899a4496b6e9": {
+    "task_uid": "9203328311c7430aaedb899a4496b6e9",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task12",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-rog-falchion-ace-compact-65-mechanical-rgb-gaming-keyboard-wired-dual-usb-c-rog-nx-red-switches-per-key-rgb-lighting-touch-panel",
+      "{{URL_1}}/product/asus-rog-falchion-ace-compact-65-mechanical-rgb-gaming-keyboard-wired-dual-usb-c-rog-nx-red-switches-per-key-rgb-lighting-touch-panel",
+      "{{URL_1}}/product/asus-rog-falchion-ace-compact-65-mechanical-rgb-gaming-keyboard-wired-dual-usb-c-rog-nx-red-switches-per-key-rgb-lighting-touch-panel-white-edition"
+    ],
+    "match_score": 0.75,
+    "instruction": "Find all offers for the ASUS ROG FALCHION ACE Compact 65% Keyboard."
+  },
+  "08e367e75bb54b47901a5bc1bbf1de19": {
+    "task_uid": "08e367e75bb54b47901a5bc1bbf1de19",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_Find_Cheapest_Offer_Task6",
+    "category": "Cheapest_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/corsair-vengeance-lpx-16gb-2x8gb-ddr4-3200mhz-c16-desktop-gaming-memory-black",
+      "{{URL_4}}/product/corsair-vengeance-lpx-16gb-2x8gb-ddr4-3600mhz-c18-desktop-gaming-memory-black"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a Corsair Vengeance LPX 16GB Kit (2 x 8GB). If multiple offers share the"
+  },
+  "0d34c4e1863c4ddb832ec4eba10d5ef6": {
+    "task_uid": "0d34c4e1863c4ddb832ec4eba10d5ef6",
+    "task_tag": "FindCompatibleProducts",
+    "webmall_task_id": "Webmall_Find_Compatible_Products_Task1",
+    "category": "Compatible_Products",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/asus-rog-falchion-rx-low-profile-compact-65-mechanical-rgb-gaming-keyboard-wireless-usb-rog-rx-red-switches-per-key-rgb-lighting-touch-panel-430-hour-battery-life",
+      "{{URL_1}}/product/asus-rog-falchion-rx-low-profile-compact-65-mechanical-rgb-gaming-keyboard-wireless-usb-rog-rx-red-switches-per-key-rgb-lighting-touch-panel-430-hour-battery-life",
+      "{{URL_1}}/product/asus-rog-falchion-ace-compact-65-mechanical-rgb-gaming-keyboard-wired-dual-usb-c-rog-nx-red-switches-per-key-rgb-lighting-touch-panel-white-edition"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for keyboards with the best visual fit and same color to this case: {{URL_2}}/produc"
+  },
+  "945163435d714a0baea55523cc1fe8f2": {
+    "task_uid": "945163435d714a0baea55523cc1fe8f2",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task7",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/pny-geforce-xlr8-rtx-2060-6gb-gaming-overclocked-edition-dual-fan"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a GPU from the brand PNY. If multiple offers share the lowest price, ret"
+  },
+  "e485786845ff490ba8db98c1ae9c5a0e": {
+    "task_uid": "e485786845ff490ba8db98c1ae9c5a0e",
+    "task_tag": "EndtoEnd",
+    "webmall_task_id": "Webmall_EndToEnd_Task7",
+    "category": "FindAndOrder",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-rog-ryuo-iii-360-argb-360mm-liquid-cpu-cooler-8th-gen-asetek-pump-3-x-argb-fans-anime-matrix-led-display-white-edition",
+      "{{URL_3}}/product/corsair-vengeance-lpx-16gb-kit-2-x-8gb-ddr4-3000mhz-pc4-24000-cl16-xmp-2-0-dimm-memory"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Asus ROG Ryuo III 360 ARGB 360mm Liquid CPU Cooler, add it to the sh"
+  },
+  "deaa61ddd20f4cad9c2d1e965698d67b": {
+    "task_uid": "deaa61ddd20f4cad9c2d1e965698d67b",
+    "task_tag": "FindSubstitutes",
+    "webmall_task_id": "Webmall_Find_Substitutes_Task5",
+    "category": "Substitute",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/asus-dual-rtx4060-evo-oc-pcie4-8gb-ddr6-hdmi-3-dp-2535mhz-clock-overclocked"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest alternative for this GPU with only a slight loss in performance: {{URL_4}}/product"
+  },
+  "b7bac2c9dccb4d3eb448ff39788ebc66": {
+    "task_uid": "b7bac2c9dccb4d3eb448ff39788ebc66",
+    "task_tag": "FindCompatibleProducts",
+    "webmall_task_id": "Webmall_Find_Compatible_Products_Task2",
+    "category": "Compatible_Products",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/amd-ryzen-threadripper-pro-5975wx-wrx8-3-6ghz-4-5-turbo-32-core-280w-146mb-cache-7nm-5th-gen-no-graphics-no-heatsink-fan",
+      "{{URL_4}}/product/amd-ryzen-threadripper-pro-5975wx-wrx8-3-6ghz-4-5-turbo-32-core-280w-146mb-cache-7nm-5th-gen-no-graphics-no-heatsink-fan",
+      "{{URL_4}}/product/amd-ryzen-threadripper-pro-5965wx-wrx8-3-8ghz-4-5-turbo-24-core-280w-140mb-cache-7nm-5th-gen-no-graphics-no-heatsink-fan"
+    ],
+    "match_score": 0.7142857142857143,
+    "instruction": "Find all offers for compatible CPUs for this motherboard: {{URL_3}}/product/asus-pro-ws-wrx80e-sage-"
+  },
+  "d7b2e5619bbf495989529a59f4fcaa34": {
+    "task_uid": "d7b2e5619bbf495989529a59f4fcaa34",
+    "task_tag": "ProductsSatisfyingVagueRequirements",
+    "webmall_task_id": "Webmall_Products_Satisfying_Vague_Requirements_Task7",
+    "category": "Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_1}}/product/sandberg-displayport-male-to-female-hdmi-converter-cable-black-5-year-warranty",
+      "{{URL_1}}/product/jedel-displayport-male-to-hdmi-female-converter-cable-black",
+      "{{URL_2}}/product/sandberg-displayport-male-to-female-hdmi-converter-cable-black-5-year-warranty",
+      "{{URL_2}}/product/jedel-displayport-male-to-hdmi-female-converter-cable-black",
+      "{{URL_3}}/product/displayport-to-hdmi-adapter",
+      "{{URL_1}}/product/displayport-male-to-hdmi-female-converter-display-adapter-cable-1080p-full-hd-audio-video"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for an adapter so I can connect my monitor, which does not support HDMI, to an HDMI "
+  },
+  "c2b0c383b748483dbf6b9d0a988cceb4": {
+    "task_uid": "c2b0c383b748483dbf6b9d0a988cceb4",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task11",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/corsair-3000d-rgb-airflow-gaming-case-w-glass-window-atx-3x-ar120-rgb-fans-gpu-cooling-4-slot-gpu-support-high-airflow-front-white",
+      "{{URL_1}}/product/corsair-3000d-rgb-airflow-gaming-case-w-glass-window-atx-3x-ar120-rgb-fans-gpu-cooling-3-slot-gpu-support-high-airflow-front-white"
+    ],
+    "match_score": 0.7142857142857143,
+    "instruction": "Find all offers for the Corsair 3000D RGB Airflow Gaming Case."
+  },
+  "a2dc1b7a75134647aaf2c20bc82b75cb": {
+    "task_uid": "a2dc1b7a75134647aaf2c20bc82b75cb",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task5",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/team-2tb-mp44l-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-4800-4400-mb-s-heat-dissipating-graphene-label",
+      "{{URL_4}}/product/team-2tb-mp44l-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-4800-4400-mb-s-heat-dissipating-graphene-label",
+      "{{URL_1}}/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label",
+      "{{URL_4}}/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label"
+    ],
+    "match_score": 0.75,
+    "instruction": "Find all offers for  NVMe SSDs from Team which support PCIe4."
+  },
+  "6eaaebfc174b429db8cd5dc900b0b00d": {
+    "task_uid": "6eaaebfc174b429db8cd5dc900b0b00d",
+    "task_tag": "EndtoEnd",
+    "webmall_task_id": "Webmall_EndToEnd_Task2",
+    "category": "FindAndOrder",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-43-rog-strix-4k-uhd-dsc-gaming-monitor-xg43uq-3840-x-2160-1ms-4-hdmi-dp-usb-speakers-displayhdr-1000-remote-control-rgb-vesa"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the ROG STRIX 4K UHD DSC Gaming Monitor (XG43UQ), add it to the shopping"
+  },
+  "07f5bca86b55489180542f7b87034439": {
+    "task_uid": "07f5bca86b55489180542f7b87034439",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task8",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/fractal-design-560w-ion-2-psu-fully-modular-fluid-dynamic-fan-80-platinum-ultraflex-wires-whisper-quiet-mode"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a PSU for PCs with more than 550 W. If multiple offers share the lowest "
+  },
+  "9ef50470a95446ef89f2f37fcc24ec00": {
+    "task_uid": "9ef50470a95446ef89f2f37fcc24ec00",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task9",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/hama-high-speed-hdmi-cable-ultra-hd-4k-ethernet-gold-plated-5-metre",
+      "{{URL_1}}/product/hama-high-speed-hdmi-cable-ultra-hd-4k-ethernet-gold-plated-5-metre"
+    ],
+    "match_score": 0.6666666666666666,
+    "instruction": "Find all offers for HDMI cables longer than 3 metres."
+  },
+  "232c21f186804b808fea91e18ccec092": {
+    "task_uid": "232c21f186804b808fea91e18ccec092",
+    "task_tag": "Checkout",
+    "webmall_task_id": "Webmall_Checkout_Task1",
+    "category": "Checkout",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_3}}/product/trust-tk-350-wireless-membrane-keyboard-spill-proof-silent-keys-media-keys-black"
+    ],
+    "match_score": 0.9,
+    "instruction": "Add the product on page {{URL_3}}/product/trust-tk-350-wireless-membrane-keyboard-spill-proof-silent"
+  },
+  "33f0b28a99694aa28d4370bacf65cf11": {
+    "task_uid": "33f0b28a99694aa28d4370bacf65cf11",
+    "task_tag": "FindSubstitutes",
+    "webmall_task_id": "Webmall_Find_Substitutes_Task4",
+    "category": "Substitute",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/samsung-odyssey-g3-lf27g35tfwuxen-27-gaming-monitor-144hz-1ms-1080p-fhd"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest alternative for this monitor having the same size: {{URL_1}}/product/asus-27-tuf-g"
+  },
+  "49c2dd6584354367b86e595b1b254c6a": {
+    "task_uid": "49c2dd6584354367b86e595b1b254c6a",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task5",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/kingston-1tb-nv2-m-2-nvme-ssd-m-2-2280-pcie4-r-w-3500-2100-mb-s",
+      "{{URL_1}}/product/kingston-1tb-nv2-m-2-nvme-ssd-m-2-2280-pcie4-r-w-3500-2100-mb-s"
+    ],
+    "match_score": 0.7142857142857143,
+    "instruction": "Find all offers for the Kingston 1TB NV2 M.2 NVMe SSD."
+  },
+  "b00bbe997f284aed9a81d3a0e565637b": {
+    "task_uid": "b00bbe997f284aed9a81d3a0e565637b",
+    "task_tag": "Checkout",
+    "webmall_task_id": "Webmall_Checkout_Task7",
+    "category": "Checkout",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-rog-hone-ace-aim-lab-edition-gaming-mouse-pad-measurement-markings-for-aim-lab-software-hybrid-cloth-surface-oil-dust-repellent-508-x-420-mm"
+    ],
+    "match_score": 0.9,
+    "instruction": "Add the product on page {{URL_3}}/product/asus-rog-hone-ace-aim-lab-edition-gaming-mouse-pad-measure"
+  },
+  "f1fd2bb33f9a40e994bdda1272a463c2": {
+    "task_uid": "f1fd2bb33f9a40e994bdda1272a463c2",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task3",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_1}}/product/smartphone-samsung-galaxy-a25-5g-6-128gb-yellow-sm-a256bzydeue",
+      "{{URL_2}}/product/samsung-galaxy-a35-5g-a356b-dual-sim-256gb-awesome-iceblue-android-14-smartphone",
+      "{{URL_2}}/product/samsung-galaxy-a25-5g-a256b-dual-sim-128gb-blue-black-android-14-0-smartphone",
+      "{{URL_2}}/product/samsung-galaxy-a25-5g-a256b-dual-sim-128gb-blue-android-14-0-smartphone"
+    ],
+    "match_score": 0.6,
+    "instruction": "Find all offers for the Samsung Galaxy A25 and A35."
+  },
+  "bc0c902cc2cc4255ab02acabc282fb66": {
+    "task_uid": "bc0c902cc2cc4255ab02acabc282fb66",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task1",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_1}}/product/uag-apple-watch-44mm-42mm-civilian-strap-slate-orange",
+      "{{URL_3}}/product/uag-civilian-strap-for-apple-watch-series-7-se-6-5-4-3-2-1-45mm-42mm-44mm-slate-orange-barcode-812451034912"
+    ],
+    "match_score": 0.7777777777777778,
+    "instruction": "Find all offers for orange straps that fit with the Apple Watch Series 6."
+  },
+  "a6ed8ba3033845539ba27903548e8a22": {
+    "task_uid": "a6ed8ba3033845539ba27903548e8a22",
+    "task_tag": "FindCompatibleProducts",
+    "webmall_task_id": "Webmall_Find_Compatible_Products_Task4",
+    "category": "Compatible_Products",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/corsair-vengeance-64gb-kit-2-x-32gb-ddr5-5600mhz-pc5-44800-cl40-1-25v-pmic-amd-optimised-dimm-memory",
+      "{{URL_1}}/product/corsair-vengeance-64gb-kit-2-x-32gb-ddr5-5200mhz-pc5-41600-cl40-1-25v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_1}}/product/kingston-fury-beast-32gb-ddr5-5600mhz-pc5-44800-cl40-1-25v-ecc-xmp-3-0-pmic-dimm-memory"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find kits with single or multiple 32 GB RAM sticks compatible with this motherboard: {{URL_4}}/produ"
+  },
+  "3feea8377a87475e8a95f93af0e13738": {
+    "task_uid": "3feea8377a87475e8a95f93af0e13738",
+    "task_tag": "FindSubstitutes",
+    "webmall_task_id": "Webmall_Find_Substitutes_Task1",
+    "category": "Substitute",
+    "answer_type": "cart",
+    "expected_urls": [
+      "{{URL_2}}/product/arctic-liquid-freezer-iii-360mm-liquid-cpu-cooler-p12-pwm-pst-fans-amp-pwm-controlled-pump"
+    ],
+    "match_score": 0.7142857142857143,
+    "instruction": "Find the cheapest alternative for this item: {{URL_3}}/product/arctic-liquid-freezer-iii-360mm-liqui"
+  },
+  "194e2797198b42ae96cd5693490ac651": {
+    "task_uid": "194e2797198b42ae96cd5693490ac651",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task6",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_1}}/product/corsair-vengeance-lpx-32gb-kit-2-x-16gb-ddr4-3000mhz-pc4-24000-cl16-xmp-2-0-dimm-memory"
+    ],
+    "match_score": 0.6666666666666666,
+    "instruction": "Find all offers for DDR4 2x16 GB RAM Kits with 3000MHz."
+  },
+  "88958e999e6d40c4a90758e913d77ffd": {
+    "task_uid": "88958e999e6d40c4a90758e913d77ffd",
+    "task_tag": "AddtoCart",
+    "webmall_task_id": "Webmall_Add_To_Cart_Task6",
+    "category": "Add_To_Cart",
+    "answer_type": "cart",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-23-8-frameless-eye-care-monitor-va24dqsb-ips-1920-x-1080-75hz-vga-hdmi-dp-usb-hub-vesa",
+      "{{URL_1}}/product/asus-23-8-frameless-eye-care-monitor-va24dqsb-ips-1920-x-1080-75hz-vga-hdmi-dp-usb-hub-vesa"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for the Asus 23.8\" Frameless Eye Care Monitor (VA24DQSB) and add each of them to the"
+  },
+  "ebcdc85561f147a8af110fbd74cf7306": {
+    "task_uid": "ebcdc85561f147a8af110fbd74cf7306",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task2",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/canon-eos-r5-ii",
+      "{{URL_1}}/product/eos-r5-mark-ii-body",
+      "{{URL_3}}/product/canon-eos-r5-mark-ii-full-frame-sans-miroir-camera",
+      "{{URL_4}}/product/canon-eos-r5-mark-ii-mirrorless-digital-camera-body-only"
+    ],
+    "match_score": 0.6,
+    "instruction": "Find all offers for the Canon EOS R5 Mark II."
+  },
+  "233aa6457c054445a1150694bf6a5a86": {
+    "task_uid": "233aa6457c054445a1150694bf6a5a86",
+    "task_tag": "CheapestOfferSpecificRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Specific_Requirements_Task6",
+    "category": "Cheapest_Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/asrock-b660m-pro-rs-intel-b660-1700-micro-atx-4-ddr4-hdmi-dp-pcie4-rgb-2x-m-2"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a motherboard with RGB lighting. If multiple offers share the lowest pri"
+  },
+  "7d18858b5a5d496e9f41b5b9fa9cfa67": {
+    "task_uid": "7d18858b5a5d496e9f41b5b9fa9cfa67",
+    "task_tag": "Checkout",
+    "webmall_task_id": "Webmall_Checkout_Task3",
+    "category": "Checkout",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_2}}/product/adata-1tb-hv620s-slim-external-hard-drive-2-5-usb-3-2-11-5mm-thick-black"
+    ],
+    "match_score": 0.9,
+    "instruction": "Add the product on page {{URL_2}}/product/adata-1tb-hv620s-slim-external-hard-drive-2-5-usb-3-2-11-5"
+  },
+  "fa7393e32d6e43b786f4251b512bcce2": {
+    "task_uid": "fa7393e32d6e43b786f4251b512bcce2",
+    "task_tag": "CheapestOfferVagueRequirements",
+    "webmall_task_id": "Webmall_Cheapest_Offer_Vague_Requirements_Task5",
+    "category": "Cheapest_Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-27-tuf-gaming-monitor-vg279q3a-1920-x-1080-fast-ips-1ms-elmb-180hz-variable-overdrive-99-srgb-vesa",
+      "{{URL_1}}/product/asus-27-tuf-gaming-monitor-vg279q3a-1920-x-1080-fast-ips-1ms-elmb-180hz-variable-overdrive-99-srgb-vesa",
+      "{{URL_4}}/product/asrock-27-gaming-monitor-pg27fft1b-ips-1920-x-1080-1ms-2-hdmi-dp-180hz-srgb-123-freesync-vesa",
+      "{{URL_1}}/product/asrock-27-gaming-monitor-pg27fft1b-ips-1920-x-1080-1ms-2-hdmi-dp-180hz-srgb-123-freesync-vesa"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for a gaming monitor which is suitable for competitive reaction-based e-spor"
+  },
+  "3191661fafcd4cc286823b8f497d3236": {
+    "task_uid": "3191661fafcd4cc286823b8f497d3236",
+    "task_tag": "ProductsSatisfyingVagueRequirements",
+    "webmall_task_id": "Webmall_Products_Satisfying_Vague_Requirements_Task4",
+    "category": "Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/adata-xpg-lancer-blade-rgb-32gb-kit-2-x-16gb-ddr5-6000mhz-cl30-1-35v-ecc-pmic-xmp-3-0-amd-expo-dimm-memory",
+      "{{URL_1}}/product/corsair-vengeance-rgb-32gb-kit-2-x-16gb-ddr5-6200mhz-pc5-49600-cl36-1-4v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_1}}/product/corsair-vengeance-rgb-32gb-kit-2-x-16gb-ddr5-5600mhz-pc5-44800-cl40-1-25v-xmp-3-0-pmic-dimm-memory-black",
+      "{{URL_3}}/product/corsair-vengeance-rgb-32gb-kit-2-x-16gb-ddr5-6000mhz-pc5-48000-cl36-1-25v-xmp-3-0-pmic-dimm-memory-white",
+      "{{URL_3}}/product/corsair-vengeance-rgb-32gb-kit-2-x-16gb-ddr5-5600mhz-pc5-44800-cl36-1-25v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_3}}/product/corsair-dominator-platinum-rgb-32gb-kit-2-x-16gb-ddr5-6200mhz-pc5-49600-cl36-1-3v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_3}}/product/corsair-dominator-platinum-rgb-32gb-kit-2-x-16gb-ddr5-6200mhz-pc5-49600-cl36-1-4v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_3}}/product/corsair-vengeance-rgb-64gb-kit-4-x-16gb-ddr5-5600mhz-pc5-44800-cl36-1-25v-xmp-3-0-pmic-dimm-memory",
+      "{{URL_3}}/product/kingston-fury-beast-rgb-32gb-kit-2-x-16gb-ddr5-6000mhz-pc5-48000-cl36-1-35v-ecc-xmp-3-0-pmic-amd-expo-dimm-memory"
+    ],
+    "match_score": 0.7777777777777778,
+    "instruction": "Find all offers for DDR5 RAM that match a colorful LED gaming aesthetic."
+  },
+  "ba65d33f3b29492fb8cb30a14b915d66": {
+    "task_uid": "ba65d33f3b29492fb8cb30a14b915d66",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "webmall_task_id": "Webmall_Products_Fulfilling_Specific_Requirements_Task4",
+    "category": "Best_Fit_Specific",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/asus-rog-ryujin-iii-360-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software-black",
+      "{{URL_1}}/product/asus-rog-ryujin-iii-360-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software-black",
+      "{{URL_2}}/product/asus-rog-ryujin-ii-argb-360mm-liquid-cpu-cooler-3-x-12cm-rog-argb-fans-customisable-3-5-lcd-display",
+      "{{URL_2}}/product/asus-rog-ryujin-iii-360mm-liquid-cpu-cooler-3x-12cm-pwm-noctua-fans-full-colour-customisable-lcd-display",
+      "{{URL_2}}/product/asus-rog-ryuo-120mm-liquid-cpu-cooler-1-x-12cm-pwm-fan-full-colour-oled-display-rgb",
+      "{{URL_2}}/product/asus-rog-ryujin-iii-360-eva-02-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software",
+      "{{URL_3}}/product/asus-rog-ryujin-ii-argb-360mm-liquid-cpu-cooler-3-x-12cm-rog-argb-fans-customisable-3-5-lcd-display",
+      "{{URL_3}}/product/asus-rog-ryujin-iii-360mm-liquid-cpu-cooler-3x-12cm-pwm-noctua-fans-full-colour-customisable-lcd-display",
+      "{{URL_3}}/product/asus-rog-ryuo-120mm-liquid-cpu-cooler-1-x-12cm-pwm-fan-full-colour-oled-display-rgb",
+      "{{URL_3}}/product/asus-rog-ryujin-iii-360-eva-02-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software",
+      "{{URL_4}}/product/asus-rog-strix-lc-iii-240-argb-white-liquid-cpu-cooler-240mm-7th-gen-v2-asetek-pump-argb-fans-customisable-lcd-display-rotatable-water-block"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find all offers for AIO liquid cpu coolers from ASUS which can display GIFs."
+  },
+  "1273cd377d0e4403a88ec4eb8b340eca": {
+    "task_uid": "1273cd377d0e4403a88ec4eb8b340eca",
+    "task_tag": "ProductsSatisfyingVagueRequirements",
+    "webmall_task_id": "Webmall_Products_Satisfying_Vague_Requirements_Task6",
+    "category": "Best_Fit_Vague",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/pny-rtx4000-sff-ada-lovelace-professional-graphics-card-20gb-ddr6-4-minidp-dp-adapter-6144-cuda-cores-dual-slot-low-profile-retail"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find an offer for a GPU with more than 16GB of VRAM that is suitable for training and running large "
+  },
+  "17dbb505e1304188ab8b24e1419541b3": {
+    "task_uid": "17dbb505e1304188ab8b24e1419541b3",
+    "task_tag": "FindSubstitutes",
+    "webmall_task_id": "Webmall_Find_Substitutes_Task2",
+    "category": "Substitute",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/amd-ryzen-3-3200g-cpu-with-wraith-stealth-cooler-quad-core-am4-3-6ghz-4-0-turbo-65w-12nm-3rd-gen-vega-8-graphics-picasso"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for this specific product: {{URL_3}}/product/amd-ryzen-3-3200g-cpu-with-wrai"
+  },
+  "bb4139a2ba6f4267ad69309e7bc40834": {
+    "task_uid": "bb4139a2ba6f4267ad69309e7bc40834",
+    "task_tag": "FindSubstitutes",
+    "webmall_task_id": "Webmall_Find_Substitutes_Task3",
+    "category": "Substitute",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_4}}/product/team-1tb-mp44-m-2-nvme-gen4-ssd-m-2-2280-pcie4-r-w-7400-6500-mb-s-heat-dissipating-graphene-label"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest alternative with at least the same capacity and speed for this product: {{URL_3}}/"
+  },
+  "e9623fc7fed44861b1d4dc10d2aec266": {
+    "task_uid": "e9623fc7fed44861b1d4dc10d2aec266",
+    "task_tag": "Checkout",
+    "webmall_task_id": "Webmall_Checkout_Task6",
+    "category": "Checkout",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_2}}/product/corsair-3500x-gaming-case-w-glass-side-amp-front-e-atx-no-fans-usb-c-asus-btf-compatible-white"
+    ],
+    "match_score": 0.9,
+    "instruction": "Add the product on page {{URL_2}}/product/corsair-3500x-gaming-case-w-glass-side-amp-front-e-atx-no-"
+  },
+  "a61d02d9b07242ad8034acf5857d219f": {
+    "task_uid": "a61d02d9b07242ad8034acf5857d219f",
+    "task_tag": "CheapestProductSearch",
+    "webmall_task_id": "Webmall_Find_Cheapest_Offer_Task5",
+    "category": "Cheapest_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_2}}/product/netac-z-slim-1tb-m-2-external-ssd-usb-3-2-gen2-type-c-up-to-550mb-s-aluminium"
+    ],
+    "match_score": 0.9,
+    "instruction": "Find the cheapest offer for the Netac Z Slim 1TB M.2 External SSD. If multiple offers share the lowe"
+  },
+  "8214dbc9ce734341b49efa15f08497ad": {
+    "task_uid": "8214dbc9ce734341b49efa15f08497ad",
+    "task_tag": "SingleProductSearch",
+    "webmall_task_id": "Webmall_Find_Specific_Product_Task10",
+    "category": "Specific_Product",
+    "answer_type": "string",
+    "expected_urls": [
+      "{{URL_3}}/product/asus-43-rog-strix-4k-uhd-dsc-gaming-monitor-xg43uq-3840-x-2160-1ms-4-hdmi-dp-usb-speakers-displayhdr-1000-remote-control-rgb-vesa"
+    ],
+    "match_score": 0.8,
+    "instruction": "Find all offers for the Asus 43\" ROG STRIX 4K UHD DSC Gaming Monitor (XG43UQ)."
+  },
+  "622832d524704bd9a5a2e0a4ed3efb15": {
+    "task_uid": "622832d524704bd9a5a2e0a4ed3efb15",
+    "task_tag": "EndtoEnd",
+    "webmall_task_id": "Webmall_EndToEnd_Task8",
+    "category": "FindAndOrder",
+    "answer_type": "checkout",
+    "expected_urls": [
+      "{{URL_2}}/product/be-quiet-pure-base-500-gaming-case-with-window-atx-2-x-pure-wings-2-fans-psu-shroud-black",
+      "{{URL_2}}/product/fractal-design-560w-ion-2-psu-fully-modular-fluid-dynamic-fan-80-platinum-ultraflex-wires-whisper-quiet-mode"
+    ],
+    "match_score": 0.8888888888888888,
+    "instruction": "Find the cheapest offer for the Be Quiet! Pure Base 500 Gaming Case and the cheapest offer for a PC "
+  }
+}

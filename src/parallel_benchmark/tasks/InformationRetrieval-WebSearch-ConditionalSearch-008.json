@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-008",
+    "task_uid": "fb4dca31-5b24-4b36-a97b-8f17e453b471",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Investigate the first-in-class drug approved for marketing in the global biopharmaceutical field by the FDA or EMA between 2023 and 2024, and provide the drug name. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Leqembi",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-008"
+}

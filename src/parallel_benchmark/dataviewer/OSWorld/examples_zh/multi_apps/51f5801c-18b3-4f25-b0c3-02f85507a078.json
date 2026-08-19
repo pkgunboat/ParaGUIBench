@@ -1,0 +1,50 @@
+{
+  "id": "51f5801c-18b3-4f25-b0c3-02f85507a078",
+  "snapshot": "libreoffice_impress",
+  "instruction": "I've been working on this presentation in LibreOffice Impress and I've added a bunch of speaker notes for my upcoming talk. I'd like to have those notes handy in a separate document when I rehearse. Could you assist me in extracting all the presenter notes from the Impress file and saving them as a Word document? Just keep the text of the notes, do not add any formatting or page number information. I'd like the file to be named 'notes.docx' and placed on my Desktop for easy access.",
+  "source": "https://github.com/danielrcollins1/ImpressExtractNotes",
+  "config": [
+    {
+      "type": "download",
+      "parameters": {
+        "files": [
+          {
+            "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/51f5801c-18b3-4f25-b0c3-02f85507a078/Dickinson_Slides.pptx",
+            "path": "/home/user/Desktop/Dickinson_Slides.pptx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/Dickinson_Slides.pptx"
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_impress",
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "compare_docx_files",
+    "result": {
+      "type": "vm_file",
+      "path": "/home/user/Desktop/notes.docx",
+      "dest": "notes.docx"
+    },
+    "expected": {
+      "type": "cloud_file",
+      "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/51f5801c-18b3-4f25-b0c3-02f85507a078/notes_gold.docx",
+      "dest": "notes_gold.docx"
+    },
+    "options": {
+      "ignore_blanks": true
+    }
+  },
+  "proxy": false,
+  "fixed_ip": false,
+  "possibility_of_env_change": "low",
+  "instruction_zh": "我一直在用 LibreOffice Impress 制作这个演示文稿，并为我即将进行的演讲添加了许多演讲者备注。我希望在排练时能将这些备注放在一个单独的文档中，以便随时查阅。你能帮我把 Impress 文件中的所有演示者备注提取出来并保存为 Word 文档吗？只保留备注文本，不要添加任何格式或页码信息。我希望文件名为“notes.docx”，并放在我的桌面上以便轻松访问。"
+}

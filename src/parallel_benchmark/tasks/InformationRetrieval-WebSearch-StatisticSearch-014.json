@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-014",
+    "task_uid": "5c452f20-25a5-4c4f-ab51-5ba3168e1e2b",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among all editions of the Vendée Globe solo non-stop round-the-world sailing race held between 2015-2024, identify the edition where the champion had the shortest finishing time. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "2024",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-014"
+}

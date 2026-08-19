@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-004",
+    "task_uid": "cf706a4b-01a8-40be-92b9-539e77024928",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "Which pages in this PPT have obvious correspondence between images and text, and which images do not match the text content? Format: match:a,b,c;unmatch:a,b,c (list page numbers). Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "match:2,3,5;unmatch:8",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/cf706a4b-01a8-40be-92b9-539e77024928",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-Readonlyppt-004"
+}

@@ -1,0 +1,466 @@
+{
+  "version": "1.0.0",
+  "task_id": "task_xxx",
+  "instruction": "查询北京天气",
+  "metadata": {
+    "start_timestamp": 1761890896.0051613,
+    "start_time_iso": "2025-10-31T14:08:16.005161",
+    "end_timestamp": 1761890943.1224751,
+    "end_time_iso": "2025-10-31T14:09:03.122475",
+    "total_duration": 47.117313861846924
+  },
+  "agents": {
+    "plan_agent": {
+      "device_id": null,
+      "recording": {
+        "start_timestamp": 1761890896.0051613,
+        "start_time_iso": "2025-10-31T14:08:16.005161",
+        "end_timestamp": 1761890943.1224751,
+        "end_time_iso": "2025-10-31T14:09:03.122475",
+        "duration": 47.117313861846924
+      },
+      "rounds": [
+        {
+          "round": 0,
+          "model_prediction": {
+            "start_timestamp": 1761890900.2960799,
+            "start_time_iso": "2025-10-31T14:08:20.296080",
+            "end_timestamp": 1761890906.7717342,
+            "end_time_iso": "2025-10-31T14:08:26.771734",
+            "duration": 6.459289789199829,
+            "response": "<tool_call>\n{\"name\": \"call_gui_agent\", \"arguments\": {\"agent_id\": \"gui_agent_0\", \"task\": \"查询北京天气\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"call_gui_agent\", \"arguments\": {\"agent_id\": \"gui_agent_1\", \"task\": \"查询上海天气\"}}\n</tool_call>",
+            "actions": [
+              {
+                "type": "call_gui_agent",
+                "agent_id": "gui_agent_0",
+                "task": "查询北京天气"
+              },
+              {
+                "type": "call_gui_agent",
+                "agent_id": "gui_agent_1",
+                "task": "查询上海天气"
+              }
+            ]
+          },
+          "action_execution": {
+            "start_timestamp": 1761890906.7717984,
+            "start_time_iso": "2025-10-31T14:08:26.771798",
+            "end_timestamp": 1761890906.9503222,
+            "end_time_iso": "2025-10-31T14:08:26.950322",
+            "duration": 0.17852377891540527,
+            "result": {
+              "status": "success",
+              "returncode": 0,
+              "output": "Successfully dispatched 2 GUI agents",
+              "error": "",
+              "dispatched_agents": ["gui_agent_0", "gui_agent_1"]
+            }
+          },
+          "total_duration": 6.637813568115234
+        },
+        {
+          "round": 1,
+          "model_prediction": {
+            "start_timestamp": 1761890950.1234567,
+            "start_time_iso": "2025-10-31T14:09:10.123457",
+            "end_timestamp": 1761890955.7891234,
+            "end_time_iso": "2025-10-31T14:09:15.789123",
+            "duration": 5.665666699409485,
+            "response": "<tool_call>\n{\"name\": \"call_code_agent\", \"arguments\": {\"agent_id\": \"code_agent_0\", \"task\": \"分析天气数据并生成报告\", \"code_type\": \"python\"}}\n</tool_call>",
+            "actions": [
+              {
+                "type": "call_code_agent",
+                "agent_id": "code_agent_0",
+                "task": "分析天气数据并生成报告",
+                "code_type": "python"
+              }
+            ]
+          },
+          "action_execution": {
+            "start_timestamp": 1761890955.7891234,
+            "start_time_iso": "2025-10-31T14:09:15.789123",
+            "end_timestamp": 1761890956.1234567,
+            "end_time_iso": "2025-10-31T14:09:16.123457",
+            "duration": 0.3343333005905151,
+            "result": {
+              "status": "success",
+              "returncode": 0,
+              "output": "Successfully dispatched code agent",
+              "error": "",
+              "dispatched_agents": ["code_agent_0"]
+            }
+          },
+          "total_duration": 6.0
+        }
+      ],
+      "summary": {
+        "total_rounds": 2,
+        "rounds_with_action": 2,
+        "total_model_time": 12.125,
+        "total_action_time": 0.513,
+        "average_model_time": 6.0625,
+        "average_action_time": 0.2565,
+        "dispatched_gui_agents": 2,
+        "dispatched_code_agents": 1
+      }
+    },
+    "gui_agents": [
+      {
+        "agent_id": "gui_agent_0",
+        "task": "查询北京天气",
+        "parent_agent": "plan_agent",
+        "parent_round": 0,
+        "device_id": ["Desktop-1"],
+        "recording": {
+          "path": "screenshots_task2/recording_gui_0.mp4",
+          "start_timestamp": 1761890906.9503222,
+          "start_time_iso": "2025-10-31T14:08:26.950322",
+          "end_timestamp": 1761890943.1224751,
+          "end_time_iso": "2025-10-31T14:09:03.122475",
+          "duration": 36.172152900695801
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "model_prediction": {
+              "start_timestamp": 1761890900.2960799,
+              "start_time_iso": "2025-10-31T14:08:20.296080",
+              "end_timestamp": 1761890906.7717342,
+              "end_time_iso": "2025-10-31T14:08:26.771734",
+              "duration": 6.459289789199829,
+              "response": "<tool_call>\n{\"name\": \"computer_use\", \"arguments\": {\"action\": \"left_click\", \"coordinate\": [14, 62]}}\n</tool_call>",
+              "actions": [
+                {
+                  "type": "computer_use",
+                  "action": "left_click",
+                  "coordinate": [14, 62]
+                }
+              ],
+              "pyautogui_code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.click(26, 66, button='left')\n"
+            },
+            "action_execution": {
+              "start_timestamp": 1761890906.7717984,
+              "start_time_iso": "2025-10-31T14:08:26.771798",
+              "end_timestamp": 1761890906.9503222,
+              "end_time_iso": "2025-10-31T14:08:26.950322",
+              "duration": 0.17852377891540527,
+              "code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.click(26, 66, button='left')\n",
+              "result": {
+                "status": "success",
+                "returncode": 0,
+                "output": "",
+                "error": ""
+              }
+            },
+            "total_duration": 6.637813568115234
+          },
+          {
+            "round": 1,
+            "model_prediction": {
+              "start_timestamp": 1761890909.0019913,
+              "start_time_iso": "2025-10-31T14:08:29.001991",
+              "end_timestamp": 1761890910.9527004,
+              "end_time_iso": "2025-10-31T14:08:30.952700",
+              "duration": 1.950155258178711,
+              "response": "<tool_call>\n{\"name\": \"computer_use\", \"arguments\": {\"action\": \"type\", \"text\": \"北京天气\"}}\n</tool_call>",
+              "actions": [
+                {
+                  "type": "computer_use",
+                  "action": "type",
+                  "text": "北京天气"
+                }
+              ],
+              "pyautogui_code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.write('北京天气', interval=0.1)\n"
+            },
+            "action_execution": {
+              "start_timestamp": 1761890910.9527855,
+              "start_time_iso": "2025-10-31T14:08:30.952785",
+              "end_timestamp": 1761890911.1124983,
+              "end_time_iso": "2025-10-31T14:08:31.112498",
+              "duration": 0.1597127914428711,
+              "code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.write('北京天气', interval=0.1)\n",
+              "result": {
+                "status": "success",
+                "returncode": 0,
+                "output": "",
+                "error": ""
+              }
+            },
+            "total_duration": 2.109868049621582
+          },
+          {
+            "round": 2,
+            "model_prediction": {
+              "start_timestamp": 1761890913.1681077,
+              "start_time_iso": "2025-10-31T14:08:33.168108",
+              "end_timestamp": 1761890916.4266715,
+              "end_time_iso": "2025-10-31T14:08:36.426672",
+              "duration": 3.258049964904785,
+              "response": "<tool_call>\n{\"name\": \"computer_use\", \"arguments\": {\"action\": \"key\", \"text\": \"enter\"}}\n</tool_call>",
+              "actions": [
+                {
+                  "type": "computer_use",
+                  "action": "key",
+                  "text": "enter"
+                }
+              ],
+              "pyautogui_code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.press('enter')\n"
+            },
+            "action_execution": {
+              "start_timestamp": 1761890916.4267125,
+              "start_time_iso": "2025-10-31T14:08:36.426713",
+              "end_timestamp": 1761890919.7121134,
+              "end_time_iso": "2025-10-31T14:08:39.712113",
+              "duration": 3.285400867462158,
+              "code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.press('enter')\n",
+              "result": {
+                "status": "success",
+                "returncode": 0,
+                "output": "",
+                "error": ""
+              }
+            },
+            "total_duration": 6.543450832366943
+          },
+          {
+            "round": 3,
+            "model_prediction": {
+              "start_timestamp": 1761890921.7756948,
+              "start_time_iso": "2025-10-31T14:08:41.775695",
+              "end_timestamp": 1761890924.7445307,
+              "end_time_iso": "2025-10-31T14:08:44.744531",
+              "duration": 2.9684765338897705,
+              "response": "<tool_call>\n{\"name\": \"computer_use\", \"arguments\": {\"action\": \"terminate\", \"status\": \"success\"}}\n</tool_call>",
+              "actions": [
+                {
+                  "type": "terminate",
+                  "status": "success"
+                }
+              ],
+              "pyautogui_code": "DONE",
+              "special_action": "DONE"
+            },
+            "action_execution": null,
+            "total_duration": 2.9684765338897705
+          }
+        ],
+        "summary": {
+          "total_rounds": 4,
+          "rounds_with_action": 3,
+          "total_model_time": 14.636,
+          "total_action_time": 3.623,
+          "average_model_time": 3.659,
+          "average_action_time": 1.208,
+          "final_status": "success"
+        }
+      },
+      {
+        "agent_id": "gui_agent_1",
+        "task": "查询上海天气",
+        "parent_agent": "plan_agent",
+        "parent_round": 0,
+        "device_id": ["Desktop-2"],
+        "recording": {
+          "path": "screenshots_task2/recording_gui_1.mp4",
+          "start_timestamp": 1761890906.9503222,
+          "start_time_iso": "2025-10-31T14:08:26.950322",
+          "end_timestamp": 1761890943.1224751,
+          "end_time_iso": "2025-10-31T14:09:03.122475",
+          "duration": 36.172152900695801
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "model_prediction": {
+              "start_timestamp": 1761890900.2960799,
+              "start_time_iso": "2025-10-31T14:08:20.296080",
+              "end_timestamp": 1761890906.7717342,
+              "end_time_iso": "2025-10-31T14:08:26.771734",
+              "duration": 6.459289789199829,
+              "response": "<tool_call>\n{\"name\": \"computer_use\", \"arguments\": {\"action\": \"left_click\", \"coordinate\": [14, 62]}}\n</tool_call>",
+              "actions": [
+                {
+                  "type": "computer_use",
+                  "action": "left_click",
+                  "coordinate": [14, 62]
+                }
+              ],
+              "pyautogui_code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.click(26, 66, button='left')\n"
+            },
+            "action_execution": {
+              "start_timestamp": 1761890906.7717984,
+              "start_time_iso": "2025-10-31T14:08:26.771798",
+              "end_timestamp": 1761890906.9503222,
+              "end_time_iso": "2025-10-31T14:08:26.950322",
+              "duration": 0.17852377891540527,
+              "code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.click(26, 66, button='left')\n",
+              "result": {
+                "status": "success",
+                "returncode": 0,
+                "output": "",
+                "error": ""
+              }
+            },
+            "total_duration": 6.637813568115234
+          },
+          {
+            "round": 1,
+            "model_prediction": {
+              "start_timestamp": 1761890909.0019913,
+              "start_time_iso": "2025-10-31T14:08:29.001991",
+              "end_timestamp": 1761890910.9527004,
+              "end_time_iso": "2025-10-31T14:08:30.952700",
+              "duration": 1.950155258178711,
+              "response": "<tool_call>\n{\"name\": \"computer_use\", \"arguments\": {\"action\": \"type\", \"text\": \"上海天气\"}}\n</tool_call>",
+              "actions": [
+                {
+                  "type": "computer_use",
+                  "action": "type",
+                  "text": "上海天气"
+                }
+              ],
+              "pyautogui_code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.write('上海天气', interval=0.1)\n"
+            },
+            "action_execution": {
+              "start_timestamp": 1761890910.9527855,
+              "start_time_iso": "2025-10-31T14:08:30.952785",
+              "end_timestamp": 1761890911.1124983,
+              "end_time_iso": "2025-10-31T14:08:31.112498",
+              "duration": 0.1597127914428711,
+              "code": "import pyautogui\nimport time\npyautogui.FAILSAFE = False\npyautogui.write('上海天气', interval=0.1)\n",
+              "result": {
+                "status": "success",
+                "returncode": 0,
+                "output": "",
+                "error": ""
+              }
+            },
+            "total_duration": 2.109868049621582
+          },
+          {
+            "round": 2,
+            "model_prediction": {
+              "start_timestamp": 1761890913.1681077,
+              "start_time_iso": "2025-10-31T14:08:33.168108",
+              "end_timestamp": 1761890916.4266715,
+              "end_time_iso": "2025-10-31T14:08:36.426672",
+              "duration": 3.258049964904785,
+              "response": "<tool_call>\n{\"name\": \"computer_use\", \"arguments\": {\"action\": \"terminate\", \"status\": \"success\"}}\n</tool_call>",
+              "actions": [
+                {
+                  "type": "terminate",
+                  "status": "success"
+                }
+              ],
+              "pyautogui_code": "DONE",
+              "special_action": "DONE"
+            },
+            "action_execution": null,
+            "total_duration": 3.258049964904785
+          }
+        ],
+        "summary": {
+          "total_rounds": 3,
+          "rounds_with_action": 2,
+          "total_model_time": 11.667,
+          "total_action_time": 0.338,
+          "average_model_time": 3.889,
+          "average_action_time": 0.169,
+          "final_status": "success"
+        }
+      }
+    ],
+    "code_agents": [
+      {
+        "agent_id": "code_agent_0",
+        "task": "分析天气数据并生成报告",
+        "code_type": "python",
+        "parent_agent": "plan_agent",
+        "parent_round": 1,
+        "device_id": ["Desktop-1"],
+        "recording": {
+          "start_timestamp": 1761890956.1234567,
+          "start_time_iso": "2025-10-31T14:09:16.123457",
+          "end_timestamp": 1761890970.5678901,
+          "end_time_iso": "2025-10-31T14:09:30.567890",
+          "duration": 14.444433450698853
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "model_prediction": {
+              "start_timestamp": 1761890956.5,
+              "start_time_iso": "2025-10-31T14:09:16.500000",
+              "end_timestamp": 1761890960.2,
+              "end_time_iso": "2025-10-31T14:09:20.200000",
+              "duration": 3.7,
+              "response": "```python\nimport json\n\nweather_data = {...}\nreport = analyze_weather(weather_data)\nprint(report)\n```",
+              "actions": [
+                {
+                  "type": "code_execution",
+                  "language": "python",
+                  "code": "import json\n\nweather_data = {...}\nreport = analyze_weather(weather_data)\nprint(report)"
+                }
+              ]
+            },
+            "action_execution": {
+              "start_timestamp": 1761890960.2,
+              "start_time_iso": "2025-10-31T14:09:20.200000",
+              "end_timestamp": 1761890965.8,
+              "end_time_iso": "2025-10-31T14:09:25.800000",
+              "duration": 5.6,
+              "code": "import json\n\nweather_data = {...}\nreport = analyze_weather(weather_data)\nprint(report)",
+              "result": {
+                "status": "success",
+                "returncode": 0,
+                "output": "Weather Report:\n北京: 晴天, 15°C\n上海: 多云, 18°C",
+                "error": ""
+              }
+            },
+            "total_duration": 9.3
+          },
+          {
+            "round": 1,
+            "model_prediction": {
+              "start_timestamp": 1761890966.0,
+              "start_time_iso": "2025-10-31T14:09:26.000000",
+              "end_timestamp": 1761890968.5,
+              "end_time_iso": "2025-10-31T14:09:28.500000",
+              "duration": 2.5,
+              "response": "<tool_call>\n{\"name\": \"terminate\", \"arguments\": {\"status\": \"success\", \"result\": \"报告已生成\"}}\n</tool_call>",
+              "actions": [
+                {
+                  "type": "terminate",
+                  "status": "success"
+                }
+              ],
+              "special_action": "DONE"
+            },
+            "action_execution": null,
+            "total_duration": 2.5
+          }
+        ],
+        "summary": {
+          "total_rounds": 2,
+          "rounds_with_action": 1,
+          "total_model_time": 6.2,
+          "total_action_time": 5.6,
+          "average_model_time": 3.1,
+          "average_action_time": 5.6,
+          "final_status": "success"
+        }
+      }
+    ]
+  },
+  "summary": {
+    "total_duration": 74.444433450698853,
+    "total_model_time": 38.816381120681763,
+    "total_action_time": 15.093519962310791,
+    "plan_agent_rounds": 2,
+    "gui_agents_count": 2,
+    "code_agents_count": 1,
+    "total_gui_rounds": 7,
+    "total_code_rounds": 2,
+    "success": true
+  }
+}

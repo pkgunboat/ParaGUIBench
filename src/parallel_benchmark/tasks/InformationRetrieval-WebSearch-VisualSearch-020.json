@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-020",
+    "task_uid": "a90e39a0-6ce3-4112-bbf2-c0e06ee11cc4",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "On the Chinese Wikipedia page for the periodic table (元素周期表), visually identify all elements with a light green (淡绿色) background. List the scientific confirmation year for each of these elements in the format 'Symbol:Year', separated by semicolons. Answer in the format: <answer>PART1; PART2; ...</answer>. Separate multiple items with semicolons (;). Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "H:1766; C:1789; N:1772; O:1774; P:1669; S:1777; Se:1817",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-020"
+}

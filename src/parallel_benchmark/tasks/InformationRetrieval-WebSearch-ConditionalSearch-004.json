@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-004",
+    "task_uid": "0d0f34b5-6163-4537-b565-fce4e8c5d158",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "During SpaceX's Starlink mission, executed on December 17, 2025, what three steps did the Falcon 9 go through from GRID FINS DEPLOY to AUTONOMOUS DRONESHIP LANDING during its return journey? Use semicolons to separate each step. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "entry burn; aerodynamic guidance; vertical landing",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-004"
+}

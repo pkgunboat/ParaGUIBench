@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationExcel-007",
+    "task_uid": "7e6bdc0a-b1dd-47c5-98a7-baafd3f5fd0f",
+    "task_type": "OSWorld脚本改造",
+    "task_tag": "FileOperate",
+    "instruction": "Sort this Excel file separately by date, name, order ID, and sales amount, and save as four separate copies.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/7e6bdc0a-b1dd-47c5-98a7-baafd3f5fd0f",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Batchoperationexcel-007",
+    "eval_rules": [
+        {
+            "check": "check_sort_order",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "column": "B",
+                "order": "asc"
+            },
+            "weight": 1.0,
+            "description": "检查排序列"
+        }
+    ]
+}

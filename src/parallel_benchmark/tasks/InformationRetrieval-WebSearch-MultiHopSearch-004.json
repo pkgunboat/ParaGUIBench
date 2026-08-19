@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-004",
+    "task_uid": "30cab820-35c3-42ad-8719-ac0cd6851b26",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Using the list of 8 member universities published on the Ivy League official website as the target set, identify university combinations that are mutually listed on both universities' official websites as partners for dual degree programs, joint training, or official exchange programs, and provide the number of such combinations. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "0",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Multi-HopSearch-004"
+}

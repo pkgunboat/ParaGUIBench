@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-026",
+    "task_uid": "393b8c61-73b3-4d4f-b3f3-9230750c07aa",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among all track and field athletes in Summer Olympic Games history, filter out those who have won at least 5 gold medals, and identify the one who has broken the most world records. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Paavo Nurmi",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-026"
+}

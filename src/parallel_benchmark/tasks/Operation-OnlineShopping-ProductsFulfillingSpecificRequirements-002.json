@@ -1,0 +1,18 @@
+{
+    "task_id": "Operation-OnlineShopping-ProductsFulfillingSpecificRequirements-002",
+    "task_uid": "36251517df2b4fb780d7851f830b6547",
+    "source_task_id": "products_fulfilling_specific_requirements_task_10",
+    "task_type": "QA",
+    "task_tag": "ProductsFulfillingSpecificRequirements",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for gaming monitors with a resolution higher than 1920x1080, a screen size of at least 27 inches, and a price below 600 euros.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9083/product/asus-27-rog-strix-wqhd-hdr-gaming-monitor-xg27aq-ips-2560-x-1440-1ms-2-hdmi-displayport-170hz-speakers-vesa###http://10.1.110.114:9083/product/asus-31-5-rog-strix-wqhd-curved-hdr-gaming-monitor-xg32vc-2560-x-1440-1ms-hdmi-displayport-usb-170hz-rgb-lighting-vesa",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9083/product/asus-27-rog-strix-wqhd-hdr-gaming-monitor-xg27aq-ips-2560-x-1440-1ms-2-hdmi-displayport-170hz-speakers-vesa",
+        "http://10.1.110.114:9083/product/asus-31-5-rog-strix-wqhd-curved-hdr-gaming-monitor-xg32vc-2560-x-1440-1ms-hdmi-displayport-usb-170hz-rgb-lighting-vesa"
+    ],
+    "original_task_id": "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-36251517df2b4fb780d7851f830b6547"
+}

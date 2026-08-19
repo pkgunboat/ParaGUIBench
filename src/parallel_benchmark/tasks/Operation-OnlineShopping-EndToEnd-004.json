@@ -1,0 +1,32 @@
+{
+    "task_id": "Operation-OnlineShopping-EndToEnd-004",
+    "task_uid": "94191bc954484f90aeb2037c2da2e8a4",
+    "source_task_id": "end_to_end_task_1",
+    "task_type": "QA",
+    "task_tag": "EndToEnd",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind the cheapest offer for the Asrock B550 PHANTOM GAMING 4, add it to the shopping cart and complete the checkout process. Pay via credit card using the following information: Address: Jessica Morgan, jessica.morgan@yahoo.com, Maple Avenue, 742, 60614, Chicago, IL, USA, Credit card number: 4242424242424242, CVV: 123, expiry date: 12/28.\n\nAfter completing the checkout, report the URLs of the products you purchased, separated by ### characters.",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9083/product/asrock-b550-phantom-gaming-4-amd-b550-am4-atx-4-ddr4-hdmi-xfire-pcie4-m-2",
+    "evaluator_path": "evaluators/checkout_evaluator.py",
+    "answer_type": "checkout",
+    "expected_urls": [
+        "http://10.1.110.114:9083/product/asrock-b550-phantom-gaming-4-amd-b550-am4-atx-4-ddr4-hdmi-xfire-pcie4-m-2"
+    ],
+    "user_details": {
+        "name": "Jessica Morgan",
+        "street": "Maple Avenue",
+        "house_number": "742",
+        "zip": "60614",
+        "city": "Chicago",
+        "state": "IL",
+        "country": "USA",
+        "email": "jessica.morgan@yahoo.com"
+    },
+    "payment_info": {
+        "card": "4242424242424242",
+        "cvv": "123",
+        "expiry_date": "12/28"
+    },
+    "original_task_id": "TaskExecution-MultiShopShopping-EndtoEnd-94191bc954484f90aeb2037c2da2e8a4"
+}

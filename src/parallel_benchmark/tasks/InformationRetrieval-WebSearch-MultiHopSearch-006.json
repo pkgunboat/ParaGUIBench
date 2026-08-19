@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-006",
+    "task_uid": "e7bc8cc9-2988-4c8a-8f9a-e09b09a5c4e9",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Using the list of experimental projects published on the CERN official website as the target set, identify experimental project pairs that mutually reference each other in their respective project introduction pages and have explicit data sharing or joint operation relationships, and count the number of project pairs that meet the criteria. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "2",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Multi-HopSearch-006"
+}

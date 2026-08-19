@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-024",
+    "task_uid": "711893a6-8480-4503-8685-56589ba17636",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among the ACM Turing Award winners from 2020 to 2024, how many are bald in their photos on the ACM official website? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "2",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-024"
+}

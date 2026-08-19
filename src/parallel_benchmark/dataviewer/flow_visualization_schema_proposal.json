@@ -1,0 +1,73 @@
+{
+  "task_id": "task_complex_001",
+  "instruction": "多源信息搜集与汇总报告生成",
+  "status": "completed", 
+  "flow_graph": {
+    "nodes": [
+      {
+        "id": "coordinator",
+        "type": "planner",
+        "label": "任务规划 (Coordinator)",
+        "detail": "分解任务为：搜集信息 -> 撰写分段 -> 合并 -> 审阅",
+        "status": "completed"
+      },
+      {
+        "id": "agent_research_a",
+        "type": "gui_agent",
+        "device_id": "Desktop-1",
+        "label": "信息搜集 A (Topic X)",
+        "detail": "搜索关于 Topic X 的最新资料",
+        "status": "completed"
+      },
+      {
+        "id": "agent_research_b",
+        "type": "gui_agent",
+        "device_id": "Desktop-2",
+        "label": "信息搜集 B (Topic Y)",
+        "detail": "搜索关于 Topic Y 的最新资料",
+        "status": "completed"
+      },
+      {
+        "id": "agent_draft_1",
+        "type": "gui_agent",
+        "device_id": "Desktop-1",
+        "label": "撰写草稿 (Section 1)",
+        "detail": "根据资料 A 撰写第一部分",
+        "status": "completed"
+      },
+      {
+        "id": "agent_draft_2",
+        "type": "gui_agent",
+        "device_id": "Desktop-2",
+        "label": "撰写草稿 (Section 2)",
+        "detail": "根据资料 B 撰写第二部分",
+        "status": "completed"
+      },
+      {
+        "id": "code_merge",
+        "type": "code_agent",
+        "device_id": "Desktop-3", 
+        "label": "合并文档",
+        "detail": "将两个部分合并为一个 PDF",
+        "status": "completed"
+      },
+      {
+        "id": "agent_review",
+        "type": "gui_agent",
+        "device_id": "Desktop-1",
+        "label": "最终审阅",
+        "detail": "打开 PDF 进行格式检查和校对",
+        "status": "completed"
+      }
+    ],
+    "edges": [
+      { "source": "coordinator", "target": "agent_research_a", "type": "control" },
+      { "source": "coordinator", "target": "agent_research_b", "type": "control" },
+      { "source": "agent_research_a", "target": "agent_draft_1", "type": "data_flow", "label": "Research Doc A" },
+      { "source": "agent_research_b", "target": "agent_draft_2", "type": "data_flow", "label": "Research Doc B" },
+      { "source": "agent_draft_1", "target": "code_merge", "type": "data_flow", "label": "Draft 1" },
+      { "source": "agent_draft_2", "target": "code_merge", "type": "data_flow", "label": "Draft 2" },
+      { "source": "code_merge", "target": "agent_review", "type": "data_flow", "label": "Merged PDF" }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-026",
+    "task_uid": "ae58ad02-582d-4933-b0d3-873f0c52802e",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among all winners of The Game Awards (TGA) Best Independent Game award (2014-2025), which games' official Steam store cover art (the store page header/capsule image) contains no human or human-like characters at all? Count any cartoon or anthropomorphic character with a human-like face and body (e.g., Cuphead-style characters), armored knights, and human figures illustrated on objects such as playing cards as human-like. Animals, vehicles, and robots/machines do NOT count. Answer in the format: <answer>PART1; PART2; ...</answer>. Separate multiple items with semicolons (;). Only output the game titles, no extra explanation.",
+    "task_source": "self",
+    "answer": "Rocket League; Stray",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-026"
+}

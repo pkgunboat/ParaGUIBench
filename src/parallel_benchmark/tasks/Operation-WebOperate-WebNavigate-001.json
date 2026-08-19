@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-001",
+    "task_uid": "49be33a6-666a-4f17-8f96-54ecf6fca25e",
+    "task_type": "self",
+    "task_tag": "WebOperate",
+    "instruction": "Navigate to the accuweather homepage and open the monthly weather forecast for Manchester, UK this month, and the official page for Manchester's Air Quality Index. After opening each target page, bookmark it in Chrome.",
+    "task_source": "",
+    "answer": "https://www.accuweather.com/en/gb/manchester/ , https://www.accuweather.com/en/gb/manchester/m15-6/air-quality-index/329260",
+    "prepare_script_path": "",
+    "evaluator_path": "eval/webnavigate_bookmark_evaluator.py",
+    "original_task_id": "Operation-WebOperate-Webnavigate-001"
+}

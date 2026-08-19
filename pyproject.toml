@@ -34,6 +34,17 @@ artifact = [
   "Pillow>=11,<13",
   "pypdf>=5,<7",
 ]
+methods = [
+  "openai>=1.82,<3",
+  "Pillow>=11,<13",
+  "requests>=2.32,<3",
+  "numpy>=1.26,<3",
+  "tqdm>=4.65,<5",
+  "pandas>=2.2,<3",
+  "psutil>=5.9,<8",
+  "filelock>=1,<4",
+  "docker>=7,<8",
+]
 onlyoffice = [
   "flask>=3,<4",
   "gunicorn>=22,<24",
@@ -47,9 +58,10 @@ dev = [
 
 [project.scripts]
 paraguibench = "paraguibench.cli.main:main"
+paraguibench-methods = "paraguibench.methods_runner.__main__:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/paraguibench"]
+packages = ["src/paraguibench", "src/parallel_benchmark", "src/desktop_env"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"

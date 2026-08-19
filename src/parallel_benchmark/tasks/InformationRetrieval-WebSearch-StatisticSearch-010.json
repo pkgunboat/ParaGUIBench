@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-010",
+    "task_uid": "37792bfc-881a-4cfd-890e-a86a2ba70500",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Identify the aerospace company with the highest global satellite launch success rate between 2017 and 2024 (with at least 30 launches), and find the rocket model with the most successful satellite launches for that company. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Soyuz 2.1a",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-010"
+}

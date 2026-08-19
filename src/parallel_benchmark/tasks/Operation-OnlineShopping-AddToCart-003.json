@@ -1,0 +1,18 @@
+{
+    "task_id": "Operation-OnlineShopping-AddToCart-003",
+    "task_uid": "79b0cd0861774d4291ce506c43257972",
+    "source_task_id": "add_to_cart_task_4",
+    "task_type": "QA",
+    "task_tag": "AddToCart",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for the motherboard Asus PRO H610T D4-CSM - Corporate Stable Model and add each of them to the respective shopping cart of the shop where you found the offer.\n\nAfter adding the products to the shopping cart, report the URLs of the products you added, separated by ### characters.",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9084/product/asus-pro-h610t-d4-csm-corporate-stable-model-intel-h610-1700-thin-mini-itx-2-ddr4-so-dimm-hdmi-dp-lvds-19v-dc-in-1x-m-2###http://10.1.110.114:9081/product/asus-pro-h610t-d4-csm-corporate-stable-model-intel-h610-1700-thin-mini-itx-2-ddr4-so-dimm-hdmi-dp-lvds-19v-dc-in-1x-m-2",
+    "evaluator_path": "evaluators/cart_evaluator.py",
+    "answer_type": "cart",
+    "expected_urls": [
+        "http://10.1.110.114:9084/product/asus-pro-h610t-d4-csm-corporate-stable-model-intel-h610-1700-thin-mini-itx-2-ddr4-so-dimm-hdmi-dp-lvds-19v-dc-in-1x-m-2",
+        "http://10.1.110.114:9081/product/asus-pro-h610t-d4-csm-corporate-stable-model-intel-h610-1700-thin-mini-itx-2-ddr4-so-dimm-hdmi-dp-lvds-19v-dc-in-1x-m-2"
+    ],
+    "original_task_id": "TaskExecution-MultiShopShopping-AddtoCart-79b0cd0861774d4291ce506c43257972"
+}

@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-013",
+    "task_uid": "56906036-c60a-47d7-9eff-54648aaf50d6",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Identify the top three brands by total global wireless earphone shipments (TWS, excluding open-ear/OWS types) across the 2020-2023 period as a whole. Answer in the format: <answer>PART1; PART2; ...</answer>. Separate multiple items with semicolons (;). Only output the brand names, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Apple; Samsung; Xiaomi",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-013"
+}

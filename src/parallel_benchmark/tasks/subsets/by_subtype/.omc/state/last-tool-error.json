@@ -1,0 +1,7 @@
+{
+  "tool_name": "Read",
+  "tool_input_preview": "{\"file_path\":\"/Users/zedongyu/.claude/projects/-Users-zedongyu-code-project-ParaGUIBench/1cfc656e-d9c2-4d95-9494-56ab0ce3e418/tool-results/brmosc2kq.txt\"}",
+  "error": "File content (25467 tokens) exceeds maximum allowed tokens (25000). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file.",
+  "timestamp": "2026-04-28T05:31:57.318Z",
+  "retry_count": 1
+}

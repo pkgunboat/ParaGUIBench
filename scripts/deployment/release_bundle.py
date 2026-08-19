@@ -477,7 +477,7 @@ def _is_allowlisted_source(path: PurePosixPath) -> bool:
     suffix = path.suffix.casefold()
     if relative.startswith(".github/workflows/"):
         return suffix in {".yaml", ".yml"}
-    if relative.startswith("src/"):
+    if relative.startswith("src/paraguibench/"):
         return suffix == ".py" or path.name == "py.typed"
     if relative.startswith("scripts/"):
         return suffix in {".mjs", ".py", ".sh"}

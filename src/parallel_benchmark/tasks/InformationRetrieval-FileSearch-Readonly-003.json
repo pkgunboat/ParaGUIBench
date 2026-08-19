@@ -1,0 +1,17 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-Readonly-003",
+    "task_uid": "04aad45f-ff78-4508-9403-b60cb8f357ff",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "Could you please check the documents in the shared folder for me? Ignoring content quality, which document appears the most visually tidy? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "project_update",
+    "accepted_answers": [
+        "project_update.pdf",
+        "project_update.docx",
+        "project_update.txt"
+    ],
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/04aad45f-ff78-4508-9403-b60cb8f357ff",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-Readonly-003"
+}

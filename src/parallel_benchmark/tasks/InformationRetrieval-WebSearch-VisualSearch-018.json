@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-018",
+    "task_uid": "6ffc9118-8dad-4b1c-9ba3-3f8b98ec87da",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among companies that have consistently been in the Fortune Global 500 top 10 from 2021-2025, how many companies’ logos contain Chinese characters? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "2",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Visualsearch-018"
+}
