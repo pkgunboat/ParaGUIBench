@@ -102,5 +102,10 @@ def launch(category: str, argv: Sequence[str]) -> None:
 
     check_environment()
     script = runner_script_path(category)
+    # 原 runner 以脚本目录为工作目录执行，使用扁平 import（如
+    # `from run_QA_pipeline import ...`）；装载时等价恢复该执行上下文。
+    script_dir = str(script.parent)
+    if script_dir not in sys.path:
+        sys.path.insert(0, script_dir)
     sys.argv = [str(script)] + list(argv)
     runpy.run_path(str(script), run_name="__main__")
