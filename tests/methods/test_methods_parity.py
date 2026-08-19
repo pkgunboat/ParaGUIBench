@@ -1,7 +1,8 @@
 """迁移方法代码的一致性锁定：与 parity_manifest.json 逐文件对照。
 
-任何对 src/parallel_benchmark、src/desktop_env、src/stages 的改动都会失败；
-有意修改时必须显式更新清单并在 docs/methods-provenance.md 追加记录。
+任何对 src/parallel_benchmark、src/desktop_env、src/stages、src/pipelines、
+src/mm_agents 的改动都会失败；有意修改时必须显式更新清单并在
+docs/methods-provenance.md 追加记录。
 """
 
 from __future__ import annotations
@@ -12,7 +13,13 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = REPO_ROOT / "tests" / "methods" / "parity_manifest.json"
-LOCKED_ROOTS = ("src/parallel_benchmark", "src/desktop_env", "src/stages")
+LOCKED_ROOTS = (
+    "src/parallel_benchmark",
+    "src/desktop_env",
+    "src/stages",
+    "src/pipelines",
+    "src/mm_agents",
+)
 
 
 def _locked_files() -> dict[str, str]:

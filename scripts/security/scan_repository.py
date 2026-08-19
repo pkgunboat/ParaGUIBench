@@ -48,6 +48,8 @@ METHODS_ZONE_PREFIXES = (
     "src/parallel_benchmark/",
     "src/desktop_env/",
     "src/stages/",
+    "src/pipelines/",
+    "src/mm_agents/",
 )
 METHODS_ZONE_EXEMPT_RULE_IDS = frozenset(
     {

@@ -61,7 +61,13 @@ paraguibench = "paraguibench.cli.main:main"
 paraguibench-methods = "paraguibench.methods_runner.__main__:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/paraguibench", "src/parallel_benchmark", "src/desktop_env"]
+packages = [
+  "src/paraguibench",
+  "src/parallel_benchmark",
+  "src/desktop_env",
+  "src/pipelines",
+  "src/mm_agents",
+]
 
 [tool.pytest.ini_options]
 addopts = "-ra"
