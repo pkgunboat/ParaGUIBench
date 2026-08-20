@@ -6,12 +6,17 @@ Official project repository for **Beyond Sequential Interaction: Benchmarking Pa
 Execution and Coordination for GUI Agents**.
 
 > [!IMPORTANT]
-> This is a **0.1 preview**, not the complete benchmark runtime. All 233 canonical task
-> definitions have been migrated, but the runtime support manifest currently marks no
-> task as `live_validated`. The earlier GUI-only Seed18 smoke run predates the required
-> RunStore v2 version vector and is retained only as historical evidence. A published
-> task definition does not imply that its environment,
-> assets, evaluator, and Agent System are executable in this preview.
+> This is a **0.2 preview**. Relative to 0.1, the original project's **GUI-Only**
+> and **ParaGUI** methods have been migrated in as the authoritative
+> implementations (byte-identical to the source project's method code, locked by
+> a parity manifest) and have been verified end-to-end on a real host: one task
+> per method ran the full pipeline — VM provisioning, agent loop, and typed
+> evaluation — with zero interruptions. Full-benchmark validation over the
+> complete task set is still pending and will gate the formal release. The
+> formal `live_validated` promotion chain (runtime-support manifest) is
+> unchanged: no task is marked `live_validated` yet. A published task
+> definition does not imply that its environment, assets, evaluator, and Agent
+> System are executable in this preview.
 
 ## Overview
 
@@ -25,7 +30,8 @@ The repository separates reusable orchestration from runnable Agent Systems:
 - `framework` defines provider-neutral DAG contracts and bounded scheduling mechanics.
 - `agents/systems` contains runnable policies. The GUI-only Seed18 vertical slice is the
   first candidate for a versioned live rerun. An experimental single-VM CLI combines a `kimi-k2.6` planner
-  with a Qwen 3.7 GUI worker; multi-VM ParaGUI runtime integration remains open.
+  with a Qwen 3.7 GUI worker. Multi-VM GUI-Only and ParaGUI are provided by the vendored
+  original methods (see "Original methods" below).
 - `benchmark` contains the 233 canonical JSON definitions, release integrity records,
   separate guest-visible input-asset and host evaluator-only gold manifests, schemas,
   provenance, and the per-task runtime support manifest.
@@ -39,6 +45,30 @@ dependency-aware plan, dispatches ready subtasks to concurrent workers, and synt
 their results. The paper reports a **46.4% success rate**, **12.9 percentage points** above
 the strongest serial baseline in that study. These are paper results; the complete
 experiment suite needed to reproduce them is not yet `live_validated` in this preview.
+
+## Original methods (GUI-Only and ParaGUI)
+
+The original project's two methods are vendored as the **authoritative
+implementations**: `src/parallel_benchmark/`, `src/desktop_env/`, `src/stages/`,
+`src/pipelines/`, and `src/mm_agents/` are byte-identical to the source project's
+method code (locked per file by `tests/methods/parity_manifest.json`; see
+[the methods provenance record](docs/methods-provenance.md)). Both methods were
+verified end-to-end on a real host in this release: one task per method completed
+the full pipeline — VM provisioning via the original runners, the Qwen GUI agent
+loop, and typed evaluation — with zero interruptions.
+
+Run them with the original runner interface:
+
+```bash
+python -m paraguibench.methods_runner <qa|webmall|webnavigate|self_operation|searchwrite> \
+  --agent-mode <plan|gui_only> --gui-agent qwen -n <vms-per-task> ...
+```
+
+Credentials and model IDs are injected through environment variables only; the
+calibrated IDs and required variables are listed in
+[docs/methods-provenance.md](docs/methods-provenance.md). The rewritten Agent
+Systems under `src/paraguibench/agents/` remain available through the `paraguibench`
+CLI as the open-source release surface.
 
 ## Release status
 
@@ -54,6 +84,7 @@ experiment suite needed to reproduce them is not yet `live_validated` in this pr
 | Historical deployment | Execution `SUCCEEDED`, evaluation `PASSED`, score `1.0`; legacy unversioned evidence only |
 | WebMall Checkout slice | Logical URLs, versioned fixture/environment, WP-CLI order evidence, distributed lease, CLI binding, and native evaluator are integrated locally; no versioned live Attempt has passed |
 | CombinationDocs-015 evaluator slice | Native `paraguibench.osworld.artifact-state.v1`, pinned input assets, evaluator-only gold, and CLI/doctor/source wiring are complete locally; the task remains blocked by four manifest-listed runtime and live gates |
+| Original methods (GUI-Only / ParaGUI) | Vendored byte-identical from the source project; one task per method verified end-to-end on a real host with zero interruptions; full-suite validation pending before the formal release |
 | Remaining release work | Private asset provisioning, real-environment deployment, Agent Systems, suite metrics, licensing review, and category-level live validation |
 
 The runtime support manifest is the authoritative machine-readable statement of two

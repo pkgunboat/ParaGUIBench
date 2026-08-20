@@ -6,10 +6,14 @@
 GUI Agents》**（超越串行交互：GUI 智能体并行执行与协调基准）的官方项目仓库。
 
 > [!IMPORTANT]
-> 当前版本是 **0.1 preview**，并非完整基准运行时。233 个 canonical 任务定义已经全部迁入，
-> 但 runtime support manifest 目前没有任务标记为 `live_validated`。早期 GUI-only
-> Seed18 冒烟运行早于 RunStore v2 版本向量门禁，现仅作为历史证据保留。任务定义
-> 已发布不代表其环境、资产、评价器和 Agent System 已能在当前 preview 中执行。
+> 当前版本是 **0.2 preview**。相对 0.1，原项目的 **GUI-Only** 与 **ParaGUI**
+> 两个方法已作为权威实现迁入（方法代码与源项目逐字节一致，由 parity manifest
+> 锁定），并已在真实宿主上端到端验证跑通：每个方法各运行一个任务走完
+> VM 装配、Agent 循环与类型化评价的完整管线，全程零中断。完整任务集的全集
+> 验证尚未进行，将通过后作为正式版发布的门槛。正式的 `live_validated`
+> 晋级链（runtime-support manifest）保持不变：目前仍无任务标记为
+> `live_validated`。任务定义已发布不代表其环境、资产、评价器和 Agent
+> System 已能在当前 preview 中执行。
 
 ## 项目概述
 
@@ -20,8 +24,8 @@ GUI Agents》**（超越串行交互：GUI 智能体并行执行与协调基准�
 
 - `framework` 定义与模型提供方无关的 DAG 契约和有界调度机制。
 - `agents/systems` 保存可运行策略。GUI-only Seed18 纵向切片是首个待执行新版本复验的候选；
-  实验性单 VM CLI 已可组合 `kimi-k2.6` planner 与 Qwen 3.7 GUI worker，
-  但多 VM ParaGUI runtime 尚未完成。
+  实验性单 VM CLI 已可组合 `kimi-k2.6` planner 与 Qwen 3.7 GUI worker。
+  多 VM 的 GUI-Only 与 ParaGUI 由整体迁入的原项目方法提供（见下文"原项目方法"）。
 - `benchmark` 保存 233 个 canonical JSON 定义、release 完整性记录、分别面向 guest
   的输入资产 manifest 和仅供宿主评价器使用的 gold manifest、schema、provenance
   及逐任务 runtime support manifest。
@@ -33,6 +37,26 @@ ParaGUI 是论文提出的 planner–worker 智能体：它把任务分解为带
 给并发工作器并汇总结果。论文报告其成功率为 **46.4%**，比该实验中的最强串行基线高
 **12.9 个百分点**。这些是论文实验结果；用于完整复现这些数字的实验套件尚未在当前 preview
 中达到 `live_validated`。
+
+## 原项目方法（GUI-Only 与 ParaGUI）
+
+原项目的两个方法以**权威实现**形式整体迁入：`src/parallel_benchmark/`、
+`src/desktop_env/`、`src/stages/`、`src/pipelines/`、`src/mm_agents/`
+与源项目方法代码逐字节一致（由 `tests/methods/parity_manifest.json`
+逐文件锁定，见[方法迁移记录](docs/methods-provenance.md)）。本版本已在真实
+宿主上对两个方法各完成一个任务的端到端验证：经原 runner 装配 VM、Qwen GUI
+Agent 循环与类型化评价全流程走通，零中断。
+
+使用原 runner 接口运行：
+
+```bash
+python -m paraguibench.methods_runner <qa|webmall|webnavigate|self_operation|searchwrite> \
+  --agent-mode <plan|gui_only> --gui-agent qwen -n <vms-per-task> ...
+```
+
+凭据与模型 ID 仅经环境变量注入；已校准的模型 ID 与必需变量见
+[docs/methods-provenance.md](docs/methods-provenance.md)。`src/paraguibench/agents/`
+下的重写 Agent System 仍经 `paraguibench` CLI 提供，作为开源发布面。
 
 ## 发布状态
 
@@ -48,6 +72,7 @@ ParaGUI 是论文提出的 planner–worker 智能体：它把任务分解为带
 | 历史部署 | 执行 `SUCCEEDED`、评价 `PASSED`、分数 `1.0`；仅作无版本向量的历史证据 |
 | WebMall Checkout 切片 | logical URL、版本化 fixture/environment、WP-CLI 订单证据、分布式租约、CLI 绑定与原生评价器已在本地接入；尚无通过的版本化实机 Attempt |
 | CombinationDocs-015 评价切片 | 已在本地接入原生 `paraguibench.osworld.artifact-state.v1`、固定输入资产、evaluator-only gold 及 CLI/doctor/source；任务仍为 blocked，等待 manifest 所列四项 runtime 与实机门禁 |
+| 原项目方法（GUI-Only / ParaGUI） | 自源项目逐字节迁入；每方法一个任务已在真实宿主端到端验证、零中断；全集验证通过后发布正式版 |
 | 后续发布工作 | 私有资产预置、真实环境部署、Agent System、套件指标、许可复核及分类级真实验证 |
 
 runtime support manifest 是两层就绪度的机器可读权威记录。
