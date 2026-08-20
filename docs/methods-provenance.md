@@ -47,11 +47,16 @@ python -m paraguibench.methods_runner <category> [原 runner 参数...]
 |---|---|---|
 | GUI worker（qwen）凭据 | `DEERAPI_API_KEY` 或 `DASHSCOPE_API_KEY` | 指向阿里云兼容端点时，把 key 同时设给 `DEERAPI_API_KEY`，`DEERAPI_BASE_URL` 设为阿里云 compatible-mode `/v1` |
 | Planner 凭据 | `DEERAPI_API_KEY` + `DEERAPI_BASE_URL` | 同上（planner 走 OpenAI-compatible chat + tools） |
-| Planner 模型 | `BENCH_DEFAULT_PLAN_AGENT` | 例：`Qwen-3.8-Max`（精确 ID 首跑校准） |
-| GUI worker 模型 | `BENCH_DEFAULT_QWEN_GUI_AGENT` | 例：`qwen3.7-plus` |
-| 方法选择 | `ABLATION_AGENT_MODE` / `--agent-mode` | `plan`（ParaGUI）或 `gui_only` |
+| Planner 模型 | `BENCH_DEFAULT_PLAN_AGENT` | 已验证有效 ID：`qwen3.8-max`（2026-08-20 实测；注意 `Qwen-3.8-Max` 写法会被端点报 model_not_found） |
+| GUI worker 模型 | `BENCH_DEFAULT_QWEN_GUI_AGENT` | 已验证有效 ID：`qwen3.7-plus` |
+| 方法选择 | `ABLATION_AGENT_MODE` / `--agent-mode` | `plan`（ParaGUI）或 `gui_only`；gui_only 模式仅要求 GUI worker 凭据 |
 | GUI agent 选择 | `ABLATION_GUI_AGENT` / `--gui-agent` | `qwen` |
 | 跳过 conda 检查 | `REQUIRED_CONDA_ENV_STRICT=0` | 服务器 venv 部署时使用 |
+| 宿主机 SSH 用户 | `BENCH_SSH_USER` | 宿主机登录名（如 `yuzedong`）；密码经 `BENCH_SSH_PASSWORD` 提供（sudo docker 与 guest sshfs 回挂均使用） |
+| VM 就绪等待 | `ABLATION_VM_READY_WAIT` / `..._REBUILT` / `..._PROBE_TIMEOUT` | 高负载宿主机上建议 300/600/10 |
+
+**参数格式注意**：`--vm-memory` 必须带单位（如 `8G`）。无单位的裸数字会被镜像内
+QEMU 包装器按 MiB 解释（`-m 8` = 8 MiB），guest 永远无法完成引导。
 
 ## 已验证的可运行组合（内部执行主机，地址见仓库外运维记录）
 

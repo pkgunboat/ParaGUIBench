@@ -22,7 +22,12 @@ def main(argv: list[str] | None = None) -> int:
         print("类别:", ", ".join(sorted(RUNNER_FILES)))
         return 0
     category, rest = args[0], args[1:]
-    launch(category, rest)
+    try:
+        launch(category, rest)
+    except KeyError:
+        print(f"未知类别: {category}")
+        print("可用类别:", ", ".join(sorted(RUNNER_FILES)))
+        return 2
     return 0
 
 

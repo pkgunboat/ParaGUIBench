@@ -42,10 +42,21 @@ def runner_script_path(category: str) -> Path:
 
     if category not in RUNNER_FILES:
         raise KeyError(f"unknown methods category: {category}")
-    script = Path(__file__).resolve().parents[2] / "stages" / RUNNER_FILES[category]
+    script = _package_root() / "stages" / RUNNER_FILES[category]
     if not script.is_file():
         raise FileNotFoundError(f"runner script missing: {script.name}")
     return script
+
+
+def _package_root() -> Path:
+    """返回仓库 src 根（launcher 模块向上两级）。
+
+    输入参数：无。
+    输出返回值：``src`` 目录绝对路径；runner 脚本与 parallel_benchmark
+        均以该锚点定位，不依赖 runner 自身的层级深浅。
+    """
+
+    return Path(__file__).resolve().parents[2]
 
 
 def environment_report(environ: dict[str, str] | None = None) -> dict[str, object]:
@@ -66,28 +77,56 @@ def environment_report(environ: dict[str, str] | None = None) -> dict[str, objec
     return {"credentials": credentials, "model_overrides": models}
 
 
-def check_environment(environ: dict[str, str] | None = None) -> None:
+def check_environment(
+    environ: dict[str, str] | None = None,
+    agent_mode: str = "plan",
+) -> None:
     """凭据缺失时 fail-fast；只打印变量名与状态。
 
     输入参数：
         environ：可选的环境字典，默认读 os.environ。
+        agent_mode：``plan`` 需要 planner+worker 两组凭据；
+            ``gui_only`` 只需要 GUI worker 凭据。
     输出返回值：
         无。
     异常：
-        SystemExit：任一角色的凭据组全部未配置。
+        SystemExit：所需角色的凭据组全部未配置。
     """
 
     report = environment_report(environ)
+    roles = ["gui-worker"]
+    if agent_mode == "plan":
+        roles.append("planner")
     missing_roles = [
         role
-        for role, names in report["credentials"].items()
-        if not any(names.values())
+        for role in roles
+        if not any(report["credentials"][role].values())
     ]
     if missing_roles:
         for role in missing_roles:
             names = ", ".join(dict(report["credentials"][role]))
             print(f"methods-runner: {role} 凭据未配置（需要以下之一: {names}）")
         raise SystemExit(2)
+
+
+def _resolve_agent_mode(argv: Sequence[str], environ: dict[str, str]) -> str:
+    """从 --agent-mode 参数或 ABLATION_AGENT_MODE 解析模式，默认 plan。
+
+    输入参数：
+        argv：透传给原 runner 的参数。
+        environ：环境字典。
+    输出返回值：
+        ``plan`` 或 ``gui_only``。
+    """
+
+    mode = environ.get("ABLATION_AGENT_MODE", "")
+    args = list(argv)
+    for index, item in enumerate(args):
+        if item == "--agent-mode" and index + 1 < len(args):
+            mode = args[index + 1]
+        elif item.startswith("--agent-mode="):
+            mode = item.split("=", 1)[1]
+    return mode if mode in {"plan", "gui_only"} else "plan"
 
 
 def _ensure_tasks_list_alias(package_root: Path) -> None:
@@ -107,7 +146,10 @@ def _ensure_tasks_list_alias(package_root: Path) -> None:
     alias = package_root / "tasks_list"
     if alias.exists() or alias.is_symlink() or not tasks.is_dir():
         return
-    alias.symlink_to("tasks", target_is_directory=True)
+    try:
+        alias.symlink_to("tasks", target_is_directory=True)
+    except FileExistsError:
+        pass
 
 
 def launch(category: str, argv: Sequence[str]) -> None:
@@ -120,13 +162,13 @@ def launch(category: str, argv: Sequence[str]) -> None:
         无；异常与退出码由原 runner 决定。
     """
 
-    check_environment()
     script = runner_script_path(category)
+    check_environment(agent_mode=_resolve_agent_mode(argv, os.environ))
     # 原 runner 以脚本目录为工作目录执行，使用扁平 import（如
     # `from run_QA_pipeline import ...`）；装载时等价恢复该执行上下文。
     script_dir = str(script.parent)
     if script_dir not in sys.path:
         sys.path.insert(0, script_dir)
-    _ensure_tasks_list_alias(script.parents[1] / "parallel_benchmark")
+    _ensure_tasks_list_alias(_package_root() / "parallel_benchmark")
     sys.argv = [str(script)] + list(argv)
     runpy.run_path(str(script), run_name="__main__")

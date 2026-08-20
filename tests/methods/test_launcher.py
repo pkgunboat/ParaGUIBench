@@ -52,7 +52,7 @@ def test_launch_passes_argv_verbatim_and_runs_script(
         captured["argv"] = list(__import__("sys").argv)
 
     monkeypatch.setattr(launcher.runpy, "run_path", fake_run_path)
-    monkeypatch.setattr(launcher, "check_environment", lambda: None)
+    monkeypatch.setattr(launcher, "check_environment", lambda **_: None)
     launcher.launch("qa", ["--agent-mode", "gui_only", "-n", "1"])
     assert captured["run_name"] == "__main__"
     assert Path(str(captured["path"])).name == "run_QA_pipeline_parallel.py"
@@ -64,7 +64,8 @@ def test_launch_creates_tasks_list_alias(tmp_path, monkeypatch):
 
     package_root = tmp_path / "parallel_benchmark"
     (package_root / "tasks").mkdir(parents=True)
-    monkeypatch.setattr(launcher, "check_environment", lambda: None)
+    monkeypatch.setattr(launcher, "check_environment", lambda **_: None)
+    monkeypatch.setattr(launcher, "_package_root", lambda: tmp_path)
     monkeypatch.setattr(
         launcher,
         "runner_script_path",
@@ -82,3 +83,43 @@ def test_launch_creates_tasks_list_alias(tmp_path, monkeypatch):
     alias = package_root / "tasks_list"
     assert alias.is_symlink()
     assert alias.resolve() == (package_root / "tasks").resolve()
+
+
+def test_launch_creates_alias_for_nested_category(tmp_path, monkeypatch):
+    """嵌套类别（self_operation_pipeline）同样在 src/parallel_benchmark 建别名。"""
+
+    package_root = tmp_path / "parallel_benchmark"
+    (package_root / "tasks").mkdir(parents=True)
+    monkeypatch.setattr(launcher, "check_environment", lambda **_: None)
+    monkeypatch.setattr(launcher, "_package_root", lambda: tmp_path)
+    monkeypatch.setattr(
+        launcher,
+        "runner_script_path",
+        lambda category: tmp_path
+        / "stages"
+        / "self_operation_pipeline"
+        / "runner.py",
+    )
+    nested = tmp_path / "stages" / "self_operation_pipeline"
+    nested.mkdir(parents=True)
+    (nested / "runner.py").write_text("print('ok')\n")
+    monkeypatch.setattr(launcher.runpy, "run_path", lambda path, run_name: None)
+    launcher.launch("self_operation", [])
+    alias = package_root / "tasks_list"
+    assert alias.is_symlink()
+    assert alias.resolve() == (package_root / "tasks").resolve()
+
+
+def test_check_environment_gui_only_skips_planner(monkeypatch):
+    """gui_only 模式下仅配置 GUI worker 凭据即可通过。"""
+
+    monkeypatch.delenv("DEERAPI_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("DASHSCOPE_API_KEY", "dummy")
+    launcher.check_environment(agent_mode="gui_only")
+    try:
+        launcher.check_environment(agent_mode="plan")
+    except SystemExit as error:
+        assert error.code == 2
+    else:
+        raise AssertionError("plan 模式缺少 planner 凭据应当 SystemExit")

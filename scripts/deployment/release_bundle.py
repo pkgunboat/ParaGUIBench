@@ -80,6 +80,7 @@ EXCLUDED_DIRECTORY_NAMES = frozenset(
         ".ruff_cache",
         ".runs",
         ".tox",
+        ".zcode",
         "__pycache__",
         "artifacts",
         "build",
@@ -97,6 +98,8 @@ EXCLUDED_DIRECTORY_NAMES = frozenset(
         "run-logs",
         "run_logs",
         "runs",
+        # methods_runner 在运行时创建的未入库软链别名（见 docs/methods-provenance.md）
+        "tasks_list",
     }
 )
 FORBIDDEN_BINARY_SUFFIXES = frozenset(
@@ -474,6 +477,10 @@ def _is_allowlisted_source(path: PurePosixPath) -> bool:
     relative = path.as_posix()
     if len(path.parts) == 1:
         return relative in ROOT_FILE_ALLOWLIST
+    # 方法系统（vendored 原项目代码与入口）不属于公开 cleanroom 闭集；
+    # 其运行依赖内网环境事实，见 docs/methods-provenance.md。
+    if relative.startswith(("src/paraguibench/methods_runner/", "tests/methods/")):
+        return False
     suffix = path.suffix.casefold()
     if relative.startswith(".github/workflows/"):
         return suffix in {".yaml", ".yml"}
