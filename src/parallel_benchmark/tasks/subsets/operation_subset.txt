@@ -1,0 +1,12 @@
+# Operation 文件操作任务子集（10 个）
+# 来源: filted_tasks_english.txt 中 FileOperate 类（不含 Search&write）
+Operation-FileOperate-BatchOperation-001
+Operation-FileOperate-BatchOperation-002
+Operation-FileOperate-BatchOperationExcel-001
+Operation-FileOperate-BatchOperationExcel-005
+Operation-FileOperate-BatchOperationWord-001
+Operation-FileOperate-BatchOperationWord-002
+Operation-FileOperate-BatchOperationPPT-001
+Operation-FileOperate-BatchOperationPPT-002
+Operation-FileOperate-CombinationDocs-001
+Operation-FileOperate-CombinationDocs-002

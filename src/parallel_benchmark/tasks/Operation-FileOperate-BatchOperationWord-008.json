@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-008",
+    "task_uid": "b9929f12-d179-450a-922a-22afb361bad3",
+    "task_type": "OSWorld脚本改造",
+    "task_tag": "FileOperate",
+    "instruction": "Change the font of all Word documents to Times New Roman.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/b9929f12-d179-450a-922a-22afb361bad3",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-008",
+    "eval_rules": [
+        {
+            "check": "check_font_name",
+            "file_pattern": "*.docx",
+            "params": {
+                "font_name": "Times New Roman",
+                "threshold": 0.9
+            },
+            "weight": 1.0,
+            "description": "字体是否为 Times New Roman"
+        }
+    ]
+}

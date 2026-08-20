@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-OnlineShopping-ProductsSatisfyingVagueRequirements-008",
+    "task_uid": "e5c6ca4628a64fcca84ac9d2a4b1ea0e",
+    "source_task_id": "products_satisfying_vague_requirements_task_2",
+    "task_type": "QA",
+    "task_tag": "ProductsSatisfyingVagueRequirements",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for Samsung Galaxy smartphones available in bright colors.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9083/product/samsung-galaxy-s24-5g-s926b-ds-256gb-amber-yellow-android-14-0-smartphone###http://10.1.110.114:9082/product/samsung-galaxy-s24-ultra-5g-s928b-ds-256gb-titanium-yellow-android-14-smartphone###http://10.1.110.114:9083/product/samsung-galaxy-s24-5g-s921b-ds-256gb-amber-yellow-android-14-0-smartphone###http://10.1.110.114:9084/product/smartphone-samsung-galaxy-s24-5g-12-256gb-yellow-amber-yellow-sm-s926bzydeue###http://10.1.110.114:9083/product/samsung-galaxy-s24-5g-s921b-ds-128gb-cobalt-violet-android-14-0-smartphone###http://10.1.110.114:9083/product/samsung-galaxy-s24-5g-s926b-ds-256gb-cobalt-violet-android-14-0-smartphone###http://10.1.110.114:9084/product/smartphone-samsung-galaxy-s24-5g-12-256gb-purple-cobalt-violet-sm-s926bzvdeue###http://10.1.110.114:9081/product/smartphone-samsung-galaxy-a25-5g-6-128gb-yellow-sm-a256bzydeue",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9083/product/samsung-galaxy-s24-5g-s926b-ds-256gb-amber-yellow-android-14-0-smartphone",
+        "http://10.1.110.114:9082/product/samsung-galaxy-s24-ultra-5g-s928b-ds-256gb-titanium-yellow-android-14-smartphone",
+        "http://10.1.110.114:9083/product/samsung-galaxy-s24-5g-s921b-ds-256gb-amber-yellow-android-14-0-smartphone",
+        "http://10.1.110.114:9084/product/smartphone-samsung-galaxy-s24-5g-12-256gb-yellow-amber-yellow-sm-s926bzydeue",
+        "http://10.1.110.114:9083/product/samsung-galaxy-s24-5g-s921b-ds-128gb-cobalt-violet-android-14-0-smartphone",
+        "http://10.1.110.114:9083/product/samsung-galaxy-s24-5g-s926b-ds-256gb-cobalt-violet-android-14-0-smartphone",
+        "http://10.1.110.114:9084/product/smartphone-samsung-galaxy-s24-5g-12-256gb-purple-cobalt-violet-sm-s926bzvdeue",
+        "http://10.1.110.114:9081/product/smartphone-samsung-galaxy-a25-5g-6-128gb-yellow-sm-a256bzydeue"
+    ],
+    "original_task_id": "TaskExecution-MultiShopShopping-ProductsSatisfyingVagueRequirements-e5c6ca4628a64fcca84ac9d2a4b1ea0e"
+}

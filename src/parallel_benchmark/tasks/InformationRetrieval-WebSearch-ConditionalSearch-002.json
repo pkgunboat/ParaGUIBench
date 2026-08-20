@@ -1,0 +1,15 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-002",
+    "task_uid": "8fac924a-c33c-4f10-9892-c519f8b5a6fd",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among the major 2024 world university rankings, two are published by British institutions. How many universities appear in the top ten of both of these two British rankings? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "7",
+    "accepted_answers": [
+        "seven"
+    ],
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-002"
+}

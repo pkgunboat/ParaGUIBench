@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-004",
+    "task_uid": "a3809ce2-6a9c-4db8-afe9-74c0e3d860ad",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Which of the 2024 Nobel laureates is bald in their photo on the official Nobel Prize website? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "Demis Hassabis",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-004"
+}

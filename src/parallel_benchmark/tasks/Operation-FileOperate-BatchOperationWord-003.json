@@ -1,0 +1,24 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperationWord-003",
+    "task_uid": "c36d8396-4dc7-4390-a661-9bb8c54bee9f",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "There are several Word documents in the folder. Please highlight place names (excluding university names) in yellow bold text.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/c36d8396-4dc7-4390-a661-9bb8c54bee9f",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-BatchoperationWord-003",
+    "eval_rules": [
+        {
+            "check": "check_highlighted_words_capitalized",
+            "file_pattern": "*.docx",
+            "params": {
+                "highlight_color": "FFFF00",
+                "threshold": 0.8
+            },
+            "weight": 1.0,
+            "description": "黄色高亮词是否大写开头"
+        }
+    ]
+}

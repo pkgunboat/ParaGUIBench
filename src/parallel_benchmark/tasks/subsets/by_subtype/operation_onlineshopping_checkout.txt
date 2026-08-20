@@ -1,0 +1,9 @@
+# Operation-OnlineShopping-Checkout (8 tasks)
+Operation-OnlineShopping-Checkout-001
+Operation-OnlineShopping-Checkout-002
+Operation-OnlineShopping-Checkout-003
+Operation-OnlineShopping-Checkout-004
+Operation-OnlineShopping-Checkout-005
+Operation-OnlineShopping-Checkout-006
+Operation-OnlineShopping-Checkout-007
+Operation-OnlineShopping-Checkout-008

@@ -1,0 +1,19 @@
+# QA 任务子集（17 个）
+# 来源: filted_tasks_english.txt
+InformationRetrieval-WebSearch-ConditionalSearch-001
+InformationRetrieval-WebSearch-ConditionalSearch-002
+InformationRetrieval-WebSearch-StatisticSearch-001
+InformationRetrieval-WebSearch-StatisticSearch-003
+InformationRetrieval-WebSearch-VisualSearch-001
+InformationRetrieval-WebSearch-VisualSearch-005
+InformationRetrieval-WebSearch-MultiHopSearch-001
+InformationRetrieval-FileSearch-Readonly-001
+InformationRetrieval-FileSearch-Readonly-002
+InformationRetrieval-FileSearch-ReadonlyWord-001
+InformationRetrieval-FileSearch-ReadonlyWord-003
+InformationRetrieval-FileSearch-ReadonlyPPT-001
+InformationRetrieval-FileSearch-ReadonlyPPT-003
+InformationRetrieval-VisualSearch-Video-001
+InformationRetrieval-WebSearch-StatisticSearch-013
+InformationRetrieval-FileSearch-ReadonlyWord-002
+InformationRetrieval-WebSearch-VisualSearch-018

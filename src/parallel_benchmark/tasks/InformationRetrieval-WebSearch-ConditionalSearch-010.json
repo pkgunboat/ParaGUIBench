@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-ConditionalSearch-010",
+    "task_uid": "8c67853e-ce0a-44c3-ae87-c6fe5b7a7b2e",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among recipients of the Nobel Prize in Chemistry from 2015 to 2024, identify scholars whose PhD alma mater is an Asian university. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Akira Yoshino",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Conditionalsearch-010"
+}

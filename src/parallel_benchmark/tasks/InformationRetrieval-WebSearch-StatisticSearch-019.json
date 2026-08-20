@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-019",
+    "task_uid": "84728436-cfa7-41f5-b5b7-62d60fc33e59",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among women who entered the top 50 of the Forbes Global Billionaires List between 2019 and 2024, list the youngest one and provide her name. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Yang Huiyan",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-019"
+}

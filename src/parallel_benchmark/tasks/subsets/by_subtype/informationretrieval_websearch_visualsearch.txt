@@ -1,0 +1,20 @@
+# InformationRetrieval-WebSearch-VisualSearch (19 tasks)
+InformationRetrieval-WebSearch-VisualSearch-001
+InformationRetrieval-WebSearch-VisualSearch-002
+InformationRetrieval-WebSearch-VisualSearch-003
+InformationRetrieval-WebSearch-VisualSearch-004
+InformationRetrieval-WebSearch-VisualSearch-005
+InformationRetrieval-WebSearch-VisualSearch-006
+InformationRetrieval-WebSearch-VisualSearch-009
+InformationRetrieval-WebSearch-VisualSearch-010
+InformationRetrieval-WebSearch-VisualSearch-013
+InformationRetrieval-WebSearch-VisualSearch-017
+InformationRetrieval-WebSearch-VisualSearch-018
+InformationRetrieval-WebSearch-VisualSearch-019
+InformationRetrieval-WebSearch-VisualSearch-020
+InformationRetrieval-WebSearch-VisualSearch-021
+InformationRetrieval-WebSearch-VisualSearch-022
+InformationRetrieval-WebSearch-VisualSearch-023
+InformationRetrieval-WebSearch-VisualSearch-024
+InformationRetrieval-WebSearch-VisualSearch-025
+InformationRetrieval-WebSearch-VisualSearch-026

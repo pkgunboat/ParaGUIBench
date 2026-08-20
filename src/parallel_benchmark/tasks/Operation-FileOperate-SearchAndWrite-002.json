@@ -1,0 +1,47 @@
+{
+    "task_id": "Operation-FileOperate-SearchAndWrite-002",
+    "task_uid": "31d84d8d-8c61-4181-b321-44b83adc03f9",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "There is a column of company names in the Excel document. Search online and fill in the founding year, headquarters city, and official website domain for each company according to the table headers.",
+    "task_source": "self",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/31d84d8d-8c61-4181-b321-44b83adc03f9",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-SearchAndWrite-001",
+    "eval_rules": [
+        {
+            "check": "check_multi_cell_values",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "tolerance": 0,
+                "cells": [
+                    {"cell": "B2", "expected": 1976},
+                    {"cell": "C2", "contains": "Cupertino"},
+                    {"cell": "D2", "contains": "apple.com"},
+                    {"cell": "B3", "expected": 1975},
+                    {"cell": "C3", "contains": "Redmond"},
+                    {"cell": "D3", "contains": "microsoft.com"},
+                    {"cell": "B4", "expected": 1997},
+                    {"cell": "C4", "contains": "Los Gatos"},
+                    {"cell": "D4", "contains": "netflix.com"},
+                    {"cell": "B5", "expected": 2006},
+                    {"cell": "C5", "contains": "Stockholm"},
+                    {"cell": "D5", "contains": "spotify.com"}
+                ]
+            },
+            "weight": 0.7,
+            "description": "B2:D5 公司信息正确性（年份精确匹配、城市/域名包含匹配）"
+        },
+        {
+            "check": "check_cells_filled",
+            "file_pattern": "*.xlsx",
+            "params": {
+                "start_cell": "B2",
+                "end_cell": "D5"
+            },
+            "weight": 0.3,
+            "description": "B2:D5区域填充"
+        }
+    ]
+}

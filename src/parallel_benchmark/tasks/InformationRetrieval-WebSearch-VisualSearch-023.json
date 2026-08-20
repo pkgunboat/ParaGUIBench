@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-023",
+    "task_uid": "ff4b5778-378b-4120-9b08-4033de555011",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among the 2023 Nobel laureates, how many have a beard or mustache in their photos on the official Nobel Prize website? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "2",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-023"
+}

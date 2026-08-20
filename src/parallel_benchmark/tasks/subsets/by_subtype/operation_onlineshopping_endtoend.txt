@@ -1,0 +1,9 @@
+# Operation-OnlineShopping-EndToEnd (8 tasks)
+Operation-OnlineShopping-EndToEnd-001
+Operation-OnlineShopping-EndToEnd-002
+Operation-OnlineShopping-EndToEnd-003
+Operation-OnlineShopping-EndToEnd-004
+Operation-OnlineShopping-EndToEnd-005
+Operation-OnlineShopping-EndToEnd-006
+Operation-OnlineShopping-EndToEnd-007
+Operation-OnlineShopping-EndToEnd-008

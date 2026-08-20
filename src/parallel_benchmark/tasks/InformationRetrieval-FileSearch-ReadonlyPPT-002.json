@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-002",
+    "task_uid": "c65ead66-0dca-40e9-993f-affc35bde5bc",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "On which page of this PPT was the Q-learning concept first introduced? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "6",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/c65ead66-0dca-40e9-993f-affc35bde5bc",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-Readonlyppt-002"
+}

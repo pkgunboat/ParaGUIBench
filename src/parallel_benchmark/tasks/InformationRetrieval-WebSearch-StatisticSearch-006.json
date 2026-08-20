@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-006",
+    "task_uid": "d8b49bd7-12d0-4562-be7c-8bdcb2fb9b80",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "What is the difference in the number of launches between SpaceX's Falcon 9 and Falcon Heavy rockets in 2025? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "165",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-006"
+}

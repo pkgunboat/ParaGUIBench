@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-001",
+    "task_uid": "38540eff-1861-4e19-b74c-15c0f8697be8",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "How many Science magazines published in 2024 that feature a fish on their cover? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "2",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-VisualSearch-001"
+}

@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-017",
+    "task_uid": "fb26b1f7-68aa-4a24-b7f2-b6dec896ed36",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Identify the video game with the highest peak concurrent online players on the Steam platform between January 2022 and June 2024, where the game was developed by a studio with fewer than 100 employees at the time of release. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Palworld",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-017"
+}

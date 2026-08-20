@@ -1,0 +1,3583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多智能体执行时间轴可视化</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a1f26;
+            --bg-tertiary: #242d38;
+            --bg-card: #1e2530;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent-blue: #58a6ff;
+            --accent-purple: #a371f7;
+            --accent-green: #3fb950;
+            --accent-orange: #d29922;
+            --accent-red: #f85149;
+            --accent-cyan: #39c5cf;
+            --border-color: #30363d;
+            --planner-think: #a371f7;
+            --planner-action: #c9b1fb;
+            --gui-agent: #58a6ff;
+            --code-agent: #d29922;
+            --model-time: #3fb950;
+            --action-time: #f85149;
+            --dependency-line: #f97583;
+            --dispatch-line: #6e7681;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* 头部设计 - 简洁专业风格 */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .header h1 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* 控制栏 */
+        .controls {
+            background: var(--bg-secondary);
+            padding: 0.875rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-blue);
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #4393e6;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .url-input {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: 'JetBrains Mono', monospace;
+            width: 280px;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .url-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .file-name {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* 图例面板 */
+        .legend-panel {
+            background: var(--bg-secondary);
+            padding: 0.75rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: none;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-panel.active {
+            display: flex;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-bar {
+            width: 24px;
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        .legend-line {
+            width: 24px;
+            height: 2px;
+        }
+
+        /* 信息面板 */
+        .info-panel {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            margin: 1rem 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-panel.active {
+            display: grid;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .info-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .info-item.task-item {
+            grid-column: span 2;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-item.answer-item {
+            grid-column: span 2;
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--accent-green);
+        }
+
+        .task-instruction {
+            font-size: 0.95rem;
+            font-weight: 400;
+            line-height: 1.5;
+            max-height: 4.5em;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: var(--accent-cyan);
+        }
+
+        .final-answer-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.6;
+            max-height: 8em;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: var(--accent-green);
+            background: var(--bg-primary);
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 0.75rem 2rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breadcrumb.active {
+            display: flex;
+        }
+
+        .breadcrumb-item {
+            color: var(--accent-blue);
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .breadcrumb-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-current {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* 图表容器 */
+        .chart-wrapper {
+            background: var(--bg-card);
+            margin: 1rem 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        #chart-container {
+            min-height: 500px;
+            background: var(--bg-card);
+        }
+
+        .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: var(--text-muted);
+            gap: 1rem;
+        }
+
+        .chart-placeholder-icon {
+            font-size: 3rem;
+            opacity: 0.5;
+        }
+
+        /* 详情面板 */
+        .detail-panel {
+            background: var(--bg-card);
+            margin: 1rem 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: none;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .detail-panel.active {
+            display: block;
+        }
+
+        .detail-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 10;
+        }
+
+        .detail-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .detail-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .badge-gui {
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--gui-agent);
+        }
+
+        .badge-code {
+            background: rgba(210, 153, 34, 0.15);
+            color: var(--code-agent);
+        }
+
+        .badge-plan {
+            background: rgba(163, 113, 247, 0.15);
+            color: var(--planner-think);
+        }
+
+        .detail-close {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+
+        .detail-close:hover {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            color: #fff;
+        }
+
+        .detail-content {
+            padding: 1.5rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        /* 时间指标卡片 */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .metric-icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.35rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .metric-model .metric-value { color: var(--model-time); }
+        .metric-action .metric-value { color: var(--action-time); }
+        .metric-total .metric-value { color: var(--accent-blue); }
+
+        /* 图片画廊 - 执行过程可视化 */
+        .execution-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .execution-step {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .step-header {
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .step-header:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .step-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+        }
+
+        .step-action {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex: 1;
+            margin-left: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .step-status {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .step-status.success {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--accent-green);
+        }
+
+        .step-status.failure {
+            background: rgba(248, 81, 73, 0.15);
+            color: var(--accent-red);
+        }
+
+        .step-content {
+            padding: 1rem;
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-screenshot {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            background: var(--bg-primary);
+        }
+
+        .step-screenshot:hover {
+            transform: scale(1.02);
+        }
+
+        .step-details {
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .step-details code {
+            background: var(--bg-primary);
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+        }
+
+        /* Round 选择器 */
+        .round-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .round-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .round-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+
+        .round-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
+
+        /* 代码/文本显示 */
+        .code-block {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .code-block.response {
+            color: var(--text-primary);
+        }
+
+        /* 动作列表 */
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .action-index {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .action-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .action-type {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            margin-bottom: 0.25rem;
+        }
+
+        .action-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* 图片模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 95%;
+            max-height: 95%;
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-nav.prev { left: -60px; }
+        .modal-nav.next { right: -60px; }
+
+        .modal-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* 状态标签 */
+        .status-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.625rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--accent-green);
+        }
+
+        .status-failure {
+            background: rgba(248, 81, 73, 0.15);
+            color: var(--accent-red);
+        }
+
+        /* 图片网格 */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .image-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .image-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: var(--bg-primary);
+        }
+
+        .image-card-info {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* 错误提示 */
+        .error-banner {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin: 1rem 2rem;
+            display: none;
+        }
+
+        .error-banner.active {
+            display: block;
+        }
+
+        /* 快速访问面板 */
+        .quick-access-panel {
+            margin: 0 2rem 1rem 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .quick-access-panel.active {
+            display: block;
+        }
+
+        .quick-access-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-access-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .quick-access-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.875rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-access-btn:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-blue);
+        }
+
+        .quick-access-btn.home {
+            border-left: 3px solid var(--accent-green);
+            background: rgba(63, 185, 80, 0.1);
+        }
+
+        .quick-access-btn.home:hover {
+            background: rgba(63, 185, 80, 0.2);
+            border-color: var(--accent-green);
+        }
+
+        .quick-access-btn.plan {
+            border-left: 3px solid var(--planner-think);
+        }
+
+        .quick-access-btn.gui {
+            border-left: 3px solid var(--gui-agent);
+        }
+
+        .quick-access-btn.code {
+            border-left: 3px solid var(--code-agent);
+        }
+
+        .quick-access-btn .rounds-count {
+            font-size: 0.7rem;
+            background: var(--bg-primary);
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            color: var(--text-muted);
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Plotly 图表深色主题适配 */
+        .js-plotly-plot .plotly .modebar {
+            background: var(--bg-tertiary) !important;
+        }
+
+        .js-plotly-plot .plotly .modebar-btn path {
+            fill: var(--text-secondary) !important;
+        }
+
+        /* 分派的 Agent 卡片 */
+        .agent-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .agent-card {
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .agent-card.gui {
+            background: rgba(88, 166, 255, 0.1);
+            border-color: rgba(88, 166, 255, 0.3);
+        }
+
+        .agent-card.code {
+            background: rgba(210, 153, 34, 0.1);
+            border-color: rgba(210, 153, 34, 0.3);
+        }
+
+        .agent-card-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .agent-card.gui .agent-card-title { color: var(--gui-agent); }
+        .agent-card.code .agent-card-title { color: var(--code-agent); }
+
+        .agent-card-type {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-card-task {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">📊</div>
+            <div>
+                <h1>多智能体执行时间轴</h1>
+                <div class="subtitle">Parallel Benchmark Task Visualization</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <input type="file" id="file-input" class="file-input" accept=".json">
+        <label for="file-input" class="btn btn-primary" title="⚠️ 子目录文件图片可能无法加载，建议使用URL输入">
+            <span>📁</span> 选择 JSON 文件
+        </label>
+        <button id="load-example" class="btn">
+            <span>📊</span> 加载示例数据
+        </button>
+        <input type="text" id="url-input" class="url-input" placeholder="输入 JSON 路径 (推荐用于子目录，如 test_data/xxx.json)">
+        <button id="load-url" class="btn btn-primary">
+            <span>🔗</span> 加载
+        </button>
+        <span id="file-name" class="file-name"></span>
+    </div>
+
+    <div id="legend-panel" class="legend-panel">
+        <div class="legend-item">
+            <div class="legend-bar" style="background: var(--planner-think);"></div>
+            <span>Plan 思考</span>
+            </div>
+        <div class="legend-item">
+            <div class="legend-bar" style="background: var(--planner-action);"></div>
+            <span>Plan 执行</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-bar" style="background: var(--gui-agent);"></div>
+            <span>GUI Agent</span>
+            </div>
+        <div class="legend-item">
+            <div class="legend-bar" style="background: var(--code-agent);"></div>
+            <span>Code Agent</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-line" style="border-top: 2px dashed var(--dependency-line);"></div>
+            <span>依赖关系</span>
+        </div>
+    </div>
+
+    <div id="info-panel" class="info-panel">
+        <div class="info-item task-item">
+            <div class="info-label">📋 任务</div>
+            <div class="info-value task-instruction" id="task-instruction">-</div>
+        </div>
+        <div class="info-item answer-item" id="answer-item" style="display: none;">
+            <div class="info-label">✅ 最终答案</div>
+            <div class="final-answer-text" id="final-answer">-</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">任务 ID</div>
+            <div class="info-value" id="task-id">-</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">总时长</div>
+            <div class="info-value" id="total-duration">-</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">设备数量</div>
+            <div class="info-value" id="devices-count">-</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Agent 总数</div>
+            <div class="info-value" id="agents-count">-</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Plan Rounds</div>
+            <div class="info-value" id="total-rounds">-</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">状态</div>
+            <div class="info-value" id="status">-</div>
+        </div>
+    </div>
+
+    <div id="error-banner" class="error-banner"></div>
+
+    <div id="breadcrumb" class="breadcrumb"></div>
+
+    <div class="chart-wrapper">
+        <div id="chart-container">
+            <div class="chart-placeholder">
+                <div class="chart-placeholder-icon">📈</div>
+                <div>请选择 JSON 文件加载执行记录数据</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快速访问面板 -->
+    <div id="quick-access" class="quick-access-panel"></div>
+
+    <div id="detail-panel" class="detail-panel"></div>
+
+    <div id="image-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <button class="modal-nav prev" onclick="prevImage()">‹</button>
+            <img id="modal-image" src="" alt="Screenshot">
+            <button class="modal-nav next" onclick="nextImage()">›</button>
+            <div class="modal-counter" id="modal-counter"></div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 全局状态 ====================
+        let recordData = null;
+        let currentView = 'level1';
+        let currentAgent = null;
+        let currentRoundIdx = 0;
+        let modalImages = [];
+        let modalCurrentIdx = 0;
+        let jsonBasePath = '';  // JSON 文件所在目录的相对路径（用于图片路径计算）
+        let expandedAgents = new Set();  // 记录被展开的 Agent 调用实例（按 agent_count/callKey 级别追踪）
+
+        // ==================== 颜色配置 ====================
+        const COLORS = {
+            plannerThink: '#a371f7',
+            plannerAction: '#c9b1fb',
+            gui: '#58a6ff',
+            code: '#d29922',
+            modelTime: '#3fb950',
+            actionTime: '#f85149',
+            dependency: '#f97583',
+            dispatch: '#6e7681',
+            background: '#1e2530',
+            text: '#e6edf3',
+            grid: '#30363d'
+        };
+
+        // 时间线粗细配置
+        const LINE_WIDTH = {
+            planner: 28,
+            agent: 24,
+            agentRound: 22
+        };
+        
+        // 标记点大小配置（用于增大点击区域）
+        const MARKER_SIZE = {
+            planner: 20,
+            agent: 18,
+            agentRound: 16
+        };
+
+        // ==================== Agent 辅助函数 ====================
+        /**
+         * 获取用于纵轴分组的 Agent 键（按 agent_id 分组，同一 agent 多次调用在同一行）
+         * @param {Object} agent - 当前 agent 对象
+         * @returns {string} - agent_id，用于纵轴分组
+         */
+        function getAgentGroupKey(agent) {
+            return agent?.agent_id || agent?.unique_id || 'unknown_agent';
+        }
+
+        /**
+         * 获取用于依赖匹配的 Agent 唯一键（优先全局计数 agent_count，用于精确定位某次调用）
+         * @param {Object} agent - 当前 agent 对象
+         * @returns {string} - 统一的 agent key，后续依赖匹配用它
+         */
+        function getAgentKey(agent) {
+            return (agent?.agent_count) 
+                ? agent.agent_count 
+                : (agent?.unique_id) 
+                    ? agent.unique_id 
+                    : `${agent?.agent_id || 'agent'}_${agent?.call_id || '0'}`;
+        }
+
+        /**
+         * 获取用于展示的 Agent 标签
+         * @param {Object} agent - 当前 agent 对象
+         * @param {string} deviceId - 所在设备，可选
+         * @returns {string} - 面向用户的展示文案
+         */
+        function getAgentDisplay(agent, deviceId) {
+            return agent?.agent_id || getAgentKey(agent);
+        }
+
+        // ==================== 事件绑定 ====================
+        document.getElementById('file-input').addEventListener('change', handleFileSelect);
+        document.getElementById('load-example').addEventListener('click', loadExampleData);
+        document.getElementById('load-url').addEventListener('click', () => {
+            const url = document.getElementById('url-input').value.trim();
+            if (url) {
+                loadJsonFromUrl(url);
+            } else {
+                showError('请输入 JSON 文件路径');
+            }
+        });
+        document.getElementById('url-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const url = document.getElementById('url-input').value.trim();
+                if (url) {
+                    loadJsonFromUrl(url);
+                }
+            }
+        });
+
+        /**
+         * 处理文件选择事件
+         * 注意：由于浏览器安全限制，通过文件选择器选择的文件无法获取完整路径
+         * 对于子目录中的文件，推荐使用 URL 输入方式加载
+         * @param {Event} e - 文件选择事件
+         */
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('file-name').textContent = `已选择: ${file.name}`;
+                // 浏览器安全限制：webkitRelativePath 只在使用 webkitdirectory 属性时有效
+                // 对于普通文件选择，只能获取文件名，无法获取目录路径
+                const relativePath = file.webkitRelativePath || file.name;
+                const pathParts = relativePath.split('/');
+                pathParts.pop(); // 移除文件名
+                jsonBasePath = pathParts.join('/');
+                if (jsonBasePath) jsonBasePath += '/';
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        recordData = JSON.parse(event.target.result);
+                        // 尝试自动探测图片路径
+                        autoDetectImageBasePath(file.name).then(() => {
+                            initVisualization();
+                        });
+                    } catch (error) {
+                        showError('解析 JSON 文件失败: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        /**
+         * 自动探测图片基础路径
+         * 当通过文件选择器加载 JSON 时，尝试猜测正确的图片路径
+         * @param {string} fileName - JSON 文件名
+         * @returns {Promise} - 探测完成的 Promise
+         */
+        async function autoDetectImageBasePath(fileName) {
+            // 如果已经有有效的 jsonBasePath，不需要探测
+            if (jsonBasePath && jsonBasePath !== '') {
+                console.log('已有基础路径:', jsonBasePath);
+                return;
+            }
+            
+            // 从 recordData 中提取第一个有效的图片路径
+            const sampleImagePath = findFirstImagePath(recordData);
+            if (!sampleImagePath) {
+                console.log('未找到图片路径，跳过探测');
+                return;
+            }
+            
+            console.log('探测图片路径，样本:', sampleImagePath);
+            
+            // 常见的子目录列表（按优先级排序）
+            const possiblePaths = [
+                '',                           // 当前目录
+                'test_data/',                 // test_data 子目录
+                'data/',                      // data 子目录
+                '../',                        // 上级目录
+            ];
+            
+            // 从文件名中提取可能的目录前缀（如 execution_record_xxx → 可能在某个子目录）
+            const filePrefix = fileName.replace(/\.json$/, '');
+            
+            for (const basePath of possiblePaths) {
+                const testUrl = basePath + sampleImagePath;
+                console.log('尝试路径:', testUrl);
+                
+                try {
+                    const response = await fetch(testUrl, { method: 'HEAD' });
+                    if (response.ok) {
+                        jsonBasePath = basePath;
+                        console.log('✓ 找到有效路径:', jsonBasePath);
+                        document.getElementById('file-name').textContent += ` (图片路径: ${basePath || './'})`;
+                        return;
+                    }
+                } catch (err) {
+                    // 忽略 fetch 错误，继续尝试下一个路径
+                }
+            }
+            
+            console.warn('⚠ 未找到有效的图片路径，图片可能无法显示');
+            console.warn('建议：使用 URL 输入框加载 JSON 文件（如 test_data/xxx.json）');
+            showError('⚠️ 无法自动定位图片目录。如果图片无法显示，请使用 URL 输入框加载（如 test_data/xxx.json）');
+        }
+
+        /**
+         * 从记录数据中查找第一个有效的图片路径
+         * @param {Object} data - 记录数据
+         * @returns {string|null} - 找到的图片路径，或 null
+         */
+        function findFirstImagePath(data) {
+            if (!data?.devices) return null;
+            
+            for (const device of data.devices) {
+                for (const agent of device.agents || []) {
+                    for (const round of agent.rounds || []) {
+                        const messages = round.model_prediction?.messages || [];
+                        for (const msg of messages) {
+                            if (msg.content && Array.isArray(msg.content)) {
+                                for (const item of msg.content) {
+                                    if (item.image_url?.url) {
+                                        const url = item.image_url.url;
+                                        // 跳过 base64 和无效路径
+                                        if (url && 
+                                            !url.startsWith('data:') && 
+                                            url !== '[IMAGE_DATA_REMOVED]' &&
+                                            url.includes('extracted_images/')) {
+                                            return normalizeImagePath(url);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        function loadExampleData() {
+            // 使用清洗后的版本（图片路径为 extracted_images/ 格式）
+            loadJsonFromUrl('execution_record_20251223_163445_cleaned.json');
+        }
+        
+        function loadJsonFromUrl(url) {
+            // 智能路径处理
+            let originalUrl = url;
+            
+            // 1. 如果是绝对路径，提取服务器根目录之后的部分
+            if (url.startsWith('/Users/') || url.startsWith('/home/') || url.includes('parallel_benchmark/')) {
+                // 查找 parallel_benchmark/ 之后的部分
+                const match = url.match(/parallel_benchmark\/(.+)$/);
+                if (match) {
+                    url = match[1]; // 提取相对于服务器根目录的路径，如 "logs/xxx.json"
+                    console.log(`检测到绝对路径，转换为: ${url}`);
+                }
+            }
+            
+            // 2. 如果是 "logs/xxx.json" 格式（相对于服务器根目录），转换为相对于HTML的路径
+            if (url.startsWith('logs/') && !url.startsWith('../')) {
+                url = '../' + url;
+                console.log(`转换为相对路径: ${url}`);
+            }
+            
+            // 计算 JSON 文件所在目录
+            const pathParts = url.split('/');
+            const fileName = pathParts.pop(); // 移除文件名
+            jsonBasePath = pathParts.join('/');
+            if (jsonBasePath) jsonBasePath += '/';
+            
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    recordData = data;
+                    document.getElementById('file-name').textContent = `已加载: ${url}`;
+                    initVisualization();
+                })
+                .catch(error => {
+                    showError(`加载文件失败 (${url}): ` + error.message);
+                });
+        }
+
+        function initVisualization() {
+            hideError();
+            updateInfoPanel();
+            document.getElementById('legend-panel').classList.add('active');
+            document.getElementById('info-panel').classList.add('active');
+            renderLevel1();
+            renderQuickAccessPanel();
+            updateBreadcrumb('level1');
+        }
+
+        // 渲染快速访问面板
+        function renderQuickAccessPanel() {
+            const panel = document.getElementById('quick-access');
+            
+            // 收集所有 Agents
+            const agents = [];
+            recordData.devices.forEach(device => {
+                device.agents.forEach(agent => {
+                    const agentLabel = getAgentKey(agent);
+                    agents.push({
+                        label: agentLabel,
+                        display: getAgentDisplay(agent, device.device_id),
+                        agent: agent,
+                        device: device.device_id,
+                        type: agent.type,
+                        roundsCount: agent.rounds?.length || 0
+                    });
+                });
+            });
+            
+            // Plan Rounds (V2: plan_agent)
+            const planRounds = recordData.plan_agent?.rounds || [];
+            
+            panel.innerHTML = `
+                <div class="quick-access-title">⚡ 快速访问（点击查看详情）</div>
+                <div class="quick-access-grid">
+                    <button class="quick-access-btn home" id="back-to-global">
+                        🏠 全局视图
+                    </button>
+                    ${planRounds.map((round, idx) => {
+                        // V2: round_id
+                        const roundNum = round.round_id !== undefined ? round.round_id : idx;
+                        return `
+                            <button class="quick-access-btn plan" data-plan-round="${roundNum}">
+                                📋 Plan Round ${roundNum}
+                            </button>
+                        `;
+                    }).join('')}
+                    ${agents.map(a => `
+                        <button class="quick-access-btn ${a.type}" data-agent="${a.label}">
+                            ${a.type === 'gui' ? '🖥️' : '💻'} ${a.display}
+                            <span class="rounds-count">${a.roundsCount} rounds</span>
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            
+            // 添加事件监听器
+            // 返回全局视图按钮
+            document.getElementById('back-to-global').addEventListener('click', () => {
+                navigateToLevel1();
+            });
+            
+            // Plan Round 按钮 (V2: round_id)
+            panel.querySelectorAll('[data-plan-round]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const roundNum = parseInt(btn.dataset.planRound);
+                    const round = planRounds.find(r => (r.round_id !== undefined ? r.round_id : planRounds.indexOf(r)) === roundNum)
+                                 || planRounds[roundNum];
+                    if (round) {
+                        showPlanRoundDetail(roundNum, round);
+                    }
+                });
+            });
+            
+            // Agent 按钮
+            panel.querySelectorAll('[data-agent]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    navigateToAgent(btn.dataset.agent);
+                });
+            });
+            
+            panel.classList.add('active');
+        }
+
+        // ==================== 信息面板更新 ====================
+        function updateInfoPanel() {
+            if (!recordData) return;
+
+            // 显示任务说明
+            const instruction = recordData.instruction || recordData.task || '';
+            const instructionEl = document.getElementById('task-instruction');
+            if (instruction) {
+                // 清理空白并显示
+                instructionEl.textContent = instruction.trim();
+                instructionEl.title = instruction.trim(); // 鼠标悬停显示完整内容
+            } else {
+                instructionEl.textContent = '无任务描述';
+            }
+
+            // 显示最终答案
+            let finalAnswer = recordData.summary?.final_answer || '';
+            
+            // 策略 2: 检查 Plan Agent 的最后一轮输出 (通常包含总结)
+            if (!finalAnswer && recordData.plan_agent?.rounds && recordData.plan_agent.rounds.length > 0) {
+                const lastRound = recordData.plan_agent.rounds[recordData.plan_agent.rounds.length - 1];
+                if (lastRound.model_prediction?.response) {
+                    const response = lastRound.model_prediction.response;
+                    // 检查是否有实际的工具调用 (排除 thought 类型)
+                    const hasToolCalls = lastRound.model_prediction.actions && 
+                                       lastRound.model_prediction.actions.some(a => a.type !== 'thought');
+                    
+                    // 如果最后一轮没有工具调用，或者明确包含总结性关键词，则将其视为最终答案
+                    if (!hasToolCalls || /Final result|Answer:|Conclusion/i.test(response)) {
+                        finalAnswer = response;
+                    }
+                }
+            }
+
+            // 策略 3: 如果仍然没有答案，尝试从所有 Round 的执行结果中提取 (Fallback)
+            if (!finalAnswer && recordData.plan_agent?.rounds) {
+                const results = [];
+                recordData.plan_agent.rounds.forEach(round => {
+                    if (round.model_prediction?.messages) {
+                        round.model_prediction.messages.forEach(msg => {
+                            if (msg.role === 'tool' && msg.content && msg.content.includes('Result:')) {
+                                const match = msg.content.match(/Result:\s*([\s\S]*?)(?:Execution steps:|$)/);
+                                if (match && match[1]) {
+                                    results.push(match[1].trim());
+                                }
+                            }
+                        });
+                    }
+                });
+                if (results.length > 0) {
+                    finalAnswer = "⚠️ 自动提取的执行结果 (未找到 Plan Agent 总结):\n\n" + results.join('\n\n');
+                }
+            }
+
+            const answerEl = document.getElementById('final-answer');
+            const answerItem = document.getElementById('answer-item');
+            if (finalAnswer && finalAnswer.trim()) {
+                answerEl.textContent = finalAnswer.trim();
+                answerEl.title = finalAnswer.trim(); // 鼠标悬停显示完整内容
+                answerItem.style.display = 'block';
+            } else {
+                answerItem.style.display = 'none';
+            }
+
+            document.getElementById('task-id').textContent = recordData.task_id || '未命名任务';
+            
+            const totalDuration = recordData.metadata?.duration || recordData.metadata?.total_duration || recordData.summary?.total_duration;
+            document.getElementById('total-duration').textContent = 
+                totalDuration ? `${totalDuration.toFixed(1)}s` : '-';
+            
+            const devicesCount = recordData.devices?.length || 0;
+            document.getElementById('devices-count').textContent = devicesCount;
+            
+            let agentsCount = 0;
+            if (recordData.devices) {
+                recordData.devices.forEach(d => {
+                    if (d.agents) agentsCount += d.agents.length;
+                });
+            }
+            document.getElementById('agents-count').textContent = agentsCount;
+            
+            const totalRounds = recordData.plan_agent?.rounds?.length || 0;
+            document.getElementById('total-rounds').textContent = totalRounds;
+            
+            // 使用 summary.success 字段判断任务是否完成
+            const isSuccess = recordData.summary?.success === true;
+            document.getElementById('status').innerHTML = isSuccess 
+                ? '<span class="status-tag status-success">✓ 已完成</span>'
+                : '<span class="status-tag status-failure">✗ 未完成</span>';
+        }
+
+        // ==================== 面包屑导航 ====================
+        function updateBreadcrumb(view, label) {
+            const breadcrumb = document.getElementById('breadcrumb');
+            
+            if (view === 'level1') {
+                breadcrumb.innerHTML = '<span class="breadcrumb-current">📊 全局执行视图 (Agent 级别)</span>';
+            } else if (view === 'level1-agent-rounds') {
+                breadcrumb.innerHTML = `
+                    <span class="breadcrumb-item" onclick="navigateToLevel1()">📊 全局执行视图</span>
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-current">🤖 ${label} Round 详情</span>
+                `;
+            } else if (view === 'level2-agent') {
+                breadcrumb.innerHTML = `
+                    <span class="breadcrumb-item" onclick="navigateToLevel1()">📊 全局执行视图</span>
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-current">🤖 ${label}</span>
+                `;
+            } else if (view === 'level2-plan') {
+                breadcrumb.innerHTML = `
+                    <span class="breadcrumb-item" onclick="navigateToLevel1()">📊 全局执行视图</span>
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-current">📋 Plan Round ${label}</span>
+                `;
+            }
+            
+            breadcrumb.classList.add('active');
+        }
+
+        function navigateToLevel1() {
+            currentView = 'level1';
+            currentAgent = null;
+            renderLevel1();
+            updateBreadcrumb('level1');
+            closeDetailPanel();
+        }
+
+        // ==================== Level 1: 全局执行视图（Agent 整体周期）====================
+        function renderLevel1() {
+            currentView = 'level1';
+            const container = document.getElementById('chart-container');
+            
+            // 清除占位符和旧内容
+            container.innerHTML = '';
+            
+            const startTime = recordData.metadata.start_timestamp;
+            const totalDuration = recordData.metadata.duration || recordData.metadata.total_duration;
+            
+            const traces = [];
+            const yLabels = [];
+            let yPos = 0;
+            
+            // 1. Plan Agent (顶层) - 显示每个 Round 的思考和执行阶段
+            yLabels.push('📋 Plan Agent');
+            
+            recordData.plan_agent.rounds.forEach((round, idx) => {
+                const roundNum = round.round_id !== undefined ? round.round_id : idx;
+                const roundStart = round.model_prediction.time_span.start_timestamp - startTime;
+                const modelEnd = round.model_prediction.time_span.end_timestamp - startTime;
+                const roundEnd = round.action_execution 
+                    ? round.action_execution.time_span.end_timestamp - startTime 
+                    : modelEnd;
+                
+                // 思考阶段（使用 lines+markers 增大点击区域）
+                const thinkMidPoint = (roundStart + modelEnd) / 2;
+                traces.push({
+                    x: [roundStart, thinkMidPoint, modelEnd],
+                    y: [0, 0, 0],
+                    mode: 'lines+markers',
+                    type: 'scatter',
+                    line: { color: COLORS.plannerThink, width: LINE_WIDTH.planner },
+                    marker: { 
+                        color: COLORS.plannerThink, 
+                        size: MARKER_SIZE.planner,
+                        symbol: 'square',
+                        opacity: 0  // 隐藏标记点，但保留点击区域
+                    },
+                    name: `Plan R${roundNum} Think`,
+                    showlegend: false,
+                    hovertemplate: `<b>Plan Round ${roundNum} - 思考阶段</b><br>` +
+                          `时间: ${roundStart.toFixed(2)}s - ${modelEnd.toFixed(2)}s<br>` +
+                          `耗时: ${round.model_prediction.time_span.duration.toFixed(2)}s<br>` +
+                          `<i>🖱️ 点击查看详情</i><extra></extra>`,
+                    customdata: [
+                        { type: 'plan-round', roundId: roundNum, round: round },
+                        { type: 'plan-round', roundId: roundNum, round: round },
+                        { type: 'plan-round', roundId: roundNum, round: round }
+                    ]
+                });
+                
+                // 执行阶段（使用 lines+markers 增大点击区域）
+                if (round.action_execution) {
+                    const actionMidPoint = (modelEnd + roundEnd) / 2;
+                    traces.push({
+                        x: [modelEnd, actionMidPoint, roundEnd],
+                        y: [0, 0, 0],
+                        mode: 'lines+markers',
+                        type: 'scatter',
+                        line: { color: COLORS.plannerAction, width: LINE_WIDTH.planner },
+                        marker: { 
+                            color: COLORS.plannerAction, 
+                            size: MARKER_SIZE.planner,
+                            symbol: 'square',
+                            opacity: 0  // 隐藏标记点，但保留点击区域
+                        },
+                        name: `Plan R${roundNum} Action`,
+                        showlegend: false,
+                        hovertemplate: `<b>Plan Round ${roundNum} - 执行阶段</b><br>` +
+                              `时间: ${modelEnd.toFixed(2)}s - ${roundEnd.toFixed(2)}s<br>` +
+                              `耗时: ${round.action_execution.time_span.duration.toFixed(2)}s<br>` +
+                              `<i>🖱️ 点击查看详情</i><extra></extra>`,
+                        customdata: [
+                            { type: 'plan-round', roundId: roundNum, round: round },
+                            { type: 'plan-round', roundId: roundNum, round: round },
+                            { type: 'plan-round', roundId: roundNum, round: round }
+                        ]
+                    });
+                }
+            });
+            
+            yPos++;
+            
+            // 2. 收集所有执行 Agent（按 agent_id 分组，同一 agent 多次调用合并到同一行）
+            const agentMap = new Map();  // 用于纵轴分组（按 agent_id）
+            const agentCallMap = new Map();  // 用于依赖匹配（按 agent_count）
+            const allAgents = [];
+            
+            recordData.devices.forEach(device => {
+                device.agents.forEach(agent => {
+                    const rounds = (agent.rounds || []).slice().sort((a, b) => {
+                        const aStart = a?.model_prediction?.time_span?.start_timestamp || 0;
+                        const bStart = b?.model_prediction?.time_span?.start_timestamp || 0;
+                        return aStart - bStart;
+                    });
+
+                    const inferredStart = rounds.length > 0
+                        ? (rounds[0].model_prediction?.time_span?.start_timestamp || agent.recording?.start_timestamp || startTime)
+                        : (agent.recording?.start_timestamp || startTime);
+                    const inferredEnd = rounds.length > 0
+                        ? (
+                            (rounds[rounds.length - 1].action_execution?.time_span?.end_timestamp) ||
+                            (rounds[rounds.length - 1].model_prediction?.time_span?.end_timestamp) ||
+                            agent.recording?.end_timestamp ||
+                            inferredStart
+                        )
+                        : (agent.recording?.end_timestamp || inferredStart);
+
+                    // 用 agent_id 作为分组键（同一 agent 多次调用合并到同一行）
+                    const groupKey = getAgentGroupKey(agent);
+                    // 用 agent_count 作为依赖匹配键（精确定位某次调用）
+                    const callKey = getAgentKey(agent);
+                    
+                    // 按 agent_id 分组：同一 agent 的多次调用合并到同一行
+                    if (agentMap.has(groupKey)) {
+                        // 已存在同名 agent，合并时间范围和 rounds
+                        const existing = agentMap.get(groupKey);
+                        existing.start = Math.min(existing.start, inferredStart - startTime);
+                        existing.end = Math.max(existing.end, inferredEnd - startTime);
+                        existing.roundsCount += rounds.length;
+                        // 保存多个 agent 实例以便后续绘制多段时间线
+                        existing.agentInstances.push({
+                            agent: agent,
+                            device: device.device_id,
+                            start: inferredStart - startTime,
+                            end: inferredEnd - startTime,
+                            roundsCount: rounds.length,
+                            callKey: callKey  // 保存调用键用于依赖匹配
+                        });
+                    } else {
+                        const agentInfo = {
+                            label: groupKey,  // 纵轴标签就是 agent_id
+                            groupKey: groupKey,
+                            agent: agent,
+                            device: device.device_id,
+                            start: inferredStart - startTime,
+                            end: inferredEnd - startTime,
+                            roundsCount: rounds.length,
+                            // 保存所有实例用于绘制多段时间线
+                            agentInstances: [{
+                                agent: agent,
+                                device: device.device_id,
+                                start: inferredStart - startTime,
+                                end: inferredEnd - startTime,
+                                roundsCount: rounds.length,
+                                callKey: callKey
+                            }]
+                        };
+                        agentMap.set(groupKey, agentInfo);
+                        allAgents.push(agentInfo);
+                    }
+                    
+                    // 为依赖匹配建立 agent_count -> agentInfo 的映射
+                    // （同一 agentInfo 可能有多个 callKey 指向它）
+                    agentCallMap.set(callKey, agentMap.get(groupKey));
+                    if (agent.unique_id) agentCallMap.set(agent.unique_id, agentMap.get(groupKey));
+                });
+            });
+            
+            // 按 agent_id 名称排序（gui_agent_1, gui_agent_2, code_agent_1, ...）
+            allAgents.sort((a, b) => {
+                // 提取类型和数字：gui_agent_1 -> ['gui', 1]
+                const parseId = (id) => {
+                    const match = id.match(/^(.+?)_(\d+)$/);
+                    if (match) {
+                        return { type: match[1], num: parseInt(match[2]) };
+                    }
+                    return { type: id, num: 0 };
+                };
+                const pa = parseId(a.label);
+                const pb = parseId(b.label);
+                // 先按类型排序，再按数字排序
+                if (pa.type !== pb.type) return pa.type.localeCompare(pb.type);
+                return pa.num - pb.num;
+            });
+            
+            // 添加 Agent 到图表 - Level 1 显示整体执行周期
+            // 同一个 agent_id 的多次调用在同一行显示多段时间条
+            // 如果某个实例被展开，则显示该实例每个 Round 的详细时间线（思考+执行分段）
+            allAgents.forEach(agentInfo => {
+                const agentType = agentInfo.agent.type === 'gui' ? 'GUI' : 'Code';
+                // 检查是否有任何一个实例被展开（用于纵轴标签显示）
+                const hasAnyExpanded = agentInfo.agentInstances.some(inst => expandedAgents.has(inst.callKey));
+                
+                // 纵轴标签：有展开实例时添加展开标记
+                const expandIcon = hasAnyExpanded ? '🔽' : '▶️';
+                yLabels.push(`${expandIcon} ${agentInfo.label} (${agentType})`);
+                
+                // 更新 agentInfo 的 yPos
+                agentInfo.yPos = yPos;
+                
+                // 同时更新 agentCallMap 中所有指向该 agentInfo 的条目的 yPos
+                agentInfo.agentInstances.forEach(instance => {
+                    if (instance.callKey) {
+                        const ref = agentCallMap.get(instance.callKey);
+                        if (ref) ref.yPos = yPos;
+                    }
+                });
+                
+                const typeLabel = agentInfo.agent.type === 'gui' ? 'GUI Agent' : 'Code Agent';
+                const baseColor = agentInfo.agent.type === 'gui' ? COLORS.gui : COLORS.code;
+
+                // 遍历每个实例，根据该实例的展开状态决定显示方式
+                agentInfo.agentInstances.forEach((instance, instanceIdx) => {
+                    const isInstanceExpanded = expandedAgents.has(instance.callKey);
+                    
+                    if (isInstanceExpanded) {
+                        // 该实例展开状态：为每个 Round 绘制思考（绿色）和执行（红色）分段
+                        const agent = instance.agent;
+                        const rounds = (agent.rounds || []).slice().sort((a, b) => {
+                            const aStart = a?.model_prediction?.time_span?.start_timestamp || 0;
+                            const bStart = b?.model_prediction?.time_span?.start_timestamp || 0;
+                            return aStart - bStart;
+                        });
+                        
+                        rounds.forEach((round, rIdx) => {
+                            const roundNum = round.round_id !== undefined ? round.round_id : rIdx;
+                            const thinkStart = (round.model_prediction?.time_span?.start_timestamp || startTime) - startTime;
+                            const thinkEnd = (round.model_prediction?.time_span?.end_timestamp || thinkStart) - startTime;
+                            const thinkDuration = round.model_prediction?.time_span?.duration || (thinkEnd - thinkStart);
+
+                            // 思考阶段（绿色）- 使用 lines+markers 增大点击区域
+                            const thinkMidPoint = (thinkStart + thinkEnd) / 2;
+                            traces.push({
+                                x: [thinkStart, thinkMidPoint, thinkEnd],
+                                y: [yPos, yPos, yPos],
+                                mode: 'lines+markers',
+                                type: 'scatter',
+                                line: { color: COLORS.modelTime, width: LINE_WIDTH.agent },
+                                marker: { 
+                                    color: COLORS.modelTime, 
+                                    size: MARKER_SIZE.agentRound,
+                                    symbol: 'square',
+                                    opacity: 0  // 隐藏标记点，但保留点击区域
+                                },
+                                name: `${agentInfo.label} R${roundNum} Think`,
+                                showlegend: false,
+                                hovertemplate: `<b>${agentInfo.label}</b> (${typeLabel})<br>` +
+                                      `Round: ${roundNum}<br>` +
+                                      `🧠 思考: ${thinkDuration?.toFixed(3) || 'N/A'}s<br>` +
+                                      `时间: ${thinkStart.toFixed(2)}s - ${thinkEnd.toFixed(2)}s<br>` +
+                                      `任务: ${(agent.task || 'N/A').replace(/\n/g, '<br>')}<br>` +
+                                      `<i>🖱️ 点击查看详情</i><extra></extra>`,
+                                customdata: [
+                                    { type: 'agent-round', agent: agent, device: instance.device, roundIdx: rIdx },
+                                    { type: 'agent-round', agent: agent, device: instance.device, roundIdx: rIdx },
+                                    { type: 'agent-round', agent: agent, device: instance.device, roundIdx: rIdx }
+                                ]
+                            });
+
+                            // 执行阶段（红色）- 使用 lines+markers 增大点击区域
+                            if (round.action_execution) {
+                                const actionStart = (round.action_execution.time_span?.start_timestamp || thinkEnd + startTime) - startTime;
+                                const actionEnd = (round.action_execution.time_span?.end_timestamp || actionStart) - startTime;
+                                const actionDuration = round.action_execution.time_span?.duration || (actionEnd - actionStart);
+                                const actionMidPoint = (actionStart + actionEnd) / 2;
+
+                                traces.push({
+                                    x: [actionStart, actionMidPoint, actionEnd],
+                                    y: [yPos, yPos, yPos],
+                                    mode: 'lines+markers',
+                                    type: 'scatter',
+                                    line: { color: COLORS.actionTime, width: LINE_WIDTH.agent },
+                                    marker: { 
+                                        color: COLORS.actionTime, 
+                                        size: MARKER_SIZE.agentRound,
+                                        symbol: 'square',
+                                        opacity: 0  // 隐藏标记点，但保留点击区域
+                                    },
+                                    name: `${agentInfo.label} R${roundNum} Action`,
+                                    showlegend: false,
+                                    hovertemplate: `<b>${agentInfo.label}</b> (${typeLabel})<br>` +
+                                          `Round: ${roundNum}<br>` +
+                                          `⚡ 执行: ${actionDuration?.toFixed(3) || 'N/A'}s<br>` +
+                                          `时间: ${actionStart.toFixed(2)}s - ${actionEnd.toFixed(2)}s<br>` +
+                                          `任务: ${(agent.task || 'N/A').replace(/\n/g, '<br>')}<br>` +
+                                          `<i>🖱️ 点击查看详情</i><extra></extra>`,
+                                    customdata: [
+                                        { type: 'agent-round', agent: agent, device: instance.device, roundIdx: rIdx },
+                                        { type: 'agent-round', agent: agent, device: instance.device, roundIdx: rIdx },
+                                        { type: 'agent-round', agent: agent, device: instance.device, roundIdx: rIdx }
+                                    ]
+                                });
+                            }
+                        });
+                    } else {
+                        // 该实例折叠状态：显示整体时间条（使用 lines+markers 增大点击区域）
+                        const duration = (instance.end - instance.start).toFixed(2);
+                        const callLabel = instance.agent.agent_count || `call_${instanceIdx + 1}`;
+                        const instanceLabel = agentInfo.agentInstances.length > 1 
+                            ? `${agentInfo.label} (${callLabel})`
+                            : agentInfo.label;
+                        
+                        // 计算中间点，让整条线更容易被点击
+                        const midPoint = (instance.start + instance.end) / 2;
+                        
+                        traces.push({
+                            x: [instance.start, midPoint, instance.end],
+                            y: [yPos, yPos, yPos],
+                            mode: 'lines+markers',
+                            type: 'scatter',
+                            line: { color: baseColor, width: LINE_WIDTH.agent },
+                            marker: { 
+                                color: baseColor, 
+                                size: MARKER_SIZE.agent,
+                                symbol: 'square',
+                                opacity: 0  // 隐藏标记点，但保留点击区域
+                            },
+                            name: instanceLabel,
+                            showlegend: false,
+                            hovertemplate: `<b>${instanceLabel}</b> (${typeLabel})<br>` +
+                                  `设备: ${instance.device}<br>` +
+                                  `时间: ${instance.start.toFixed(2)}s - ${instance.end.toFixed(2)}s<br>` +
+                                  `时长: ${duration}s<br>` +
+                                  `Rounds: ${instance.roundsCount}<br>` +
+                                  `任务: ${wrapTextForHover(instance.agent.task || 'N/A', 40)}<br>` +
+                                  `<i>🖱️ 点击展开 Round 详情</i><extra></extra>`,
+                            customdata: [
+                                { type: 'agent', agent: instance.agent, device: instance.device },
+                                { type: 'agent', agent: instance.agent, device: instance.device },
+                                { type: 'agent', agent: instance.agent, device: instance.device }
+                            ]
+                        });
+                    }
+                });
+                
+                yPos++;
+            });
+            
+            // 3. 添加依赖连接线
+            // 合并 agentMap（按 agent_id）和 agentCallMap（按 agent_count）供依赖匹配使用
+            const combinedMap = new Map([...agentMap, ...agentCallMap]);
+            addConnectionLines(traces, combinedMap, startTime);
+            
+            // 4. 创建布局
+            const rowCount = yLabels.length;
+            const rowHeight = 80;
+            const chartHeight = Math.max(400, rowCount * rowHeight + 80);
+            
+            console.log('Chart layout:', { rowCount, chartHeight, yLabels });
+            
+            const layout = {
+                title: {
+                    text: '',
+                    font: { size: 16, color: COLORS.text }
+                },
+                xaxis: {
+                    title: { text: '时间 (秒)', font: { color: COLORS.text, size: 12 } },
+                    range: [0, Math.max((totalDuration || 60) * 1.05, 10)],
+                    gridcolor: COLORS.grid,
+                    tickfont: { color: COLORS.text, size: 11 },
+                    zerolinecolor: COLORS.grid
+                },
+                yaxis: {
+                    title: '',
+                    tickmode: 'array',
+                    tickvals: Array.from({ length: rowCount }, (_, i) => i),
+                    ticktext: yLabels,
+                    range: [rowCount - 0.5, -0.5],
+                    gridcolor: COLORS.grid,
+                    tickfont: { color: COLORS.text, size: 12 },
+                    dtick: 1,
+                    fixedrange: false
+                },
+                height: chartHeight,
+                paper_bgcolor: COLORS.background,
+                plot_bgcolor: COLORS.background,
+                hovermode: 'closest',
+                margin: { l: 300, r: 40, t: 30, b: 50 },
+                shapes: createRoundSeparators(startTime),
+                hoverlabel: {
+                    bgcolor: '#1e2530',
+                    bordercolor: '#30363d',
+                    font: { 
+                        family: 'Noto Sans SC, sans-serif', 
+                        size: 12, 
+                        color: '#e6edf3' 
+                    },
+                    align: 'left',
+                    namelength: -1  // 不限制文本长度
+                }
+            };
+            
+            const config = {
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+                responsive: true,
+                displaylogo: false
+            };
+            
+            Plotly.newPlot('chart-container', traces, layout, config).then(() => {
+                const chart = document.getElementById('chart-container');
+                chart.on('plotly_click', handleChartClick);
+            });
+        }
+        
+        // ==================== Level 1.5: Agent Round 详情视图（显示每个 Round 分段）====================
+        function renderAgentRoundsLevel(agentInfo, deviceId) {
+            currentView = 'level1-agent-rounds';
+            const container = document.getElementById('chart-container');
+            container.innerHTML = '';
+            
+            const startTime = recordData.metadata.start_timestamp;
+            const totalDuration = recordData.metadata.duration || recordData.metadata.total_duration;
+            
+            const traces = [];
+            const yLabels = [];
+            let yPos = 0;
+            
+            // 1. Plan Agent (保持显示)
+            yLabels.push('📋 Plan Agent');
+            
+            recordData.plan_agent.rounds.forEach((round, idx) => {
+                const roundNum = round.round_id !== undefined ? round.round_id : idx;
+                const roundStart = round.model_prediction.time_span.start_timestamp - startTime;
+                const modelEnd = round.model_prediction.time_span.end_timestamp - startTime;
+                const roundEnd = round.action_execution 
+                    ? round.action_execution.time_span.end_timestamp - startTime 
+                    : modelEnd;
+                
+                traces.push({
+                    x: [roundStart, modelEnd],
+                    y: [0, 0],
+                    mode: 'lines',
+                    type: 'scatter',
+                    line: { color: COLORS.plannerThink, width: LINE_WIDTH.planner },
+                    showlegend: false,
+                    hovertemplate: `<b>Plan Round ${roundNum} - 思考</b><br>耗时: ${round.model_prediction.time_span.duration.toFixed(2)}s<extra></extra>`,
+                    customdata: [{ type: 'plan-round', roundId: roundNum, round: round }]
+                });
+                
+                if (round.action_execution) {
+                    traces.push({
+                        x: [modelEnd, roundEnd],
+                        y: [0, 0],
+                        mode: 'lines',
+                        type: 'scatter',
+                        line: { color: COLORS.plannerAction, width: LINE_WIDTH.planner },
+                        showlegend: false,
+                        hovertemplate: `<b>Plan Round ${roundNum} - 执行</b><br>耗时: ${round.action_execution.time_span.duration.toFixed(2)}s<extra></extra>`,
+                        customdata: [{ type: 'plan-round', roundId: roundNum, round: round }]
+                    });
+                }
+            });
+            
+            yPos++;
+            
+            // 2. 当前 Agent 的每个 Round 详情
+            const agent = agentInfo.agent;
+            const agentLabel = getAgentDisplay(agent, deviceId);
+            const typeLabel = agent.type === 'gui' ? 'GUI Agent' : 'Code Agent';
+            
+            yLabels.push(`🤖 ${agentLabel} (Rounds 详情)`);
+            
+            const rounds = (agent.rounds || []).slice().sort((a, b) => {
+                const aStart = a?.model_prediction?.time_span?.start_timestamp || 0;
+                const bStart = b?.model_prediction?.time_span?.start_timestamp || 0;
+                return aStart - bStart;
+            });
+
+            // 为每个 round 分段绘制：思考(绿色)与执行(红色)
+            rounds.forEach((round, rIdx) => {
+                const roundNum = round.round_id !== undefined ? round.round_id : rIdx;
+                const thinkStart = (round.model_prediction?.time_span?.start_timestamp || startTime) - startTime;
+                const thinkEnd = (round.model_prediction?.time_span?.end_timestamp || thinkStart) - startTime;
+                const thinkDuration = round.model_prediction?.time_span?.duration || (thinkEnd - thinkStart);
+
+                // 思考阶段（绿色）
+                traces.push({
+                    x: [thinkStart, thinkEnd],
+                    y: [yPos, yPos],
+                    mode: 'lines',
+                    type: 'scatter',
+                    line: { color: COLORS.modelTime, width: LINE_WIDTH.agent },
+                    name: `${agentLabel} - Round ${roundNum} Think`,
+                    showlegend: false,
+                    hovertemplate: `<b>${agentLabel}</b> (${typeLabel})<br>` +
+                          `Round: ${roundNum}<br>` +
+                          `🧠 思考: ${thinkDuration?.toFixed(3) || 'N/A'}s<br>` +
+                          `时间: ${thinkStart.toFixed(2)}s - ${thinkEnd.toFixed(2)}s<br>` +
+                          `任务: ${wrapTextForHover(agent.task || 'N/A', 40)}<extra></extra>`,
+                    customdata: [{ type: 'agent-round', agent: agent, device: deviceId, roundIdx: rIdx }]
+                });
+
+                // 执行阶段（红色）
+                if (round.action_execution) {
+                    const actionStart = (round.action_execution.time_span?.start_timestamp || thinkEnd + startTime) - startTime;
+                    const actionEnd = (round.action_execution.time_span?.end_timestamp || actionStart) - startTime;
+                    const actionDuration = round.action_execution.time_span?.duration || (actionEnd - actionStart);
+
+                    traces.push({
+                        x: [actionStart, actionEnd],
+                        y: [yPos, yPos],
+                        mode: 'lines',
+                        type: 'scatter',
+                        line: { color: COLORS.actionTime, width: LINE_WIDTH.agent },
+                        name: `${agentLabel} - Round ${roundNum} Action`,
+                        showlegend: false,
+                        hovertemplate: `<b>${agentLabel}</b> (${typeLabel})<br>` +
+                              `Round: ${roundNum}<br>` +
+                              `⚡ 执行: ${actionDuration?.toFixed(3) || 'N/A'}s<br>` +
+                              `时间: ${actionStart.toFixed(2)}s - ${actionEnd.toFixed(2)}s<br>` +
+                              `任务: ${wrapTextForHover(agent.task || 'N/A', 40)}<extra></extra>`,
+                        customdata: [{ type: 'agent-round', agent: agent, device: deviceId, roundIdx: rIdx }]
+                    });
+                }
+            });
+            
+            yPos++;
+            
+            // 3. 其他 Agent（灰色背景显示）
+            recordData.devices.forEach(device => {
+                device.agents.forEach(otherAgent => {
+                    const otherLabel = getAgentDisplay(otherAgent, device.device_id);
+                    if (otherLabel === agentLabel) return; // 跳过当前 agent
+                    
+                    yLabels.push(`🤖 ${otherLabel}`);
+                    
+                    const otherRounds = (otherAgent.rounds || []).slice().sort((a, b) => {
+                        const aStart = a?.model_prediction?.time_span?.start_timestamp || 0;
+                        const bStart = b?.model_prediction?.time_span?.start_timestamp || 0;
+                        return aStart - bStart;
+                    });
+                    
+                    if (otherRounds.length > 0) {
+                        const otherStart = (otherRounds[0].model_prediction?.time_span?.start_timestamp || startTime) - startTime;
+                        const lastRound = otherRounds[otherRounds.length - 1];
+                        const otherEnd = (lastRound.action_execution?.time_span?.end_timestamp || 
+                                          lastRound.model_prediction?.time_span?.end_timestamp || startTime) - startTime;
+                        
+                        const baseColor = otherAgent.type === 'gui' ? COLORS.gui : COLORS.code;
+                        traces.push({
+                            x: [otherStart, otherEnd],
+                            y: [yPos, yPos],
+                            mode: 'lines',
+                            type: 'scatter',
+                            line: { color: baseColor, width: LINE_WIDTH.agent, opacity: 0.4 },
+                            showlegend: false,
+                            hovertemplate: `<b>${otherLabel}</b><br>点击查看详情<extra></extra>`,
+                            customdata: [{ type: 'agent', agent: otherAgent, device: device.device_id }]
+                        });
+                    }
+                    
+                    yPos++;
+                });
+            });
+            
+            // 4. 添加依赖连接线（针对当前 Agent）
+            addAgentDependencyLines(traces, agent, agentLabel, 1, startTime);
+            
+            const rowCount = yLabels.length;
+            const rowHeight = 80;
+            const chartHeight = Math.max(400, rowCount * rowHeight + 80);
+            
+            const layout = {
+                title: {
+                    text: `${agentLabel} - Round 详情视图`,
+                    font: { size: 14, color: COLORS.text }
+                },
+                xaxis: {
+                    title: { text: '时间 (秒)', font: { color: COLORS.text, size: 12 } },
+                    range: [0, Math.max((totalDuration || 60) * 1.05, 10)],
+                    gridcolor: COLORS.grid,
+                    tickfont: { color: COLORS.text, size: 11 },
+                    zerolinecolor: COLORS.grid
+                },
+                yaxis: {
+                    title: '',
+                    tickmode: 'array',
+                    tickvals: Array.from({ length: rowCount }, (_, i) => i),
+                    ticktext: yLabels,
+                    range: [rowCount - 0.5, -0.5],
+                    gridcolor: COLORS.grid,
+                    tickfont: { color: COLORS.text, size: 12 },
+                    dtick: 1,
+                    fixedrange: false
+                },
+                height: chartHeight,
+                paper_bgcolor: COLORS.background,
+                plot_bgcolor: COLORS.background,
+                hovermode: 'closest',
+                margin: { l: 220, r: 40, t: 60, b: 50 },
+                shapes: createRoundSeparators(startTime),
+                hoverlabel: {
+                    bgcolor: '#1e2530',
+                    bordercolor: '#30363d',
+                    font: { 
+                        family: 'Noto Sans SC, sans-serif', 
+                        size: 12, 
+                        color: '#e6edf3' 
+                    },
+                    align: 'left',
+                    namelength: -1
+                }
+            };
+            
+            const config = {
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+                responsive: true,
+                displaylogo: false
+            };
+            
+            Plotly.newPlot('chart-container', traces, layout, config).then(() => {
+                const chart = document.getElementById('chart-container');
+                chart.on('plotly_click', handleAgentRoundsLevelClick);
+            });
+            
+            // 更新面包屑
+            updateBreadcrumb('level1-agent-rounds', agentLabel);
+            
+            // 自动显示第一个 round 的详情（包含图片和动作）
+            if (agent.rounds && agent.rounds.length > 0) {
+                showAgentRoundDetail(agent, 0);
+            }
+        }
+        
+        // 处理 Agent Rounds Level 的点击事件
+        function handleAgentRoundsLevelClick(data) {
+            const point = data.points[0];
+            if (!point) return;
+            
+            let clickData = point.customdata;
+            if (Array.isArray(clickData)) clickData = clickData[0];
+            if (!clickData) return;
+            
+            if (clickData.type === 'agent-round') {
+                // 点击了 Round，显示详情
+                showAgentRoundDetail(clickData.agent, clickData.roundIdx);
+            } else if (clickData.type === 'agent') {
+                // 点击了其他 Agent，切换到该 Agent 的详情
+                const agentLabel = getAgentKey(clickData.agent);
+                const agentInfo = { agent: clickData.agent, label: agentLabel };
+                renderAgentRoundsLevel(agentInfo, clickData.device);
+            } else if (clickData.type === 'plan-round') {
+                showPlanRoundDetail(clickData.roundId, clickData.round);
+            }
+        }
+        
+        // 添加 Agent 依赖线（用于 Level 1.5）
+        // 注意：依赖关系是从 Plan Agent 角度定义的，是 Agent 之间的依赖
+        // 在 Level 1.5 视图中，我们显示当前 Agent 与其他 Agent 之间的依赖关系
+        function addAgentDependencyLines(traces, agent, agentLabel, yPos, startTime) {
+            // Level 1.5 视图中，依赖关系可能涉及其他 Agent
+            // 暂时不在 Level 1.5 中显示跨 Agent 的依赖线
+            // 依赖关系主要在 Level 1（Plan Agent 视角）中显示
+        }
+        
+        // 生成自依赖曲线路径（从同一行的一个点到另一个点，向下弯曲）
+        function generateSelfDependencyPath(x1, x2, y, offset) {
+            const points = 30;
+            const xArr = [], yArr = [];
+            const midX = (x1 + x2) / 2;
+            const controlY = y + offset; // 向下弯曲
+            
+            for (let i = 0; i <= points; i++) {
+                const t = i / points;
+                xArr.push((1 - t) ** 2 * x1 + 2 * (1 - t) * t * midX + t ** 2 * x2);
+                yArr.push((1 - t) ** 2 * y + 2 * (1 - t) * t * controlY + t ** 2 * y);
+            }
+            
+            return { x: xArr, y: yArr };
+        }
+
+        // 添加连接线
+        function addConnectionLines(traces, agentMap, startTime) {
+            // 依赖关系线 (V2: plan_agent)
+            // 收集所有 agent 的 round 时间信息，用于精确绘制依赖线
+            const agentRoundTimes = new Map(); // agentId_roundNum -> {start, end, yPos}
+            
+            recordData.devices.forEach(device => {
+                device.agents.forEach(agent => {
+                    const agentLabel = getAgentKey(agent);
+                    const agentInfo = agentMap.get(agentLabel);
+                    if (!agentInfo) return;
+                    
+                    (agent.rounds || []).forEach((round, rIdx) => {
+                        const roundNum = round.round_id !== undefined ? round.round_id : rIdx;
+                        const roundStart = (round.model_prediction?.time_span?.start_timestamp || startTime) - startTime;
+                        const roundEnd = (round.action_execution?.time_span?.end_timestamp || 
+                                          round.model_prediction?.time_span?.end_timestamp || 
+                                          startTime) - startTime;
+                        
+                        agentRoundTimes.set(`${agentLabel}_r${roundNum}`, {
+                            start: roundStart,
+                            end: roundEnd,
+                            yPos: agentInfo.yPos,
+                            label: agentLabel
+                        });
+                    });
+                });
+            });
+            
+            // 依赖关系是从 Plan Agent 的角度定义的
+            // 表示 Plan Round N 中对某个 agent 的调用依赖于之前 Plan Round 中的调用
+            // 即使是同一个 agent（自依赖），也需要显示依赖线
+            recordData.plan_agent.rounds.forEach((round, planRoundIdx) => {
+                const planRoundNum = round.round_id !== undefined ? round.round_id : planRoundIdx;
+                
+                if (round.dependencies) {
+                    Object.entries(round.dependencies).forEach(([agentKey, depInfo]) => {
+                        if (depInfo.depends_on?.length > 0) {
+                            depInfo.depends_on.forEach(dep => {
+                                // 查找被依赖的 agent（源）
+                                const sourceAgent = findAgentInMap(dep.agent_id, agentMap);
+                                // 查找有依赖的 agent（目标）- 可能是同一个 agent
+                                const targetAgent = findAgentInMap(agentKey, agentMap);
+                                
+                                if (sourceAgent && targetAgent) {
+                                    // 获取对应 Plan Round 的时间
+                                    const sourcePlanRound = recordData.plan_agent.rounds[dep.round - 1];
+                                    const targetPlanRound = recordData.plan_agent.rounds[depInfo.round - 1] || round;
+                                    
+                                        // 时序依赖：同一个 agent 被 Plan Agent 在不同 Round 中调用
+                                        // 依赖线从前一次调用的结束位置连接到后一次调用的开始位置
+                                        if (dep.agent_id === agentKey) {
+                                            const instances = sourceAgent.agentInstances || [sourceAgent];
+                                            
+                                            // 通过 parent_round 找到正确的源实例和目标实例
+                                            // dep.round 是 plan_agent 的 round 编号（1-indexed），对应 parent_round = dep.round - 1
+                                            // depInfo.round 是目标所在的 plan_agent round（1-indexed）
+                                            const sourceParentRound = dep.round - 1;  // 转为 0-indexed
+                                            const targetParentRound = depInfo.round - 1;  // 转为 0-indexed
+                                            
+                                            let sourceInstance = instances.find(inst => inst.agent.parent_round === sourceParentRound);
+                                            let targetInstance = instances.find(inst => inst.agent.parent_round === targetParentRound);
+                                            
+                                            // 如果通过 parent_round 找不到，按时间排序作为后备
+                                            if (!sourceInstance || !targetInstance) {
+                                                const sorted = [...instances].sort((a, b) => a.start - b.start);
+                                                if (sorted.length >= 2) {
+                                                    sourceInstance = sourceInstance || sorted[0];
+                                                    targetInstance = targetInstance || sorted[1];
+                                                }
+                                            }
+                                            
+                                            if (sourceInstance && targetInstance && sourceInstance !== targetInstance) {
+                                                // 依赖线从源实例的结束位置开始
+                                                const sourceEnd = sourceInstance.end;
+                                                // 连接到目标实例的开始位置
+                                                const targetStart = targetInstance.start;
+                                                
+                                                // 对于自依赖（同一agent），使用直线连接
+                                                // 注意：自依赖时 sourceAgent 和 targetAgent 是同一个对象，yPos 相同
+                                                
+                                                // 绘制圆形标记在源实例结束位置
+                                                traces.push({
+                                                    x: [sourceEnd],
+                                                    y: [sourceAgent.yPos],
+                                                    mode: 'markers',
+                                                    type: 'scatter',
+                                                    marker: { 
+                                                        symbol: 'circle',
+                                                        size: 12,
+                                                        color: COLORS.dependency,
+                                                        line: { color: '#fff', width: 2 }
+                                                    },
+                                                    showlegend: false,
+                                                    hovertemplate: `<b>时序依赖起点</b><br>` +
+                                                        `${sourceAgent.label} (Plan Round ${dep.round}) 结束<br>` +
+                                                        `时间: ${sourceEnd.toFixed(2)}s<br>` +
+                                                        `原因: ${dep.reason || 'N/A'}<extra></extra>`
+                                                });
+                                                
+                                                // 绘制直线从源实例结束到目标实例开始
+                                                traces.push({
+                                                    x: [sourceEnd, targetStart],
+                                                    y: [sourceAgent.yPos, targetAgent.yPos],
+                                                    mode: 'lines',
+                                                    type: 'scatter',
+                                                    line: { 
+                                                        color: COLORS.dependency, 
+                                                        width: 3,
+                                                        dash: 'dash' 
+                                                    },
+                                                    showlegend: false,
+                                                    hovertemplate: `<b>时序依赖</b><br>` +
+                                                        `${sourceAgent.label}<br>` +
+                                                        `Plan Round ${dep.round} → Round ${depInfo.round}<br>` +
+                                                        `原因: ${dep.reason || 'N/A'}<extra></extra>`
+                                                });
+                                                
+                                                // 添加箭头标记在目标实例开始位置
+                                                traces.push({
+                                                    x: [targetStart],
+                                                    y: [targetAgent.yPos],
+                                                    mode: 'markers',
+                                                    type: 'scatter',
+                                                    marker: { 
+                                                        symbol: 'triangle-right',
+                                                        size: 12,
+                                                        color: COLORS.dependency
+                                                    },
+                                                    showlegend: false,
+                                                    hovertemplate: `<b>时序依赖终点</b><br>` +
+                                                        `${targetAgent.label} (Plan Round ${depInfo.round}) 开始<br>` +
+                                                        `时间: ${targetStart.toFixed(2)}s<extra></extra>`
+                                                });
+                                            }
+                                    } else {
+                                        // 不同 agent 之间的依赖
+                                        // 根据 parent_round 找到正确的源实例和目标实例
+                                        const sourceInstances = sourceAgent.agentInstances || [sourceAgent];
+                                        const targetInstances = targetAgent.agentInstances || [targetAgent];
+                                        
+                                        // dep.round 是 plan_agent 的 round 编号（1-indexed），对应 parent_round = dep.round - 1
+                                        // depInfo.round 是目标所在的 plan_agent round（1-indexed）
+                                        const sourceParentRound = dep.round - 1;  // 转为 0-indexed
+                                        const targetParentRound = depInfo.round - 1;  // 转为 0-indexed
+                                        
+                                        let sourceInstance = sourceInstances.find(inst => inst.agent?.parent_round === sourceParentRound);
+                                        let targetInstance = targetInstances.find(inst => inst.agent?.parent_round === targetParentRound);
+                                        
+                                        // 如果通过 parent_round 找不到，使用第一个/最后一个实例作为后备
+                                        if (!sourceInstance && sourceInstances.length > 0) {
+                                            sourceInstance = sourceInstances[0];
+                                        }
+                                        if (!targetInstance && targetInstances.length > 0) {
+                                            targetInstance = targetInstances[0];
+                                        }
+                                        
+                                        const sourceEnd = sourceInstance?.end || sourceAgent.end;
+                                        const targetStart = targetInstance?.start || targetAgent.start;
+                                        
+                                        // 绘制圆形标记在源实例结束位置
+                                        traces.push({
+                                            x: [sourceEnd],
+                                            y: [sourceAgent.yPos],
+                                            mode: 'markers',
+                                            type: 'scatter',
+                                            marker: { 
+                                                symbol: 'circle',
+                                                size: 12,
+                                                color: COLORS.dependency,
+                                                line: { color: '#fff', width: 2 }
+                                            },
+                                            showlegend: false,
+                                            hovertemplate: `<b>依赖起点</b><br>` +
+                                                `${sourceAgent.label} (Plan Round ${dep.round}) 结束<br>` +
+                                                `时间: ${sourceEnd.toFixed(2)}s<br>` +
+                                                `原因: ${dep.reason || 'N/A'}<extra></extra>`
+                                        });
+                                        
+                                        // 绘制直线从源实例结束到目标实例开始
+                                        traces.push({
+                                            x: [sourceEnd, targetStart],
+                                            y: [sourceAgent.yPos, targetAgent.yPos],
+                                            mode: 'lines',
+                                            type: 'scatter',
+                                            line: { 
+                                                color: COLORS.dependency, 
+                                                width: 3,
+                                                dash: 'dash' 
+                                            },
+                                            showlegend: false,
+                                            hovertemplate: `<b>依赖关系 (Plan 视角)</b><br>` +
+                                                `${sourceAgent.label} → ${targetAgent.label}<br>` +
+                                                `Plan Round ${dep.round} → Round ${depInfo.round}<br>` +
+                                                `原因: ${dep.reason || 'N/A'}<extra></extra>`
+                                        });
+                                        
+                                        // 添加箭头标记在目标实例开始位置
+                                        traces.push({
+                                            x: [targetStart],
+                                            y: [targetAgent.yPos],
+                                            mode: 'markers',
+                                            type: 'scatter',
+                                            marker: { 
+                                                symbol: 'triangle-right',
+                                                size: 12,
+                                                color: COLORS.dependency
+                                            },
+                                            showlegend: false,
+                                            hovertemplate: `<b>依赖终点</b><br>` +
+                                                `${targetAgent.label} (Plan Round ${depInfo.round}) 开始<br>` +
+                                                `时间: ${targetStart.toFixed(2)}s<extra></extra>`
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+            
+            // 分派连接线已移除 - 根据用户要求不再绘制任务分配线
+        }
+
+        // 创建 Round 分隔线 (V2: plan_agent, time_span)
+        function createRoundSeparators(startTime) {
+            const shapes = [];
+            recordData.plan_agent.rounds.forEach((round, idx) => {
+                if (idx > 0) {
+                    const roundStart = round.model_prediction.time_span.start_timestamp - startTime;
+                    shapes.push({
+                        type: 'line',
+                        x0: roundStart,
+                        x1: roundStart,
+                        y0: -0.5,
+                        y1: 100,
+                        xref: 'x',
+                        yref: 'y',
+                        line: { color: 'rgba(163, 113, 247, 0.2)', width: 1, dash: 'dot' }
+                    });
+                }
+            });
+            return shapes;
+        }
+
+        // Agent 名称匹配辅助函数
+        // 支持通过 agent_id、agent_count 或 agent_id 格式的字符串匹配 agentInfo
+        function findAgentInMap(agentId, agentMap) {
+            // 1. 直接匹配（agent_count 格式）
+            const direct = agentMap.get(agentId);
+            if (direct) return direct;
+            
+            // 2. 遍历所有 agentInfo，检查其中的 agent 对象的 agent_id 和 agent_count
+            for (const [key, agentInfo] of agentMap.entries()) {
+                // 检查 agentInfo 的主 agent
+                if (agentInfo.agent) {
+                    if (agentInfo.agent.agent_id === agentId || 
+                        agentInfo.agent.agent_count === agentId ||
+                        agentInfo.agent.unique_id === agentId) {
+                        return agentInfo;
+                    }
+                }
+                
+                // 检查 agentInfo 的所有实例
+                if (agentInfo.agentInstances) {
+                    for (const instance of agentInfo.agentInstances) {
+                        if (instance.agent) {
+                            if (instance.agent.agent_id === agentId ||
+                                instance.agent.agent_count === agentId ||
+                                instance.agent.unique_id === agentId) {
+                                return agentInfo;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 3. 模糊匹配（通过数字后缀匹配）
+            const depNumMatch = agentId.match(/_(\d+)$/);
+            if (depNumMatch) {
+                const depNum = depNumMatch[1];
+                for (const [key, value] of agentMap.entries()) {
+                    const keyNumMatch = key.match(/_(\d+)$/);
+                    if (keyNumMatch && keyNumMatch[1] === depNum) {
+                        const depType = agentId.includes('gui') ? 'gui' : agentId.includes('code') ? 'code' : '';
+                        const keyType = key.includes('gui') ? 'gui' : key.includes('code') ? 'code' : '';
+                        if (!depType || !keyType || depType === keyType) {
+                            return value;
+                        }
+                    }
+                }
+            }
+            
+            return null;
+        }
+            
+        // 曲线路径生成
+        function generateCurvedPath(x1, y1, x2, y2, curvature = 0.3) {
+            const points = 25;
+            const x = [], y = [];
+                const midX = (x1 + x2) / 2;
+                const midY = (y1 + y2) / 2;
+                const dx = x2 - x1;
+                const dy = y2 - y1;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            
+            if (len === 0) return { x: [x1, x2], y: [y1, y2] };
+            
+            const controlOffset = len * curvature;
+            const controlX = midX - (dy / len) * controlOffset;
+            const controlY = midY + (dx / len) * controlOffset;
+            
+                for (let i = 0; i <= points; i++) {
+                    const t = i / points;
+                x.push((1 - t) ** 2 * x1 + 2 * (1 - t) * t * controlX + t ** 2 * x2);
+                y.push((1 - t) ** 2 * y1 + 2 * (1 - t) * t * controlY + t ** 2 * y2);
+                }
+                
+                return { x, y };
+            }
+            
+        // ==================== 图表点击处理 ====================
+        function handleChartClick(data) {
+            console.log('Chart click event:', data);
+            const point = data.points[0];
+            if (!point) return;
+            
+            // customdata 在 Plotly 中可能是数组或对象，需要正确处理
+            let clickData = point.customdata;
+            if (Array.isArray(clickData)) {
+                clickData = clickData[0];
+            }
+            
+            if (!clickData) {
+                console.log('No customdata found');
+                return;
+            }
+            
+            console.log('Click data:', clickData);
+            
+            if (clickData.type === 'plan-round') {
+                showPlanRoundDetail(clickData.roundId, clickData.round);
+            } else if (clickData.type === 'agent') {
+                // Level 1 点击 Agent 实例：原地展开/折叠该实例的 Round 详情
+                // 使用 callKey（agent_count）而非 groupKey（agent_id），实现实例级别的展开控制
+                const callKey = getAgentKey(clickData.agent);
+                
+                // 切换展开状态（按实例级别）
+                if (expandedAgents.has(callKey)) {
+                    expandedAgents.delete(callKey);
+                } else {
+                    expandedAgents.add(callKey);
+                }
+                
+                // 重新渲染 Level 1（会根据 expandedAgents 状态显示展开/折叠）
+                renderLevel1();
+                
+                // 如果展开，显示第一个 Round 的详情面板
+                if (expandedAgents.has(callKey) && clickData.agent.rounds?.length > 0) {
+                    showAgentRoundDetail(clickData.agent, 0);
+                }
+            } else if (clickData.type === 'agent-round') {
+                // 点击展开的 Agent Round，显示该 Round 的详情
+                showAgentRoundDetail(clickData.agent, clickData.roundIdx);
+            }
+        }
+
+        // ==================== Plan Round 详情 ====================
+        function showPlanRoundDetail(roundId, roundData) {
+            updateBreadcrumb('level2-plan', roundId);
+            
+            // 收集该 Round 分派的 Agent
+            const assignedAgents = [];
+            recordData.devices.forEach(device => {
+                device.agents.forEach(agent => {
+                    if (agent.parent_agent === 'coordinator' && agent.parent_round === roundId) {
+                        assignedAgents.push({ agent, device: device.device_id });
+                    }
+                });
+            });
+            
+            const panel = document.getElementById('detail-panel');
+            panel.innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-title">
+                        <span>📋 Plan Round ${roundId}</span>
+                        <span class="detail-badge badge-plan">Planner</span>
+                    </div>
+                    <button class="detail-close" onclick="closeDetailPanel()">×</button>
+                </div>
+                <div class="detail-content">
+                <div class="detail-section">
+                        <div class="section-title">时间统计</div>
+                        <div class="metrics-grid">
+                            <div class="metric-card metric-model">
+                                <div class="metric-icon">🧠</div>
+                                <div class="metric-value">${roundData.model_prediction.time_span.duration.toFixed(2)}s</div>
+                                <div class="metric-label">思考时间</div>
+                        </div>
+                            <div class="metric-card metric-action">
+                                <div class="metric-icon">⚡</div>
+                                <div class="metric-value">${roundData.action_execution?.time_span?.duration.toFixed(2) || '0.00'}s</div>
+                                <div class="metric-label">执行时间</div>
+                        </div>
+                            <div class="metric-card metric-total">
+                                <div class="metric-icon">⏱️</div>
+                                <div class="metric-value">${roundData.total_duration.toFixed(2)}s</div>
+                                <div class="metric-label">总耗时</div>
+                        </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">🤖</div>
+                                <div class="metric-value">${assignedAgents.length}</div>
+                                <div class="metric-label">分派 Agent</div>
+                    </div>
+                </div>
+                    </div>
+                    
+                    ${assignedAgents.length > 0 ? `
+                <div class="detail-section">
+                        <div class="section-title">分派的 Agent</div>
+                        <div class="agent-cards">
+                            ${assignedAgents.map(({ agent, device }) => {
+                                const label = getAgentDisplay(agent, device);
+                                const key = getAgentKey(agent);
+                                const typeLabel = agent.type === 'gui' ? 'GUI Agent' : 'Code Agent';
+                            return `
+                                    <div class="agent-card ${agent.type}" onclick="navigateToAgent('${key}')">
+                                        <div class="agent-card-title">${label}</div>
+                                        <div class="agent-card-type">${typeLabel} @ ${device}</div>
+                                        <div class="agent-card-task">${agent.task || 'N/A'}</div>
+                            </div>
+                        `;
+                        }).join('')}
+                    </div>
+                </div>
+                    ` : ''}
+                    
+                <div class="detail-section">
+                        <div class="section-title">思考内容</div>
+                        <div class="code-block response">${escapeHtml(roundData.model_prediction.response || '无')}</div>
+                </div>
+                    
+                    ${roundData.action_execution?.result ? `
+                <div class="detail-section">
+                        <div class="section-title">执行结果</div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span class="status-tag ${roundData.action_execution.result.status === 'success' ? 'status-success' : 'status-failure'}">
+                                ${roundData.action_execution.result.status === 'success' ? '✓ 成功' : '✗ 失败'}
+                            </span>
+                        </div>
+                    ${roundData.action_execution.result.output ? `
+                            <div class="code-block">${escapeHtml(roundData.action_execution.result.output)}</div>
+                    ` : ''}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            panel.classList.add('active');
+        }
+
+        // 导航到特定 Agent（在 Level 1 中展开/折叠该实例，支持 toggle）
+        function navigateToAgent(agentLabel) {
+            recordData.devices.forEach(device => {
+                device.agents.forEach(agent => {
+                    const key = getAgentKey(agent);
+                    if (key === agentLabel || agent.agent_count === agentLabel) {
+                        // 在 Level 1 中切换该实例的展开/折叠状态
+                        const callKey = getAgentKey(agent);
+                        
+                        // Toggle: 如果已展开则折叠，否则展开
+                        if (expandedAgents.has(callKey)) {
+                            expandedAgents.delete(callKey);
+                        } else {
+                            expandedAgents.add(callKey);
+                        }
+                        
+                        // 重新渲染 Level 1（会根据 expandedAgents 状态显示展开/折叠）
+                        renderLevel1();
+                        
+                        // 如果展开了，显示第一个 Round 的详情面板
+                        if (expandedAgents.has(callKey) && agent.rounds?.length > 0) {
+                            showAgentRoundDetail(agent, 0);
+                        }
+                    }
+                });
+            });
+        }
+
+        // ==================== Agent 详情 (Level 2) ====================
+        function showAgentDetail(agent, deviceId) {
+            currentView = 'level2-agent';
+            currentAgent = agent;
+            currentRoundIdx = 0;
+            
+            const agentLabel = getAgentDisplay(agent, deviceId);
+            updateBreadcrumb('level2-agent', agentLabel);
+            
+            // 渲染 Agent 的 Round 时间线
+            renderAgentRoundsTimeline(agent, deviceId);
+            
+            // 显示第一个 Round 的详情
+            if (agent.rounds?.length > 0) {
+                showAgentRoundDetail(agent, 0);
+            }
+        }
+
+        // 渲染 Agent 的 Round 时间线
+        function renderAgentRoundsTimeline(agent, deviceId) {
+            const container = document.getElementById('chart-container');
+            
+            // 清除旧内容
+            container.innerHTML = '';
+            
+            if (!agent.rounds || agent.rounds.length === 0) {
+                container.innerHTML = `
+                    <div class="chart-placeholder">
+                        <div class="chart-placeholder-icon">📭</div>
+                        <div>该 Agent 没有 Round 数据</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // V2: time_span
+            const agentStartTime = agent.rounds[0].model_prediction.time_span.start_timestamp;
+            const agentEndTime = agent.recording?.end_timestamp || 
+                agent.rounds[agent.rounds.length - 1].action_execution?.time_span?.end_timestamp ||
+                    agent.rounds[agent.rounds.length - 1].model_prediction.time_span.end_timestamp;
+            const agentDuration = agentEndTime - agentStartTime;
+            
+            const traces = [];
+            const yLabels = [];
+            
+            agent.rounds.forEach((round, idx) => {
+                // V2: round_id
+                const roundNum = round.round_id !== undefined ? round.round_id : idx + 1;
+                yLabels.push(`Round ${roundNum}`);
+                
+                // V2: time_span
+                const roundStart = round.model_prediction.time_span.start_timestamp - agentStartTime;
+                const modelEnd = round.model_prediction.time_span.end_timestamp - agentStartTime;
+                
+                // Model Thinking
+                traces.push({
+                    x: [roundStart, modelEnd],
+                    y: [idx, idx],
+                    mode: 'lines',
+                    type: 'scatter',
+                    line: { color: COLORS.modelTime, width: LINE_WIDTH.agentRound },
+                    showlegend: false,
+                    hovertemplate: `<b>Round ${roundNum} - Model Thinking</b><br>` +
+                          `耗时: ${round.model_prediction.time_span.duration.toFixed(3)}s<br>` +
+                          `任务: ${(agent.task || 'N/A').replace(/\n/g, '<br>')}<extra></extra>`,
+                    customdata: [{ type: 'agent-round', roundIdx: idx, stage: 'model' }]
+                });
+                
+                // Action Execution
+                if (round.action_execution) {
+                    // V2: time_span
+                    const actionStart = round.action_execution.time_span.start_timestamp - agentStartTime;
+                    const actionEnd = round.action_execution.time_span.end_timestamp - agentStartTime;
+                    
+                    traces.push({
+                        x: [actionStart, actionEnd],
+                        y: [idx, idx],
+                        mode: 'lines',
+                        type: 'scatter',
+                        line: { color: COLORS.actionTime, width: LINE_WIDTH.agentRound },
+                        showlegend: false,
+                        hovertemplate: `<b>Round ${roundNum} - Action Execution</b><br>` +
+                              `耗时: ${round.action_execution.time_span.duration.toFixed(3)}s<br>` +
+                              `状态: ${round.action_execution.result?.status || 'N/A'}<br>` +
+                              `任务: ${(agent.task || 'N/A').replace(/\n/g, '<br>')}<extra></extra>`,
+                        customdata: [{ type: 'agent-round', roundIdx: idx, stage: 'action' }]
+                    });
+                }
+            });
+            
+            const agentLabel = getAgentDisplay(agent, deviceId);
+            const typeLabel = agent.type === 'gui' ? 'GUI Agent' : 'Code Agent';
+            
+            const layout = {
+                title: {
+                    text: `${agentLabel} (${typeLabel}) - Round 时间线`,
+                    font: { size: 14, color: COLORS.text }
+                },
+                xaxis: {
+                    title: { text: '时间 (秒)', font: { color: COLORS.text } },
+                    range: [-0.5, agentDuration * 1.1],
+                    gridcolor: COLORS.grid,
+                    tickfont: { color: COLORS.text }
+                },
+                yaxis: {
+                    tickmode: 'array',
+                    tickvals: Array.from({ length: yLabels.length }, (_, i) => i),
+                    ticktext: yLabels,
+                    autorange: 'reversed',
+                    gridcolor: COLORS.grid,
+                    tickfont: { color: COLORS.text }
+                },
+                height: Math.max(300, yLabels.length * 50 + 100),
+                paper_bgcolor: COLORS.background,
+                plot_bgcolor: COLORS.background,
+                hovermode: 'closest',
+                margin: { l: 100, r: 40, t: 60, b: 60 },
+                hoverlabel: {
+                    bgcolor: '#1e2530',
+                    bordercolor: '#30363d',
+                    font: { 
+                        family: 'Noto Sans SC, sans-serif', 
+                        size: 12, 
+                        color: '#e6edf3' 
+                    },
+                    align: 'left',
+                    namelength: -1
+                }
+            };
+            
+            const config = {
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+                responsive: true,
+                displaylogo: false
+            };
+            
+            Plotly.newPlot('chart-container', traces, layout, config).then(() => {
+                document.getElementById('chart-container').on('plotly_click', (data) => {
+                    console.log('Agent round click:', data);
+                    const point = data.points[0];
+                    if (!point) return;
+                    
+                    let clickData = point.customdata;
+                    if (Array.isArray(clickData)) {
+                        clickData = clickData[0];
+                    }
+                    
+                    if (clickData?.type === 'agent-round') {
+                        currentRoundIdx = clickData.roundIdx;
+                        showAgentRoundDetail(currentAgent, currentRoundIdx);
+                    }
+                });
+            });
+        }
+
+        // ==================== Agent Round 详情 (包含图片和动作序列) ====================
+        function showAgentRoundDetail(agent, roundIdx) {
+            currentAgent = agent;  // 确保 currentAgent 被更新
+            currentRoundIdx = roundIdx;
+            const round = agent.rounds[roundIdx];
+            // V2: round_id
+            const roundNum = round.round_id !== undefined ? round.round_id : roundIdx + 1;
+            
+            const agentLabel = getAgentDisplay(agent, agent.device_id || '');
+            const isGUI = agent.type === 'gui';
+            const badgeClass = isGUI ? 'badge-gui' : 'badge-code';
+            const typeLabel = isGUI ? 'GUI Agent' : 'Code Agent';
+            
+            // 收集图片
+            const images = collectRoundImages(round);
+            
+            // 收集详细动作（使用新的解析函数）
+            const detailedActions = extractDetailedActions(round);
+            
+            // 收集所有 tool_calls
+            const toolCalls = collectToolCalls(round);
+            
+            // 收集所有 assistant responses
+            const assistantResponses = collectAssistantResponses(round);
+            
+            const panel = document.getElementById('detail-panel');
+            panel.innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-title">
+                        <span>🤖 ${agentLabel} - Round ${roundNum}</span>
+                        <span class="detail-badge ${badgeClass}">${typeLabel}</span>
+                    </div>
+                    <button class="detail-close" onclick="closeDetailPanel()">×</button>
+                </div>
+                <div class="detail-content">
+                    <!-- Round 选择器 (V2: round_id) -->
+                    ${agent.rounds.length > 1 ? `
+                    <div class="round-selector">
+                        ${agent.rounds.map((r, idx) => {
+                            const rNum = r.round_id !== undefined ? r.round_id : idx + 1;
+                            return `<button class="round-btn ${idx === roundIdx ? 'active' : ''}" 
+                                    onclick="showAgentRoundDetail(currentAgent, ${idx})">
+                                Round ${rNum}
+                            </button>`;
+                        }).join('')}
+                    </div>
+                    ` : ''}
+                    
+                    <!-- 时间统计 (V2: time_span) -->
+                <div class="detail-section">
+                        <div class="section-title">时间统计</div>
+                        <div class="metrics-grid">
+                            <div class="metric-card metric-model">
+                                <div class="metric-icon">🧠</div>
+                                <div class="metric-value">${round.model_prediction.time_span.duration.toFixed(3)}s</div>
+                                <div class="metric-label">Model Time</div>
+                        </div>
+                            <div class="metric-card metric-action">
+                                <div class="metric-icon">⚡</div>
+                                <div class="metric-value">${round.action_execution?.time_span?.duration.toFixed(3) || '0.000'}s</div>
+                                <div class="metric-label">Action Time</div>
+                        </div>
+                            <div class="metric-card metric-total">
+                                <div class="metric-icon">⏱️</div>
+                                <div class="metric-value">${round.total_duration.toFixed(3)}s</div>
+                                <div class="metric-label">Total Time</div>
+                        </div>
+                            ${round.action_execution?.result?.status ? `
+                            <div class="metric-card">
+                                <div class="metric-icon">${round.action_execution.result.status === 'success' || round.action_execution.result.status === 'finished' ? '✅' : '❌'}</div>
+                                <div class="metric-value" style="font-size: 1rem;">
+                                    ${round.action_execution.result.status === 'success' ? '成功' : round.action_execution.result.status === 'finished' ? '完成' : '失败'}
+                            </div>
+                                <div class="metric-label">执行状态</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                    
+                    <!-- 图片画廊 (GUI Agent) -->
+                    ${isGUI && images.length > 0 ? `
+                <div class="detail-section">
+                        <div class="section-title">📸 执行截图 (${images.length} 张)</div>
+                        <div class="image-grid">
+                            ${images.map((img, idx) => `
+                                <div class="image-card" onclick="openImageModal(${JSON.stringify(images).replace(/"/g, '&quot;')}, ${idx})">
+                                    <img src="${processImageUrl(img.url)}" 
+                                         alt="Step ${img.step}" 
+                                         loading="lazy"
+                                         onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22120%22><rect fill=%22%231e2530%22 width=%22200%22 height=%22120%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 fill=%22%236e7681%22 font-size=%2212%22>加载失败</text></svg>'">
+                                    <div class="image-card-info">Step ${img.step} - ${img.role}</div>
+                                </div>
+                            `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                    
+                    <!-- 动作序列（详细信息：坐标、文本等） -->
+                    ${detailedActions.length > 0 ? `
+                <div class="detail-section">
+                        <div class="section-title">🎯 动作序列 (${detailedActions.length} 个)</div>
+                        <div class="action-list">
+                            ${detailedActions.map((action, idx) => `
+                                <div class="action-item">
+                                    <div class="action-index">${idx + 1}</div>
+                                    <div class="action-info">
+                                        <div class="action-type">${action.description || action.type}</div>
+                                        <div class="action-desc">
+                                            ${action.details || ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Tool Calls 展示 -->
+                    ${toolCalls.length > 0 ? `
+                <div class="detail-section">
+                        <div class="section-title">🔧 Tool Calls (${toolCalls.length} 个)</div>
+                        <div class="action-list">
+                            ${toolCalls.map((toolCall, idx) => {
+                                const argsDisplay = typeof toolCall.parsedArguments === 'object' 
+                                    ? JSON.stringify(toolCall.parsedArguments, null, 2)
+                                    : toolCall.arguments;
+                                return `
+                                <div class="action-item">
+                                    <div class="action-index">${idx + 1}</div>
+                                    <div class="action-info">
+                                        <div class="action-type">${toolCall.functionName}</div>
+                                        <div class="action-desc">
+                                            <div style="margin-bottom: 0.5rem;">
+                                                <strong>ID:</strong> <code>${toolCall.id}</code>
+                                            </div>
+                                            <div style="margin-bottom: 0.5rem;">
+                                                <strong>参数:</strong>
+                                            </div>
+                                            <div class="code-block" style="margin-top: 0.5rem; font-size: 0.8rem; max-height: 200px; overflow-y: auto;">
+                                                ${escapeHtml(argsDisplay)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            }).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Assistant Responses 展示 -->
+                    ${assistantResponses.length > 0 ? `
+                <div class="detail-section">
+                        <div class="section-title">💬 Assistant Responses (${assistantResponses.length} 条)</div>
+                        ${assistantResponses.map((response, idx) => `
+                            <div style="margin-bottom: 1rem; padding: 1rem; background: var(--bg-tertiary); border-radius: 6px; border: 1px solid var(--border-color);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">
+                                        ${response.isRoundResponse ? '📋 Round 级别响应' : `消息 #${response.messageIdx + 1}`}
+                                    </div>
+                                    ${response.hasToolCalls ? `
+                                        <span style="font-size: 0.75rem; padding: 0.2rem 0.5rem; background: rgba(88, 166, 255, 0.15); color: var(--accent-blue); border-radius: 4px;">
+                                            包含 ${response.toolCallsCount} 个 Tool Call
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                ${response.content && response.content.trim() ? `
+                                    <div class="code-block response" style="margin: 0;">
+                                        ${escapeHtml(response.content)}
+                                    </div>
+                                ` : '<div style="color: var(--text-muted); font-style: italic; font-size: 0.85rem;">（无文本内容，仅包含 Tool Calls）</div>'}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Model Response (保留原有展示，作为主要响应) -->
+                    ${round.model_prediction?.response && !assistantResponses.some(r => r.isRoundResponse) ? `
+                    <div class="detail-section">
+                        <div class="section-title">🧠 Model Response</div>
+                        <div class="code-block response">${escapeHtml(round.model_prediction.response)}</div>
+                </div>
+                    ` : ''}
+                    
+                    <!-- 执行结果 -->
+                    ${round.action_execution?.result ? `
+                <div class="detail-section">
+                        <div class="section-title">⚙️ 执行结果</div>
+                        ${round.action_execution.result.status ? `
+                        <div style="margin-bottom: 0.75rem;">
+                            <span class="status-tag ${round.action_execution.result.status === 'success' || round.action_execution.result.status === 'finished' ? 'status-success' : 'status-failure'}">
+                                ${round.action_execution.result.status === 'success' ? '✓ 成功' : round.action_execution.result.status === 'finished' ? '✓ 完成' : '✗ 失败'}
+                            </span>
+                            ${round.action_execution.result.returncode !== undefined ? 
+                                `<span style="margin-left: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+                                    返回码: ${round.action_execution.result.returncode}
+                                </span>` : ''
+                            }
+                        </div>
+                        ` : `<!-- 中间步骤不显示状态，避免误导（GUI agent中间步骤没有明确的成功/失败状态） -->`}
+                        ${round.action_execution.result.output ? `
+                            <div class="code-block">${escapeHtml(round.action_execution.result.output)}</div>
+                    ` : ''}
+                        ${round.action_execution.result.error ? `
+                            <div class="code-block" style="border-color: var(--accent-red); color: var(--accent-red);">
+                                ${escapeHtml(round.action_execution.result.error)}
+                            </div>
+                    ` : ''}
+                    </div>
+                    ` : ''}
+                    
+                    <!-- 执行代码 -->
+                    ${round.action_execution?.code ? `
+                    <div class="detail-section">
+                        <div class="section-title">💻 执行代码</div>
+                        <div class="code-block">${escapeHtml(round.action_execution.code)}</div>
+                </div>
+                ` : ''}
+                </div>
+            `;
+            
+            panel.classList.add('active');
+        }
+
+        /**
+         * 统一处理图片路径：截断绝对路径到 extracted_images 开头，清理多余前缀
+         * @param {string} rawUrl - 原始图片 URL
+         * @returns {string} - 归一化后的路径（可能仍为空字符串）
+         */
+        function normalizeImagePath(rawUrl) {
+            if (!rawUrl) return '';
+            let cleaned = rawUrl.trim();
+            const idx = cleaned.indexOf('extracted_images/');
+            if (idx !== -1) {
+                cleaned = cleaned.slice(idx);
+            }
+            cleaned = cleaned.replace(/^\.\/+/, '');
+            return cleaned;
+        }
+
+        // 收集 Round 中的图片
+        function collectRoundImages(round) {
+            const images = [];
+            
+            if (round.model_prediction?.messages) {
+                round.model_prediction.messages.forEach((msg, msgIdx) => {
+                    if (msg.content && Array.isArray(msg.content)) {
+                        msg.content.forEach((item, itemIdx) => {
+                            if (item.image_url?.url) {
+                                const url = normalizeImagePath(item.image_url.url);
+                                // 跳过无效的图片URL（占位符或不存在的路径）
+                                if (url && 
+                                    url !== '[IMAGE_DATA_REMOVED]' &&
+                                    (url.startsWith('data:image/') ||
+                                     url.endsWith('.png') ||
+                                     url.endsWith('.jpg') ||
+                                     url.endsWith('.jpeg') ||
+                                     url.startsWith('http') || 
+                                     url.startsWith('extracted_images/'))) {
+                                    images.push({
+                                        url: url,
+                                        step: msgIdx + 1,
+                                        role: msg.role || 'unknown',
+                                        index: images.length
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            
+            // 也检查 screenshot_url（只处理有效的路径）
+            if (round.model_prediction?.screenshot_url) {
+                const screenshotUrl = normalizeImagePath(round.model_prediction.screenshot_url);
+                // 只处理以 extracted_images/ 开头或 data: 开头的有效图片路径
+                if (screenshotUrl && 
+                    (screenshotUrl.startsWith('data:image/') || 
+                     screenshotUrl.startsWith('http') ||
+                     screenshotUrl.startsWith('extracted_images/'))) {
+                    images.push({
+                        url: screenshotUrl,
+                        step: 0,
+                        role: 'screenshot',
+                        index: images.length
+                    });
+                }
+            }
+            
+            return images;
+        }
+
+        // 格式化动作数据
+        function formatActionData(data) {
+            if (!data) return 'N/A';
+            if (typeof data === 'string') return data;
+            
+            const parts = [];
+            for (const [key, value] of Object.entries(data)) {
+                if (typeof value === 'string' && value.length > 50) {
+                    parts.push(`${key}: "${value.substring(0, 50)}..."`);
+                } else {
+                    parts.push(`${key}: ${JSON.stringify(value)}`);
+                }
+            }
+            return parts.join(', ');
+        }
+
+        /**
+         * 从 Round 的 messages 中提取详细的 GUI 动作信息
+         * @param {Object} round - Round 对象
+         * @returns {Array} - 详细动作列表，每个元素包含 {type, description, details, coordinate, text}
+         */
+        function extractDetailedActions(round) {
+            const detailedActions = [];
+            const messages = round.model_prediction?.messages || [];
+            
+            messages.forEach((msg, msgIdx) => {
+                // 查找 assistant 消息中的 tool_calls
+                if (msg.role === 'assistant' && msg.tool_calls) {
+                    msg.tool_calls.forEach(toolCall => {
+                        if (toolCall.function?.name === 'computer_use' || 
+                            toolCall.function?.name === 'computer') {
+                            try {
+                                const args = JSON.parse(toolCall.function.arguments || '{}');
+                                const actionInfo = {
+                                    type: args.action || 'unknown',
+                                    toolCallId: toolCall.id,
+                                    rawArgs: args
+                                };
+                                
+                                // 根据动作类型提取详细信息
+                                switch (args.action) {
+                                    case 'left_click':
+                                    case 'right_click':
+                                    case 'double_click':
+                                    case 'middle_click':
+                                        actionInfo.description = `${getActionLabel(args.action)}`;
+                                        if (args.coordinate) {
+                                            actionInfo.coordinate = args.coordinate;
+                                            actionInfo.details = `坐标: (${args.coordinate[0]}, ${args.coordinate[1]})`;
+                                        }
+                                        break;
+                                    case 'type':
+                                        actionInfo.description = '输入文本';
+                                        actionInfo.text = args.text;
+                                        actionInfo.details = `文本: "${truncateText(args.text, 50)}"`;
+                                        break;
+                                    case 'key':
+                                        actionInfo.description = '按键';
+                                        actionInfo.keys = args.key;
+                                        actionInfo.details = `按键: ${Array.isArray(args.key) ? args.key.join(' + ') : args.key}`;
+                                        break;
+                                    case 'scroll':
+                                        actionInfo.description = '滚动';
+                                        actionInfo.details = `方向: ${args.direction || 'down'}, 距离: ${args.amount || 3}`;
+                                        if (args.coordinate) {
+                                            actionInfo.coordinate = args.coordinate;
+                                            actionInfo.details += `, 坐标: (${args.coordinate[0]}, ${args.coordinate[1]})`;
+                                        }
+                                        break;
+                                    case 'wait':
+                                        actionInfo.description = '等待';
+                                        actionInfo.details = `等待时间: ${args.duration || 2}秒`;
+                                        break;
+                                    case 'screenshot':
+                                        actionInfo.description = '截图';
+                                        actionInfo.details = '获取当前屏幕截图';
+                                        break;
+                                    case 'mouse_move':
+                                        actionInfo.description = '移动鼠标';
+                                        if (args.coordinate) {
+                                            actionInfo.coordinate = args.coordinate;
+                                            actionInfo.details = `移动到: (${args.coordinate[0]}, ${args.coordinate[1]})`;
+                                        }
+                                        break;
+                                    default:
+                                        actionInfo.description = args.action || 'unknown';
+                                        actionInfo.details = JSON.stringify(args);
+                                }
+                                
+                                detailedActions.push(actionInfo);
+                            } catch (e) {
+                                console.warn('解析 tool_call arguments 失败:', e);
+                            }
+                        }
+                    });
+                }
+            });
+            
+            // 如果没有从 tool_calls 中提取到动作，使用原始的 actions 数组
+            if (detailedActions.length === 0) {
+                const originalActions = round.model_prediction?.actions || [];
+                originalActions.forEach(action => {
+                    const desc = action.description || '';
+                    // 解析 "# Claude Computer Use: xxx" 格式
+                    const match = desc.match(/Claude Computer Use:\s*(\w+)/i);
+                    const actionType = match ? match[1] : (action.type || 'action');
+                    
+                    detailedActions.push({
+                        type: actionType,
+                        description: getActionLabel(actionType),
+                        details: action.description || formatActionData(action.data),
+                        rawAction: action
+                    });
+                });
+            }
+            
+            return detailedActions;
+        }
+
+        /**
+         * 从 Round 的 messages 中收集所有 tool_calls
+         * @param {Object} round - Round 对象
+         * @returns {Array} - tool_calls 列表，每个元素包含 {id, functionName, arguments, messageIdx, rawToolCall}
+         */
+        function collectToolCalls(round) {
+            const toolCalls = [];
+            const messages = round.model_prediction?.messages || [];
+            
+            messages.forEach((msg, msgIdx) => {
+                if (msg.role === 'assistant' && msg.tool_calls && Array.isArray(msg.tool_calls)) {
+                    msg.tool_calls.forEach(toolCall => {
+                        const toolCallInfo = {
+                            id: toolCall.id || 'unknown',
+                            type: toolCall.type || 'function',
+                            functionName: toolCall.function?.name || 'unknown',
+                            arguments: toolCall.function?.arguments || '{}',
+                            messageIdx: msgIdx,
+                            rawToolCall: toolCall
+                        };
+                        
+                        // 尝试解析arguments（如果是JSON字符串）
+                        try {
+                            if (typeof toolCallInfo.arguments === 'string') {
+                                toolCallInfo.parsedArguments = JSON.parse(toolCallInfo.arguments);
+                            } else {
+                                toolCallInfo.parsedArguments = toolCallInfo.arguments;
+                            }
+                        } catch (e) {
+                            toolCallInfo.parsedArguments = toolCallInfo.arguments;
+                        }
+                        
+                        toolCalls.push(toolCallInfo);
+                    });
+                }
+            });
+            
+            return toolCalls;
+        }
+
+        /**
+         * 从 Round 的 messages 中收集所有 assistant 消息的 response（content）
+         * @param {Object} round - Round 对象
+         * @returns {Array} - response 列表，每个元素包含 {content, messageIdx, hasToolCalls}
+         */
+        function collectAssistantResponses(round) {
+            const responses = [];
+            const messages = round.model_prediction?.messages || [];
+            
+            messages.forEach((msg, msgIdx) => {
+                if (msg.role === 'assistant') {
+                    const content = msg.content;
+                    const hasToolCalls = !!(msg.tool_calls && msg.tool_calls.length > 0);
+                    // 只记录有实际内容（非空字符串）或有tool_calls的消息
+                    if ((content && content.trim()) || hasToolCalls) {
+                        responses.push({
+                            content: content || '',
+                            messageIdx: msgIdx,
+                            hasToolCalls: hasToolCalls,
+                            toolCallsCount: msg.tool_calls ? msg.tool_calls.length : 0
+                        });
+                    }
+                }
+            });
+            
+            // 如果round.model_prediction.response存在，也添加进去（作为主要响应）
+            if (round.model_prediction?.response && round.model_prediction.response.trim()) {
+                // 检查是否已经在responses中（避免重复）
+                const alreadyExists = responses.some(r => r.content === round.model_prediction.response);
+                if (!alreadyExists) {
+                    responses.push({
+                        content: round.model_prediction.response,
+                        messageIdx: -1, // 标记为round级别的response
+                        hasToolCalls: false,
+                        toolCallsCount: 0,
+                        isRoundResponse: true
+                    });
+                }
+            }
+            
+            return responses;
+        }
+
+        /**
+         * 获取动作类型的中文标签
+         * @param {string} actionType - 动作类型
+         * @returns {string} - 中文标签
+         */
+        function getActionLabel(actionType) {
+            const labels = {
+                'left_click': '左键点击',
+                'right_click': '右键点击',
+                'double_click': '双击',
+                'middle_click': '中键点击',
+                'mouse_move': '移动鼠标',
+                'type': '输入文字',
+                'key': '按键',
+                'screenshot': '截图',
+                'cursor_position': '光标位置',
+                'left_click_drag': '拖拽',
+                'scroll': '滚动'
+            };
+            return labels[actionType] || actionType;
+        }
+
+        /**
+         * 获取动作类型的中文标签
+         * @param {string} actionType - 动作类型
+         * @returns {string} - 中文标签
+         */
+        function getActionLabel(actionType) {
+            const labels = {
+                'left_click': '🖱️ 左键点击',
+                'right_click': '🖱️ 右键点击',
+                'double_click': '🖱️ 双击',
+                'middle_click': '🖱️ 中键点击',
+                'type': '⌨️ 输入文本',
+                'key': '⌨️ 按键',
+                'scroll': '📜 滚动',
+                'wait': '⏳ 等待',
+                'screenshot': '📷 截图',
+                'mouse_move': '🖱️ 移动鼠标',
+                'DONE': '✅ 完成',
+                'FAIL': '❌ 失败',
+                'gui_action': '🖥️ GUI操作'
+            };
+            return labels[actionType] || actionType;
+        }
+
+        /**
+         * 截断过长的文本
+         * @param {string} text - 原始文本
+         * @param {number} maxLen - 最大长度
+         * @returns {string} - 截断后的文本
+         */
+        function truncateText(text, maxLen) {
+            if (!text) return '';
+            if (text.length <= maxLen) return text;
+            return text.substring(0, maxLen) + '...';
+        }
+
+        // 处理图片 URL（包括特殊字符编码）
+        function processImageUrl(url) {
+            if (!url) return '';
+            url = normalizeImagePath(url);
+            if (url.startsWith('data:image/')) return url;
+            if (url.startsWith('http://') || url.startsWith('https://')) return url;
+            
+            // 对于本地路径，需要拼接 JSON 文件所在目录
+            let processedUrl = url;
+            
+            // 如果路径不以 extracted_images/ 开头，添加它
+            if (!url.startsWith('extracted_images/') && !url.includes('..') && !url.startsWith('/')) {
+                processedUrl = 'extracted_images/' + url;
+            }
+            
+            // 拼接 JSON 文件所在目录（支持从子目录加载的 JSON 文件）
+            if (jsonBasePath && !processedUrl.startsWith(jsonBasePath)) {
+                processedUrl = jsonBasePath + processedUrl;
+            }
+            
+            // 对文件名中的特殊字符进行编码（保留路径分隔符）
+            // 对所有路径段进行编码，除了空字符串（路径分隔产生的）
+            processedUrl = processedUrl.split('/').map((part) => {
+                if (part === '') return part;
+                // 对所有部分进行编码，确保方括号等特殊字符被转义
+                return encodeURIComponent(part);
+            }).join('/');
+            
+            return processedUrl;
+        }
+
+        // ==================== 图片模态框 ====================
+        function openImageModal(images, startIdx) {
+            modalImages = images.map(img => ({
+                ...img,
+                url: processImageUrl(img.url)
+            }));
+            modalCurrentIdx = startIdx;
+            updateModalImage();
+            document.getElementById('image-modal').classList.add('active');
+        }
+
+        function updateModalImage() {
+            const img = modalImages[modalCurrentIdx];
+            document.getElementById('modal-image').src = img.url;
+            document.getElementById('modal-counter').textContent = 
+                `${modalCurrentIdx + 1} / ${modalImages.length}`;
+        }
+
+        function prevImage() {
+            modalCurrentIdx = (modalCurrentIdx - 1 + modalImages.length) % modalImages.length;
+            updateModalImage();
+        }
+
+        function nextImage() {
+            modalCurrentIdx = (modalCurrentIdx + 1) % modalImages.length;
+            updateModalImage();
+        }
+
+        function closeModal() {
+            document.getElementById('image-modal').classList.remove('active');
+        }
+
+        // 键盘导航
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('image-modal').classList.contains('active')) return;
+            
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'ArrowRight') nextImage();
+        });
+
+        // 点击模态框背景关闭
+        document.getElementById('image-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'image-modal') closeModal();
+        });
+
+        // ==================== 辅助函数 ====================
+        /**
+         * 将长文本按指定字符数分割为多行（用于 Plotly hovertemplate）
+         * @param {string} text - 原始文本
+         * @param {number} maxCharsPerLine - 每行最大字符数（默认70）
+         * @returns {string} - 用 <br> 连接的多行文本
+         */
+        function wrapTextForHover(text, maxCharsPerLine = 40) {
+            if (!text) return '';
+            text = String(text).trim();
+            
+            // 如果文本很短，直接返回
+            if (text.length <= maxCharsPerLine) return text;
+            
+            const lines = [];
+            let currentLine = '';
+            const words = text.split(' ');
+            
+            for (const word of words) {
+                // 如果单个词就超过限制，强制断行
+                if (word.length > maxCharsPerLine) {
+                    if (currentLine) {
+                        lines.push(currentLine);
+                        currentLine = '';
+                    }
+                    // 将长词分段
+                    for (let i = 0; i < word.length; i += maxCharsPerLine) {
+                        lines.push(word.substring(i, i + maxCharsPerLine));
+                    }
+                    continue;
+                }
+                
+                // 检查加入这个词后是否超过限制
+                const testLine = currentLine ? currentLine + ' ' + word : word;
+                if (testLine.length > maxCharsPerLine) {
+                    if (currentLine) {
+                        lines.push(currentLine);
+                    }
+                    currentLine = word;
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            
+            if (currentLine) {
+                lines.push(currentLine);
+            }
+            
+            return lines.join('<br>');
+        }
+        
+        function closeDetailPanel() {
+            document.getElementById('detail-panel').classList.remove('active');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = String(text);
+            return div.innerHTML;
+        }
+
+        function showError(message) {
+            const banner = document.getElementById('error-banner');
+            banner.textContent = '❌ ' + message;
+            banner.classList.add('active');
+            setTimeout(() => banner.classList.remove('active'), 5000);
+        }
+
+        function hideError() {
+            document.getElementById('error-banner').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

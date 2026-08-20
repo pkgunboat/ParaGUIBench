@@ -1,0 +1,30 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-008",
+    "task_uid": "3f600f5d-a835-4c59-9fae-b9139365d03e",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Based on the project numbers in Excel and the naming conventions in txt, rename the Word and PPT files.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/3f600f5d-a835-4c59-9fae-b9139365d03e",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-008",
+    "eval_rules": [
+        {
+            "check": "check_named_files_exist",
+            "file_pattern": "*",
+            "params": {
+                "filenames": [
+                    "p-2026-001_multi_modal_agent_rev1.0.docx",
+                    "p-2026-002_gui_benchmark_study_rev2.1.docx",
+                    "p-2026-003_parallel_execution_rev3.5.docx",
+                    "p-2026-001_multi_modal_agent_rev1.0.pptx",
+                    "p-2026-002_gui_benchmark_study_rev2.1.pptx",
+                    "p-2026-003_parallel_execution_rev3.5.pptx"
+                ]
+            },
+            "weight": 1.0,
+            "description": "Word 和 PPT 均按项目编号和命名规则正确重命名"
+        }
+    ]
+}

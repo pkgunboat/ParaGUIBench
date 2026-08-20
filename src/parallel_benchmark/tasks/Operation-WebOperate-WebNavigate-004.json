@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-004",
+    "task_uid": "a1d0e68a-6dd0-402b-8d6a-713c152c19dc",
+    "task_type": "self",
+    "task_tag": "WebOperate",
+    "instruction": "Open LibreOffice's official Mac and Windows installation guide pages and change the page language to Chinese. After opening each target page, bookmark it in Chrome.",
+    "task_source": "",
+    "answer": "https://www.libreoffice.org/get-help/install-howto/macos/ , https://www.libreoffice.org/download/download-libreoffice/",
+    "prepare_script_path": "",
+    "evaluator_path": "eval/webnavigate_bookmark_evaluator.py",
+    "original_task_id": "Operation-WebOperate-Webnavigate-004"
+}

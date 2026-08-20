@@ -1,0 +1,9 @@
+# InformationRetrieval-WebSearch-MultiHopSearch (8 tasks)
+InformationRetrieval-WebSearch-MultiHopSearch-001
+InformationRetrieval-WebSearch-MultiHopSearch-002
+InformationRetrieval-WebSearch-MultiHopSearch-003
+InformationRetrieval-WebSearch-MultiHopSearch-004
+InformationRetrieval-WebSearch-MultiHopSearch-005
+InformationRetrieval-WebSearch-MultiHopSearch-006
+InformationRetrieval-WebSearch-MultiHopSearch-007
+InformationRetrieval-WebSearch-MultiHopSearch-008

@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-022",
+    "task_uid": "a13b7561-1ee7-4d84-ac07-61844f8b46ab",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Identify the lightest head-mounted VR/AR device among all devices released globally in 2023-2024, and list the device name. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Brilliant Monocle",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-022"
+}

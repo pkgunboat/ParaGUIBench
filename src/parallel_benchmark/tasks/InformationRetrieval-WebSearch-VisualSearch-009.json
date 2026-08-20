@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-009",
+    "task_uid": "a2f6bbe4-1da2-40b4-aa1e-85115b6fc1cc",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "As of 2025, among Chinese state-owned banks, how many of them have red logos? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "2",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Visualsearch-009"
+}

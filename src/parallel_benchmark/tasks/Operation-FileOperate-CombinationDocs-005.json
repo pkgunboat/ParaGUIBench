@@ -1,0 +1,29 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-005",
+    "task_uid": "58870403-ea44-4f4c-8941-b2a57f170cd1",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "Export all documents in the folder to PDF with the same filenames.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/58870403-ea44-4f4c-8941-b2a57f170cd1",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-005",
+    "eval_rules": [
+        {
+            "check": "check_named_files_exist",
+            "file_pattern": "*",
+            "params": {
+                "filenames": [
+                    "Business_Report.pdf",
+                    "Development_Guide.pdf",
+                    "Employee_Directory.pdf",
+                    "Product_Catalog.pdf",
+                    "Training_Program.pdf"
+                ]
+            },
+            "weight": 1.0,
+            "description": "所有文档均已导出为同名PDF文件"
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-FileSearch-ReadonlyPPT-005",
+    "task_uid": "1fad9312-f060-4a1e-8208-2e65f6e950a0",
+    "task_type": "QA",
+    "task_tag": "FileSearch",
+    "instruction": "How many slides in these PPTs use fade and push transition animations respectively? Answer in the format: <answer>PART1; PART2; ...</answer>. Separate multiple items with semicolons (;). Only output the tags, no extra explanation.",
+    "task_source": "",
+    "answer": "3; 2",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/1fad9312-f060-4a1e-8208-2e65f6e950a0",
+    "evaluator_path": "eval/file_search_readonly_evaluator.py",
+    "original_task_id": "InformationRetrieval-FileSearch-Readonlyppt-005"
+}

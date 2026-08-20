@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-FileOperate-BatchOperation-003",
+    "task_uid": "c919165f-cdfb-413a-8e00-424a0a133620",
+    "task_type": "OSWorld脚本",
+    "task_tag": "FileOperate",
+    "instruction": "I like to read in my spare time, but this book is too thick. Every time I open it, I have to find where I left off, which is very troublesome. I want to split this book into several PDF files, each containing a different chapter, and name them according to the example I set for the first chapter.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/5df7b33a-9f77-4101-823e-02f863e1c1ae/raw_book.zip",
+    "evaluator_path": "eval/osworld_scripts/5df7b33a-9f77-4101-823e-02f863e1c1ae.json",
+    "original_task_id": "Operation-FileOperate-Batchoperation-003"
+}

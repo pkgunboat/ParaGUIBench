@@ -1,0 +1,28 @@
+{
+    "task_id": "Operation-FileOperate-CombinationDocs-007",
+    "task_uid": "eebc7ed2-5c7d-4df5-ab71-b53040167536",
+    "task_type": "self",
+    "task_tag": "FileOperate",
+    "instruction": "The folder contains many Word, PPT, and Excel files. Create different subfolders based on themes and content, and classify them into the subfolders.",
+    "task_source": "",
+    "answer": "",
+    "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/eebc7ed2-5c7d-4df5-ab71-b53040167536",
+    "evaluator_path": "",
+    "original_task_id": "Operation-FileOperate-Combinationdocs-007",
+    "eval_rules": [
+        {
+            "check": "check_files_in_same_folder",
+            "file_pattern": "*",
+            "params": {
+                "file_groups": [
+                    ["McDonald_finacial_report.docx", "McDonalds_Monthly_Data.xlsx"],
+                    ["Conference.pptx"],
+                    ["Eval_framework.docx"],
+                    ["Presentation_Strategy.pptx", "McDonalds_powerpoint_report.pptx"]
+                ]
+            },
+            "weight": 1.0,
+            "description": "文件按主题分类到同一子文件夹中"
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-MultiHopSearch-005",
+    "task_uid": "bdae778a-b032-46a2-9abc-e0aceb11dc09",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Using the list of member universities published on the FISU (International University Sports Federation) official website as the target set, identify university combinations where both universities explicitly mention each other as partners for international sports events or joint hosting, and count the number of such combinations. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "0",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Multi-HopSearch-005"
+}

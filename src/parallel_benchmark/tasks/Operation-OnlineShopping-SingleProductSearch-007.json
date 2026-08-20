@@ -1,0 +1,18 @@
+{
+    "task_id": "Operation-OnlineShopping-SingleProductSearch-007",
+    "task_uid": "c2b0c383b748483dbf6b9d0a988cceb4",
+    "source_task_id": "single_product_search_task_11",
+    "task_type": "QA",
+    "task_tag": "SingleProductSearch",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for the Corsair 3000D RGB Airflow Gaming Case.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "task_source": "WebMall",
+    "evaluator_type": "QuestionAnswering",
+    "answer": "http://10.1.110.114:9082/product/corsair-3000d-rgb-airflow-gaming-case-w-glass-window-atx-3x-ar120-rgb-fans-gpu-cooling-4-slot-gpu-support-high-airflow-front-white###http://10.1.110.114:9081/product/corsair-3000d-rgb-airflow-gaming-case-w-glass-window-atx-3x-ar120-rgb-fans-gpu-cooling-3-slot-gpu-support-high-airflow-front-white",
+    "evaluator_path": "evaluators/string_url_evaluator.py",
+    "answer_type": "string",
+    "expected_urls": [
+        "http://10.1.110.114:9082/product/corsair-3000d-rgb-airflow-gaming-case-w-glass-window-atx-3x-ar120-rgb-fans-gpu-cooling-4-slot-gpu-support-high-airflow-front-white",
+        "http://10.1.110.114:9081/product/corsair-3000d-rgb-airflow-gaming-case-w-glass-window-atx-3x-ar120-rgb-fans-gpu-cooling-3-slot-gpu-support-high-airflow-front-white"
+    ],
+    "original_task_id": "TaskExecution-MultiShopShopping-SingleProductSearch-c2b0c383b748483dbf6b9d0a988cceb4"
+}

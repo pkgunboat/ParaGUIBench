@@ -52,7 +52,7 @@ jobs:
           test -n "$WHEEL_PATH"
           python -m venv .venv-ci
           .venv-ci/bin/python -m pip install \
-            "paraguibench[live,dev,artifact] @ file://${WHEEL_PATH}"
+            "paraguibench[live,dev,artifact,methods] @ file://${WHEEL_PATH}"
           .venv-ci/bin/python scripts/installation/verify_install.py --profile live-osworld
 
       - name: Run tests and repository validators

@@ -1,0 +1,16 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-019",
+    "task_uid": "49d0bc86-2d30-4bbb-aa23-9994ed6b2d8f",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among the contributors of the OSWorld GitHub repository (xlang-ai/OSWorld), how many users' avatars are photos of real people? (Data as of June 11, 2026.) Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "25",
+    "accepted_answers": [
+        "24",
+        "26"
+    ],
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Visualsearch-019"
+}

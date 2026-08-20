@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-VisualSearch-006",
+    "task_uid": "58f36d7f-d64d-4e74-963b-8c48c4b8b135",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "By 2025, how many of Beijing's 985 universities will have school logos that are primarily red in color? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "self",
+    "answer": "3",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Visualsearch-006"
+}

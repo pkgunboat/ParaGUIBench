@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-011",
+    "task_uid": "38b185ab-d01d-4c97-a58e-d8d5ab4bec7b",
+    "task_type": "OSWorld脚本改造",
+    "task_tag": "WebOperate",
+    "instruction": "Open the FDA website and display side effects and historical information for Tamiflu.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "Operation-WebOperate-Webnavigate-011"
+}

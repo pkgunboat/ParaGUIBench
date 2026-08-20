@@ -1,0 +1,41 @@
+{
+  "id": "0f84bef9-9790-432e-92b7-eece357603fb",
+  "snapshot": "libreoffice_impress",
+  "instruction": "On it Whenever I launch a LibreOffice Impress, it uses both screens, one for current slide and next slide and another for actual presentation. What I want is to use only one monitor which shows presentation. I dont want the screen with Current slide and Next slide so that it can be used for other purposes. How should I achieve this?",
+  "source": "https://stackoverflow.com/questions/29036788/how-to-disable-libreoffice-impress-to-use-multiple-display",
+  "config": [
+    {
+      "type": "download",
+      "parameters": {
+        "files": [
+          {
+            "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/0f84bef9-9790-432e-92b7-eece357603fb/multimedia_classroom_podium-2020.pptx",
+            "path": "/home/user/Desktop/multimedia_classroom_podium-2020.pptx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/multimedia_classroom_podium-2020.pptx"
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "evaluator": {
+    "func": "check_presenter_console_disable",
+    "result": {
+      "type": "vm_file",
+      "path": "/home/user/.config/libreoffice/4/user/registrymodifications.xcu",
+      "dest": "registrymodifications.xcu"
+    }
+  },
+  "proxy": false,
+  "fixed_ip": false,
+  "possibility_of_env_change": "low",
+  "instruction_zh": "每当我启动 LibreOffice Impress 时，它会使用两个屏幕，一个显示当前幻灯片和下一张幻灯片，另一个用于实际演示。我希望只使用一个显示器来显示演示文稿。我不想要显示当前幻灯片和下一张幻灯片的屏幕，这样它就可以用于其他目的。我该如何实现这一点？"
+}

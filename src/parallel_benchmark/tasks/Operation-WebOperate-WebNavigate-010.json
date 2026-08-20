@@ -1,0 +1,12 @@
+{
+    "task_id": "Operation-WebOperate-WebNavigate-010",
+    "task_uid": "a93c6823-7716-40a2-91e1-17dabbaf7d0c",
+    "task_type": "OSWorld脚本改造",
+    "task_tag": "WebOperate",
+    "instruction": "Navigate to the webpage and return to the introduction pages for iPhone 15 Pro Max, iPhone 14 Pro Max, and iPhone 13 Pro Max.",
+    "task_source": "OSWorld",
+    "answer": "",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "Operation-WebOperate-Webnavigate-010"
+}

@@ -1,0 +1,12 @@
+{
+    "task_id": "InformationRetrieval-WebSearch-StatisticSearch-007",
+    "task_uid": "cc72eb2a-ab16-4d7f-ace8-83f2bd55aef7",
+    "task_type": "QA",
+    "task_tag": "WebSearch",
+    "instruction": "Among EU member states between 2016-2024, identify the country with the greatest reduction in elderly relative poverty rate among the top five countries ranked by population aging growth (proportion of population aged 65 and above). 2016–2024 EU65 Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "task_source": "VeriGUI",
+    "answer": "Poland",
+    "prepare_script_path": "",
+    "evaluator_path": "",
+    "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-007"
+}
