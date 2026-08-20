@@ -110,7 +110,7 @@ def check_environment(
 
 
 def _resolve_agent_mode(argv: Sequence[str], environ: dict[str, str]) -> str:
-    """从 --agent-mode 参数或 ABLATION_AGENT_MODE 解析模式，默认 plan。
+    """解析运行模式；与原 runner 语义一致：ABLATION_AGENT_MODE 非空时优先。
 
     输入参数：
         argv：透传给原 runner 的参数。
@@ -119,7 +119,10 @@ def _resolve_agent_mode(argv: Sequence[str], environ: dict[str, str]) -> str:
         ``plan`` 或 ``gui_only``。
     """
 
-    mode = environ.get("ABLATION_AGENT_MODE", "")
+    env_mode = environ.get("ABLATION_AGENT_MODE", "")
+    if env_mode:
+        return env_mode if env_mode in {"plan", "gui_only"} else "plan"
+    mode = ""
     args = list(argv)
     for index, item in enumerate(args):
         if item == "--agent-mode" and index + 1 < len(args):

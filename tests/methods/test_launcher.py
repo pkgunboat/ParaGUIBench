@@ -123,3 +123,22 @@ def test_check_environment_gui_only_skips_planner(monkeypatch):
         assert error.code == 2
     else:
         raise AssertionError("plan 模式缺少 planner 凭据应当 SystemExit")
+
+
+def test_resolve_agent_mode_env_overrides_cli():
+    """ABLATION_AGENT_MODE 非空时优先于 --agent-mode，对齐原 runner 语义。"""
+
+    assert (
+        launcher._resolve_agent_mode(
+            ["--agent-mode", "gui_only"], {"ABLATION_AGENT_MODE": "plan"}
+        )
+        == "plan"
+    )
+    assert (
+        launcher._resolve_agent_mode(
+            ["--agent-mode", "plan"], {"ABLATION_AGENT_MODE": "gui_only"}
+        )
+        == "gui_only"
+    )
+    assert launcher._resolve_agent_mode(["--agent-mode", "gui_only"], {}) == "gui_only"
+    assert launcher._resolve_agent_mode([], {}) == "plan"
