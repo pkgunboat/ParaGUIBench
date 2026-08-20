@@ -83,3 +83,7 @@ ParaGUI）等重写实现保留为开源发布面，但**不是**原项目方法
 遗留（对文档内嵌图片做 OCR 文字检查），全部 233 个正式任务及 evaluator
 配置零引用；保留它会强制所有使用者安装 torch 级重依赖（easyocr）。
 其余迁移文件仍与基线逐字节一致。
+
+webmall runner 读取原运行时目录 ``src/extra_docker_env/tasks``（仅含 91 个
+OnlineShopping 任务 JSON，与 ``parallel_benchmark/tasks`` 中同名文件字段一致）。
+装载器在 webmall 类别启动时为这些文件建立逐文件相对软链（不进入版本库）。

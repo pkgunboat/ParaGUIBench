@@ -155,6 +155,40 @@ def _ensure_tasks_list_alias(package_root: Path) -> None:
         pass
 
 
+_WEBMALL_TASK_PREFIX = "Operation-OnlineShopping-"
+
+
+def _ensure_webmall_tasks_alias(src_root: Path) -> None:
+    """webmall runner 从 ``src/extra_docker_env/tasks`` 读任务（原运行时目录）。
+
+    迁移基线中 91 个 OnlineShopping 任务 JSON 位于
+    ``parallel_benchmark/tasks`` 且字段一致；装载时为它们建立逐文件相对
+    软链，避免整目录混入非购物任务。目录不进入版本库（.gitignore 已忽略）。
+
+    输入参数：
+        src_root：仓库 ``src`` 目录。
+    输出返回值：
+        无。
+    """
+
+    tasks_dir = src_root / "parallel_benchmark" / "tasks"
+    webmall_dir = src_root / "extra_docker_env" / "tasks"
+    if not tasks_dir.is_dir():
+        return
+    webmall_dir.mkdir(parents=True, exist_ok=True)
+    for task_json in tasks_dir.glob(f"{_WEBMALL_TASK_PREFIX}*.json"):
+        link = webmall_dir / task_json.name
+        if link.exists() or link.is_symlink():
+            continue
+        try:
+            link.symlink_to(
+                f"../../parallel_benchmark/tasks/{task_json.name}",
+                target_is_directory=False,
+            )
+        except FileExistsError:
+            continue
+
+
 def launch(category: str, argv: Sequence[str]) -> None:
     """以原 runner 自己的 argv 原样执行它。
 
@@ -172,6 +206,9 @@ def launch(category: str, argv: Sequence[str]) -> None:
     script_dir = str(script.parent)
     if script_dir not in sys.path:
         sys.path.insert(0, script_dir)
-    _ensure_tasks_list_alias(_package_root() / "parallel_benchmark")
+    package_root = _package_root()
+    _ensure_tasks_list_alias(package_root / "parallel_benchmark")
+    if category == "webmall":
+        _ensure_webmall_tasks_alias(package_root)
     sys.argv = [str(script)] + list(argv)
     runpy.run_path(str(script), run_name="__main__")

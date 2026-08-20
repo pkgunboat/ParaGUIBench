@@ -142,3 +142,33 @@ def test_resolve_agent_mode_env_overrides_cli():
     )
     assert launcher._resolve_agent_mode(["--agent-mode", "gui_only"], {}) == "gui_only"
     assert launcher._resolve_agent_mode([], {}) == "plan"
+
+
+def test_launch_webmall_creates_extra_docker_env_alias(tmp_path, monkeypatch):
+    """webmall 类别装载时为 OnlineShopping 任务建逐文件软链目录。"""
+
+    package_root = tmp_path / "parallel_benchmark"
+    shopping = package_root / "tasks"
+    shopping.mkdir(parents=True)
+    (shopping / "Operation-OnlineShopping-AddToCart-001.json").write_text("{}")
+    (shopping / "Operation-OnlineShopping-AddToCart-002.json").write_text("{}")
+    (shopping / "InformationRetrieval-WebSearch-Other-001.json").write_text("{}")
+    monkeypatch.setattr(launcher, "check_environment", lambda **_: None)
+    monkeypatch.setattr(launcher, "_package_root", lambda: tmp_path)
+    monkeypatch.setattr(
+        launcher,
+        "runner_script_path",
+        lambda category: tmp_path / "stages" / "runner.py",
+    )
+    (tmp_path / "stages").mkdir()
+    (tmp_path / "stages" / "runner.py").write_text("print('ok')\n")
+    monkeypatch.setattr(launcher.runpy, "run_path", lambda path, run_name: None)
+    launcher.launch("webmall", [])
+    webmall_dir = tmp_path / "extra_docker_env" / "tasks"
+    links = sorted(p.name for p in webmall_dir.iterdir())
+    assert links == [
+        "Operation-OnlineShopping-AddToCart-001.json",
+        "Operation-OnlineShopping-AddToCart-002.json",
+    ]
+    target = webmall_dir / links[0]
+    assert target.is_symlink() and target.resolve().is_file()
