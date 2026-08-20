@@ -74,3 +74,12 @@ QEMU 包装器按 MiB 解释（`-m 8` = 8 MiB），guest 永远无法完成引�
 ParaGUI）等重写实现保留为开源发布面，但**不是**原项目方法；论文口径的两个方法
 以本文件迁移的代码为权威。后续若需要把原方法接入公开 RunStore/版本向量，另行
 立项并更新本记录。
+
+## 记录的偏离（2026-08-20，OCR 度量删除）
+
+按管理者决定，删除了 `desktop_env/evaluators/metrics/docs.py` 的
+`compare_image_text` 函数与模块级 `import easyocr`，并从
+`metrics/__init__.py` 的再导出中移除同名条目。理由：该函数为 OSWorld 上游
+遗留（对文档内嵌图片做 OCR 文字检查），全部 233 个正式任务及 evaluator
+配置零引用；保留它会强制所有使用者安装 torch 级重依赖（easyocr）。
+其余迁移文件仍与基线逐字节一致。

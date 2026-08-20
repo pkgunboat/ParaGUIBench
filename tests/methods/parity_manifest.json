@@ -1,5 +1,5 @@
 {
- "baseline": "ParaGUIBench-dev 8d36e157 working tree (2026-08-19 migration)",
+ "baseline": "ParaGUIBench-dev 8d36e157 working tree (2026-08-19 migration; documented deviation: OCR metric removal 2026-08-20)",
  "files": {
   "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "src/config_loader.py": "94346f34609e6632bb7ef11e54e838c3a5548d132d496d19532ded80c9218ec7",
@@ -26,11 +26,11 @@
   "src/desktop_env/evaluators/getters/replay.py": "3e27fd2ff92b7c4ad91d4e63a6b80644b2602000a9779e96b64dd2a230e9916a",
   "src/desktop_env/evaluators/getters/vlc.py": "12afad8fbc0828badc09a7212fa6433dbb23c768655afab077e5c71ba2e04cc4",
   "src/desktop_env/evaluators/getters/vscode.py": "d3e344c3bf23fefbbe13d991745cac9c54f73733555a8aae2736a992d549c857",
-  "src/desktop_env/evaluators/metrics/__init__.py": "d479abf894e32f18b78619bdbbf8196f36e0b4bb2063d40c0e48e32647808410",
+  "src/desktop_env/evaluators/metrics/__init__.py": "f5f1ecf5334122073365db75f8167d42fe8c53d194fb96cd84910c1f5bd6c6ec",
   "src/desktop_env/evaluators/metrics/basic_os.py": "08843c93bab8e8f0f917f09dd146768e272f5dff735652f02545b46b45764bbc",
   "src/desktop_env/evaluators/metrics/chrome.py": "7736722609006ab0bf1ce61930bf727d6596e47fb7f461900c6b7553ccb8dfd2",
   "src/desktop_env/evaluators/metrics/comprehensive.py": "dfce1a6acea2327bfff899f42b892f2292bf389f12bd6b1e23da6f7be1b4cd90",
-  "src/desktop_env/evaluators/metrics/docs.py": "fb7a2bdc08559b0f8d51b24f495f0556724fd3f3f6bb7b8891f8cd40da4e4e10",
+  "src/desktop_env/evaluators/metrics/docs.py": "c5d9f99b3eea7d789562329eb5e6f39013548800d84b22a7890ec816dacf1755",
   "src/desktop_env/evaluators/metrics/general.py": "bec162f6bd999f01d1df098244396d5d6b4f58a60a1244ea5829af302763a15a",
   "src/desktop_env/evaluators/metrics/gimp.py": "b7a276b281d5c30ddfb9899a5b774b31bea6d9f23bc3da113c57804ab42ceded",
   "src/desktop_env/evaluators/metrics/libreoffice.py": "d26f31efaa8c8e76094ed0002fc3cf35faf4c88c55c03a277fe757f9c3be5e96",

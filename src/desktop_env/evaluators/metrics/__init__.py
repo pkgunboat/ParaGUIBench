@@ -51,7 +51,6 @@ from .docs import (
     compare_contains_image,
     compare_docx_files_and_ignore_new_lines,
     compare_docx_images,
-    compare_image_text,
     compare_references,
     compare_docx_paragraph_styles,
     compare_docx_run_formatting
