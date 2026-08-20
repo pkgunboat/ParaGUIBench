@@ -1078,11 +1078,15 @@ def stage2_execute_parallel(
         log.info("TEST MODE: plan_max_rounds=1, gui_max_rounds=1")
 
     start_time = time.time()
+    # 与 run_QA_pipeline_parallel 一致：未传 timeout_per_subtask 时默认 0 会在
+    # BaseAgentTool.execute 层被当成 0 秒期限，GUI worker 一轮未跑即超时。
+    subtask_timeout = int(os.environ.get("ABLATION_SUBTASK_TIMEOUT", "3600"))
     result = planner.execute_task(
         task=task_instruction,
         context=oracle_context,
         max_rounds=plan_max_rounds,
         max_rounds_per_subtask=gui_max_rounds,
+        timeout_per_subtask=subtask_timeout,
     )
     elapsed_time = time.time() - start_time
     log.info("执行完成，耗时: %.2fs", elapsed_time)

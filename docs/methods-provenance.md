@@ -87,3 +87,11 @@ ParaGUI）等重写实现保留为开源发布面，但**不是**原项目方法
 webmall runner 读取原运行时目录 ``src/extra_docker_env/tasks``（仅含 91 个
 OnlineShopping 任务 JSON，与 ``parallel_benchmark/tasks`` 中同名文件字段一致）。
 装载器在 webmall 类别启动时为这些文件建立逐文件相对软链（不进入版本库）。
+
+## 记录的偏离（2026-08-20，webmall 并行 runner 超时传参修复）
+
+`run_webmall_pipeline_parallel.py` 构造 `execute_task` 时漏传
+`timeout_per_subtask`（默认 0 在 `BaseAgentTool.execute` 层被当作 0 秒期限，
+GUI worker 一轮未跑即超时）。原项目的非并行版与 QA runner 均显式传参
+（600/读 ABLATION_SUBTASK_TIMEOUT）。修复为与 QA 并行版一致的
+env 读取（默认 3600 秒）。
