@@ -12,7 +12,7 @@
 #     bash scripts/deployment/start_bench_services.sh
 #     bash scripts/deployment/stop_bench_services.sh
 #
-# 所有端口来自 configs/deploy.yaml 的 services.*，由 start_services.sh
+# 所有端口来自 configs/deploy.yaml 的 services.*，由 start_bench_services.sh
 # 通过 Python 解析后导出为环境变量。
 # ─────────────────────────────────────────────────────────────
 
@@ -79,7 +79,7 @@ services:
 
   # ── OnlyOffice 实例 2/3（多实例部署，profile 控制） ─────────
   # 启用方式：docker compose --profile onlyoffice-multi up -d
-  # （start_services.sh 根据 deploy.yaml services.onlyoffice.instances 自动启用）
+  # （start_bench_services.sh 根据 deploy.yaml services.onlyoffice.instances 自动启用）
   # 每套实例独立的数据目录（文档/共享链接/协作 key 互不串扰），
   # stage0 按任务轮转把文档路由到不同实例，绕开 DocumentServer
   # 社区版 ~20 并发编辑连接的许可上限。

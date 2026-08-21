@@ -43,8 +43,8 @@ curl http://127.0.0.1:5050/healthz     # OnlyOffice share Flask
 curl http://127.0.0.1:8080/            # OnlyOffice DocumentServer
 ```
 
-端口与 host 的权威配置是 `configs/deploy.yaml`（模板见
-`configs/deploy.example.yaml`，缺省时 `config_loader` 用默认值
+端口与 host 的权威配置是 `configs/deploy.yaml`（可自行创建，字段与
+默认值见 `src/config_loader.py`；缺省时 `config_loader` 用默认值
 9081-9084 / 8080 / 5050；也可用 `BENCH_DEPLOY_CONFIG` 指向自定义路径）。
 
 ### 换机部署后的任务 URL 改写

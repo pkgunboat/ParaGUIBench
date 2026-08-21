@@ -26,7 +26,8 @@ while [[ $# -gt 0 ]]; do
     *) POSITIONAL_ARGS+=("$1"); shift ;;
   esac
 done
-set -- "${POSITIONAL_ARGS[@]}"
+# bash < 4.4 在 set -u 下展开空数组会报 unbound variable，用 + 展开保护
+set -- ${POSITIONAL_ARGS[@]+"${POSITIONAL_ARGS[@]}"}
 
 # 幂等检查：已初始化则提示
 if [ -f "${MARKER_FILE}" ] && [ "${FORCE_SETUP}" = "0" ]; then
@@ -48,7 +49,8 @@ _safe_tar_check() {
 }
 
 # 优先使用 configs/deploy.yaml 指定的 resources.root/webmall_assets/backup
-# （离线部署场景，见 configs/deploy.example.yaml）；没有时回落到
+# （离线部署场景，见 configs/deploy.yaml 的 resources.root，可自行创建，
+# 字段与默认值见 src/config_loader.py）；没有时回落到
 # deploy/methods-services/webmall/backup 并从 Mannheim 公网下载。
 RES_ROOT="$(python3 - <<'PY' 2>/dev/null || true
 import sys
@@ -125,6 +127,15 @@ SPECIFIED_IP="${1:-}"
 if [ -n "$SPECIFIED_IP" ]; then
   DEPLOY_HOST="$SPECIFIED_IP"
 fi
+# 端口配置显式校验：deploy.yaml 的 services.webmall.ports 少于 4 项时，
+# 后续 ${!SHOP_PORT_VAR} 在 set -u 下会以不友好的方式崩溃
+for _shop_idx in 1 2 3 4; do
+  _port_var="SHOP${_shop_idx}_PORT"
+  if [ -z "${!_port_var:-}" ]; then
+    echo "✗ configs/deploy.yaml 的 services.webmall.ports 需要至少 4 个端口"
+    exit 1
+  fi
+done
 echo "  Shop 端口: ${SHOP1_PORT} ${SHOP2_PORT} ${SHOP3_PORT} ${SHOP4_PORT}"
 echo "  目标 Host: ${DEPLOY_HOST}"
 
@@ -155,8 +166,10 @@ for SHOP_ID in 1 2 3 4; do
   SHOP_PORT_VALUE="${!SHOP_PORT_VAR}"
   TEMP_CONFIG="/tmp/webmall_shop_${SHOP_ID}_wpconfig.php"
 
-  # 使用 compose 默认值或环境变量中的 DB 密码
+  # 使用 compose 默认值或环境变量中的 DB 密码；转义 sed 替换文本里的
+  # 特殊字符（& 和分隔符 |），避免自定义密码破坏 wp-config 模板
   DB_PASS="${WEBMALL_DB_PASSWORD:-wordpress_db_password}"
+  DB_PASS_ESCAPED="$(printf '%s' "${DB_PASS}" | sed -e 's/[\\&|]/\\&/g')"
 
   # 为每个 shop 生成唯一的 SALT 值（hex 避免sed 元字符问题）
   AUTH_KEY_VAL="$(openssl rand -hex 32)"
@@ -170,7 +183,7 @@ for SHOP_ID in 1 2 3 4; do
 
   sed \
     -e "s/SHOP${SHOP_ID}_PORT_PLACEHOLDER/${SHOP_PORT_VALUE}/g" \
-    -e "s/DB_PASSWORD_PLACEHOLDER/${DB_PASS}/g" \
+    -e "s|DB_PASSWORD_PLACEHOLDER|${DB_PASS_ESCAPED}|g" \
     -e "s/AUTH_KEY_PLACEHOLDER/${AUTH_KEY_VAL}/g" \
     -e "s/SECURE_AUTH_KEY_PLACEHOLDER/${SECURE_AUTH_KEY_VAL}/g" \
     -e "s/LOGGED_IN_KEY_PLACEHOLDER/${LOGGED_IN_KEY_VAL}/g" \
@@ -272,7 +285,9 @@ echo ""
 echo "=== WebMall 初始化完成！==="
 echo ""
 
-# 写入标记文件
+# 写入标记文件（离线/resources 部署时 backup/ 分支目录可能从未创建，
+# 先确保父目录存在，避免成功恢复后反而以重定向失败退出）
+mkdir -p "$(dirname "${MARKER_FILE}")"
 date -Iseconds > "${MARKER_FILE}"
 
 echo "访问地址："

@@ -62,7 +62,7 @@ bash scripts/deployment/stop_bench_services.sh
 商品数据来自公开备份 tarball（Uni Mannheim WebMall 上游，
 `data.dws.informatik.uni-mannheim.de/webmall/backup`）恢复出的
 MariaDB + WP 卷数据。离线部署可把 tarball 预放到
-`resources/webmall_assets/backup/`（见 `configs/deploy.example.yaml` 的
+`resources/webmall_assets/backup/`（见 `configs/deploy.yaml` 的
 `resources.root`）。
 
 ## 任务 JSON 里的 URL

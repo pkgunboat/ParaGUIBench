@@ -384,6 +384,39 @@ def test_public_secret_validation_sources_are_not_mistaken_for_credentials(
     assert "tests/installation/test_verify_secret_file.py" in paths
 
 
+def test_methods_services_stack_stays_outside_cleanroom_closure(
+    tmp_path: Path,
+) -> None:
+    """功能：确认方法验证服务栈不进入 cleanroom 闭集，公开部署编排仍进入。
+
+    输入参数：``tmp_path`` 为 pytest 提供的临时目录。
+    输出返回值：无；``deploy/methods-services/`` 出现在 manifest 或
+    ``deploy/onlyoffice/compose.yaml`` 缺失时失败。
+    """
+
+    bundle = _load_bundle_module()
+    repository = tmp_path / "repository"
+    output = tmp_path / "output"
+    _initialize_repository(repository)
+    _write_file(
+        repository,
+        "deploy/methods-services/webmall/demo.sh",
+        "# internal methods stack\n",
+    )
+    _write_file(
+        repository,
+        "deploy/onlyoffice/compose.yaml",
+        "services: {}\n",
+    )
+
+    artifacts = bundle.build_release_bundle(repository, output, name="release-test")
+    manifest = json.loads(artifacts.manifest_path.read_text(encoding="utf-8"))
+    paths = {entry["path"] for entry in manifest["files"]}
+
+    assert "deploy/methods-services/webmall/demo.sh" not in paths
+    assert "deploy/onlyoffice/compose.yaml" in paths
+
+
 def test_verifier_rejects_duplicate_json_manifest_keys(tmp_path: Path) -> None:
     """功能：确认重复 JSON key 不能通过“后值覆盖前值”混入 release。
 

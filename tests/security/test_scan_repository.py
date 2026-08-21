@@ -259,6 +259,36 @@ class RepositorySecurityScannerTests(unittest.TestCase):
             self.assertEqual(1, len(findings))
             self.assertEqual("secret-token", findings[0].category)
 
+    def test_methods_services_zone_exempts_environment_coupled_rules_only(self) -> None:
+        """功能：deploy/methods-services/ 与方法区同策略，凭据规则仍命中。
+
+        输入参数：无；以临时目录构造服务栈文件。
+        输出返回值：无；断言失败时由 unittest 报告。
+        """
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            zone_file = (
+                root / "deploy" / "methods-services" / "onlyoffice" / "demo.py"
+            )
+            zone_file.parent.mkdir(parents=True)
+            internal_address = "192.168" + ".1.10"
+            zone_file.write_text(
+                'UPSTREAM = "http://' + internal_address + ':8080"\n',
+                encoding="utf-8",
+            )
+            findings = self.scanner.scan_file(zone_file, root)
+            self.assertEqual([], findings)
+
+            synthetic_secret = "sk-ant-" + "a" * 20
+            zone_file.write_text(
+                'TOKEN = "' + synthetic_secret + '"\n',
+                encoding="utf-8",
+            )
+            findings = self.scanner.scan_file(zone_file, root)
+            self.assertEqual(1, len(findings))
+            self.assertEqual("secret-token", findings[0].category)
+
     def test_non_zone_files_keep_full_rule_set(self) -> None:
         """功能：方法区外的私网地址仍然按原规则报告。
 
