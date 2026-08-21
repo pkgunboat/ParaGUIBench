@@ -21,8 +21,33 @@
                     ["Presentation_Strategy.pptx", "McDonalds_powerpoint_report.pptx"]
                 ]
             },
-            "weight": 1.0,
+            "weight": 0.6,
             "description": "文件按主题分类到同一子文件夹中"
+        },
+        {
+            "check": "check_named_files_in_subfolders",
+            "file_pattern": "*",
+            "params": {
+                "filenames": [
+                    "McDonald_finacial_report.docx",
+                    "McDonalds_Monthly_Data.xlsx",
+                    "Conference.pptx",
+                    "Eval_framework.docx",
+                    "Presentation_Strategy.pptx",
+                    "McDonalds_powerpoint_report.pptx"
+                ]
+            },
+            "weight": 0.25,
+            "description": "所有指定文件都已移动到子文件夹"
+        },
+        {
+            "check": "check_min_subfolders",
+            "file_pattern": "*",
+            "params": {
+                "min_count": 3
+            },
+            "weight": 0.15,
+            "description": "至少创建多个主题子文件夹"
         }
     ]
 }

@@ -14,8 +14,18 @@
             "check": "check_docx_has_hyperlink",
             "file_pattern": "*.docx",
             "params": {"threshold": 0.3},
-            "weight": 1.0,
+            "weight": 0.5,
             "description": "Word文档中包含指向PPT页面的超链接"
+        },
+        {
+            "check": "check_docx_hyperlink_targets",
+            "file_pattern": "*.docx",
+            "params": {
+                "expected_extensions": [".pptx", ".ppt"],
+                "min_links": 1
+            },
+            "weight": 0.5,
+            "description": "超链接目标指向PPT文件"
         }
     ]
 }

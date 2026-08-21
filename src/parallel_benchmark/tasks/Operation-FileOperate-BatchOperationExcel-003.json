@@ -11,14 +11,15 @@
     "original_task_id": "Operation-FileOperate-Batchoperationexcel-003",
     "eval_rules": [
         {
-            "check": "check_sort_order",
+            "check": "check_sort_order_by_header_keywords",
             "file_pattern": "*.xlsx",
             "params": {
-                "column": "B",
-                "order": "desc"
+                "header_keywords": ["sales", "amount"],
+                "order": "desc",
+                "header_rows": 5
             },
             "weight": 1.0,
-            "description": "B列降序排列"
+            "description": "按销售额列降序排列"
         }
     ]
 }

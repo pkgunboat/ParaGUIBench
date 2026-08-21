@@ -12,13 +12,65 @@
     "eval_rules": [
         {
             "check": "check_misspelled_words_highlighted",
-            "file_pattern": "*.docx",
+            "file_pattern": "center.docx",
             "params": {
-                "expected_highlights": {},
+                "expected_highlights": {
+                    "sesssion": "center"
+                },
                 "highlight_color": "FFFF00"
             },
             "weight": 1.0,
-            "description": "拼错词是否被黄色标记"
+            "description": "center.docx 拼错词是否被黄色标记"
+        },
+        {
+            "check": "check_misspelled_words_highlighted",
+            "file_pattern": "episode.docx",
+            "params": {
+                "expected_highlights": {
+                    "childhoood": "episode"
+                },
+                "highlight_color": "FFFF00"
+            },
+            "weight": 1.0,
+            "description": "episode.docx 拼错词是否被黄色标记"
+        },
+        {
+            "check": "check_misspelled_words_highlighted",
+            "file_pattern": "experience.docx",
+            "params": {
+                "expected_highlights": {
+                    "visiters": "experience",
+                    "severall": "experience"
+                },
+                "highlight_color": "FFFF00"
+            },
+            "weight": 1.0,
+            "description": "experience.docx 拼错词是否被黄色标记"
+        },
+        {
+            "check": "check_misspelled_words_highlighted",
+            "file_pattern": "hall.docx",
+            "params": {
+                "expected_highlights": {
+                    "prasenting": "hall"
+                },
+                "highlight_color": "FFFF00"
+            },
+            "weight": 1.0,
+            "description": "hall.docx 拼错词是否被黄色标记"
+        },
+        {
+            "check": "check_misspelled_words_highlighted",
+            "file_pattern": "travel.docx",
+            "params": {
+                "expected_highlights": {
+                    "intrenational": "travel",
+                    "conmference": "travel"
+                },
+                "highlight_color": "FFFF00"
+            },
+            "weight": 1.0,
+            "description": "travel.docx 拼错词是否被黄色标记"
         }
     ]
 }

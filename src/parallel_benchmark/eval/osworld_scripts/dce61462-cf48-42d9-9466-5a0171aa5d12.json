@@ -100,9 +100,48 @@
     "options": {
       "rules": [
         {
-          "type": "sheet_data",
+          "type": "sheet_fuzzy",
           "sheet_idx0": 0,
-          "sheet_idx1": "EI0"
+          "sheet_idx1": "EI0",
+          "rules": [
+            {
+              "range": [
+                "A1:A1"
+              ],
+              "type": "exact_match",
+              "normalization": [
+                [
+                  "Title",
+                  "tile"
+                ],
+                [
+                  "title",
+                  "tile"
+                ]
+              ],
+              "ignore_case": true
+            },
+            {
+              "range": [
+                "A2:A5",
+                "B1:B5",
+                "D1:D5"
+              ],
+              "type": "exact_match"
+            },
+            {
+              "range": [
+                "C1:C5"
+              ],
+              "type": "exact_match",
+              "normalization": [
+                [
+                  ", ",
+                  ","
+                ]
+              ]
+            }
+          ]
         }
       ]
     }

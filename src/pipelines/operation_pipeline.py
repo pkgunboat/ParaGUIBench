@@ -23,6 +23,7 @@ for _p in [SRC_DIR, SCRIPT_DIR, STAGES_DIR]:
 
 from pipeline_base import BasePipeline, TaskItem, UNIFIED_TASKS_DIR
 from task_scanner import scan_unified_tasks
+from config_loader import DeployConfig
 
 from self_operation_pipeline.run_self_operation_pipeline_parallel import (
     stage1_initialize_with_flatten,
@@ -58,7 +59,7 @@ class OperationPipeline(BasePipeline):
         """
         parser.add_argument(
             "--gt-cache-dir", type=str,
-            default=os.path.join(STAGES_DIR, "self_operation_pipeline", "gt_cache"),
+            default=os.path.join(DeployConfig().resources_root, "operation_gt_cache"),
             help="Ground Truth 文件缓存目录（由 download_resources.py 填充）",
         )
 

@@ -16,8 +16,19 @@
             "params": {
                 "threshold": 0.8
             },
-            "weight": 1.0,
+            "weight": 0.5,
             "description": "图片名和文档名是否一致"
+        },
+        {
+            "check": "check_docx_image_width",
+            "file_pattern": "*.docx",
+            "params": {
+                "width_cm": 5.0,
+                "tolerance_cm": 0.15,
+                "threshold": 1.0
+            },
+            "weight": 0.5,
+            "description": "插入图片宽度是否为5cm"
         }
     ]
 }

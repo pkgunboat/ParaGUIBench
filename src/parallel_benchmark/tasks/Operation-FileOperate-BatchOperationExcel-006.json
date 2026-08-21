@@ -14,8 +14,8 @@
             "check": "check_negative_values_colored",
             "file_pattern": "*.xlsx",
             "params": {
-                "start_cell": "B4",
-                "end_cell": "B15"
+                "start_cell": "D4",
+                "end_cell": "D15"
             },
             "weight": 1.0,
             "description": "负值单元格标记为红色"

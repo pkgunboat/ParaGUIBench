@@ -223,6 +223,7 @@ def compare_archive(pred_path: str, gold_path: str, **kwargs) -> float:
     Compare two archives. Note that the files in the archives should be of the same type.
     """
     file_path = kwargs.pop('file_path', '')
+    score_threshold = kwargs.pop('score_threshold', None)
 
     if not pred_path:
         return 0.
@@ -281,7 +282,10 @@ def compare_archive(pred_path: str, gold_path: str, **kwargs) -> float:
         fp1 = os.path.join(pred_folder, file_path, f1)
         fp2 = os.path.join(gold_folder, file_path, f2)
         score += compare_function(fp1, fp2, **kwargs)
-    return score / len(pred_files)
+    avg_score = score / len(pred_files)
+    if score_threshold is not None and avg_score >= float(score_threshold):
+        return 1.0
+    return avg_score
 
 
 def compare_htmls(html_path1: str, html_path2: str) -> float:

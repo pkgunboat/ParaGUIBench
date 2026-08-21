@@ -27,9 +27,22 @@ import argparse
 import time
 import re
 import html
-from typing import List, Dict, Any, Tuple, Set
+from typing import List, Dict, Any, Optional, Tuple, Set
 from urllib.parse import urlparse
 from dataclasses import dataclass, field
+
+try:
+    from webmall_identity import (
+        deep_html_unescape,
+        product_identity_matches,
+        slugify_product_name,
+    )
+except ImportError:  # 作为 webmall_eval_assets 包导入时
+    from webmall_eval_assets.webmall_identity import (
+        deep_html_unescape,
+        product_identity_matches,
+        slugify_product_name,
+    )
 
 
 # 4 个商店的端口和名称
@@ -173,14 +186,30 @@ def open_url_in_vm(vm_ip: str, server_port: int, url: str) -> bool:
     """
     headers = {"Content-Type": "application/json"}
     api_url = f"http://{vm_ip}:{server_port}/execute"
+    # 通过 Python 子进程显式设置 DISPLAY 并检查 xdg-open 返回码。这比仅
+    # 判断 /execute HTTP 200 更能区分“命令被接收”与“浏览器导航成功”。
+    script = (
+        "import os, subprocess\n"
+        "env = os.environ.copy()\n"
+        "env['DISPLAY'] = ':0'\n"
+        f"result = subprocess.run(['xdg-open', {url!r}], env=env, "
+        "stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n"
+        "print('OPEN_OK' if result.returncode == 0 else 'OPEN_FAIL')\n"
+    )
     payload = json.dumps({
-        "command": f"xdg-open '{url}'",
-        "shell": True
+        "command": ["python3", "-c", script],
+        "shell": False,
     })
     
     try:
         response = requests.post(api_url, headers=headers, data=payload, timeout=30)
-        return response.status_code == 200
+        if response.status_code != 200:
+            return False
+        try:
+            output = str(response.json().get("output") or "")
+        except Exception:
+            output = response.text
+        return "OPEN_OK" in output
     except Exception as e:
         print(f"    打开 URL 失败: {e}")
         return False
@@ -199,11 +228,7 @@ def _deep_unescape(text: str) -> str:
     返回:
         完全解码后的文本
     """
-    prev = None
-    while text != prev:
-        prev = text
-        text = html.unescape(text)
-    return text
+    return deep_html_unescape(text)
 
 
 def name_to_slug(name: str) -> str:
@@ -222,29 +247,28 @@ def name_to_slug(name: str) -> str:
     返回:
         slug 格式的字符串
     """
-    # 转换为小写
-    slug = name.lower()
+    return slugify_product_name(name, keep_amp=True)
 
-    # 与 WooCommerce 一致：& 转为 amp（而非丢弃）
-    slug = slug.replace('&', ' amp ')
 
-    # 替换特殊字符为空格或连字符
-    # 保留字母、数字、空格和连字符
-    slug = re.sub(r'[^\w\s-]', ' ', slug)
+def _is_cart_url_for_shop(url: str, shop_port: Optional[int]) -> bool:
+    """判断当前 URL 是否为指定 WebMall 店铺的购物车页。
 
-    # 替换多个空格为单个空格
-    slug = re.sub(r'\s+', ' ', slug).strip()
-
-    # 替换空格为连字符
-    slug = slug.replace(' ', '-')
-
-    # 移除连续的连字符
-    slug = re.sub(r'-+', '-', slug)
-
-    # 移除首尾的连字符
-    slug = slug.strip('-')
-
-    return slug
+    功能：分别校验 URL path 与端口，不使用整串 ``/cart`` 子串或页面文本
+    作为已进入购物车的充分证据。
+    输入参数：url 为 AT 地址栏 URL；shop_port 为当前正在评价的店铺端口。
+    输出返回值：URL 为该店铺的精确 cart 路径时返回 True。
+    """
+    try:
+        parsed = urlparse(url)
+    except (TypeError, ValueError):
+        return False
+    if parsed.scheme.lower() not in {"http", "https"} or not parsed.hostname:
+        return False
+    if not re.fullmatch(r"/cart/?", parsed.path or "", flags=re.IGNORECASE):
+        return False
+    if shop_port is not None and parsed.port != shop_port:
+        return False
+    return True
 
 
 def extract_product_hrefs_from_at(at_xml: str) -> Tuple[Set[str], Set[str], List[Dict]]:
@@ -399,10 +423,11 @@ def detect_cart_from_at(at_xml: str, shop_port: int = None) -> CartDetectionResu
     # 提取当前 URL
     result.detected_url = extract_current_url_from_at(at_xml)
     
-    # 判断是否是购物车页面
-    url = result.detected_url or ""
-    if "/cart" in url.lower() or "shopping cart" in at_xml.lower() or "your cart" in at_xml.lower():
-        result.is_cart_page = True
+    # 购物车状态必须由地址栏中的正确店铺 cart URL 证明。
+    result.is_cart_page = _is_cart_url_for_shop(result.detected_url, shop_port)
+    if not result.is_cart_page:
+        result.error = "当前页面不是指定店铺的购物车页"
+        return result
     
     # 检查购物车是否为空
     if "cart is currently empty" in at_xml.lower():
@@ -412,20 +437,31 @@ def detect_cart_from_at(at_xml: str, shop_port: int = None) -> CartDetectionResu
     # 提取商品链接
     hrefs, slugs, products = extract_product_hrefs_from_at(at_xml)
     
-    # 如果指定了商店端口，过滤链接
+    # 如果指定了商店端口，实体链接必须属于该端口。仅有 Remove/
+    # Quantity 文本时则可使用当前已验证 cart 页中生成的 slug。
     if shop_port:
-        port_str = f":{shop_port}"
-        filtered_hrefs = {h for h in hrefs if port_str in h}
-        filtered_slugs = set()
-        for href in filtered_hrefs:
-            slug = urlparse(href).path.rstrip("/").split("/")[-1]
+        filtered_hrefs = set()
+        filtered_slugs = {
+            str(product.get("slug") or "")
+            for product in products
+            if product.get("slug") and not product.get("href")
+        }
+        current_host = (urlparse(result.detected_url).hostname or "").lower()
+        for href in hrefs:
+            try:
+                parsed_href = urlparse(href)
+            except (TypeError, ValueError):
+                continue
+            if parsed_href.port != shop_port:
+                continue
+            if current_host and (parsed_href.hostname or "").lower() != current_host:
+                continue
+            filtered_hrefs.add(href)
+            slug = parsed_href.path.rstrip("/").split("/")[-1]
             if slug:
                 filtered_slugs.add(slug)
-        
-        # 如果过滤后有结果，使用过滤后的；否则使用全部
-        if filtered_hrefs:
-            hrefs = filtered_hrefs
-            slugs = filtered_slugs
+        hrefs = filtered_hrefs
+        slugs = filtered_slugs
     
     result.product_hrefs = hrefs
     result.product_slugs = slugs
@@ -588,7 +624,7 @@ def evaluate_all_vms(
         all_detected_slugs = set()
         
         for shop_result in shop_results:
-            if shop_result.error:
+            if shop_result.error or not shop_result.is_cart_page:
                 continue
             port = shop_result.shop_port
             if port not in port_to_slugs:
@@ -603,17 +639,31 @@ def evaluate_all_vms(
             
             # 检查该端口的商店是否检测到了对应的 slug
             matched = False
+            matched_detected_slug = ""
             
             if cp_port in port_to_slugs:
-                # 检查该商店的购物车中是否有期望的 slug
-                if cp.slug in port_to_slugs[cp_port]:
-                    matched = True
+                # 仅对 amp 词元的 WooCommerce 差异容忍，其余词元和数字
+                # 型号必须完整一致。
+                for detected_slug in list(port_to_slugs[cp_port]):
+                    if product_identity_matches(cp.slug, detected_slug):
+                        matched = True
+                        matched_detected_slug = detected_slug
+                        port_to_slugs[cp_port].discard(detected_slug)
+                        break
             
             if matched:
                 if not cp.flag:
                     cp.flag = True
                     eval_result.score += cp.weight
                     eval_result.matched_checkpoints.append(cp)
+                else:
+                    # 同一期望商品已在其他 VM 命中，当前 VM 再次加购是
+                    # 额外外部副作用，不应被全局 checkpoint.flag 静默合并。
+                    eval_result.unexpected_products.append({
+                        "shop_port": cp_port,
+                        "slug": matched_detected_slug,
+                        "reason": "duplicate_expected_product_across_vms",
+                    })
             else:
                 eval_result.unmatched_checkpoints.append(cp)
         
@@ -621,14 +671,77 @@ def evaluate_all_vms(
         eval_result.total_weight = sum(cp.weight for cp in checkpoints)
         
         # 找出意外的商品
-        expected_slugs = {cp.slug for cp in checkpoints}
-        for slug in all_detected_slugs:
-            if slug not in expected_slugs:
-                eval_result.unexpected_products.append({"slug": slug})
+        expected_pairs = []
+        for cp in checkpoints:
+            cp_port = int(cp.domain.rsplit(":", 1)[-1]) if ":" in cp.domain else 0
+            expected_pairs.append((cp_port, cp.slug))
+        for shop_result in shop_results:
+            if shop_result.error or not shop_result.is_cart_page:
+                continue
+            for slug in shop_result.product_slugs:
+                expected_here = [
+                    expected_slug
+                    for port, expected_slug in expected_pairs
+                    if port == shop_result.shop_port
+                ]
+                if not any(product_identity_matches(item, slug) for item in expected_here):
+                    eval_result.unexpected_products.append({
+                        "shop_port": shop_result.shop_port,
+                        "slug": slug,
+                    })
         
         evaluation_results[vm_key] = eval_result
     
     return evaluation_results
+
+
+def summarize_cart_evaluation(
+    checkpoints: List[Checkpoint],
+    evaluation_results: Dict[str, EvaluationResult],
+) -> Dict[str, Any]:
+    """
+    汇总多 VM cart 评价结果。
+
+    checkpoint.flag 表示跨 VM 合并后的唯一期望商品匹配；unexpected 也应按
+    合并后的唯一 slug 计算，避免 n>1 时同一多余商品被重复计入 precision 分母。
+    """
+    matched_count = sum(1 for cp in checkpoints if cp.flag)
+    total_expected = len(checkpoints)
+    unexpected_slugs = sorted({
+        product.get("slug", "")
+        for result in evaluation_results.values()
+        for product in result.unexpected_products
+        if product.get("slug")
+    })
+    total_unexpected = len(unexpected_slugs)
+
+    passed = (
+        matched_count == total_expected and total_unexpected == 0
+    ) if total_expected else False
+    recall = matched_count / total_expected if total_expected else 0.0
+    total_detected = matched_count + total_unexpected
+    precision = (
+        matched_count / total_detected
+        if total_detected > 0
+        else (1.0 if matched_count == 0 else 0.0)
+    )
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall) > 0 else 0.0
+    )
+    score = matched_count / total_expected if total_expected > 0 else 0.0
+
+    return {
+        "score": score,
+        "matched_count": matched_count,
+        "max_score": total_expected,
+        "passed": passed,
+        "recall": recall,
+        "precision": precision,
+        "f1": f1,
+        "total_unexpected": total_unexpected,
+        "unexpected_slugs": unexpected_slugs,
+    }
 
 
 def create_checkpoints_from_urls(urls: List[str]) -> List[Checkpoint]:

@@ -323,6 +323,10 @@ def read_cell_value(xlsx_file: str, sheet_name: str, coordinate: str) -> Any:
             return shared_strs[int(cell["c"]["v"])]
         if cell["c"]["@t"] == "str":
             return cell["c"]["v"]
+        if cell["c"]["@t"] == "inlineStr":
+            inline = cell["c"].get("is", {})
+            if isinstance(inline, dict):
+                return inline.get("t")
     except (KeyError, ValueError):
         return None
     #  }}} read_cell_value # 

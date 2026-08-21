@@ -119,6 +119,24 @@ class _FileLock:
         self._fh.close()
 
 
+def _is_evaluator_error(run: dict) -> bool:
+    """
+    判定一条 run 是否为评价器错误(应从 SR 分母与 mean_score 中剔除)。
+
+    输入: run 条目(含 score / status)。
+    输出: True=评价器错误(status==evaluator_error 或 score<0 哨兵), 否则 False。
+
+    背景: 各评价器对配置/GT 缺失等非模型失败统一返回 score=-1.0 且
+    status="evaluator_error"(见 eval/operation_checks/*.py)。这类 run 既不是
+    PASS 也不是模型 FAIL, 必须单列, 不能计入通过率分母, 更不能把 -1.0 平均进
+    mean_score(否则产生负均值)。
+    """
+    if str(run.get("status") or "") == "evaluator_error":
+        return True
+    score = run.get("score")
+    return isinstance(score, (int, float)) and score < 0
+
+
 def _task_aggregate(runs: list) -> dict:
     """
     由该任务全部 run 条目算 task 级聚合。
@@ -128,20 +146,29 @@ def _task_aggregate(runs: list) -> dict:
     输出: aggregate dict（run_count/pass_count/pass_rate/best_score/
                           latest_score/mean_score/total_cost_usd/total_tokens/
                           mean_elapsed_sec/latest_run_id/latest_status）
+
+    统计口径: evaluator_error(score<0 或 status==evaluator_error)单列为
+    error_count, 从 pass_rate 分母与 mean_score 中剔除, 绝不把负分平均进均值。
     """
     n = len(runs)
-    scores = [r.get("score") or 0.0 for r in runs]
-    passes = [bool(r.get("pass")) for r in runs]
+    err_runs = [r for r in runs if _is_evaluator_error(r)]
+    valid_runs = [r for r in runs if not _is_evaluator_error(r)]
+    n_valid = len(valid_runs)
+    # 仅用有效 run 计分/通过率; best_score 也只看有效 run(避免 -1.0 干扰)。
+    scores = [r.get("score") or 0.0 for r in valid_runs]
+    passes = [bool(r.get("pass")) for r in valid_runs]
     # latest: timestamp 最大者（YYYYMMDD_HHMMSS 字典序即时间序），并列取 host 大者
     latest = max(runs, key=lambda r: (r.get("timestamp", ""),
                                       r.get("host", "")))
     return {
         "run_count": n,
+        "valid_count": n_valid,
+        "error_count": len(err_runs),
         "pass_count": sum(1 for p in passes if p),
-        "pass_rate": (sum(1 for p in passes if p) / n) if n else 0.0,
+        "pass_rate": (sum(1 for p in passes if p) / n_valid) if n_valid else 0.0,
         "best_score": max(scores) if scores else 0.0,
         "latest_score": latest.get("score") or 0.0,
-        "mean_score": (sum(scores) / n) if n else 0.0,
+        "mean_score": (sum(scores) / n_valid) if n_valid else 0.0,
         "total_cost_usd": round(sum(r.get("cost_usd") or 0.0 for r in runs), 4),
         "total_tokens": sum(r.get("token_total") or 0 for r in runs),
         "mean_elapsed_sec": (sum(r.get("elapsed_time_sec") or 0.0
@@ -149,6 +176,7 @@ def _task_aggregate(runs: list) -> dict:
         "latest_run_id": latest.get("run_id"),
         "latest_status": latest.get("status"),
         "latest_pass": bool(latest.get("pass")),
+        "latest_error": _is_evaluator_error(latest),
     }
 
 
@@ -161,10 +189,12 @@ def _member_from_task_agg(task_agg: dict) -> dict:
     """
     return {
         "latest_pass": task_agg.get("latest_pass"),
+        "latest_error": task_agg.get("latest_error"),
         "best_pass": (task_agg.get("pass_count") or 0) > 0,
         "latest_score": task_agg.get("latest_score"),
         "best_score": task_agg.get("best_score"),
         "runs": task_agg.get("run_count"),
+        "valid_runs": task_agg.get("valid_count"),
         "total_cost_usd": task_agg.get("total_cost_usd"),
         "total_tokens": task_agg.get("total_tokens"),
     }
@@ -292,21 +322,35 @@ def _scope_aggregate(members: dict) -> dict:
     """
     n = len(members)
     if n == 0:
-        return {"task_count": 0, "total_runs": 0,
+        return {"task_count": 0, "n_scored_task_latest": 0,
+                "error_task_count_latest": 0, "total_runs": 0,
                 "pass_rate_by_task_latest": 0.0,
                 "pass_rate_by_task_best": 0.0,
                 "mean_score_by_task_latest": 0.0,
                 "total_cost_usd": 0.0, "total_tokens": 0}
     vals = list(members.values())
+    # latest 口径下: evaluator_error 的 task 单列 error_task_count_latest,
+    # 从通过率分母(n_scored)与 mean_score 中剔除。
+    scored = [v for v in vals if not v.get("latest_error")]
+    n_scored = len(scored)
+    best_scored = [v for v in vals if (v.get("valid_runs") or 0) > 0]
+    n_best_scored = len(best_scored)
     return {
         "task_count": n,
+        "n_scored_task_latest": n_scored,
+        "error_task_count_latest": n - n_scored,
+        "n_scored_task_best": n_best_scored,
+        "error_task_count_best": n - n_best_scored,
         "total_runs": sum(v.get("runs", 0) for v in vals),
         "pass_rate_by_task_latest":
-            sum(1 for v in vals if v.get("latest_pass")) / n,
+            (sum(1 for v in scored if v.get("latest_pass")) / n_scored)
+            if n_scored else 0.0,
         "pass_rate_by_task_best":
-            sum(1 for v in vals if v.get("best_pass")) / n,
+            (sum(1 for v in best_scored if v.get("best_pass")) / n_best_scored)
+            if n_best_scored else 0.0,
         "mean_score_by_task_latest":
-            sum(v.get("latest_score") or 0.0 for v in vals) / n,
+            (sum(v.get("latest_score") or 0.0 for v in scored) / n_scored)
+            if n_scored else 0.0,
         "total_cost_usd":
             round(sum(v.get("total_cost_usd") or 0.0 for v in vals), 4),
         "total_tokens": sum(v.get("total_tokens") or 0 for v in vals),

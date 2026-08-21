@@ -21,20 +21,23 @@ import argparse
 import json
 import os
 from typing import Dict, List, Optional, Tuple
-from urllib.parse import urlparse
 
 from cart_evaluator_from_at import (
     create_checkpoints_from_urls,
     detect_vm_all_carts,
     evaluate_all_vms,
+    summarize_cart_evaluation,
 )
 from checkout_evaluator_from_at import (
     ExpectedCheckout,
+    expected_checkout_from_urls,
     extract_checkout_info,
     extract_checkout_info_with_recovery,
     get_at as get_checkout_at,
+    summarize_checkout_attempts,
     verify_checkout,
 )
+from webmall_identity import compare_url_lists, normalize_http_url
 
 # Browsergym 生成的 task_sets.json 路径。该文件不在本仓库内，需用户自行
 # 从上游 WebMall 打包得到；通过环境变量 WEBMALL_TASK_SET_PATH 显式指定。
@@ -53,7 +56,12 @@ TASK_SET_PATH = os.environ.get(
 
 
 def normalize_url(url: str) -> str:
-    return url.rstrip("/").lstrip("http://").lstrip("https://")
+    """安全归一化 WebMall URL。
+
+    输入参数：url 为期望或提交 URL。
+    输出返回值：保留完整主机身份、仅忽略协议差异的比较键。
+    """
+    return normalize_http_url(url)
 
 
 def load_task_sets(path: str) -> Dict[str, dict]:
@@ -93,18 +101,17 @@ def get_answers_for_task(
 
 
 def evaluate_string(expected_urls: List[str], submitted_urls: List[str]) -> dict:
-    expected_norm = {normalize_url(u): u for u in expected_urls}
-    submitted_norm = {normalize_url(u): u for u in submitted_urls}
+    """对 String 任务执行 URL 多集合精确评价。
 
-    matched = []
-    wrong = []
-    for sub_norm, original in submitted_norm.items():
-        if sub_norm in expected_norm:
-            matched.append(expected_norm[sub_norm])
-        else:
-            wrong.append(original)
+    输入参数：expected_urls 为 gold URL；submitted_urls 为 Agent 提交 URL。
+    输出返回值：包含 passed、score、matched、wrong 及 missing 的结果字典。
+    """
+    comparison = compare_url_lists(expected_urls, submitted_urls)
+    matched = comparison["matched"]
+    wrong = comparison["wrong"]
+    missing = comparison["missing"]
 
-    passed = len(matched) == len(expected_urls) if expected_urls else False
+    passed = bool(expected_urls) and not wrong and not missing
     score = len(matched) / len(expected_urls) if expected_urls else 0.0
 
     return {
@@ -113,6 +120,7 @@ def evaluate_string(expected_urls: List[str], submitted_urls: List[str]) -> dict
         "score": score,
         "matched": matched,
         "wrong": wrong,
+        "missing": missing,
         "expected": expected_urls,
         "submitted": submitted_urls,
     }
@@ -134,17 +142,16 @@ def evaluate_cart(
 
     eval_results = evaluate_all_vms(all_results, checkpoints)
 
-    matched_count = sum(1 for cp in checkpoints if cp.flag)
-    total_expected = len(checkpoints)
-    passed = matched_count == total_expected if total_expected else False
-    score = matched_count / total_expected if total_expected else 0.0
+    summary = summarize_cart_evaluation(checkpoints, eval_results)
 
     return {
         "type": "cart",
-        "passed": passed,
-        "score": score,
-        "matched_count": matched_count,
-        "total_expected": total_expected,
+        "passed": summary["passed"],
+        "score": summary["score"],
+        "matched_count": summary["matched_count"],
+        "total_expected": summary["max_score"],
+        "total_unexpected": summary["total_unexpected"],
+        "unexpected_slugs": summary["unexpected_slugs"],
         "evaluation_results": {
             vm_key: {
                 "score": res.score,
@@ -160,12 +167,8 @@ def evaluate_cart(
 
 def build_expected_checkout(task_config: dict) -> ExpectedCheckout:
     answers = task_config["correct_answer"]["answers"]
-    product_url = answers[0] if answers else ""
-    product_slug = urlparse(product_url).path.rstrip("/").split("/")[-1]
-
-    return ExpectedCheckout(
-        product_slug=product_slug,
-        shop_port=urlparse(product_url).port or 0,
+    return expected_checkout_from_urls(
+        answers,
         user_details=task_config.get("user_details", {}),
     )
 
@@ -203,6 +206,9 @@ def evaluate_checkout(
                 "order_number": result.order_number,
                 "billing_info": result.billing_info,
                 "product_name": result.product_name,
+                "product_names": result.product_names,
+                "product_slugs": result.product_slugs,
+                "product_checks": result.product_checks,
                 "error": result.error,
                 "recovery_used": result.recovery_used,
                 "recovery_url": result.recovery_url,
@@ -214,10 +220,14 @@ def evaluate_checkout(
         if score > best_score:
             best_score = score
 
+    summary = summarize_checkout_attempts(port_results)
     return {
         "type": "checkout",
-        "passed": passed_any,
-        "score": best_score,
+        "passed": summary["passed"],
+        "score": summary["best_score"] if summary["passed"] else 0.0,
+        "valid_order_count": summary["valid_order_count"],
+        "completed_order_count": summary["completed_order_count"],
+        "unexpected_order_count": summary["unexpected_order_count"],
         "ports": port_results,
     }
 

@@ -1787,9 +1787,15 @@ class BasePipeline(ABC):
         if getattr(self, '_progress_state', None):
             score = result.get("score", 0.0)
             interrupted = result.get("interrupted", False)
-            if interrupted:
+            eval_status = str((result.get("evaluator_output") or {}).get("status")
+                              or result.get("status") or "")
+            # 评价器错误(哨兵 score<0 或 status==evaluator_error)与执行异常同归 error 桶,
+            # 不计入 fail; PASS/FAIL 判定统一用权威 pass 字段(与最终统计口径一致),
+            # 不再用 score == 1.0(与 pass 字段可能不一致)。
+            if interrupted or eval_status == "evaluator_error" or (
+                    isinstance(score, (int, float)) and score < 0):
                 status = "error"
-            elif score == 1.0:
+            elif result.get("pass"):
                 status = "pass"
             else:
                 status = "fail"
@@ -1827,20 +1833,23 @@ class BasePipeline(ABC):
             t.task_id for t in getattr(self, "_prepared_tasks", [])
         ]
 
+        from report_generator import generate_report, _task_bucket
+
         # 统计
         total = len(results)
-        passed = sum(1 for r in results.values()
-                     if r.get("pass", False))
-        interrupted = sum(1 for r in results.values()
-                          if r.get("interrupted", False))
+        buckets = [_task_bucket(r) for r in results.values()]
+        passed = sum(1 for b in buckets if b == "passed")
+        failed = sum(1 for b in buckets if b == "failed")
+        interrupted = sum(1 for b in buckets if b == "interrupted")
+        eval_error = sum(1 for b in buckets if b == "eval_error")
         self.log.info("=" * 60)
-        self.log.info("[%s] 完成: PASS=%d, FAIL=%d, INTERRUPTED=%d, TOTAL=%d",
-                       self.pipeline_name, passed,
-                       total - passed - interrupted, interrupted, total)
+        self.log.info(
+            "[%s] 完成: PASS=%d, FAIL=%d, INTERRUPTED=%d, EVALERR=%d, TOTAL=%d",
+            self.pipeline_name, passed, failed, interrupted, eval_error, total,
+        )
         self.log.info("=" * 60)
 
         # 生成统计报告
-        from report_generator import generate_report
         report_dir = generate_report(results, self.get_output_dir(), log=self.log)
         self.log.info("统计报告: %s", report_dir)
 

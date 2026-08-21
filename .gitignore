@@ -53,8 +53,10 @@ configs/deploy.yaml
 /src/parallel_benchmark/logs/
 /src/stages/self_operation_pipeline/gt_cache/
 
-# ZCode 本地会话目录
+# 本地 AI 助手会话目录（settings.local.json 会记录含绝对路径的已批准命令，
+# 仅靠用户全局 gitignore 不够：release bundle 门禁以 GIT_CONFIG_NOSYSTEM 运行 git）
 /.zcode/
+/.claude/
 /src/parallel_benchmark/tasks_list
 /src/extra_docker_env/
 

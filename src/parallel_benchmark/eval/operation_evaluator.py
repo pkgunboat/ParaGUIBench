@@ -53,11 +53,15 @@ from eval.operation_checks.docx_checks import (
     check_vowels_colored_red,
     check_uppercase_words_have_parentheses,
     check_highlighted_words_capitalized,
+    check_highlighted_words_bold,
     check_misspelled_words_highlighted,
     check_heading_colors_different,
+    check_heading_colors_in_palette,
     check_image_name_matches_doc,
+    check_docx_image_width,
     check_docx_word_count,
     check_docx_has_hyperlink,
+    check_docx_hyperlink_targets,
     check_headings_have_body,
 )
 from eval.operation_checks.xlsx_checks import (
@@ -65,12 +69,14 @@ from eval.operation_checks.xlsx_checks import (
     check_header_bold,
     check_column_alignment,
     check_sort_order,
+    check_n_sorted_copies,
     check_has_sum_row,
     check_batchexcel001_annual_sum,
     check_batchexcel002_header_bold,
     check_batchexcel002_range_right_align,
     # 扩展函数
     check_cell_contains_string,
+    check_sort_order_by_header_keywords,
     check_values_are_decimals,
     check_negative_values_colored,
     check_sorted_columns_exist,
@@ -92,6 +98,8 @@ from eval.operation_checks.file_checks import (
     check_files_in_same_folder,
     check_html_files_for_xlsx,
     check_named_files_exist,
+    check_named_files_in_subfolders,
+    check_min_subfolders,
 )
 
 logger = logging.getLogger("eval.operation_evaluator")
@@ -130,17 +138,22 @@ CHECK_REGISTRY: Dict[str, _RegistryEntry] = {
     "check_vowels_colored_red":          (check_vowels_colored_red, "*.docx"),
     "check_uppercase_words_have_parentheses": (check_uppercase_words_have_parentheses, "*.docx"),
     "check_highlighted_words_capitalized": (check_highlighted_words_capitalized, "*.docx"),
+    "check_highlighted_words_bold":        (check_highlighted_words_bold, "*.docx"),
     "check_misspelled_words_highlighted": (check_misspelled_words_highlighted, "*.docx"),
     "check_heading_colors_different":    (check_heading_colors_different, "*.docx"),
+    "check_heading_colors_in_palette":    (check_heading_colors_in_palette, "*.docx"),
     "check_image_name_matches_doc":      (check_image_name_matches_doc, "*.docx"),
+    "check_docx_image_width":            (check_docx_image_width, "*.docx"),
     "check_docx_word_count":            (check_docx_word_count, "*.docx"),
     "check_docx_has_hyperlink":         (check_docx_has_hyperlink, "*.docx"),
+    "check_docx_hyperlink_targets":      (check_docx_hyperlink_targets, "*.docx"),
     "check_headings_have_body":         (check_headings_have_body, "*.docx"),
     # ---- xlsx 通用 ----
     "check_cell_value":                  (check_cell_value, "*.xlsx"),
     "check_header_bold":                 (check_header_bold, "*.xlsx"),
     "check_column_alignment":            (check_column_alignment, "*.xlsx"),
     "check_sort_order":                  (check_sort_order, "*.xlsx"),
+    "check_n_sorted_copies":             (check_n_sorted_copies, "*.xlsx", True),
     "check_has_sum_row":                 (check_has_sum_row, "*.xlsx"),
     # ---- xlsx 任务专用 ----
     "check_batchexcel001_annual_sum":    (check_batchexcel001_annual_sum, "*.xlsx"),
@@ -148,6 +161,7 @@ CHECK_REGISTRY: Dict[str, _RegistryEntry] = {
     "check_batchexcel002_range_right_align": (check_batchexcel002_range_right_align, "*.xlsx"),
     # ---- xlsx 扩展 ----
     "check_cell_contains_string":         (check_cell_contains_string, "*.xlsx"),
+    "check_sort_order_by_header_keywords": (check_sort_order_by_header_keywords, "*.xlsx"),
     "check_values_are_decimals":         (check_values_are_decimals, "*.xlsx"),
     "check_negative_values_colored":     (check_negative_values_colored, "*.xlsx"),
     "check_sorted_columns_exist":        (check_sorted_columns_exist, "*.xlsx"),
@@ -168,6 +182,8 @@ CHECK_REGISTRY: Dict[str, _RegistryEntry] = {
     "check_files_in_same_folder":        (check_files_in_same_folder, "*", True),
     "check_html_files_for_xlsx":         (check_html_files_for_xlsx, "*.xlsx", True),
     "check_named_files_exist":           (check_named_files_exist, "*", True),
+    "check_named_files_in_subfolders":   (check_named_files_in_subfolders, "*", True),
+    "check_min_subfolders":              (check_min_subfolders, "*", True),
 }
 
 
@@ -193,6 +209,68 @@ def _find_matching_files(result_dir: str, file_pattern: str) -> List[str]:
     # 去重并排序
     unique = sorted(set(files))
     return unique
+
+
+def _is_agent_output_exception(exc: Exception) -> bool:
+    """
+    判断文件级 check 异常是否更像 agent 产物损坏/不可解析。
+
+    这类情况应按普通 FAIL 计入分母；未知异常仍按 evaluator_error，
+    避免把检查器脚本 bug 当成模型失败。
+    """
+    if isinstance(exc, (
+        FileNotFoundError,
+        IsADirectoryError,
+        NotADirectoryError,
+        PermissionError,
+        UnicodeDecodeError,
+    )):
+        return True
+
+    exc_name = exc.__class__.__name__
+    if exc_name in {
+        "BadZipFile",
+        "InvalidFileException",
+        "PackageNotFoundError",
+        "XMLSyntaxError",
+        "ParserError",
+    }:
+        return True
+
+    message = str(exc).lower()
+    return any(
+        marker in message
+        for marker in (
+            "file is not a zip file",
+            "not a zip file",
+            "package not found",
+            "not a word file",
+            "not a powerpoint file",
+            "unsupported file format",
+            "cannot open",
+            "could not open",
+            "no such file",
+            "not a valid",
+        )
+    )
+
+
+def _check_exception_result(check_name: str, fpath: str, exc: Exception) -> Dict[str, Any]:
+    if _is_agent_output_exception(exc):
+        return {
+            "pass": False,
+            "score": 0.0,
+            "reason": (
+                f"Agent 输出文件无法解析 "
+                f"({check_name}, {os.path.basename(fpath)}): {exc}"
+            ),
+        }
+    return {
+        "pass": False,
+        "score": -1.0,
+        "status": "evaluator_error",
+        "reason": f"检查函数异常 ({check_name}): {exc}",
+    }
 
 
 # ==================================================================
@@ -253,12 +331,17 @@ def _execute_single_rule(
             dir_result = check_fn(result_dir, params)
         except Exception as exc:
             logger.error("目录级检查函数 %s 执行异常 (%s): %s", check_name, result_dir, exc)
-            dir_result = {"pass": False, "score": 0.0, "reason": f"异常: {exc}"}
+            dir_result = {
+                "pass": False,
+                "score": -1.0,
+                "status": "evaluator_error",
+                "reason": f"异常: {exc}",
+            }
 
         score_val = float(dir_result.get("score", 0.0))
         pass_val = bool(dir_result.get("pass", False))
         dir_reason = dir_result.get("reason", "")
-        return {
+        rule_result = {
             "check": check_name,
             "description": description,
             "weight": weight,
@@ -273,6 +356,9 @@ def _execute_single_rule(
             }],
             "reason": f"{description}: {dir_reason}" if dir_reason else description,
         }
+        if dir_result.get("status"):
+            rule_result["status"] = dir_result.get("status")
+        return rule_result
 
     file_pattern = rule.get("file_pattern", default_pattern)
 
@@ -296,7 +382,7 @@ def _execute_single_rule(
             result = check_fn(fpath, params)
         except Exception as exc:
             logger.error("检查函数 %s 执行异常 (%s): %s", check_name, fpath, exc)
-            result = {"pass": False, "score": 0.0, "reason": f"异常: {exc}"}
+            result = _check_exception_result(check_name, fpath, exc)
 
         file_results.append({
             "file": os.path.basename(fpath),

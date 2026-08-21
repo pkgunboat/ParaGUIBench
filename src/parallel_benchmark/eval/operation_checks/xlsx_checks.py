@@ -7,7 +7,9 @@ Excel 表格（.xlsx）属性检查原语。
 依赖: openpyxl
 """
 
+import glob
 import logging
+import os
 from typing import Any, Dict, List, Optional
 
 import openpyxl
@@ -378,6 +380,94 @@ def check_sort_order(file_path: str, params: dict) -> dict:
         return _partial(
             ratio,
             f"列 {column} 排序不完全（有序比例 {ratio:.1%}，期望 {order}）"
+        )
+    finally:
+        wb.close()
+
+
+def check_sort_order_by_header_keywords(file_path: str, params: dict) -> dict:
+    """
+    按表头关键字定位列并检查排序。
+
+    比固定列号更贴近“按 sales amount 排序”这类任务，避免 agent 只把
+    B 列排好但真实销售额列未排序也通过。
+    """
+    keywords = [str(k).lower() for k in params.get("header_keywords", [])]
+    order = params.get("order", "desc")
+    sheet_name = params.get("sheet_name")
+    header_rows = int(params.get("header_rows", 5))
+    skip_header = params.get("skip_header", True)
+
+    if not keywords:
+        return _config_error("参数缺少 header_keywords")
+
+    wb = _load_workbook(file_path, data_only=True)
+    if wb is None:
+        return _fail(f"无法打开文件: {file_path}")
+
+    try:
+        ws = _get_sheet(wb, sheet_name)
+        if ws is None:
+            return _fail(f"工作表不存在: {sheet_name}")
+
+        best = None
+        for row_idx in range(1, min(header_rows, ws.max_row) + 1):
+            for col_idx in range(1, ws.max_column + 1):
+                value = ws.cell(row=row_idx, column=col_idx).value
+                if value is None:
+                    continue
+                text = str(value).lower()
+                if all(keyword in text for keyword in keywords):
+                    best = (row_idx, col_idx, value)
+                    break
+            if best:
+                break
+
+        if not best:
+            return _fail(f"未找到包含关键字 {keywords} 的表头")
+
+        header_row, col_idx, header_value = best
+        start_row = header_row + 1 if skip_header else header_row
+        values = []
+        for row_idx in range(start_row, ws.max_row + 1):
+            val = ws.cell(row=row_idx, column=col_idx).value
+            if val is None:
+                continue
+            if isinstance(val, str):
+                normalized = val.replace(",", "").strip()
+                try:
+                    val = float(normalized)
+                except ValueError:
+                    continue
+            values.append(val)
+
+        if len(values) <= 1:
+            return _ok(f"列 {header_value} 数据量不足，无需排序检查")
+
+        try:
+            is_ascending = all(values[i] <= values[i + 1] for i in range(len(values) - 1))
+            is_descending = all(values[i] >= values[i + 1] for i in range(len(values) - 1))
+        except TypeError:
+            return _fail(f"列 {header_value} 含不可比较值")
+
+        if order == "asc" and is_ascending:
+            return _ok(f"列 {header_value} 升序排列正确（{len(values)} 行）")
+        if order == "desc" and is_descending:
+            return _ok(f"列 {header_value} 降序排列正确（{len(values)} 行）")
+
+        inversions = 0
+        total_pairs = 0
+        for i in range(len(values) - 1):
+            total_pairs += 1
+            if order == "asc" and values[i] > values[i + 1]:
+                inversions += 1
+            elif order == "desc" and values[i] < values[i + 1]:
+                inversions += 1
+
+        ratio = 1.0 - (inversions / total_pairs) if total_pairs else 1.0
+        return _partial(
+            ratio,
+            f"列 {header_value} 排序不完全（有序比例 {ratio:.1%}，期望 {order}）"
         )
     finally:
         wb.close()
@@ -755,6 +845,66 @@ def check_values_are_decimals(file_path: str, params: dict) -> dict:
         wb.close()
 
 
+def _rgb_is_red(rgb) -> bool:
+    """
+    判断一个 openpyxl 颜色 rgb 值是否属于“红色”。
+
+    采用红色通道占优判据（而非固定枚举），可覆盖纯红/深红/浅红填充：
+    要求 R 通道足够高，且明显高于 G、B 通道。这样能正确接受真实
+    agent 常用的浅红底色（如 LibreOffice 的 FFFFD7D7、Excel 的
+    “浅红填充”FFFFC7CE），同时拒绝黄/白/绿等非红色。
+
+    输入:
+        rgb: openpyxl 颜色对象的 .rgb 属性（可能为 None / 非字符串 / 主题标记）
+    输出:
+        bool: 判定为红色返回 True，否则 False
+    """
+    if not rgb:
+        return False
+    s = str(rgb).upper()
+    if s == "RED":
+        return True
+    if len(s) == 8:  # 去掉 ARGB 的 alpha 前缀
+        s = s[2:]
+    if len(s) != 6:  # 主题色/索引色等无法解析为 RRGGBB
+        return False
+    try:
+        r = int(s[0:2], 16)
+        g = int(s[2:4], 16)
+        b = int(s[4:6], 16)
+    except ValueError:
+        return False
+    return r >= 150 and (r - g) >= 40 and (r - b) >= 40
+
+
+def _cell_is_red(cell) -> bool:
+    """
+    判断单元格是否被标记为红色：字体颜色为红，或背景填充（fgColor/start_color）为红。
+
+    输入:
+        cell: openpyxl 单元格对象
+    输出:
+        bool: 字体色或背景填充色任一为红色返回 True，否则 False
+    """
+    # 1) 字体颜色
+    try:
+        if cell.font and cell.font.color and _rgb_is_red(getattr(cell.font.color, "rgb", None)):
+            return True
+    except Exception:
+        pass
+    # 2) 背景填充：仅当存在实际填充图案时才检查 fgColor / start_color
+    try:
+        fill = cell.fill
+        if fill is not None and getattr(fill, "patternType", None):
+            for attr in ("fgColor", "start_color"):
+                col = getattr(fill, attr, None)
+                if col is not None and _rgb_is_red(getattr(col, "rgb", None)):
+                    return True
+    except Exception:
+        pass
+    return False
+
+
 def check_negative_values_colored(file_path: str, params: dict) -> dict:
     """
     检查负值单元格是否被标记为红色。
@@ -800,17 +950,14 @@ def check_negative_values_colored(file_path: str, params: dict) -> dict:
                     continue
                 if isinstance(cell.value, (int, float)) and cell.value < 0:
                     negative_cells += 1
-                    # 检查是否为红色
-                    if cell.font and cell.font.color:
-                        color = cell.font.color
-                        if color.rgb and str(color.rgb).upper() in ("FFFF0000", "FF0000", "RED"):
-                            red_negative_cells += 1
-                        elif hasattr(color, 'theme') and color.theme is not None:
-                            # 主题颜色需要更复杂的检查
-                            details.append(f"{get_column_letter(col)}{row}: 负值但非红色")
+                    # 红色可来自字体颜色或红色背景填充，任一命中即视为已标红
+                    if _cell_is_red(cell):
+                        red_negative_cells += 1
+                    else:
+                        details.append(f"{get_column_letter(col)}{row}: 负值但非红色")
 
         if negative_cells == 0:
-            return _ok("无负值单元格")
+            return _ok(f"区域 {start_cell}:{end_cell} 内无负值单元格，无需红色标记")
 
         if red_negative_cells == negative_cells:
             return _ok(f"全部 {negative_cells} 个负值单元格都标记为红色")
@@ -894,6 +1041,7 @@ def check_sequential_numbers(file_path: str, params: dict) -> dict:
     start_after = params.get("start_after", "")
     sheet_name = params.get("sheet_name")
     threshold = params.get("threshold", 0.8)
+    expected_format = params.get("format")
 
     if not start_after:
         return _config_error("参数缺少 start_after")
@@ -921,11 +1069,21 @@ def check_sequential_numbers(file_path: str, params: dict) -> dict:
         if len(values) < 2:
             return _ok("序列值数量不足")
 
-        # 检查是否为从0开始的递增序列
+        def _matches_expected(value, expected_num: int) -> bool:
+            if expected_format:
+                expected_text = str(expected_format).replace("#", str(expected_num))
+                return str(value).strip() == expected_text
+            if value == expected_num:
+                return True
+            if isinstance(value, str) and value.strip().isdigit():
+                return int(value.strip()) == expected_num
+            return False
+
+        # 检查是否为从0开始的递增序列，可选格式如 No.#
         expected = 0
         correct_count = 0
         for val in values:
-            if val == expected:
+            if _matches_expected(val, expected):
                 correct_count += 1
             expected += 1
 
@@ -1091,3 +1249,135 @@ def check_cells_filled(file_path: str, params: dict) -> dict:
         return _partial(ratio, f"{filled}/{total} 有值，空白: {', '.join(empty_cells[:5])}")
     finally:
         wb.close()
+
+
+def _is_monotonic(values: List[Any], order: str) -> bool:
+    """
+    安全判定一列数值是否按指定方向单调。
+
+    输入:
+        values: 已剔除 None 的单元格值列表
+        order: "asc"（升序）或 "desc"（降序）
+    输出:
+        bool；元素类型不可比较（TypeError）时视为未排序返回 False
+    """
+    if len(values) <= 1:
+        return True
+    try:
+        if order == "asc":
+            return all(values[i] <= values[i + 1] for i in range(len(values) - 1))
+        return all(values[i] >= values[i + 1] for i in range(len(values) - 1))
+    except TypeError:
+        return False
+
+
+def check_n_sorted_copies(result_dir: str, params: dict) -> dict:
+    """
+    目录级检查：结果目录中是否存在 N 份 xlsx 副本，每份分别按一个不同的目标列排序。
+
+    针对"将同一表格分别按多个字段排序另存为多份副本"类任务：单条 check_sort_order
+    只能验证一个字段，无法覆盖 4 个字段。本函数遍历目录内全部 *.xlsx，统计每个文件
+    在哪些目标列上有序，再用二分图匹配确保每个目标列由**不同**文件覆盖（一份文件即便
+    在多列上恰好有序，也只能认领一列），从而要求覆盖全部 N 个字段。
+
+    输入:
+        result_dir: Agent 产出文件所在目录（目录级 check，直接接收 result_dir）
+        params:
+            columns (list): 目标列标识列表（字母/表头名/列号），如 ["A","B","C","D"]
+            order (str): "asc"（升序）或 "desc"（降序），默认 "asc"
+            data_start_row (int): 数据起始行（1-based），默认 4
+                                  （适配含 2 行标题块 + 1 行表头的表格布局）
+            sheet_name (str, 可选): 工作表名称，默认活动表
+            require_distinct_files (bool): 是否要求每个字段由不同文件覆盖，默认 True
+    输出:
+        {"pass": bool, "score": float, "reason": str}
+        score = 已覆盖字段数 / len(columns)，全部覆盖时 pass=True
+    """
+    columns = params.get("columns")
+    order = params.get("order", "asc")
+    sheet_name = params.get("sheet_name")
+    data_start_row = params.get("data_start_row", 4)
+    require_distinct_files = params.get("require_distinct_files", True)
+
+    if not columns:
+        return _config_error("参数缺少 columns")
+
+    # 收集目录内全部 xlsx（含子目录），与 _find_matching_files 行为一致
+    xlsx_files = sorted(set(
+        glob.glob(os.path.join(result_dir, "*.xlsx"))
+        + glob.glob(os.path.join(result_dir, "**", "*.xlsx"), recursive=True)
+    ))
+    if not xlsx_files:
+        return _fail("未找到 xlsx 文件")
+
+    target = [str(c) for c in columns]
+    n_required = len(target)
+
+    # 统计每个文件在哪些目标列上有序
+    file_sorted_cols: Dict[str, set] = {}
+    for fpath in xlsx_files:
+        wb = _load_workbook(fpath, data_only=True)
+        if wb is None:
+            continue
+        try:
+            ws = _get_sheet(wb, sheet_name)
+            if ws is None:
+                continue
+            sorted_here = set()
+            for col in columns:
+                col_idx = _resolve_column(col, ws)
+                if col_idx is None:
+                    continue
+                values = [
+                    ws.cell(row=r, column=col_idx).value
+                    for r in range(data_start_row, ws.max_row + 1)
+                ]
+                values = [v for v in values if v is not None]
+                # 数据量不足无法证明"按该列排序"，不计入覆盖
+                if len(values) <= 1:
+                    continue
+                if _is_monotonic(values, order):
+                    sorted_here.add(str(col))
+            file_sorted_cols[fpath] = sorted_here
+        finally:
+            wb.close()
+
+    if require_distinct_files:
+        # 二分图最大匹配（增广路）：文件 -> 目标列，保证每列由不同文件认领
+        match_col: Dict[str, str] = {}
+
+        def _try_assign(fpath: str, seen: set) -> bool:
+            for col in file_sorted_cols.get(fpath, set()):
+                if col not in target or col in seen:
+                    continue
+                seen.add(col)
+                if col not in match_col or _try_assign(match_col[col], seen):
+                    match_col[col] = fpath
+                    return True
+            return False
+
+        for fpath in xlsx_files:
+            _try_assign(fpath, set())
+        covered = set(match_col.keys())
+    else:
+        covered = set()
+        for cols in file_sorted_cols.values():
+            covered |= (cols & set(target))
+
+    n_covered = len(covered)
+    missing = [c for c in target if c not in covered]
+    ratio = n_covered / n_required if n_required else 0.0
+
+    detail = "; ".join(
+        f"{os.path.basename(f)}:[{','.join(sorted(cols & set(target))) or '无'}]"
+        for f, cols in file_sorted_cols.items()
+    )
+    if n_covered >= n_required:
+        return _ok(
+            f"{n_required} 个字段各由不同文件按 {order} 排序覆盖（{detail}）"
+        )
+    return _partial(
+        ratio,
+        f"仅覆盖 {n_covered}/{n_required} 个排序字段（缺 {','.join(missing)}），"
+        f"要求每字段由不同文件覆盖={require_distinct_files}；明细: {detail}"
+    )

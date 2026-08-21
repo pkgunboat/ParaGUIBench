@@ -57,6 +57,57 @@ def _calc_parallelism(total: int, seq: int) -> str:
     return f"{total / seq:.1f}x"
 
 
+def _evaluator_output(result: Dict[str, Any]) -> Dict[str, Any]:
+    output = result.get("evaluator_output")
+    return output if isinstance(output, dict) else {}
+
+
+def _evaluator_score(result: Dict[str, Any]) -> Any:
+    output = _evaluator_output(result)
+    if "score" in output:
+        return output.get("score")
+    return result.get("score")
+
+
+def _is_evaluator_error(result: Dict[str, Any]) -> bool:
+    output = _evaluator_output(result)
+    status = str(output.get("status") or result.get("status") or "")
+    score = _evaluator_score(result)
+    return status == "evaluator_error" or (
+        isinstance(score, (int, float)) and score < 0
+    )
+
+
+def _task_bucket(result: Dict[str, Any]) -> str:
+    """
+    Mutually exclusive task outcome bucket.
+
+    interrupted takes precedence because those runs did not finish normally.
+    evaluator_error is separate from model fail and is excluded from SR.
+    """
+    if result.get("interrupted", False):
+        return "interrupted"
+    if _is_evaluator_error(result):
+        return "eval_error"
+
+    output = _evaluator_output(result)
+    pass_value = result.get("pass") if "pass" in result else output.get("pass")
+    if pass_value is True:
+        return "passed"
+    return "failed"
+
+
+def _display_task_status(result: Dict[str, Any]) -> str:
+    bucket = _task_bucket(result)
+    if bucket == "passed":
+        return "PASS"
+    if bucket == "interrupted":
+        return "INT"
+    if bucket == "eval_error":
+        return "EVALERR"
+    return "FAIL"
+
+
 def _as_int(value: Any) -> int:
     """宽松转换统计字段，空值/非法值按 0 处理。"""
     try:
@@ -175,6 +226,7 @@ def compute_results_summary(
         "pass": summary["passed"],
         "fail": summary["failed"],
         "interrupted": summary["interrupted"],
+        "eval_error": summary["eval_error"],
         "pass_rate": summary["rate"],
         "plan_rounds": summary["plan_rounds"],
         "gui_rounds_total": summary["gui_total"],
@@ -251,9 +303,12 @@ def _compute_pipeline_summary(tasks: List[Dict]) -> Dict[str, Any]:
         汇总字典
     """
     total = len(tasks)
-    passed = sum(1 for t in tasks if t.get("pass", False))
-    interrupted = sum(1 for t in tasks if t.get("interrupted", False))
-    failed = total - passed - interrupted
+    buckets = [_task_bucket(t) for t in tasks]
+    passed = sum(1 for b in buckets if b == "passed")
+    failed = sum(1 for b in buckets if b == "failed")
+    interrupted = sum(1 for b in buckets if b == "interrupted")
+    eval_error = sum(1 for b in buckets if b == "eval_error")
+    scored = passed + failed
 
     sum_plan_rounds = sum(t.get("plan_rounds", 0) for t in tasks)
     sum_gui_total = sum(t.get("gui_rounds_total", 0) for t in tasks)
@@ -269,7 +324,8 @@ def _compute_pipeline_summary(tasks: List[Dict]) -> Dict[str, Any]:
         "passed": passed,
         "failed": failed,
         "interrupted": interrupted,
-        "rate": f"{passed/total*100:.1f}%" if total > 0 else "0.0%",
+        "eval_error": eval_error,
+        "rate": f"{passed/scored*100:.1f}%" if scored > 0 else "0.0%",
         "plan_rounds": sum_plan_rounds,
         "gui_total": sum_gui_total,
         "gui_seq": sum_gui_seq,
@@ -298,12 +354,12 @@ def _generate_markdown(by_pipeline: Dict[str, List[Dict]]) -> str:
     # ── 总表 ──
     lines.append("## 总体统计")
     lines.append("")
-    header = "| Pipeline | Tasks | Pass | Fail | Int. | Rate | Σ Plan Rounds | Σ GUI Steps(Total) | Σ GUI Steps(Seq) | Parallelism | Σ Token(Plan) | Σ Token(GUI) | Σ Token | Σ Cost($) | Σ Time(s) |"
-    sep    = "|----------|-------|------|------|------|------|---------------|--------------------|--------------------|-------------|---------------|--------------|---------|-----------|-----------|"
+    header = "| Pipeline | Tasks | Pass | Fail | Int. | EvalErr | Rate | Σ Plan Rounds | Σ GUI Steps(Total) | Σ GUI Steps(Seq) | Parallelism | Σ Token(Plan) | Σ Token(GUI) | Σ Token | Σ Cost($) | Σ Time(s) |"
+    sep    = "|----------|-------|------|------|------|---------|------|---------------|--------------------|--------------------|-------------|---------------|--------------|---------|-----------|-----------|"
     lines.append(header)
     lines.append(sep)
 
-    grand = {"total": 0, "passed": 0, "failed": 0, "interrupted": 0,
+    grand = {"total": 0, "passed": 0, "failed": 0, "interrupted": 0, "eval_error": 0,
              "plan_rounds": 0, "gui_total": 0, "gui_seq": 0,
              "token_plan": 0, "token_gui": 0, "token_total": 0,
              "cost_usd": 0.0, "time_sec": 0.0}
@@ -312,6 +368,7 @@ def _generate_markdown(by_pipeline: Dict[str, List[Dict]]) -> str:
         s = _compute_pipeline_summary(by_pipeline[pipeline_name])
         lines.append(
             f"| {pipeline_name} | {s['total']} | {s['passed']} | {s['failed']} | {s['interrupted']} "
+            f"| {s['eval_error']} "
             f"| {s['rate']} | {s['plan_rounds']} | {s['gui_total']} | {s['gui_seq']} "
             f"| {s['parallelism']} | {s['token_plan']} | {s['token_gui']} | {s['token_total']} "
             f"| {s['cost_usd']} | {s['time_sec']} |"
@@ -321,11 +378,13 @@ def _generate_markdown(by_pipeline: Dict[str, List[Dict]]) -> str:
                 grand[k] += s[k] if isinstance(s[k], (int, float)) else 0
 
     # 汇总行
-    grand_rate = f"{grand['passed']/grand['total']*100:.1f}%" if grand["total"] > 0 else "0.0%"
+    grand_scored = grand["total"] - grand["interrupted"] - grand["eval_error"]
+    grand_rate = f"{grand['passed']/grand_scored*100:.1f}%" if grand_scored > 0 else "0.0%"
     grand_par = _calc_parallelism(grand["gui_total"], grand["gui_seq"])
     lines.append(
         f"| **Total** | **{grand['total']}** | **{grand['passed']}** | **{grand['failed']}** "
-        f"| **{grand['interrupted']}** | **{grand_rate}** | **{grand['plan_rounds']}** "
+        f"| **{grand['interrupted']}** | **{grand['eval_error']}** | **{grand_rate}** "
+        f"| **{grand['plan_rounds']}** "
         f"| **{grand['gui_total']}** | **{grand['gui_seq']}** | **{grand_par}** "
         f"| **{grand['token_plan']}** | **{grand['token_gui']}** | **{grand['token_total']}** "
         f"| **{round(grand['cost_usd'], 2)}** | **{round(grand['time_sec'], 1)}** |"
@@ -350,8 +409,7 @@ def _generate_markdown(by_pipeline: Dict[str, List[Dict]]) -> str:
                         t.get("gui_rounds_total", 0),
                         t.get("gui_steps_sequential", 0)))
                 elif col_name == "Pass":
-                    row.append("PASS" if t.get("pass", False) else
-                               ("INT" if t.get("interrupted", False) else "FAIL"))
+                    row.append(_display_task_status(t))
                 elif col_key:
                     val = t.get(col_key, "-")
                     if isinstance(val, float):
@@ -380,7 +438,7 @@ def _generate_excel(by_pipeline: Dict[str, List[Dict]], xlsx_path: str):
     ws = wb.active
     ws.title = "Summary"
 
-    summary_headers = ["Pipeline", "Tasks", "Pass", "Fail", "Interrupted", "Rate",
+    summary_headers = ["Pipeline", "Tasks", "Pass", "Fail", "Interrupted", "EvalErr", "Rate",
                        "Σ Plan Rounds", "Σ GUI Steps(Total)", "Σ GUI Steps(Seq)",
                        "Parallelism", "Σ Token(Plan)", "Σ Token(GUI)", "Σ Token",
                        "Σ Cost($)", "Σ Time(s)"]
@@ -397,7 +455,7 @@ def _generate_excel(by_pipeline: Dict[str, List[Dict]], xlsx_path: str):
     for pipeline_name in sorted(by_pipeline.keys()):
         s = _compute_pipeline_summary(by_pipeline[pipeline_name])
         values = [pipeline_name, s["total"], s["passed"], s["failed"], s["interrupted"],
-                  s["rate"], s["plan_rounds"], s["gui_total"], s["gui_seq"],
+                  s["eval_error"], s["rate"], s["plan_rounds"], s["gui_total"], s["gui_seq"],
                   s["parallelism"], s["token_plan"], s["token_gui"], s["token_total"],
                   s["cost_usd"], s["time_sec"]]
         for col, v in enumerate(values, 1):
@@ -422,7 +480,7 @@ def _generate_excel(by_pipeline: Dict[str, List[Dict]], xlsx_path: str):
                         t.get("gui_rounds_total", 0),
                         t.get("gui_steps_sequential", 0))
                 elif col_name == "Pass":
-                    val = "PASS" if t.get("pass") else ("INT" if t.get("interrupted") else "FAIL")
+                    val = _display_task_status(t)
                 elif col_key:
                     val = t.get(col_key, "")
                 else:

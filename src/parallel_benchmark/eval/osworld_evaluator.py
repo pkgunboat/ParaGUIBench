@@ -40,6 +40,9 @@ import requests
 from parallel_benchmark.eval.osworld_scripts.adapter import adapt_result_path, PATH_MAPPING
 
 
+_AGENT_RESULT_MISSING = object()
+
+
 def _map_paths_in_string(text: str) -> str:
     """
     将字符串中所有 OSWorld 原生路径前缀替换为共享目录路径。
@@ -722,7 +725,7 @@ def _get_result(
     shared_host_dir: str,
     work_dir: str,
     log: logging.Logger,
-) -> Tuple[Optional[str], str]:
+) -> Tuple[Any, str]:
     """
     获取评测结果数据。
 
@@ -743,12 +746,61 @@ def _get_result(
         path = _get_result_file(result_config, vm_ip, shared_host_dir, work_dir, log)
         return path, "vm_file"
 
+    if rtype == "background_image_in_slide":
+        path = _get_result_background_image(
+            result_config, vm_ip, shared_host_dir, work_dir, log,
+        )
+        if path is _AGENT_RESULT_MISSING:
+            return path, "missing_agent_result"
+        return path, "vm_file"
+
     if rtype == "vm_command_line":
         output = _get_result_command(result_config, vm_ip, vm_port, log)
         return output, "vm_command_line"
 
     log.error("未知 result type: %s", rtype)
     return None, rtype
+
+
+def _normalize_multi_files(cfg: Dict[str, Any]) -> Tuple[List[str], List[str], set]:
+    """
+    将 result/expected 配置的 path/dest 归一化为并行列表，兼容 OSWorld multi 语义。
+
+    对齐 OSWorld getters.file.get_vm_file / get_cloud_file 的行为：
+      - multi=False（或缺省）：path/dest 为单个字符串，包成单元素列表；
+      - multi=True：path/dest 本身即为等长列表，列表中的所有文件都要下载到同一目录，
+        使得诸如 sheet_print 依赖的 "<xlsx_stem>-Sheet1.csv" 旁挂文件与主 xlsx 同目录。
+
+    输入:
+        cfg: result 或 expected 配置字典（含 path / dest / multi / gives）
+    输出:
+        (paths, dests, gives)
+        - paths: 原始路径/URL 列表
+        - dests: 与 paths 等长的本地文件名列表（缺省时由各自 path 的 basename 推导）
+        - gives: 需要返回给评测函数的下标集合（缺省 {0}，即主文件）
+    """
+    raw_path = cfg.get("path", "")
+    raw_dest = cfg.get("dest", None)
+
+    if cfg.get("multi", False) or isinstance(raw_path, list):
+        paths: List[str] = list(raw_path) if isinstance(raw_path, list) else [raw_path]
+        if isinstance(raw_dest, list):
+            dests: List[str] = list(raw_dest)
+        elif raw_dest is not None:
+            dests = [raw_dest]
+        else:
+            dests = [os.path.basename(str(p).split("?")[0]) for p in paths]
+    else:
+        paths = [raw_path]
+        dests = [raw_dest if raw_dest is not None
+                 else os.path.basename(str(raw_path).split("?")[0])]
+
+    # 补齐 dest（长度不足时用 path 的 basename 兜底），保证与 paths 等长
+    while len(dests) < len(paths):
+        dests.append(os.path.basename(str(paths[len(dests)]).split("?")[0]))
+
+    gives = set(cfg.get("gives", [0]))
+    return paths, dests, gives
 
 
 def _get_result_file(
@@ -765,21 +817,144 @@ def _get_result_file(
       OSWorld 原始路径 → adapt_result_path → /home/user/shared/...
       → _vm_path_to_host_path → 宿主机路径
       → SSH 下载到本地 work_dir
+
+    支持 multi 语义：当 path/dest 为列表（multi=True）时，把列表中的所有文件都下载到
+    同一个 work_dir/result 目录（旁挂 CSV 与主 xlsx 同目录），并按 gives（默认 {0}）返回主文件。
     """
-    original_path = cfg.get("path", "")
-    dest_name = cfg.get("dest", os.path.basename(original_path))
+    paths, dests, gives = _normalize_multi_files(cfg)
+    result_dir = os.path.join(work_dir, "result")
 
-    vm_path = adapt_result_path(original_path)
-    host_path = _vm_path_to_host_path(vm_path, shared_host_dir)
-    local_path = os.path.join(work_dir, "result", dest_name)
+    log.info("获取结果文件 (%d 个):", len(paths))
+    given: List[Optional[str]] = []
+    for i, (original_path, dest_name) in enumerate(zip(paths, dests)):
+        vm_path = adapt_result_path(original_path)
+        host_path = _vm_path_to_host_path(vm_path, shared_host_dir)
+        local_path = os.path.join(result_dir, dest_name)
 
-    log.info("获取结果文件:")
-    log.info("  原始路径: %s", original_path)
-    log.info("  宿主机路径: %s", host_path)
+        log.info("  [%d] 原始路径: %s", i, original_path)
+        log.info("      宿主机路径: %s", host_path)
 
-    if _ssh_download_file(vm_ip, host_path, local_path, log):
-        return local_path
-    return None
+        ok = _ssh_download_file(vm_ip, host_path, local_path, log)
+        if i in gives:
+            given.append(local_path if ok else None)
+
+    if not given:
+        return None
+    # 主文件下载失败则视为获取结果失败
+    if given[0] is None:
+        return None
+    # gives 只含单个下标（含默认 {0}）时返回字符串，兼容 compare_table 等按 str 路径消费的评测函数
+    return given[0] if len(given) == 1 else given
+
+
+def _extract_slide_background_image(
+    pptx_local_path: str,
+    slide_index: int,
+    dest_path: str,
+    log: logging.Logger,
+) -> Optional[str]:
+    """
+    从本地已下载的 .pptx 中解压出指定页幻灯片的背景图片，写入 dest_path。
+
+    移植自 desktop_env/evaluators/getters/impress.py:get_background_image_in_slide，
+    但改为直接对本地文件操作（本评测走 SSH+共享目录，没有 OSWorld env/get_vm_file）。
+    """
+    import xml.etree.ElementTree as ET
+    import zipfile
+
+    bg_tag = "{http://schemas.openxmlformats.org/presentationml/2006/main}bgPr"
+    image_tag = "{http://schemas.openxmlformats.org/drawingml/2006/main}blip"
+    embed_attr = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed"
+    rels_ns = {"r": "http://schemas.openxmlformats.org/package/2006/relationships"}
+
+    try:
+        with zipfile.ZipFile(pptx_local_path, "r") as myzip:
+            names = myzip.namelist()
+            slide_xml = "ppt/slides/slide{}.xml".format(slide_index + 1)
+            if slide_xml not in names:
+                log.warning("背景图片提取: 幻灯片 %s 不存在于 pptx", slide_xml)
+                return None
+
+            image_id = None
+            with myzip.open(slide_xml) as f:
+                root = ET.parse(f).getroot()
+                for child in root.iter(bg_tag):
+                    for element in child.iter(image_tag):
+                        if embed_attr in element.attrib:
+                            image_id = element.attrib[embed_attr]
+                            break
+                    if image_id is not None:
+                        break
+            if image_id is None:
+                log.warning("背景图片提取: 幻灯片 %d 未设置背景图片(bgPr blip)", slide_index)
+                return None
+
+            rels_xml = "ppt/slides/_rels/slide{}.xml.rels".format(slide_index + 1)
+            if rels_xml not in names:
+                log.warning("背景图片提取: 缺少关系文件 %s", rels_xml)
+                return None
+
+            image_zip_path = None
+            with myzip.open(rels_xml) as f:
+                root = ET.parse(f).getroot()
+                for rel in root.findall("r:Relationship", rels_ns):
+                    if "image" in rel.attrib.get("Type", "") and rel.attrib.get("Id") == image_id:
+                        target = rel.attrib.get("Target", "")
+                        if target.startswith(".."):
+                            image_zip_path = os.path.normpath(
+                                os.path.join("ppt/slides", target)
+                            ).replace("\\", "/")
+                        else:
+                            log.warning("背景图片提取: 非 zip 内相对路径 Target=%s，跳过", target)
+                        break
+
+            if not image_zip_path or image_zip_path not in names:
+                log.warning(
+                    "背景图片提取: 未能定位 zip 内图片 (id=%s, path=%s)",
+                    image_id, image_zip_path,
+                )
+                return None
+
+            os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+            with myzip.open(image_zip_path) as src, open(dest_path, "wb") as dst:
+                shutil.copyfileobj(src, dst)
+            log.info(
+                "背景图片提取成功: slide=%d, %s -> %s",
+                slide_index, image_zip_path, dest_path,
+            )
+            return dest_path
+    except Exception as exc:
+        log.error("背景图片提取异常: %s", exc, exc_info=True)
+        return None
+
+
+def _get_result_background_image(
+    cfg: Dict[str, Any],
+    vm_ip: str,
+    shared_host_dir: str,
+    work_dir: str,
+    log: logging.Logger,
+) -> Any:
+    """
+    background_image_in_slide 类型：下载 pptx 后提取指定页背景图片。
+    """
+    ppt_file_path = cfg.get("ppt_file_path", "")
+    slide_index = int(cfg.get("slide_index", 0))
+    dest_name = cfg.get("dest") or "background_image.png"
+
+    pptx_local = _get_result_file(
+        {"path": ppt_file_path, "dest": os.path.basename(ppt_file_path)},
+        vm_ip, shared_host_dir, work_dir, log,
+    )
+    if not pptx_local:
+        log.error("background_image_in_slide: 下载 pptx 失败 (%s)", ppt_file_path)
+        return None
+
+    dest_path = os.path.join(work_dir, "result", dest_name)
+    extracted = _extract_slide_background_image(pptx_local, slide_index, dest_path, log)
+    if extracted is None:
+        return _AGENT_RESULT_MISSING
+    return extracted
 
 
 def _get_result_command(
@@ -871,12 +1046,22 @@ def _get_expected(
     etype = expected_config.get("type", "")
 
     if etype == "cloud_file":
-        url = expected_config.get("path", "")
-        dest = expected_config.get("dest", os.path.basename(url.split("?")[0]))
-        local_path = os.path.join(work_dir, "expected", dest)
-        if _download_url_to_local(url, local_path, log):
-            return local_path, "cloud_file"
-        return None, "cloud_file"
+        paths, dests, gives = _normalize_multi_files(expected_config)
+        expected_dir = os.path.join(work_dir, "expected")
+
+        log.info("获取期望文件 (%d 个):", len(paths))
+        given: List[Optional[str]] = []
+        for i, (url, dest) in enumerate(zip(paths, dests)):
+            local_path = os.path.join(expected_dir, dest)
+            log.info("  [%d] %s", i, url[:120])
+            ok = _download_url_to_local(url, local_path, log)
+            if i in gives:
+                given.append(local_path if ok else None)
+
+        if not given or given[0] is None:
+            return None, "cloud_file"
+        primary = given[0] if len(given) == 1 else given
+        return primary, "cloud_file"
 
     if etype == "rule":
         return expected_config.get("rules", {}), "rule"
@@ -903,7 +1088,10 @@ def _load_eval_funcs() -> Dict[str, Any]:
     if _cached_eval_funcs is not None:
         return _cached_eval_funcs
 
-    from desktop_env.evaluators.metrics.general import check_direct_json_object
+    from desktop_env.evaluators.metrics.general import (
+        check_direct_json_object,
+        check_include_exclude,
+    )
     from desktop_env.evaluators.metrics.table import (
         compare_table,
         compare_conference_city_in_order,
@@ -924,6 +1112,7 @@ def _load_eval_funcs() -> Dict[str, Any]:
 
     _cached_eval_funcs = {
         "check_direct_json_object": check_direct_json_object,
+        "check_include_exclude": check_include_exclude,
         "compare_table": compare_table,
         "compare_conference_city_in_order": compare_conference_city_in_order,
         "compare_references": compare_references,
@@ -979,8 +1168,8 @@ def _dispatch_eval(
     log.info("调用评测函数: %s", func_name)
 
     try:
-        # check_direct_json_object 签名特殊：(result_json_str, rules_dict)
-        if func_name == "check_direct_json_object":
+        # check_direct_json_object / check_include_exclude 签名特殊：(result, rules_dict)
+        if func_name in {"check_direct_json_object", "check_include_exclude"}:
             return float(func(result_data, expected_data))
 
         # 部分 OSWorld 原生函数不接受 **options
@@ -1060,8 +1249,10 @@ def evaluate_osworld_task(
 
     log.info("=" * 50)
     log.info("OSWorld 评测开始: func=%s", func_name)
-    log.info("  result_type=%s, expected_type=%s",
-             result_cfg.get("type"), expected_cfg.get("type"))
+    if isinstance(result_cfg, dict):
+        log.info("  result_type=%s, expected_type=%s",
+                 result_cfg.get("type"),
+                 expected_cfg.get("type") if isinstance(expected_cfg, dict) else None)
 
     # 创建临时工作目录
     work_dir = tempfile.mkdtemp(prefix="osw_eval_")
@@ -1073,40 +1264,91 @@ def evaluate_osworld_task(
             log.info("执行 postconfig (%d 步)...", len(postconfig))
             _run_postconfig(postconfig, vm_ip, vm_port, shared_host_dir, log)
 
-        # 3. 获取 result
-        log.info("获取 result...")
-        result_data, _result_type = _get_result(
-            result_cfg, vm_ip, vm_port, shared_host_dir, work_dir, log,
-        )
-        if result_data is None:
-            return {
-                "score": -1.0, "pass": False, "status": "evaluator_error",
-                "reason": "获取评测结果失败", "func": func_name,
-            }
-        saved_result_path = _persist_result_data(
-            result_data, _result_type, save_result_dir, log,
-        )
+        # 归一化为并行列表：func 为 list 时表示多指标合取（全部通过才算 pass），
+        # result / expected 为与 func 等长的并行列表；func 为标量时保持单指标行为。
+        if isinstance(func_name, list):
+            func_names = list(func_name)
+            result_cfgs = result_cfg if isinstance(result_cfg, list) else [result_cfg]
+            expected_cfgs = expected_cfg if isinstance(expected_cfg, list) else [expected_cfg]
+            options_list = options if isinstance(options, list) else [options] * len(func_names)
+            if not (len(func_names) == len(result_cfgs) == len(expected_cfgs)):
+                return {
+                    "score": -1.0,
+                    "pass": False,
+                    "status": "evaluator_error",
+                    "reason": (
+                        "多指标配置长度不一致: "
+                        f"func={len(func_names)} result={len(result_cfgs)} "
+                        f"expected={len(expected_cfgs)}"
+                    ),
+                    "func": func_names,
+                }
+        else:
+            func_names = [func_name]
+            result_cfgs = [result_cfg]
+            expected_cfgs = [expected_cfg]
+            options_list = [options]
 
-        # 4. 获取 expected
-        log.info("获取 expected...")
-        expected_data, _expected_type = _get_expected(expected_cfg, work_dir, log)
-        if expected_data is None:
-            result = {
-                "score": -1.0, "pass": False, "status": "evaluator_error",
-                "reason": "获取期望结果失败", "func": func_name,
-            }
-            if saved_result_path:
-                result["saved_result_path"] = saved_result_path
-            return result
+        # 3~5. 逐指标获取 result / expected 并分发评测，取最小分（合取）
+        sub_scores: List[float] = []
+        missing_result_reasons: List[str] = []
+        for idx, (fn, rcfg, ecfg) in enumerate(
+            zip(func_names, result_cfgs, expected_cfgs)
+        ):
+            opt = options_list[idx] if idx < len(options_list) else {}
 
-        # 5. 分发评测
-        score = _dispatch_eval(func_name, result_data, expected_data, options, log)
-        score_val = float(score) if isinstance(score, (int, float)) else 0.0
+            log.info("[指标 %d/%d] 获取 result... func=%s",
+                     idx + 1, len(func_names), fn)
+            result_data, _result_type = _get_result(
+                rcfg, vm_ip, vm_port, shared_host_dir, work_dir, log,
+            )
+            if result_data is _AGENT_RESULT_MISSING:
+                reason = f"指标 {idx + 1}: 未找到应由 agent 产出的背景图"
+                log.info("%s，按正常失败计 0 分", reason)
+                missing_result_reasons.append(reason)
+                sub_scores.append(0.0)
+                continue
+            if result_data is None:
+                return {
+                    "score": -1.0,
+                    "pass": False,
+                    "status": "evaluator_error",
+                    "reason": f"获取评测结果失败 (指标 {idx + 1}: {fn})",
+                    "func": func_name,
+                }
+            # 仅持久化首个指标的 result 产物（保持既有单指标行为不变）
+            if idx == 0:
+                saved_result_path = _persist_result_data(
+                    result_data, _result_type, save_result_dir, log,
+                )
+
+            log.info("[指标 %d/%d] 获取 expected...", idx + 1, len(func_names))
+            expected_data, _expected_type = _get_expected(ecfg, work_dir, log)
+            if expected_data is None:
+                result = {
+                    "score": -1.0,
+                    "pass": False,
+                    "status": "evaluator_error",
+                    "reason": f"获取期望结果失败 (指标 {idx + 1}: {fn})",
+                    "func": func_name,
+                }
+                if saved_result_path:
+                    result["saved_result_path"] = saved_result_path
+                return result
+
+            sub = _dispatch_eval(fn, result_data, expected_data, opt, log)
+            sub_val = float(sub) if isinstance(sub, (int, float)) else 0.0
+            log.info("[指标 %d/%d] func=%s -> score=%.4f",
+                     idx + 1, len(func_names), fn, sub_val)
+            sub_scores.append(sub_val)
+
+        # 合取：整体分为各子指标最小值，全部为 1.0 才通过
+        score_val = min(sub_scores) if sub_scores else 0.0
         # 严格通过：仅当 score == 1.0 才算 pass（与 operation_evaluator 对齐）
         passed = score_val >= 1.0 - 1e-9
 
-        log.info("OSWorld 评测完成: func=%s, score=%.4f, pass=%s",
-                 func_name, score_val, passed)
+        log.info("OSWorld 评测完成: func=%s, sub_scores=%s, score=%.4f, pass=%s",
+                 func_name, sub_scores, score_val, passed)
 
         result = {
             "score": score_val,
@@ -1115,6 +1357,8 @@ def evaluate_osworld_task(
             "reason": f"OSWorld {func_name}: score={score_val:.4f}/1.00",
             "func": func_name,
         }
+        if missing_result_reasons:
+            result["reason"] += "; " + "; ".join(missing_result_reasons)
         if saved_result_path:
             result["saved_result_path"] = saved_result_path
         return result

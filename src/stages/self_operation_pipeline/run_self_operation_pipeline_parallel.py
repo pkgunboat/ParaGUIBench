@@ -564,6 +564,28 @@ def compare_docx_style_focused(gt_path: str, result_path: str) -> float:
     return compare_docx_comprehensive(gt_path, result_path, weights=weights)
 
 
+def compare_combinationdocs002_ignore_docx_run_format(gt_path: str, result_path: str) -> float:
+    """
+    CombinationDocs-002 corrects data values in Word/PPT using Excel as source.
+
+    The gold Word file stores some corrected values across hand-authored runs.
+    A clean edit with the same visible text can therefore score 0 on the
+    run_format submetric even though run segmentation is not part of the task.
+    Keep text/table/style checks, but remove run-level segmentation from this
+    task's docx comparison. Non-docx files still use the default comparator.
+    """
+    if os.path.splitext(gt_path)[1].lower() != ".docx":
+        return compare_file_comprehensive(gt_path, result_path)
+
+    from desktop_env.evaluators.metrics.comprehensive import compare_docx_comprehensive
+
+    return compare_docx_comprehensive(
+        gt_path,
+        result_path,
+        weights={"text": 0.5, "table": 0.25, "style": 0.25, "run_format": 0.0},
+    )
+
+
 def compare_docx_vowels_red(gt_path: str, result_path: str) -> float:
     """
     Word-007 专用评估：检查所有元音字母是否被标为红色。
@@ -772,6 +794,7 @@ def compare_xlsx_hide_na_focused(gt_path: str, result_path: str) -> float:
 
 # key = task_id, value = callable(gt_path, result_path) -> float
 CUSTOM_FILE_EVALUATORS: Dict[str, Any] = {
+    "Operation-FileOperate-CombinationDocs-002": compare_combinationdocs002_ignore_docx_run_format,
     "Operation-FileOperate-Batchoperationexcel-006": compare_xlsx_negative_profit_red,
     "Operation-FileOperate-Batchoperationppt-001": compare_pptx_first_slide_transition,
     "Operation-FileOperate-BatchoperationWord-001": compare_docx_style_focused,
@@ -781,6 +804,176 @@ CUSTOM_FILE_EVALUATORS: Dict[str, Any] = {
     "Operation-FileOperate-BatchoperationWord-009": compare_docx_double_spacing,
     "Operation-FileOperate-Batchoperationexcel-008": compare_xlsx_hide_na_focused,
 }
+
+
+def _collect_relative_image_paths(directory: str) -> set:
+    """
+    递归收集目录下所有图片文件的「相对路径」（相对 directory，统一用 '/'、小写）。
+
+    用相对路径而非 basename，是因为同一 basename（如 Unknown-1.jpeg）
+    会在多个分类子文件夹中重复出现，只有相对路径能区分「放进了哪个文件夹」。
+
+    输入:
+        directory: 目录路径
+
+    输出:
+        set[str]，形如 {"basketball/unknown.jpeg", ...}；目录不存在返回空集
+    """
+    image_exts = {".jpeg", ".jpg", ".png", ".gif", ".bmp", ".webp", ".tiff"}
+    rel_set: set = set()
+    if not directory or not os.path.isdir(directory):
+        return rel_set
+    for root, _, files in os.walk(directory):
+        for fname in files:
+            if os.path.splitext(fname)[1].lower() not in image_exts:
+                continue
+            rel = os.path.relpath(os.path.join(root, fname), directory)
+            rel_set.add(rel.replace(os.sep, "/").lower())
+    return rel_set
+
+
+_PPT003_CATEGORY_ALIASES = {
+    "basketball": ("basketball", "basketbal", "baskball", "basket"),
+    "soccer": ("soccer", "football", "futbol"),
+    "volleyball": ("volleyball", "volley"),
+    "esport": ("esport", "esports", "e-sport", "e-sports"),
+}
+
+
+def _normalize_ppt003_folder_name(name: str) -> str:
+    return "".join(ch for ch in name.lower() if ch.isalnum())
+
+
+def _ppt003_category_for_relpath(rel_path: str) -> str:
+    """
+    Map a relative image path to the canonical sport category, ignoring source
+    asset-library folders such as images/.
+    """
+    parts = [p for p in rel_path.replace("\\", "/").split("/") if p]
+    if len(parts) < 2:
+        return ""
+
+    for folder in parts[:-1]:
+        normalized = _normalize_ppt003_folder_name(folder)
+        if normalized in {"image", "images", "asset", "assets", "imagelibrary", "sourcelibrary"}:
+            continue
+        for category, aliases in _PPT003_CATEGORY_ALIASES.items():
+            if any(alias in normalized for alias in aliases):
+                return category
+    return ""
+
+
+def _ppt003_categorized_image_keys(rel_paths: set) -> set:
+    """
+    Convert image relative paths to comparable (category, filename) keys.
+    This lets correct move-style answers pass even if they do not preserve the
+    GT's images/ source folder, and tolerates common category-folder aliases.
+    """
+    keys = set()
+    for rel_path in rel_paths:
+        category = _ppt003_category_for_relpath(rel_path)
+        if not category:
+            continue
+        filename = os.path.basename(rel_path.replace("\\", "/"))
+        if filename:
+            keys.add((category, filename))
+    return keys
+
+
+def compare_ppt003_image_categorization(
+    gt_dir: str,
+    result_dir: str,
+    log: logging.Logger,
+) -> Dict[str, Any]:
+    """
+    PPT-003 专用目录级评估：核对「图片是否被分类到正确的运动子文件夹」。
+
+    背景:
+        任务要求把 28 张 Unknown-*.jpeg 按每个 PPT 讲解的运动分门别类，
+        为每类新建文件夹并把图片放进去。GT（answer_files）结构为
+        4 个根 ppt{1..4}.pptx + 每类一个子文件夹（内含分类后的图片）。
+        默认 match_and_compare_files 只比对 .docx/.xlsx/.pptx，会把所有
+        .jpeg 过滤掉，导致「什么都没做」的 run 也拿 mean=1.0（假阳性）。
+
+    评估逻辑:
+        1. 分别收集 GT / result 中图片的「规范化类别 + 文件名」集合；
+           根目录图片与 images/ 源图库视为未分类，不计入。
+        2. 命中 = |GT分类集合 ∩ result分类集合|。
+        3. 对放错/多余的分类图片按数量扣分（上限为 GT 分类总数）。
+        4. score = max(0, (命中 - 扣分) / GT分类总数)。
+
+    输入:
+        gt_dir: GT 目录（HF answer_files 结构）
+        result_dir: Agent 结果目录
+        log: logger
+
+    输出:
+        与 match_and_compare_files 一致的结果字典。
+    """
+    gt_rel = _collect_relative_image_paths(gt_dir)
+    result_rel = _collect_relative_image_paths(result_dir)
+
+    # 只统计真实运动类别下的图片；根目录图片与 images/ 源图库是未整理素材。
+    gt_categorized = _ppt003_categorized_image_keys(gt_rel)
+    result_categorized = _ppt003_categorized_image_keys(result_rel)
+
+    if not gt_categorized:
+        log.error("[ppt-003] GT 中未找到分类到子文件夹的图片，无法评估")
+        return {
+            "score": -1.0, "pass": False, "status": "evaluator_error",
+            "file_scores": {}, "missing_files": [],
+            "gt_file_count": len(gt_rel), "result_file_count": len(result_rel),
+            "reason": "GT 中无分类图片（可能 GT 结构异常）",
+        }
+
+    correct = len(gt_categorized & result_categorized)
+    extra = len(result_categorized - gt_categorized)
+    total_gt = len(gt_categorized)
+    penalty = min(extra, total_gt)
+    score = max(0.0, (correct - penalty) / total_gt)
+
+    missing = sorted(f"{category}/{filename}"
+                     for category, filename in gt_categorized - result_categorized)
+    log.info("[ppt-003] GT分类图片=%d 命中=%d 放错/多余=%d 得分=%.3f",
+             total_gt, correct, extra, score)
+
+    return {
+        "score": score,
+        "pass": score >= 1.0 - 1e-9,
+        "status": "ok",
+        "file_scores": {
+            f"{category}/{filename}": (
+                1.0 if (category, filename) in result_categorized else 0.0
+            )
+            for category, filename in sorted(gt_categorized)
+        },
+        "missing_files": missing,
+        "gt_file_count": total_gt,
+        "result_file_count": len(result_categorized),
+        "reason": (
+            f"图片分类比对：GT {total_gt} 张，命中 {correct} 张，"
+            f"放错/多余 {extra} 张，得分 {score:.2f}/1.00"
+        ),
+    }
+
+
+# key = task_id, value = callable(gt_dir, result_dir, log) -> Dict[str, Any]
+# 目录级自定义评估器：在 match_and_compare_files 的默认「按文件名 + 文档扩展名过滤」
+# 逻辑之前触发，用于「产物是目录结构/非文档文件」的任务（例如按类别归档图片）。
+CUSTOM_DIR_EVALUATORS: Dict[str, Any] = {
+    "Operation-FileOperate-BatchOperationPPT-003": compare_ppt003_image_categorization,
+}
+
+
+def _evaluator_error_result(reason: str, **extra: Any) -> Dict[str, Any]:
+    payload: Dict[str, Any] = {
+        "score": -1.0,
+        "pass": False,
+        "status": "evaluator_error",
+        "reason": reason,
+    }
+    payload.update(extra)
+    return payload
 
 
 # ============================================================
@@ -1375,6 +1568,13 @@ def match_and_compare_files(
     task_id = _task_config.get("task_id", "")
     custom_compare_fn = CUSTOM_FILE_EVALUATORS.get(task_id)
 
+    # 目录级自定义评估器（最高优先级）：整目录比对，绕过 doc_extensions 过滤。
+    # 用于产物为目录结构/非文档文件的任务（如 PPT-003 图片归类）。
+    custom_dir_fn = CUSTOM_DIR_EVALUATORS.get(task_id)
+    if custom_dir_fn is not None:
+        log.info("使用目录级自定义比对: %s", task_id)
+        return custom_dir_fn(gt_dir, result_dir, log)
+
     gt_map = _build_filename_map(gt_dir)
     result_map = _build_filename_map(result_dir)
 
@@ -1529,11 +1729,19 @@ def stage3_evaluate_operation(
             return eval_result
         except Exception as exc:
             log.error("规则化评估器执行失败: %s", exc, exc_info=True)
-            return {"score": 0.0, "pass": False, "reason": f"规则化评估异常: {exc}"}
+            return _evaluator_error_result(f"规则化评估异常: {exc}")
 
     # 路径 1：自定义 evaluator（.py 脚本）
     if evaluator_path and evaluator_path.endswith(".py"):
         log.info("使用自定义 evaluator: %s", evaluator_path)
+        local_result_dir = os.path.join(
+            tempfile.gettempdir(),
+            "operation_result",
+            f"group_{config.group_id}",
+            task_id,
+        )
+        if os.path.exists(local_result_dir):
+            shutil.rmtree(local_result_dir, ignore_errors=True)
         try:
             # load_evaluator 内部会拼接 parallel_benchmark_dir，直接传相对路径
             evaluator_module = load_evaluator(evaluator_path)
@@ -1544,11 +1752,46 @@ def stage3_evaluate_operation(
             )
             summary = extract_execution_summary(execution_record)
             final_answer = summary.get("model_output_answer", "")
-            eval_result = evaluator_module.evaluate(task_path, final_answer)
+
+            result_dir = download_agent_result_from_host(
+                config.shared_host_dir, local_result_dir, config.vm_ip, log,
+            )
+            saved_path = ""
+            if result_dir and save_result_dir:
+                try:
+                    task_save_dir = os.path.join(save_result_dir, task_id)
+                    if os.path.exists(task_save_dir):
+                        shutil.rmtree(task_save_dir, ignore_errors=True)
+                    shutil.copytree(local_result_dir, task_save_dir)
+                    saved_path = task_save_dir
+                except Exception as exc:
+                    log.warning("保存结果文件失败: %s", exc)
+
+            import inspect
+
+            signature = inspect.signature(evaluator_module.evaluate)
+            params = signature.parameters
+            accepts_result_dir = (
+                "result_dir" in params
+                or any(p.kind == inspect.Parameter.VAR_KEYWORD for p in params.values())
+            )
+            if accepts_result_dir:
+                eval_result = evaluator_module.evaluate(
+                    task_path, final_answer, result_dir=result_dir or local_result_dir,
+                )
+            else:
+                eval_result = evaluator_module.evaluate(task_path, final_answer)
+            if saved_path:
+                eval_result["saved_result_path"] = saved_path
             return eval_result
         except Exception as exc:
             log.error("自定义 evaluator 执行失败: %s", exc)
-            return {"score": 0.0, "pass": False, "reason": f"evaluator 异常: {exc}"}
+            return _evaluator_error_result(f"evaluator 异常: {exc}")
+        finally:
+            try:
+                shutil.rmtree(local_result_dir, ignore_errors=True)
+            except Exception:
+                pass
 
     # 路径 2：OSWorld JSON 评测配置
     if evaluator_path and evaluator_path.endswith(".json"):
@@ -1569,7 +1812,7 @@ def stage3_evaluate_operation(
             )
         except Exception as exc:
             log.error("OSWorld 评测执行失败: %s", exc, exc_info=True)
-            return {"score": 0.0, "pass": False, "reason": f"OSWorld 评测异常: {exc}"}
+            return _evaluator_error_result(f"OSWorld 评测异常: {exc}")
 
     # 路径 3：默认文件比对
     log.info("使用默认文件比对评估")
@@ -1578,7 +1821,7 @@ def stage3_evaluate_operation(
     # 注意: HuggingFace 上 GT 按 task_uid 组织，不是 task_id
     task_uid = task_config.get("task_uid", "")
     if not task_uid:
-        return {"score": 0.0, "pass": False, "reason": f"任务缺少 task_uid: {task_id}"}
+        return _evaluator_error_result(f"任务缺少 task_uid: {task_id}")
     gt_dir = download_gt_from_hf(task_uid, gt_cache_dir, log)
 
     # Step B: 下载 Agent 结果到 Mac 本地
@@ -1646,7 +1889,7 @@ def stage3_evaluate_operation(
         eval_result = match_and_compare_files(gt_dir, result_dir, task_config, log)
     except Exception as exc:
         log.error("文件比对评估异常: %s", exc)
-        eval_result = {"score": 0.0, "pass": False, "reason": f"比对异常: {exc}"}
+        eval_result = _evaluator_error_result(f"比对异常: {exc}")
 
     # Step D: 清理临时文件
     try:
@@ -1656,6 +1899,26 @@ def stage3_evaluate_operation(
 
     eval_result["saved_result_path"] = saved_path
     return eval_result
+
+
+def _is_evaluator_error_output(evaluator_output: Any) -> bool:
+    if not isinstance(evaluator_output, dict):
+        return False
+    if str(evaluator_output.get("status") or "") == "evaluator_error":
+        return True
+    score = evaluator_output.get("score")
+    return isinstance(score, (int, float)) and score < 0
+
+
+def _task_outcome_bucket(task_result: Dict[str, Any]) -> str:
+    if task_result.get("interrupted"):
+        return "interrupted"
+    evaluator_output = task_result.get("evaluator_output")
+    if _is_evaluator_error_output(evaluator_output):
+        return "eval_error"
+    if isinstance(evaluator_output, dict) and evaluator_output.get("pass"):
+        return "passed"
+    return "failed"
 
 
 # ============================================================
@@ -2045,11 +2308,11 @@ def run_single_task(
             )
             task_result["evaluator_output"] = eval_result
         except Exception as exc:
-            task_result["interrupted"] = True
-            task_result["interrupt_reason"] = f"stage3_evaluate_exception: {exc}"
             task_result["evaluator_output"] = {
-                "pass": False, "score": 0.0,
-                "error": f"evaluator_exception: {exc}",
+                "pass": False,
+                "score": -1.0,
+                "status": "evaluator_error",
+                "reason": f"evaluator_exception: {exc}",
             }
             log.error("评估失败: %s", exc)
 
@@ -2434,18 +2697,11 @@ def main() -> None:
     log.info("=" * 80)
 
     # 统计汇总
-    passed = sum(
-        1 for r in output_results.values()
-        if r.get("evaluator_output") and r.get("evaluator_output", {}).get("pass")
-    )
-    interrupted = sum(1 for r in output_results.values() if r.get("interrupted"))
-    eval_error = sum(
-        1 for r in output_results.values()
-        if (not r.get("interrupted"))
-        and r.get("evaluator_output")
-        and r.get("evaluator_output", {}).get("status") == "evaluator_error"
-    )
-    failed = total_count - passed - interrupted - eval_error
+    buckets = [_task_outcome_bucket(r) for r in output_results.values()]
+    passed = sum(1 for b in buckets if b == "passed")
+    failed = sum(1 for b in buckets if b == "failed")
+    interrupted = sum(1 for b in buckets if b == "interrupted")
+    eval_error = sum(1 for b in buckets if b == "eval_error")
 
     log.info(
         "统计: 通过 %d | 失败 %d | 中断 %d | 评价器错误 %d | 总计 %d",
@@ -2457,9 +2713,10 @@ def main() -> None:
     for uid, res in sorted(output_results.items(), key=lambda x: x[1].get("task_id", "")):
         tid = res.get("task_id", uid[:8])
         ev = res.get("evaluator_output")
-        if res.get("interrupted"):
+        bucket = _task_outcome_bucket(res)
+        if bucket == "interrupted":
             log.info("  %s: INTERRUPTED (%s)", tid, res.get("interrupt_reason", ""))
-        elif ev and ev.get("status") == "evaluator_error":
+        elif bucket == "eval_error":
             log.info("  %s: EVALUATOR_ERROR (%s)", tid, ev.get("reason", ""))
         elif ev:
             log.info("  %s: %s (score=%.2f)", tid,

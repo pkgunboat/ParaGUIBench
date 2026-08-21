@@ -324,8 +324,17 @@ def check_direct_json_object(result, rules) -> float:
                 if isinstance(expected_json.get(key), list):
                     flag = 0
                     expected_value_list = expected_json.get(key)
+                    result_value = result.get(key)
                     for each_expected_value in expected_value_list:
-                        if isinstance(result.get(key), list) and each_expected_value in result.get(key):
+                        if isinstance(result_value, list) and each_expected_value in result_value:
+                            flag = 1
+                            break
+                        # result_not_list: result value is a plain string (e.g. a
+                        # single filename) rather than a list; require an exact
+                        # candidate match to avoid accepting prefix/substring
+                        # collisions such as "kili_wrong.jpg".
+                        if rules.get("result_not_list", False) and isinstance(result_value, str) \
+                                and each_expected_value == result_value:
                             flag = 1
                             break
                     if flag == 0:

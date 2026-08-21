@@ -103,8 +103,7 @@
           "rules": [
             {
               "range": [
-                "A1:A6",
-                "D1:D6"
+                "A1:A6"
               ],
               "type": "exact_match"
             },
@@ -131,8 +130,40 @@
                 "C1:C6"
               ],
               "type": "includes",
+              "normalization": [
+                [
+                  ".0",
+                  ""
+                ]
+              ],
               "trim_leadings": "+ ",
               "ignore_chars": " ()-"
+            },
+            {
+              "range": [
+                "D1:D6"
+              ],
+              "type": "exact_match",
+              "normalization": [
+                [
+                  "https://www.",
+                  ""
+                ],
+                [
+                  "http://www.",
+                  ""
+                ],
+                [
+                  "https://",
+                  ""
+                ],
+                [
+                  "http://",
+                  ""
+                ]
+              ],
+              "trim_trailings": "/",
+              "ignore_case": true
             }
           ]
         }

@@ -657,6 +657,56 @@ def check_highlighted_words_capitalized(file_path: str, params: dict) -> dict:
     return _partial(ratio, f"大写开头率 {ratio:.1%}（{capitalized_count}/{total_highlighted}）")
 
 
+def _run_has_highlight(run, highlight_color: str = "FFFF00") -> bool:
+    color = run.font.highlight_color
+    if not color:
+        return False
+    color_text = str(color).upper()
+    color_value = getattr(color, "value", None)
+    return (
+        highlight_color.upper() in color_text
+        or "YELLOW" in color_text
+        or color_value == 7
+        or color == 7
+    )
+
+
+def check_highlighted_words_bold(file_path: str, params: dict) -> dict:
+    """
+    检查被黄色高亮的文本是否同时加粗。
+
+    用于“highlight ... in yellow bold text”类任务；只检查已经高亮的
+    文本是否满足 bold，避免把未被识别的 gold 实体硬编码到 evaluator。
+    """
+    highlight_color = params.get("highlight_color", "FFFF00")
+    threshold = params.get("threshold", 0.8)
+
+    doc = _load_document(file_path)
+    if doc is None:
+        return _fail(f"无法打开文件: {file_path}")
+
+    total_highlighted = 0
+    bold_highlighted = 0
+    for para in doc.paragraphs:
+        for run in para.runs:
+            if not (run.text or "").strip():
+                continue
+            if not _run_has_highlight(run, highlight_color):
+                continue
+            total_highlighted += 1
+            style_bold = para.style.font.bold if para.style and para.style.font else None
+            if run.font.bold is True or (run.font.bold is None and style_bold is True):
+                bold_highlighted += 1
+
+    if total_highlighted == 0:
+        return _fail("未找到黄色高亮文本")
+
+    ratio = bold_highlighted / total_highlighted
+    if ratio >= threshold:
+        return _ok(f"高亮文本加粗率 {ratio:.1%}（{bold_highlighted}/{total_highlighted}）")
+    return _partial(ratio, f"高亮文本加粗率 {ratio:.1%}（{bold_highlighted}/{total_highlighted}）")
+
+
 def check_misspelled_words_highlighted(file_path: str, params: dict) -> dict:
     """
     检查特定拼写错误的词是否被黄色高亮标记。
@@ -680,27 +730,55 @@ def check_misspelled_words_highlighted(file_path: str, params: dict) -> dict:
     if doc is None:
         return _fail(f"无法打开文件: {file_path}")
 
+    def _is_yellow_highlighted(run) -> bool:
+        color = run.font.highlight_color
+        if not color:
+            return False
+        color_text = str(color).upper()
+        color_value = getattr(color, "value", None)
+        return (
+            highlight_color in color_text
+            or "YELLOW" in color_text
+            or color_value == 7
+            or color == 7
+        )
+
     total = len(expected_highlights)
-    matched = 0
+    matched_words = set()
     details = []
 
     for para in doc.paragraphs:
+        spans = []
+        cursor = 0
         for run in para.runs:
-            text = run.text.lower()
-            if not text:
-                continue
-            for misspelled, doc_key in expected_highlights.items():
-                if misspelled.lower() in text:
-                    if run.font.highlight_color:
-                        hl = str(run.font.highlight_color).upper()
-                        if highlight_color in hl or "YELLOW" in hl or run.font.highlight_color == 7:
-                            matched += 1
-                            details.append(f"'{misspelled}' 在 {doc_key} 中已高亮")
-                        else:
-                            details.append(f"'{misspelled}' 未高亮")
-                    else:
-                        details.append(f"'{misspelled}' 未高亮")
+            text = run.text or ""
+            start = cursor
+            cursor += len(text)
+            spans.append((start, cursor, run))
 
+        paragraph_text = "".join(run.text or "" for run in para.runs).lower()
+        if not paragraph_text:
+            continue
+
+        for misspelled, doc_key in expected_highlights.items():
+            if misspelled in matched_words:
+                continue
+            needle = misspelled.lower()
+            start = paragraph_text.find(needle)
+            while start >= 0:
+                end = start + len(needle)
+                overlapping_runs = [
+                    run for run_start, run_end, run in spans
+                    if run_end > start and run_start < end and (run.text or "")
+                ]
+                if overlapping_runs and all(_is_yellow_highlighted(run) for run in overlapping_runs):
+                    matched_words.add(misspelled)
+                    details.append(f"'{misspelled}' 在 {doc_key} 中已高亮")
+                    break
+                details.append(f"'{misspelled}' 未完整黄色高亮")
+                start = paragraph_text.find(needle, start + 1)
+
+    matched = len(matched_words)
     if matched == total:
         return _ok(f"全部 {total} 个错误词都已黄色高亮")
 
@@ -753,6 +831,97 @@ def check_heading_colors_different(file_path: str, params: dict) -> dict:
     return _partial(ratio, f"{len(unique_colors)} 种颜色 / {len(colors_only)} 个标题")
 
 
+def check_heading_colors_in_palette(file_path: str, params: dict) -> dict:
+    """
+    检查标题颜色是否限定在指定调色板内。
+    """
+    heading_styles = params.get("heading_styles", ["Heading 1", "Heading 2", "Heading 3"])
+    allowed_colors = {str(c).upper().replace("#", "") for c in params.get(
+        "allowed_colors", ["FF0000", "FFFF00", "0000FF", "00FF00"]
+    )}
+    threshold = params.get("threshold", 1.0)
+    tolerance = float(params.get("rgb_tolerance", 60.0))
+
+    doc = _load_document(file_path)
+    if doc is None:
+        return _fail(f"无法打开文件: {file_path}")
+
+    def _parse_rgb(rgb: str):
+        if not rgb:
+            return None
+        if len(rgb) == 8:
+            rgb = rgb[2:]
+        if len(rgb) != 6:
+            return None
+        try:
+            return (int(rgb[0:2], 16), int(rgb[2:4], 16), int(rgb[4:6], 16))
+        except ValueError:
+            return None
+
+    def _color_family(rgb: str) -> Optional[str]:
+        parsed = _parse_rgb(rgb)
+        if parsed is None:
+            return None
+        import colorsys
+        r, g, b = parsed
+        h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+        hue = h * 360
+        if (hue <= 15 or hue >= 345) and s >= 0.55 and v >= 0.5:
+            return "red"
+        if 45 <= hue <= 70 and s >= 0.45 and v >= 0.5:
+            return "yellow"
+        if 200 <= hue <= 260 and s >= 0.45 and v >= 0.35:
+            return "blue"
+        if 80 <= hue <= 165 and s >= 0.35 and v >= 0.3:
+            return "green"
+        return None
+
+    def _rgb_distance(rgb1: str, rgb2: str) -> float:
+        parsed1 = _parse_rgb(rgb1)
+        parsed2 = _parse_rgb(rgb2)
+        if parsed1 is None or parsed2 is None:
+            return float("inf")
+        return sum((a - b) ** 2 for a, b in zip(parsed1, parsed2)) ** 0.5
+
+    def _matches_allowed_color(rgb: str) -> bool:
+        normalized_rgb = rgb[2:] if len(rgb) == 8 else rgb
+        if normalized_rgb in allowed_colors:
+            return True
+        if any(_rgb_distance(normalized_rgb, allowed) <= tolerance for allowed in allowed_colors):
+            return True
+        family = _color_family(normalized_rgb)
+        return family is not None and family in allowed_families
+
+    allowed_families = {
+        family for color in allowed_colors
+        if (family := _color_family(color))
+    }
+
+    total = 0
+    matched = 0
+    details = []
+    for para in doc.paragraphs:
+        if not (para.style and para.style.name in heading_styles):
+            continue
+        for run in para.runs:
+            if not run.text.strip():
+                continue
+            total += 1
+            rgb = str(run.font.color.rgb).upper() if run.font.color and run.font.color.rgb else ""
+            normalized_rgb = rgb[2:] if len(rgb) == 8 else rgb
+            if _matches_allowed_color(rgb):
+                matched += 1
+            else:
+                details.append(f"{run.text[:20]}={normalized_rgb or '无颜色'}")
+
+    if total == 0:
+        return _fail("未找到可检查颜色的标题文本")
+    ratio = matched / total
+    if ratio >= threshold:
+        return _ok(f"标题颜色调色板匹配率 {ratio:.1%}（{matched}/{total}）")
+    return _partial(ratio, f"标题颜色调色板匹配率 {ratio:.1%}，不匹配: {', '.join(details[:5])}")
+
+
 def check_image_name_matches_doc(file_path: str, params: dict) -> dict:
     """
     检查文档中插入的图片名和文档名是否一致。
@@ -795,6 +964,40 @@ def check_image_name_matches_doc(file_path: str, params: dict) -> dict:
         return _ok(f"图片名匹配率 {ratio:.1%}（{matched_images}/{total_images}）")
 
     return _partial(ratio, f"匹配率 {ratio:.1%}（{matched_images}/{total_images}）")
+
+
+def check_docx_image_width(file_path: str, params: dict) -> dict:
+    """
+    检查文档中内联图片宽度是否接近期望厘米数。
+    """
+    width_cm = float(params.get("width_cm", 5.0))
+    tolerance_cm = float(params.get("tolerance_cm", 0.15))
+    threshold = params.get("threshold", 1.0)
+    expected_width = Cm(width_cm)
+    tolerance = Cm(tolerance_cm)
+
+    doc = _load_document(file_path)
+    if doc is None:
+        return _fail(f"无法打开文件: {file_path}")
+
+    total = len(doc.inline_shapes)
+    if total == 0:
+        return _fail("文档中无内联图片")
+
+    matched = 0
+    details = []
+    for idx, shape in enumerate(doc.inline_shapes, 1):
+        actual = shape.width
+        if abs(actual - expected_width) <= tolerance:
+            matched += 1
+        else:
+            actual_cm = actual / Cm(1)
+            details.append(f"图{idx}: {actual_cm:.2f}cm")
+
+    ratio = matched / total
+    if ratio >= threshold:
+        return _ok(f"图片宽度匹配率 {ratio:.1%}（{matched}/{total}），期望 {width_cm:g}cm")
+    return _partial(ratio, f"图片宽度匹配率 {ratio:.1%}，不匹配: {', '.join(details[:5])}")
 
 
 def check_docx_word_count(file_path: str, params: dict) -> dict:
@@ -929,3 +1132,43 @@ def check_docx_has_hyperlink(file_path: str, params: dict) -> dict:
         return _ok(f"文档包含 {link_count} 个超链接")
 
     return _partial(ratio, f"仅 {link_count} 个超链接")
+
+
+def check_docx_hyperlink_targets(file_path: str, params: dict) -> dict:
+    """
+    检查 Word 超链接目标是否指向指定文件类型。
+    """
+    expected_extensions = [
+        ext.lower() if str(ext).startswith(".") else f".{str(ext).lower()}"
+        for ext in params.get("expected_extensions", [".pptx", ".ppt"])
+    ]
+    min_links = int(params.get("min_links", 1))
+
+    doc = _load_document(file_path)
+    if doc is None:
+        return _fail(f"无法打开文件: {file_path}")
+
+    namespaces = {
+        "w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+        "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    }
+    targets = []
+    for hyperlink in doc.element.body.findall(".//w:hyperlink", namespaces):
+        rid = hyperlink.get(f"{{{namespaces['r']}}}id")
+        if rid and rid in doc.part.rels:
+            rel = doc.part.rels[rid]
+            targets.append(str(rel.target_ref))
+
+    if not targets:
+        return _fail("文档中不存在可解析目标的超链接")
+
+    matched = [
+        target for target in targets
+        if any(ext in target.lower() for ext in expected_extensions)
+    ]
+    if len(matched) >= min_links:
+        return _ok(f"{len(matched)}/{len(targets)} 个超链接目标指向 {expected_extensions}")
+    return _partial(
+        len(matched) / max(min_links, len(targets)),
+        f"仅 {len(matched)} 个超链接目标指向 {expected_extensions}: {targets[:5]}",
+    )

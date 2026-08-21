@@ -107,24 +107,23 @@ from webmall_eval_assets.bookmark_utils import (  # noqa: E402
 # 常量
 # ============================================================
 
-TASKS_LIST_DIR = os.path.join(parallel_benchmark_dir, "tasks_list")
+TASKS_LIST_DIR = os.path.join(parallel_benchmark_dir, "tasks")
 
-# 覆盖的任务 ID 列表（Webnavigate-001~011 + settings-001~003）
+# 覆盖的任务 ID 列表（WebNavigate-001~011 + Settings-001~003）
 DEFAULT_TASK_IDS = [
-    "Operation-WebOperate-Webnavigate-001",
-    "Operation-WebOperate-Webnavigate-002",
-    "Operation-WebOperate-Webnavigate-003",
-    "Operation-WebOperate-Webnavigate-004",
-    "Operation-WebOperate-Webnavigate-005",
-    "Operation-WebOperate-Webnavigate-006",
-    "Operation-WebOperate-Webnavigate-007",
-    "Operation-WebOperate-Webnavigate-008",
-    "Operation-WebOperate-Webnavigate-009",
-    "Operation-WebOperate-Webnavigate-010",
-    "Operation-WebOperate-Webnavigate-011",
-    "Operation-WebOperate-settings-001",
-    "Operation-WebOperate-settings-002",
-    "Operation-WebOperate-settings-003",
+    "Operation-WebOperate-WebNavigate-001",
+    "Operation-WebOperate-WebNavigate-002",
+    "Operation-WebOperate-WebNavigate-003",
+    "Operation-WebOperate-WebNavigate-004",
+    "Operation-WebOperate-WebNavigate-005",
+    "Operation-WebOperate-WebNavigate-007",
+    "Operation-WebOperate-WebNavigate-008",
+    "Operation-WebOperate-WebNavigate-009",
+    "Operation-WebOperate-WebNavigate-010",
+    "Operation-WebOperate-WebNavigate-011",
+    "Operation-WebOperate-Settings-001",
+    "Operation-WebOperate-Settings-002",
+    "Operation-WebOperate-Settings-003",
 ]
 
 OUTPUT_JSON_PATH = os.path.join(
@@ -141,6 +140,53 @@ _active_groups_lock = threading.Lock()
 # ============================================================
 # 任务扫描
 # ============================================================
+
+def _load_task_id_mapping(tasks_dir: str) -> Dict[str, str]:
+    mapping_path = os.path.join(tasks_dir, "id_mapping.json")
+    if not os.path.isfile(mapping_path):
+        return {}
+    try:
+        with open(mapping_path, "r", encoding="utf-8") as file_obj:
+            data = json.load(file_obj)
+    except Exception:
+        return {}
+    return {
+        str(key): str(value)
+        for key, value in data.items()
+        if isinstance(key, str) and isinstance(value, str)
+    }
+
+
+def _task_filename_index(tasks_dir: str) -> Dict[str, str]:
+    try:
+        filenames = os.listdir(tasks_dir)
+    except OSError:
+        return {}
+    return {
+        filename[:-5].lower(): filename[:-5]
+        for filename in filenames
+        if filename.endswith(".json") and filename != "id_mapping.json"
+    }
+
+
+def _resolve_task_id_case(tasks_dir: str, task_id: str) -> str:
+    """
+    Resolve historical Webnavigate/settings spelling to canonical task_id.
+
+    Linux filesystems are case-sensitive, so path probing must not rely on
+    macOS' case-insensitive behavior.
+    """
+    task_id = task_id.strip()
+    if os.path.exists(os.path.join(tasks_dir, f"{task_id}.json")):
+        return task_id
+
+    mapped = _load_task_id_mapping(tasks_dir).get(task_id)
+    if mapped and os.path.exists(os.path.join(tasks_dir, f"{mapped}.json")):
+        return mapped
+
+    filename_index = _task_filename_index(tasks_dir)
+    return filename_index.get(task_id.lower(), task_id)
+
 
 def scan_webnavigate_tasks(
     tasks_dir: str,
@@ -159,13 +205,14 @@ def scan_webnavigate_tasks(
     results = []
 
     for tid in target_ids:
-        path = os.path.join(tasks_dir, f"{tid}.json")
+        resolved_tid = _resolve_task_id_case(tasks_dir, tid)
+        path = os.path.join(tasks_dir, f"{resolved_tid}.json")
         if not os.path.exists(path):
             logging.getLogger("webnavigate").warning("任务文件不存在: %s", path)
             continue
         with open(path, "r", encoding="utf-8") as f:
             config = json.load(f)
-        results.append((tid, path, config))
+        results.append((config.get("task_id", resolved_tid), path, config))
 
     return results
 
@@ -1486,8 +1533,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--task-ids",
         type=str, default="",
-        help="指定任务 ID 列表（逗号分隔，如 Webnavigate-001,settings-002）。"
-             "会自动补全为完整 task_id 格式。为空则使用全部 9 个默认任务。",
+        help="指定任务 ID 列表（逗号分隔，如 WebNavigate-001,Settings-002）。"
+             "会自动补全为完整 task_id 格式。为空则使用默认任务列表。",
     )
     parser.add_argument(
         "--task-list-file",
@@ -1514,17 +1561,21 @@ def _expand_task_id(short_id: str) -> str:
     将简短的任务 ID 扩展为完整格式。
 
     输入:
-        short_id: 如 "Webnavigate-001" 或 "settings-002"
+        short_id: 如 "WebNavigate-001" 或 "Settings-002"
     输出:
-        完整 task_id: 如 "Operation-WebOperate-Webnavigate-001"
+        完整 task_id: 如 "Operation-WebOperate-WebNavigate-001"
     """
     short_id = short_id.strip()
     if short_id.startswith("Operation-"):
         return short_id
     if short_id.lower().startswith("webnavigate"):
-        return f"Operation-WebOperate-{short_id}"
+        suffix = short_id.split("-", 1)[1] if "-" in short_id else short_id[len("webnavigate"):]
+        suffix = suffix.lstrip("-")
+        return f"Operation-WebOperate-WebNavigate-{suffix}"
     if short_id.lower().startswith("settings"):
-        return f"Operation-WebOperate-{short_id}"
+        suffix = short_id.split("-", 1)[1] if "-" in short_id else short_id[len("settings"):]
+        suffix = suffix.lstrip("-")
+        return f"Operation-WebOperate-Settings-{suffix}"
     return short_id
 
 

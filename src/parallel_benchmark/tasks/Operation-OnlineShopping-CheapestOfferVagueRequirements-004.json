@@ -9,8 +9,10 @@
     "evaluator_type": "QuestionAnswering",
     "answer": "http://10.1.110.114:9083/product/asrock-b550m-phantom-gaming-4-amd-b550-am4-micro-atx-4-ddr4-hdmi-dp-xfire-pcie4-m-2###http://10.1.110.114:9083/product/aorus-am4-a520-aorus-elite",
     "evaluator_path": "evaluators/string_url_evaluator.py",
-    "answer_type": "string",
-    "expected_urls": [
+  "answer_type": "string",
+  "skip_eval": true,
+  "skip_eval_reason": "The phrase 'designed for gamers' has no catalog-level decision rule. Live data on 2026-07-14 contains lower-priced AM4 boards marketed under AORUS and TUF Gaming as well as the legacy Phantom Gaming/AORUS candidates, so the cheapest qualifying offer changes with the unstated gaming taxonomy.",
+  "expected_urls": [
         "http://10.1.110.114:9083/product/asrock-b550m-phantom-gaming-4-amd-b550-am4-micro-atx-4-ddr4-hdmi-dp-xfire-pcie4-m-2",
         "http://10.1.110.114:9083/product/aorus-am4-a520-aorus-elite"
     ],

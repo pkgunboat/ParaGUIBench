@@ -34,17 +34,40 @@
     "pdf"
   ],
   "evaluator": {
-    "func": "compare_pdfs",
-    "result": {
-      "type": "vm_file",
-      "path": "/home/user/Desktop/problematic/Invoice # 243729.pdf",
-      "dest": "Invoice # 243729.pdf"
-    },
-    "expected": {
-      "type": "cloud_file",
-      "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/Invoice%20%23%20243729.pdf",
-      "dest": "Invoice # 243729 Gold.pdf"
-    }
+    "func": [
+      "compare_pdfs",
+      "check_include_exclude"
+    ],
+    "result": [
+      {
+        "type": "vm_file",
+        "path": "/home/user/Desktop/problematic/Invoice # 243729.pdf",
+        "dest": "Invoice # 243729.pdf"
+      },
+      {
+        "type": "vm_command_line",
+        "command": "ls -1 '/home/user/Desktop/problematic/'"
+      }
+    ],
+    "expected": [
+      {
+        "type": "cloud_file",
+        "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/Invoice%20%23%20243729.pdf",
+        "dest": "Invoice # 243729 Gold.pdf"
+      },
+      {
+        "type": "rule",
+        "rules": {
+          "include": [
+            "Invoice # 243729.pdf"
+          ],
+          "exclude": [
+            "invoice TII-20220301-90.pdf",
+            "Invoice # GES-20220215-82.pdf"
+          ]
+        }
+      }
+    ]
   },
   "proxy": false,
   "fixed_ip": false,

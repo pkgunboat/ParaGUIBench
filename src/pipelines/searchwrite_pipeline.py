@@ -422,7 +422,12 @@ class SearchWritePipeline(BasePipeline):
                 return operation_evaluate(task_result_dir, task.task_config)
             except Exception as exc:
                 log.error("operation_evaluator 评估失败: %s", exc)
-                return {"score": 0.0, "pass": False, "reason": f"评估异常: {exc}"}
+                return {
+                    "score": -1.0,
+                    "pass": False,
+                    "status": "evaluator_error",
+                    "reason": f"评估异常: {exc}",
+                }
 
         # 路径 1：如果有 evaluator_path 且为 .json，使用 OSWorld 评价器
         evaluator_path = task.task_config.get("evaluator_path", "")
@@ -447,7 +452,12 @@ class SearchWritePipeline(BasePipeline):
                 )
             except Exception as exc:
                 log.error("OSWorld 评测执行失败: %s", exc, exc_info=True)
-                return {"score": 0.0, "pass": False, "reason": f"OSWorld 评测异常: {exc}"}
+                return {
+                    "score": -1.0,
+                    "pass": False,
+                    "status": "evaluator_error",
+                    "reason": f"OSWorld 评测异常: {exc}",
+                }
 
         # 路径 2：否则使用原有的 xlsx 评估逻辑（路由到该任务所属实例）
         share_urls = task.extra.get("share_urls", {})

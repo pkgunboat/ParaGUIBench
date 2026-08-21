@@ -37,7 +37,6 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
-from urllib.parse import urlparse as _urlparse
 
 import requests
 
@@ -127,13 +126,22 @@ from webmall_eval_assets.cart_evaluator_from_at import (  # noqa: E402
     create_checkpoints_from_urls,
     detect_vm_all_carts,
     evaluate_all_vms,
+    summarize_cart_evaluation,
 )
 from webmall_eval_assets.checkout_evaluator_from_at import (  # noqa: E402
-    ExpectedCheckout,
+    expected_checkout_from_urls,
     extract_checkout_info,
     extract_checkout_info_with_recovery,
     get_at as get_checkout_at,
+    summarize_checkout_attempts,
     verify_checkout,
+)
+from webmall_eval_assets.webmall_run_contracts import (  # noqa: E402
+    build_evaluator_error,
+    build_task_provenance,
+    classify_webmall_result,
+    partition_skipped_tasks,
+    summarize_webmall_results,
 )
 
 # ============================================================
@@ -1199,43 +1207,16 @@ def stage3_evaluate_parallel(
 
         vm_eval_results = evaluate_all_vms(all_cart_results, checkpoints)
 
-        matched_count = sum(1 for cp in checkpoints if cp.flag)
-        total_expected = len(checkpoints)
-
-        total_unexpected = sum(
-            len(res.unexpected_products) for res in vm_eval_results.values()
-        )
-
-        passed = (
-            (matched_count == total_expected and total_unexpected == 0)
-            if total_expected else False
-        )
-        recall = matched_count / total_expected if total_expected else 0.0
-        total_detected = matched_count + total_unexpected
-        precision = (
-            matched_count / total_detected
-            if total_detected > 0
-            else (1.0 if matched_count == 0 else 0.0)
-        )
-        f1 = (
-            2 * precision * recall / (precision + recall)
-            if (precision + recall) > 0 else 0.0
-        )
-
-        # 归一化 score 到 [0, 1]，与 pipeline_base 的 pass 判定 (score == 1.0) 兼容
-        score = matched_count / total_expected if total_expected > 0 else 0.0
+        summary = summarize_cart_evaluation(checkpoints, vm_eval_results)
 
         eval_result = {
-            "score": score,
-            "matched_count": matched_count,
-            "max_score": total_expected,
-            "passed": passed,
-            "recall": recall,
-            "precision": precision,
-            "f1": f1,
+            **summary,
             "matched_urls": [cp.value for cp in checkpoints if cp.flag],
             "missing_urls": [cp.value for cp in checkpoints if not cp.flag],
-            "detail": f"[cart/AT] 匹配 {matched_count}/{total_expected} 个期望商品",
+            "detail": (
+                f"[cart/AT] 匹配 {summary['matched_count']}/{summary['max_score']} 个期望商品，"
+                f"多余商品 {summary['total_unexpected']} 个"
+            ),
             "evaluation_results": {
                 vm_key: {
                     "score": res.score,
@@ -1252,15 +1233,11 @@ def stage3_evaluate_parallel(
         # checkout 类型：基于 AT 验证订单确认页
         log.info("checkout 任务评测方式：基于 Accessibility Tree 验证订单确认页")
 
-        product_url = expected_urls[0] if expected_urls else ""
-        product_slug = _urlparse(product_url).path.rstrip("/").split("/")[-1]
-        user_details = task_config.get("user_details", {})
-        expected_checkout = ExpectedCheckout(
-            product_slug=product_slug,
-            shop_port=_urlparse(product_url).port or 0,
-            user_details=user_details,
+        expected_checkout = expected_checkout_from_urls(
+            expected_urls,
+            user_details=task_config.get("user_details", {}),
         )
-        log.info("  期望商品 slug: %s", product_slug)
+        log.info("  期望商品 slug: %s", ", ".join(expected_checkout.product_slugs))
 
         port_results = []
         passed_any = False
@@ -1287,6 +1264,9 @@ def stage3_evaluate_parallel(
                 "order_number": co_result.order_number,
                 "billing_info": co_result.billing_info,
                 "product_name": co_result.product_name,
+                "product_names": co_result.product_names,
+                "product_slugs": co_result.product_slugs,
+                "product_checks": co_result.product_checks,
                 "error": co_result.error,
                 "recovery_used": co_result.recovery_used,
                 "recovery_url": co_result.recovery_url,
@@ -1307,6 +1287,9 @@ def stage3_evaluate_parallel(
                 )
                 log.info("  VM:%d -- score=%.1f%% %s", port, pr["score"] * 100, status_str)
 
+        checkout_summary = summarize_checkout_attempts(port_results)
+        passed_any = checkout_summary["passed"]
+        best_score = checkout_summary["best_score"]
         eval_result = {
             "score": 1 if passed_any else 0,
             "max_score": 1,
@@ -1317,6 +1300,9 @@ def stage3_evaluate_parallel(
             "matched_urls": expected_urls if passed_any else [],
             "missing_urls": [] if passed_any else expected_urls,
             "detail": f"[checkout/AT] {'通过' if passed_any else '未通过'} (best_score={best_score:.1%})",
+            "valid_order_count": checkout_summary["valid_order_count"],
+            "completed_order_count": checkout_summary["completed_order_count"],
+            "unexpected_order_count": checkout_summary["unexpected_order_count"],
             "port_results": port_results,
         }
 
@@ -1409,6 +1395,7 @@ def run_single_webmall_task(
     expected_answer = task_config.get("answer", "")
 
     task_result: Dict[str, Any] = {
+        **build_task_provenance(task_config),
         "task_uid": task_uid,
         "task_tag": task_config.get("task_tag", ""),
         "answer_type": task_config.get("answer_type", ""),
@@ -1562,12 +1549,9 @@ def run_single_webmall_task(
             eval_result = stage3_evaluate_parallel(task_config, result, config, log)
             task_result["evaluator_output"] = eval_result
         except Exception as exc:
-            task_result["interrupted"] = True
-            task_result["interrupt_reason"] = f"stage3_evaluate_exception: {exc}"
-            task_result["evaluator_output"] = {
-                "pass": False, "score": 0.0,
-                "error": f"evaluator_exception: {exc}",
-            }
+            error_reason = f"evaluator_exception: {exc}"
+            task_result["evaluator_output"] = build_evaluator_error(error_reason)
+            task_result["run_status"] = "EVALUATOR_ERROR"
             log.error("评估失败: %s", exc)
 
         log.info("任务 %s 执行完成", task_uid[:8])
@@ -1762,7 +1746,8 @@ def main() -> None:
         log.info("[ablation] 环境变量覆盖 gui_agent=%s", _ablation_gui_agent)
 
     # conda 环境检查
-    required_env = os.environ.get("REQUIRED_CONDA_ENV", "parallelbenchmark")
+    # 不默认激活旧 parallelbenchmark 环境；仅对显式配置的项目环境校验。
+    required_env = os.environ.get("REQUIRED_CONDA_ENV", "")
     strict_check = os.environ.get("REQUIRED_CONDA_ENV_STRICT", "1") == "1"
     ensure_conda_env(required_env, strict=strict_check)
 
@@ -1788,11 +1773,6 @@ def main() -> None:
             args.gui_max_rounds, args.gui_timeout, args.vms_per_task,
         )
     log.info("=" * 80)
-
-    # 检查商店可达性（仅一次，所有任务共享 4 个商店实例）
-    if not check_webmall_shops():
-        log.error("部分 WebMall 商店不可达，请检查服务状态后再运行")
-        sys.exit(1)
 
     # 加载任务
     # 优先级：--all > --task-list-file > --task-uids > DEFAULT_TASK_UIDS
@@ -1827,6 +1807,39 @@ def main() -> None:
         log.warning("未找到 WebMall 任务，退出")
         return
 
+    # 在创建 MemoryGuard、容器组、心跳或 worker future 前完成隔离分流。
+    # SKIP 结果直接进入输出，且不触发商店探测或任何 VM 资源。
+    total_count = len(task_items)
+    task_items, skipped_results = partition_skipped_tasks(task_items)
+    output_results: Dict[str, Any] = dict(skipped_results)
+    results_lock = threading.Lock()
+    output_json_path = os.path.abspath(
+        args.output_json_path if args.output_json_path else OUTPUT_JSON_PATH
+    )
+    os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
+    for task_uid, skipped_result in skipped_results.items():
+        log.info(
+            "任务预检 SKIP | UID: %s | 原因: %s",
+            task_uid[:8],
+            skipped_result.get("skip_eval_reason", ""),
+        )
+
+    if not task_items:
+        with open(output_json_path, "w", encoding="utf-8") as file_obj:
+            json.dump(output_results, file_obj, ensure_ascii=False, indent=2)
+        outcome_summary = summarize_webmall_results(output_results.values())
+        log.info(
+            "全部任务均在执行前隔离：SKIP=%d，未创建容器或 Agent；输出: %s",
+            outcome_summary["skipped"],
+            output_json_path,
+        )
+        return
+
+    # 仅当至少存在一项可运行任务时检查共享商店服务。
+    if not check_webmall_shops():
+        log.error("部分 WebMall 商店不可达，请检查服务状态后再运行")
+        sys.exit(1)
+
     # 创建内存管理器
     memory_guard = MemoryGuard(args.memory_limit_gb, args.vm_memory)
 
@@ -1840,17 +1853,8 @@ def main() -> None:
     heartbeat = GlobalScreensaverHeartbeat(vm_ip=args.vm_ip, interval_sec=180)
     heartbeat.start()
 
-    # 结果收集
-    output_results: Dict[str, Any] = {}
-    results_lock = threading.Lock()
-    output_json_path = os.path.abspath(
-        args.output_json_path if args.output_json_path else OUTPUT_JSON_PATH
-    )
-    os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
-
     # 并行调度
-    completed_count = 0
-    total_count = len(task_items)
+    completed_count = len(skipped_results)
 
     with ThreadPoolExecutor(
         max_workers=args.max_parallel_tasks,
@@ -1861,7 +1865,7 @@ def main() -> None:
         for i, (task_uid, task_path, task_config) in enumerate(task_items):
             log.info(
                 "提交任务 %d/%d | UID: %s | [%s] %s",
-                i + 1, total_count, task_uid[:8],
+                len(skipped_results) + i + 1, total_count, task_uid[:8],
                 task_config.get("answer_type", "?"),
                 task_config.get("task_tag", ""),
             )
@@ -1892,21 +1896,7 @@ def main() -> None:
                 output_results[task_uid] = task_result
                 completed_count += 1
 
-            # 判定状态
-            eval_out = task_result.get("evaluator_output") or {}
-            if "passed" in eval_out:
-                is_passed = eval_out["passed"]
-            else:
-                is_passed = (
-                    eval_out.get("score", 0) == eval_out.get("max_score", 0)
-                    and eval_out.get("max_score", 0) > 0
-                )
-            if task_result.get("interrupted"):
-                status = "INTERRUPTED"
-            elif is_passed:
-                status = "PASS"
-            else:
-                status = "FAIL"
+            status = classify_webmall_result(task_result)
             log.info(
                 "任务完成 %d/%d | UID: %s | [%s] | 状态: %s",
                 completed_count, total_count, task_uid[:8],
@@ -1936,15 +1926,14 @@ def main() -> None:
     total_cost_all = 0.0
     for uid, res in output_results.items():
         eval_out = res.get("evaluator_output") or {}
-        if "passed" in eval_out:
-            is_passed = eval_out["passed"]
-        else:
-            is_passed = (
-                eval_out.get("score", 0) == eval_out.get("max_score", 0)
-                and eval_out.get("max_score", 0) > 0
-            )
-        status = "PASS" if is_passed else "FAIL"
-        interrupted = " (中断)" if res.get("interrupted") else ""
+        status = classify_webmall_result(res)
+        reason = (
+            res.get("skip_eval_reason")
+            or eval_out.get("reason")
+            or res.get("interrupt_reason")
+            or ""
+        )
+        reason_suffix = f" | 原因: {reason}" if reason and status != "PASS" else ""
         token_info = res.get("token_usage") or {}
         task_cost = token_info.get("total_cost_usd", 0.0)
         total_cost_all += task_cost
@@ -1954,8 +1943,23 @@ def main() -> None:
             status, uid[:8], res.get("answer_type", "?"),
             res.get("task_tag", ""),
             eval_out.get("score", "N/A"), eval_out.get("max_score", "N/A"),
-            cost_str, interrupted,
+            cost_str, reason_suffix,
         )
+
+    outcome_summary = summarize_webmall_results(output_results.values())
+    pass_rate = outcome_summary["pass_rate"]
+    pass_rate_text = f"{pass_rate:.2%}" if pass_rate is not None else "N/A"
+    log.info(
+        "结果统计：PASS=%d | FAIL=%d | SKIP=%d | EVALUATOR_ERROR=%d | "
+        "INTERRUPTED=%d | 有效分母=%d | 通过率=%s",
+        outcome_summary["passed"],
+        outcome_summary["failed"],
+        outcome_summary["skipped"],
+        outcome_summary["evaluator_errors"],
+        outcome_summary["interrupted"],
+        outcome_summary["valid_evaluations"],
+        pass_rate_text,
+    )
 
     if total_cost_all > 0:
         log.info("总 Token 费用: $%.4f", total_cost_all)

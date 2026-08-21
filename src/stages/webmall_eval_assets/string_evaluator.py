@@ -24,6 +24,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
 
+from webmall_identity import compare_url_lists, normalize_http_url
+
 
 # ===== 配置 =====
 # 默认 VM IP；运行时一般由上游 pipeline 或 CLI --vm-ip 传入具体值。
@@ -109,7 +111,7 @@ def normalize_url(url: str) -> str:
     返回:
         归一化后的URL
     """
-    return url.rstrip("/").lstrip("http://").lstrip("https://")
+    return normalize_http_url(url)
 
 
 def generate_task_uid(webmall_task_id: str) -> str:
@@ -306,23 +308,10 @@ class StringEvaluator:
         expected_urls = [replace_url_placeholders(u, vm_ip) for u in task.expected_urls]
         submitted_urls_resolved = [replace_url_placeholders(u, vm_ip) for u in submitted_urls]
         
-        # 归一化URL
-        norm_expected = {normalize_url(u): u for u in expected_urls}
-        norm_submitted = {normalize_url(u): u for u in submitted_urls_resolved}
-        
-        # 计算匹配
-        matched = []
-        wrong = []
-        
-        for norm_sub, orig_sub in norm_submitted.items():
-            if norm_sub in norm_expected:
-                matched.append(orig_sub)
-            else:
-                wrong.append(orig_sub)
-        
-        # 计算未提交的期望URL
-        matched_norm = set(normalize_url(u) for u in matched)
-        missing = [u for u in expected_urls if normalize_url(u) not in matched_norm]
+        comparison = compare_url_lists(expected_urls, submitted_urls_resolved)
+        matched = comparison["matched"]
+        wrong = comparison["wrong"]
+        missing = comparison["missing"]
         
         # 计算分数
         score = len(matched)
@@ -350,6 +339,7 @@ class StringEvaluator:
             "precision": precision,
             "recall": recall,
             "f1": f1,
+            "passed": bool(expected_urls) and not wrong and not missing,
             "detail": f"匹配 {score}/{max_score} 个期望URL，错误提交 {len(wrong)} 个",
         }
     

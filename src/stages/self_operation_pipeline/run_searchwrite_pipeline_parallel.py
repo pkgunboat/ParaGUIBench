@@ -1005,13 +1005,23 @@ def stage3_evaluate(
             )
         except Exception as exc:
             log.error("评估异常: %s", exc)
-            eval_result = {"score": 0.0, "pass": False, "reason": str(exc)}
+            eval_result = {
+                "score": -1.0,
+                "pass": False,
+                "status": "evaluator_error",
+                "reason": str(exc),
+            }
     else:
         try:
             eval_result = evaluate_multi_file(file_pairs)
         except Exception as exc:
             log.error("评估异常: %s", exc)
-            eval_result = {"score": 0.0, "pass": False, "reason": str(exc)}
+            eval_result = {
+                "score": -1.0,
+                "pass": False,
+                "status": "evaluator_error",
+                "reason": str(exc),
+            }
 
     log.info("评估结果: score=%.2f, pass=%s, cells=%d/%d",
              eval_result.get("score", 0),
@@ -1021,6 +1031,26 @@ def stage3_evaluate(
 
     eval_result["saved_result_path"] = saved_path
     return eval_result
+
+
+def _is_evaluator_error_output(evaluator_output: Any) -> bool:
+    if not isinstance(evaluator_output, dict):
+        return False
+    if str(evaluator_output.get("status") or "") == "evaluator_error":
+        return True
+    score = evaluator_output.get("score")
+    return isinstance(score, (int, float)) and score < 0
+
+
+def _task_outcome_bucket(task_result: Dict[str, Any]) -> str:
+    if task_result.get("interrupted"):
+        return "interrupted"
+    evaluator_output = task_result.get("evaluator_output")
+    if _is_evaluator_error_output(evaluator_output):
+        return "eval_error"
+    if isinstance(evaluator_output, dict) and evaluator_output.get("pass"):
+        return "passed"
+    return "failed"
 
 
 # ============================================================
@@ -1430,11 +1460,11 @@ def run_single_task(
             )
             task_result["evaluator_output"] = eval_result
         except Exception as exc:
-            task_result["interrupted"] = True
-            task_result["interrupt_reason"] = f"stage3_exception: {exc}"
             task_result["evaluator_output"] = {
-                "pass": False, "score": 0.0,
-                "error": f"evaluator_exception: {exc}",
+                "pass": False,
+                "score": -1.0,
+                "status": "evaluator_error",
+                "reason": f"evaluator_exception: {exc}",
             }
             log.error("评估失败: %s", exc)
 
@@ -1839,23 +1869,27 @@ def main() -> None:
     log.info("=" * 80)
 
     # 统计汇总
-    passed = sum(
-        1 for r in output_results.values()
-        if r.get("evaluator_output") and r.get("evaluator_output", {}).get("pass")
-    )
-    interrupted = sum(1 for r in output_results.values() if r.get("interrupted"))
-    failed = total_count - passed - interrupted
+    buckets = [_task_outcome_bucket(r) for r in output_results.values()]
+    passed = sum(1 for b in buckets if b == "passed")
+    failed = sum(1 for b in buckets if b == "failed")
+    interrupted = sum(1 for b in buckets if b == "interrupted")
+    eval_error = sum(1 for b in buckets if b == "eval_error")
 
-    log.info("统计: 通过 %d | 失败 %d | 中断 %d | 总计 %d",
-             passed, failed, interrupted, total_count)
+    log.info(
+        "统计: 通过 %d | 失败 %d | 中断 %d | 评价器错误 %d | 总计 %d",
+        passed, failed, interrupted, eval_error, total_count,
+    )
 
     # 输出详细得分
     log.info("-" * 60)
     for uid, res in sorted(output_results.items(), key=lambda x: x[1].get("task_id", "")):
         tid = res.get("task_id", uid[:8])
         ev = res.get("evaluator_output")
-        if res.get("interrupted"):
+        bucket = _task_outcome_bucket(res)
+        if bucket == "interrupted":
             log.info("  %s: INTERRUPTED (%s)", tid, res.get("interrupt_reason", ""))
+        elif bucket == "eval_error":
+            log.info("  %s: EVALUATOR_ERROR (%s)", tid, ev.get("reason", ""))
         elif ev:
             log.info("  %s: %s (score=%.2f, cells=%d/%d)",
                      tid,

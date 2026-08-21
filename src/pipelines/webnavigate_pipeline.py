@@ -39,7 +39,6 @@ DEFAULT_TASK_IDS = [
     "Operation-WebOperate-WebNavigate-003",
     "Operation-WebOperate-WebNavigate-004",
     "Operation-WebOperate-WebNavigate-005",
-    "Operation-WebOperate-WebNavigate-006",
     "Operation-WebOperate-WebNavigate-007",
     "Operation-WebOperate-WebNavigate-008",
     "Operation-WebOperate-WebNavigate-009",

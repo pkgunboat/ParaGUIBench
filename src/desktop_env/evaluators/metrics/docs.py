@@ -880,6 +880,7 @@ def compare_references(file1, file2, **options):
 
     reference_indicator = options.get('reference_indicator', 'References')
     reference_base_result = options.get('reference_base_result', 0.5)
+    content_only = options.get('content_only', False)
 
     # Determine file types and load documents
     if file1.endswith('.docx') and file2.endswith('.docx'):
@@ -915,6 +916,132 @@ def compare_references(file1, file2, **options):
 
     if len(ref1) != len(ref2):
         return 0
+
+    if content_only:
+        def _normalize_reference_text(text):
+            text = text.lower()
+            text = re.sub(r'https?://doi\.org/', 'doi:', text)
+            text = re.sub(r'\bdoi\s*:?\s*', 'doi:', text)
+            text = re.sub(r'\s+', ' ', text).strip()
+            return text
+
+        def _tokens_for_reference(text):
+            text = _normalize_reference_text(text)
+            text = re.sub(r'https?://', ' ', text)
+            text = re.sub(r'[^a-z0-9/.-]+', ' ', text)
+            stop = {
+                'and', 'the', 'for', 'from', 'with', 'this', 'that', 'a', 'an',
+                'retrieved', 'accessed', 'https', 'http', 'www',
+            }
+            return [tok.strip('.-') for tok in text.split()
+                    if len(tok.strip('.-')) > 1 and tok.strip('.-') not in stop]
+
+        def _token_f1(actual, expected):
+            actual_tokens = _tokens_for_reference(actual)
+            expected_tokens = _tokens_for_reference(expected)
+            if not actual_tokens or not expected_tokens:
+                return 0.0
+
+            actual_counts = {}
+            expected_counts = {}
+            for tok in actual_tokens:
+                actual_counts[tok] = actual_counts.get(tok, 0) + 1
+            for tok in expected_tokens:
+                expected_counts[tok] = expected_counts.get(tok, 0) + 1
+
+            overlap = sum(
+                min(actual_counts.get(tok, 0), expected_counts.get(tok, 0))
+                for tok in expected_counts
+            )
+            precision = overlap / len(actual_tokens)
+            recall = overlap / len(expected_tokens)
+            return (
+                2 * precision * recall / (precision + recall)
+                if precision + recall else 0.0
+            )
+
+        def _extract_doi(text):
+            normalized = _normalize_reference_text(text)
+            match = re.search(r'\bdoi:?(10\.\d{4,9}/[^\s,]+)', normalized)
+            if not match:
+                return None
+            return match.group(1).rstrip(').,').lower()
+
+        def _extract_urls(text):
+            urls = []
+            for url in re.findall(r'https?://[^\s,]+', text.lower()):
+                cleaned = url.rstrip(').,')
+                if 'doi.org/' in cleaned:
+                    continue
+                urls.append(cleaned)
+            return urls
+
+        def _extract_year(text):
+            match = re.search(r'\((\d{4}[a-z]?)\)', text.lower())
+            return match.group(1) if match else None
+
+        def _extract_pages(text):
+            pages = []
+            for match in re.findall(r'\b(?:pp?\.\s*)?(\d{1,5}\s*[-–]\s*\d{1,5})\b', text.lower()):
+                pages.append(re.sub(r'\s+', '', match).replace('–', '-'))
+            return pages
+
+        def _source_tokens(text):
+            normalized = _normalize_reference_text(text)
+            remainder = re.split(r'\(\d{4}[a-z]?\)\.\s*', normalized, maxsplit=1)
+            if len(remainder) != 2:
+                return []
+            parts = [p.strip() for p in re.split(r'\.\s+', remainder[1], maxsplit=2)]
+            if len(parts) < 2:
+                return []
+            source = parts[1]
+            source = re.split(r'\b(?:retrieved|doi:|https?://|pp?\.)\b', source)[0]
+            source = source.split(',')[0]
+            tokens = _tokens_for_reference(source)
+            return [tok for tok in tokens if not tok.isdigit()]
+
+        def _list_similarity(actual_items, expected_items):
+            if not actual_items or not expected_items:
+                return None
+            actual_set = set(actual_items)
+            expected_set = set(expected_items)
+            return len(actual_set & expected_set) / len(actual_set | expected_set)
+
+        def _fields_consistent(actual, expected):
+            actual_year = _extract_year(actual)
+            expected_year = _extract_year(expected)
+            if expected_year and actual_year != expected_year:
+                return False
+
+            actual_doi = _extract_doi(actual)
+            expected_doi = _extract_doi(expected)
+            if actual_doi and expected_doi and actual_doi != expected_doi:
+                return False
+
+            actual_urls = _extract_urls(actual)
+            expected_urls = _extract_urls(expected)
+            if actual_urls and expected_urls and set(actual_urls) != set(expected_urls):
+                return False
+
+            actual_pages = _extract_pages(actual)
+            expected_pages = _extract_pages(expected)
+            if actual_pages and expected_pages and set(actual_pages) != set(expected_pages):
+                return False
+
+            return True
+
+        identity_threshold = float(options.get('reference_identity_threshold', 0.72))
+        source_threshold = float(options.get('reference_source_threshold', 0.6))
+        passed = 0
+        for actual_ref, expected_ref in zip(ref1, ref2):
+            token_score = _token_f1(actual_ref, expected_ref)
+            source_score = _list_similarity(
+                _source_tokens(actual_ref), _source_tokens(expected_ref)
+            )
+            source_ok = source_score is None or source_score >= source_threshold
+            if token_score >= identity_threshold and source_ok and _fields_consistent(actual_ref, expected_ref):
+                passed += 1
+        return passed / len(ref1) if ref1 else 0
 
     total_similarity = 0
     for r1, r2 in zip(ref1, ref2):

@@ -186,6 +186,7 @@ def check_html_files_for_xlsx(result_dir: str, params: dict) -> dict:
         {"pass": bool, "score": float, "reason": str}
     """
     search_subdirs = params.get("search_subdirs", True)
+    validate_content = params.get("validate_content", False)
 
     # 查找所有 xlsx 文件
     if search_subdirs:
@@ -215,6 +216,17 @@ def check_html_files_for_xlsx(result_dir: str, params: dict) -> dict:
             html_matches = glob.glob(html_pattern)
 
         if html_matches:
+            if validate_content:
+                html_path = html_matches[0]
+                try:
+                    with open(html_path, "r", encoding="utf-8", errors="ignore") as f:
+                        content = f.read(4096).lower()
+                except OSError as exc:
+                    details.append(f"{xlsx_name} -> {html_name} 无法读取: {exc}")
+                    continue
+                if "<html" not in content or ("<table" not in content and "<body" not in content):
+                    details.append(f"{xlsx_name} -> {html_name} 内容不像 HTML 导出")
+                    continue
             matched += 1
             details.append(f"{xlsx_name} -> {html_name}")
         else:
@@ -225,6 +237,53 @@ def check_html_files_for_xlsx(result_dir: str, params: dict) -> dict:
         return _ok(f"全部 {total} 个 xlsx 都有对应的 html 文件")
 
     return _partial(ratio, f"{matched}/{total} 个 xlsx 有对应 html: {', '.join(details[:5])}")
+
+
+def check_named_files_in_subfolders(result_dir: str, params: dict) -> dict:
+    """
+    检查指定文件是否都被移动到根目录之外的某个子文件夹中。
+    """
+    filenames = params.get("filenames", [])
+    if not filenames:
+        return _config_error("参数缺少 filenames")
+
+    matched = 0
+    details = []
+    for filename in filenames:
+        matches = glob.glob(os.path.join(result_dir, "**", filename), recursive=True)
+        if not matches:
+            details.append(f"{filename}: 缺失")
+            continue
+        rel_dir = os.path.relpath(os.path.dirname(matches[0]), result_dir)
+        if rel_dir != ".":
+            matched += 1
+            details.append(f"{filename}: {rel_dir}")
+        else:
+            details.append(f"{filename}: 仍在根目录")
+
+    ratio = matched / len(filenames)
+    if matched == len(filenames):
+        return _ok(f"全部 {len(filenames)} 个文件已分类到子文件夹")
+    return _partial(ratio, f"{matched}/{len(filenames)} 个文件在子文件夹: {'; '.join(details[:5])}")
+
+
+def check_min_subfolders(result_dir: str, params: dict) -> dict:
+    """
+    检查结果目录至少创建了若干个非空子文件夹。
+    """
+    min_count = int(params.get("min_count", 2))
+    subfolders = []
+    for entry in os.scandir(result_dir):
+        if not entry.is_dir():
+            continue
+        has_file = any(os.path.isfile(os.path.join(entry.path, child)) for child in os.listdir(entry.path))
+        if has_file:
+            subfolders.append(entry.name)
+
+    if len(subfolders) >= min_count:
+        return _ok(f"存在 {len(subfolders)} 个非空子文件夹: {', '.join(subfolders[:5])}")
+    ratio = len(subfolders) / min_count if min_count else 1.0
+    return _partial(ratio, f"仅 {len(subfolders)} 个非空子文件夹，期望至少 {min_count}")
 
 
 def check_named_files_exist(result_dir: str, params: dict) -> dict:

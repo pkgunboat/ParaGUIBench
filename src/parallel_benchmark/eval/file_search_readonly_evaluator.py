@@ -252,6 +252,12 @@ def _normalize_answer(text: Optional[str]) -> str:
     return re.sub(r'\s+', ' ', normalized)
 
 
+def _canonical_exact_answer(text: Optional[str]) -> str:
+    """严格匹配模式下的轻量 canonical 形式，保留词间空格但规整分隔符。"""
+    normalized = _normalize_answer(text)
+    return re.sub(r'\s*([;,:/])\s*', r'\1', normalized)
+
+
 def _extract_answer_tag(text: Optional[str]) -> Optional[str]:
     """从模型输出中抽取 <answer>...</answer> 标签内容。"""
     if not text:
@@ -537,6 +543,33 @@ def evaluate(task: Union[Dict, str], agent_answer: Optional[str]) -> Dict:
         norm = _normalize_answer(alias)
         if norm and norm not in candidates:
             candidates.append(norm)
+
+    if task_data.get("answer_match_mode") in {"exact", "strict_exact"}:
+        strict_pred = _canonical_exact_answer(pred_text)
+        for idx, ref_candidate in enumerate(candidates):
+            if strict_pred == _canonical_exact_answer(ref_candidate):
+                result = {
+                    "pass": True,
+                    "score": 1.0,
+                    "status": "ok",
+                    "reason": "严格精确匹配成功。",
+                    "match_type": "strict_exact",
+                    "ref_text": reference,
+                    "pred_text": pred_text,
+                }
+                if idx > 0:
+                    result["match_type"] += "_via_alias"
+                    result["matched_alias"] = ref_candidate
+                return result
+        return {
+            "pass": False,
+            "score": 0.0,
+            "status": "ok",
+            "reason": "严格精确匹配失败。",
+            "match_type": "strict_exact_no_match",
+            "ref_text": reference,
+            "pred_text": pred_text,
+        }
 
     primary_result: Optional[Dict] = None
     for idx, ref_candidate in enumerate(candidates):

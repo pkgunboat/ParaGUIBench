@@ -11,14 +11,20 @@
     "original_task_id": "Operation-FileOperate-Batchoperationexcel-007",
     "eval_rules": [
         {
-            "check": "check_sort_order",
+            "check": "check_n_sorted_copies",
             "file_pattern": "*.xlsx",
             "params": {
-                "column": "B",
-                "order": "asc"
+                "columns": [
+                    "A",
+                    "B",
+                    "C",
+                    "D"
+                ],
+                "order": "asc",
+                "data_start_row": 4
             },
             "weight": 1.0,
-            "description": "检查排序列"
+            "description": "检查四份副本分别按日期/姓名/订单号/销售额升序排序"
         }
     ]
 }

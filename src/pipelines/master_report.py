@@ -39,6 +39,11 @@ def _load_typed() -> List[Dict[str, Any]]:
     return mt.load_master()
 
 
+def _is_eval_error_row(row: Dict[str, Any]) -> bool:
+    score = row.get("score")
+    return isinstance(score, (int, float)) and score < 0
+
+
 # ============================================================
 # Sheet: Main
 # ============================================================
@@ -177,12 +182,17 @@ def _aggregate_by(rows: List[Dict[str, Any]], group_key: str) -> List[Dict[str, 
     for key, group in sorted(grouped.items(), key=lambda kv: str(kv[0])):
         total = len(group)
         passed = sum(1 for g in group if g.get("pass") is True)
+        interrupted = sum(1 for g in group if g.get("interrupted") is True)
+        eval_error = sum(1 for g in group
+                         if not g.get("interrupted", False)
+                         and _is_eval_error_row(g))
         fail = sum(1 for g in group
                    if g.get("pass") is False
                    and not g.get("empty", False)
-                   and not g.get("interrupted", False))
-        interrupted = sum(1 for g in group if g.get("interrupted") is True)
-        rate = passed / total if total else 0.0
+                   and not g.get("interrupted", False)
+                   and not _is_eval_error_row(g))
+        scored = passed + fail
+        rate = passed / scored if scored else 0.0
         sum_plan = _safe_sum(group, "plan_rounds")
         sum_gui_total = _safe_sum(group, "gui_rounds_total")
         sum_gui_seq = _safe_sum(group, "gui_steps_sequential")
@@ -193,6 +203,7 @@ def _aggregate_by(rows: List[Dict[str, Any]], group_key: str) -> List[Dict[str, 
             "pass": passed,
             "fail": fail,
             "interrupted": interrupted,
+            "eval_error": eval_error,
             "rate": round(rate, 3),
             "plan_rounds": sum_plan,
             "gui_rounds_total": sum_gui_total,
@@ -295,7 +306,7 @@ def _aggregate_main_by_pipeline(rows: List[Dict[str, Any]]) -> List[Dict[str, An
     Main 表按 (condition, pipeline) 双维度展开，聚合列与 Ablation 子表对齐。
 
     输出字段（与 _aggregate_by 返回的 15 个指标对齐）:
-        condition, pipeline, total, pass, fail, interrupted, rate,
+        condition, pipeline, total, pass, fail, interrupted, eval_error, rate,
         plan_rounds, gui_rounds_total, gui_steps_sequential, parallelism,
         token_plan, token_gui, token_total, cost_usd, elapsed_time_sec
     """
@@ -306,12 +317,17 @@ def _aggregate_main_by_pipeline(rows: List[Dict[str, Any]]) -> List[Dict[str, An
     for (cond, pipeline), group in sorted(grouped.items()):
         total = len(group)
         passed = sum(1 for g in group if g.get("pass") is True)
+        interrupted = sum(1 for g in group if g.get("interrupted") is True)
+        eval_error = sum(1 for g in group
+                         if not g.get("interrupted", False)
+                         and _is_eval_error_row(g))
         fail = sum(1 for g in group
                    if g.get("pass") is False
                    and not g.get("empty", False)
-                   and not g.get("interrupted", False))
-        interrupted = sum(1 for g in group if g.get("interrupted") is True)
-        rate = passed / total if total else 0.0
+                   and not g.get("interrupted", False)
+                   and not _is_eval_error_row(g))
+        scored = passed + fail
+        rate = passed / scored if scored else 0.0
         sum_plan = _safe_sum(group, "plan_rounds")
         sum_gui_total = _safe_sum(group, "gui_rounds_total")
         sum_gui_seq = _safe_sum(group, "gui_steps_sequential")
@@ -323,6 +339,7 @@ def _aggregate_main_by_pipeline(rows: List[Dict[str, Any]]) -> List[Dict[str, An
             "pass": passed,
             "fail": fail,
             "interrupted": interrupted,
+            "eval_error": eval_error,
             "rate": round(rate, 3),
             "plan_rounds": sum_plan,
             "gui_rounds_total": sum_gui_total,

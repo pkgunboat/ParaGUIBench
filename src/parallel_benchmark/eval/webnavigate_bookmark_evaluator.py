@@ -126,26 +126,57 @@ REGEX_PATTERNS = {
         "description": "论文首位作者和最后三位作者个人网页书签"
     },
     "Operation-WebOperate-WebNavigate-001": {
-        "patterns": [
-            r'accuweather.*manchester',
-            r'accuweather.*manchester.*air-quality-index'
+        "pattern_groups": [
+            {
+                "name": "Manchester monthly forecast",
+                "patterns": [
+                    r'https?://(www\.)?accuweather\.com/en/gb/manchester/[^?#]*/(?:[a-z]+-weather|weather-forecast|monthly-weather-forecast)/329260/?(?:[?#].*)?$',
+                    r'https?://(www\.)?accuweather\.com/en/gb/manchester/[^?#]*/monthly-weather-forecast/329260/?(?:[?#].*)?$',
+                    r'https?://(www\.)?accuweather\.com/en/gb/manchester/[^?#]*/month/?(?:[?#].*)?$',
+                ],
+            },
+            {
+                "name": "Manchester Air Quality Index",
+                "patterns": [
+                    r'https?://(www\.)?accuweather\.com/en/gb/manchester/[^?#]*/air-quality-index/329260/?(?:[?#].*)?$',
+                ],
+            },
         ],
-        "expected_count": 2,
         "description": "accuweather manchester 天气和空气质量"
     },
     "Operation-WebOperate-WebNavigate-002": {
-        "patterns": [
-            r'amazon.*help|shipping\.amazon',
-            r'GKM69DUUYKQWKWX7'
+        "pattern_groups": [
+            {
+                "name": "Amazon shipping questions",
+                "patterns": [
+                    r'^https?://shipping\.amazon\.com/help/?(?:[?#].*)?$',
+                    r'^https?://(www\.)?amazon\.com/(?:gp/)?help/.*shipping(?:[/?#].*)?$',
+                ],
+            },
+            {
+                "name": "Amazon refunds and returns",
+                "patterns": [
+                    r'https?://(www\.)?amazon\.com/gp/help/customer/display\.html\?[^#]*nodeId=GKM69DUUYKQWKWX7(?:[&#].*)?$',
+                ],
+            },
         ],
-        "expected_count": 2,
         "description": "Amazon 运输和退换货政策"
     },
     "Operation-WebOperate-WebNavigate-003": {
-        "patterns": [
-            r'tesla\.com/model[3ys]'
+        "pattern_groups": [
+            {
+                "name": "Tesla Model Y",
+                "patterns": [r'https?://(www\.)?tesla\.com/modely/?(?:[?#].*)?$'],
+            },
+            {
+                "name": "Tesla Model 3",
+                "patterns": [r'https?://(www\.)?tesla\.com/model3/?(?:[?#].*)?$'],
+            },
+            {
+                "name": "Tesla Model S",
+                "patterns": [r'https?://(www\.)?tesla\.com/models/?(?:[?#].*)?$'],
+            },
         ],
-        "expected_count": 3,
         "description": "Tesla Model Y/3/S 车型页面"
     },
     "Operation-WebOperate-WebNavigate-004": {
@@ -157,34 +188,70 @@ REGEX_PATTERNS = {
         "description": "LibreOffice Mac 安装指南和下载页面"
     },
     "Operation-WebOperate-WebNavigate-005": {
-        "patterns": [
-            r'deerapi.*about-price',
-            r'api\.deerapi\.com/pricing',
-            r'siliconflow.*pricing'
+        "pattern_groups": [
+            {
+                "name": "deerAPI pricing",
+                "patterns": [
+                    r'https?://helpdoc\.deerapi\.com/about-price/?(?:[?#].*)?$',
+                    r'https?://api\.deerapi\.com/pricing/?(?:[?#].*)?$',
+                ],
+            },
+            {
+                "name": "Silicon Flow pricing",
+                "patterns": [r'https?://(www\.)?siliconflow\.com/pricing/?(?:[?#].*)?$'],
+            },
         ],
-        "expected_count": 2,
         "description": "deerAPI 和 Silicon Flow API 价格页面"
     },
     "Operation-WebOperate-WebNavigate-007": {
-        "patterns": [
-            r'unitree.*about',
-            r'unitree.*g1|unitree-g1'
+        "pattern_groups": [
+            {
+                "name": "Unitree About",
+                "patterns": [
+                    r'^https?://(www\.)?unitree\.com/(?:cn/)?about/?(?:[?#].*)?$',
+                ],
+            },
+            {
+                "name": "Unitree G1",
+                "patterns": [
+                    r'^https?://(www\.)?unitree\.com/(?:cn/)?g1/?(?:[?#].*)?$',
+                ],
+            },
         ],
-        "expected_count": 2,
         "description": "Unitree 关于我们和 G1 机器人页面"
     },
     "Operation-WebOperate-WebNavigate-008": {
-        "patterns": [
-            r'steampowered.*1238810'
+        "pattern_groups": [
+            {
+                "name": "Steam Battlefield 5 app page",
+                "patterns": [
+                    r'https?://store\.steampowered\.com/app/1238810(?:/[^/?#]*)?/?(?:[?#].*)?$',
+                ],
+            },
         ],
-        "expected_count": 1,
         "description": "Steam Battlefield 5 购买页面"
     },
     "Operation-WebOperate-WebNavigate-010": {
-        "patterns": [
-            r'support\.apple.*(111828|111846|111870)'
+        "pattern_groups": [
+            {
+                "name": "iPhone 15 Pro Max 111828",
+                "patterns": [
+                    r'^https?://support\.apple\.com/[^?#]*111828(?:[/?#].*)?$',
+                ],
+            },
+            {
+                "name": "iPhone 14 Pro Max 111846",
+                "patterns": [
+                    r'^https?://support\.apple\.com/[^?#]*111846(?:[/?#].*)?$',
+                ],
+            },
+            {
+                "name": "iPhone 13 Pro Max 111870",
+                "patterns": [
+                    r'^https?://support\.apple\.com/[^?#]*111870(?:[/?#].*)?$',
+                ],
+            },
         ],
-        "expected_count": 3,
         "description": "Apple iPhone 15/14/13 Pro Max 技术规格页面"
     },
     "Operation-WebOperate-WebNavigate-011": {

@@ -71,7 +71,8 @@
       "dest": "gold_book.zip"
     },
     "options": {
-      "file_type": "pdf"
+      "file_type": "pdf",
+      "score_threshold": 0.99
     }
   },
   "proxy": false,

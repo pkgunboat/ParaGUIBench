@@ -13,7 +13,9 @@
         {
             "check": "check_html_files_for_xlsx",
             "file_pattern": "*.xlsx",
-            "params": {},
+            "params": {
+                "validate_content": true
+            },
             "weight": 1.0,
             "description": "每个xlsx文件都有对应的同名html文件"
         }

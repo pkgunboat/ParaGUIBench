@@ -98,33 +98,120 @@ print(json.dumps({"found": found, "candidates": candidates}, ensure_ascii=False)
     return (payload.get("found") or "").strip()
 
 
-def extract_urls_from_bookmarks_json(bookmarks: Dict[str, Any]) -> List[str]:
-    """
-    从 Bookmarks JSON 递归提取全部 URL。
+def extract_bookmark_records_from_json(bookmarks: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """从 Chrome Bookmarks JSON 提取保留文件夹层级的 URL 记录。
 
-    输入:
-        bookmarks: Bookmarks 文件解析后的 dict
-    输出:
-        List[str]: 书签中的 URL（去重，保留原顺序）
+    功能：从 ``roots`` 的 bookmark_bar/other/synced 等根节点递归遍历，
+    为每个 URL 保留根键与完整 folder_path；仅删除 URL 与路径均相同的重复记录。
+    输入参数：bookmarks 为 Bookmarks 文件解析后的字典。
+    输出返回值：记录列表，每项包含 type、name、url、root_key 和 folder_path。
+    """
+    records: List[Dict[str, Any]] = []
+    seen: set[tuple[str, tuple[str, ...]]] = set()
+
+    def walk(node: Any, folder_path: List[str], *, root_node: bool = False) -> None:
+        """递归遍历单个书签节点。
+
+        输入参数：node 为当前 JSON 节点；folder_path 为其父文件夹路径；
+        root_node 表示当前是 Chrome roots 的直接根节点。
+        输出返回值：无；符合条件的记录追加到外层 records。
+        """
+        if isinstance(node, list):
+            for item in node:
+                walk(item, folder_path)
+            return
+        if not isinstance(node, dict):
+            return
+
+        node_type = node.get("type")
+        if node_type == "url":
+            url = str(node.get("url") or "").strip()
+            key = (url, tuple(folder_path))
+            if url and key not in seen:
+                seen.add(key)
+                records.append({
+                    "type": "url",
+                    "name": str(node.get("name") or ""),
+                    "url": url,
+                    "root_key": folder_path[0] if folder_path else "",
+                    "folder_path": list(folder_path),
+                })
+            return
+
+        next_path = list(folder_path)
+        if node_type == "folder" and not root_node:
+            folder_name = str(node.get("name") or "").strip()
+            if folder_name:
+                next_path.append(folder_name)
+
+        children = node.get("children")
+        if isinstance(children, list):
+            walk(children, next_path)
+            return
+
+        # 兼容非标准或精简 fixture：只在没有 children 时遍历复合值。
+        for value in node.values():
+            if isinstance(value, (dict, list)):
+                walk(value, next_path)
+
+    roots = bookmarks.get("roots")
+    if isinstance(roots, dict):
+        for root_key, root in roots.items():
+            if isinstance(root, (dict, list)):
+                walk(root, [str(root_key)], root_node=True)
+    else:
+        walk(bookmarks, ["unknown"], root_node=True)
+    return records
+
+
+def extract_urls_from_bookmarks_json(bookmarks: Dict[str, Any]) -> List[str]:
+    """从 Bookmarks JSON 提取去重 URL 列表。
+
+    功能：复用结构化记录提取逻辑，在忽略文件夹层级的兼容场景中按 URL 去重。
+    输入参数：bookmarks 为 Bookmarks 文件解析后的字典。
+    输出返回值：书签 URL 列表，去重且保留首次出现顺序。
     """
     urls: List[str] = []
     seen: set[str] = set()
-
-    def walk(node: Any) -> None:
-        if isinstance(node, dict):
-            if node.get("type") == "url":
-                url = (node.get("url") or "").strip()
-                if url and url not in seen:
-                    seen.add(url)
-                    urls.append(url)
-            for v in node.values():
-                walk(v)
-        elif isinstance(node, list):
-            for item in node:
-                walk(item)
-
-    walk(bookmarks.get("roots", bookmarks))
+    for record in extract_bookmark_records_from_json(bookmarks):
+        url = record["url"]
+        if url not in seen:
+            seen.add(url)
+            urls.append(url)
     return urls
+
+
+def _read_bookmarks_json(controller: Any, bookmarks_path: Optional[str]) -> Dict[str, Any]:
+    """从 VM 读取并解析 Chrome Bookmarks JSON。
+
+    输入参数：controller 为 PythonController；bookmarks_path 为可选显式文件路径。
+    输出返回值：解析后的 Bookmarks 字典；路径、读取或 JSON 错误向上抛出。
+    """
+    path = (bookmarks_path or "").strip() or find_bookmarks_path(controller)
+    if not path:
+        raise FileNotFoundError("未找到 Chrome/Chromium Bookmarks 文件路径")
+
+    raw = controller.get_file(path)
+    if not raw:
+        raise RuntimeError(f"读取 Bookmarks 文件失败: {path}")
+    try:
+        return json.loads(raw.decode("utf-8"))
+    except UnicodeDecodeError:
+        return json.loads(raw.decode("utf-8", errors="ignore"))
+
+
+def read_bookmark_records(
+    controller: Any,
+    bookmarks_path: Optional[str] = None,
+) -> List[Dict[str, Any]]:
+    """从 VM 读取保留文件夹层级的书签记录。
+
+    输入参数：controller 为 PythonController；bookmarks_path 为可选显式文件路径。
+    输出返回值：包含 URL 与 folder_path 的记录列表。
+    """
+    return extract_bookmark_records_from_json(
+        _read_bookmarks_json(controller, bookmarks_path)
+    )
 
 
 def read_bookmark_urls(controller, bookmarks_path: Optional[str] = None) -> List[str]:
@@ -137,20 +224,8 @@ def read_bookmark_urls(controller, bookmarks_path: Optional[str] = None) -> List
     输出:
         List[str]: 收藏夹 URL 列表
     """
-    path = (bookmarks_path or "").strip() or find_bookmarks_path(controller)
-    if not path:
-        raise FileNotFoundError("未找到 Chrome/Chromium Bookmarks 文件路径")
-
-    raw = controller.get_file(path)
-    if not raw:
-        raise RuntimeError(f"读取 Bookmarks 文件失败: {path}")
-
-    try:
-        data = json.loads(raw.decode("utf-8"))
-    except UnicodeDecodeError:
-        data = json.loads(raw.decode("utf-8", errors="ignore"))
-
-    return extract_urls_from_bookmarks_json(data)
+    records = read_bookmark_records(controller, bookmarks_path)
+    return list(dict.fromkeys(record["url"] for record in records))
 
 
 def close_chrome_and_clear_bookmarks(controller) -> Dict[str, Any]:
@@ -379,4 +454,3 @@ print(json.dumps(out, ensure_ascii=False))
         "raw_output_tail": raw_tail,
         "result_keys": list(result.keys()),
     }
-
