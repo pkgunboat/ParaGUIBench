@@ -66,7 +66,11 @@ python -m paraguibench.methods_runner <qa|webmall|webnavigate|self_operation|sea
 
 Credentials and model IDs are injected through environment variables only; the
 calibrated IDs and required variables are listed in
-[docs/methods-provenance.md](docs/methods-provenance.md). The rewritten Agent
+[docs/methods-provenance.md](docs/methods-provenance.md). External services
+(WebMall stores, OnlyOffice), the VM image story, and task-asset provisioning
+for these runners are covered in
+[docs/deployment/methods-services.md](docs/deployment/methods-services.md).
+The rewritten Agent
 Systems under `src/paraguibench/agents/` remain available through the `paraguibench`
 CLI as the open-source release surface.
 

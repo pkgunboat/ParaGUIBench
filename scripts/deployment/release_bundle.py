@@ -479,7 +479,15 @@ def _is_allowlisted_source(path: PurePosixPath) -> bool:
         return relative in ROOT_FILE_ALLOWLIST
     # 方法系统（vendored 原项目代码与入口）不属于公开 cleanroom 闭集；
     # 其运行依赖内网环境事实，见 docs/methods-provenance.md。
-    if relative.startswith(("src/paraguibench/methods_runner/", "tests/methods/")):
+    # deploy/methods-services/ 是同一方法区的验证服务栈（含打包者环境
+    # 地址的迁移文档与原版服务代码），同样留在闭集之外。
+    if relative.startswith(
+        (
+            "src/paraguibench/methods_runner/",
+            "tests/methods/",
+            "deploy/methods-services/",
+        )
+    ):
         return False
     suffix = path.suffix.casefold()
     if relative.startswith(".github/workflows/"):

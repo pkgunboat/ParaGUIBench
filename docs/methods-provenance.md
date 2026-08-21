@@ -88,6 +88,15 @@ webmall runner 读取原运行时目录 ``src/extra_docker_env/tasks``（仅含 
 OnlineShopping 任务 JSON，与 ``parallel_benchmark/tasks`` 中同名文件字段一致）。
 装载器在 webmall 类别启动时为这些文件建立逐文件相对软链（不进入版本库）。
 
+## 服务栈与第三方部署（2026-08-20 迁入）
+
+方法验证所用的外部服务栈（WebMall 四店 compose、OnlyOffice 共享服务
+原版代码）已从原 dev 库 `docker/` 迁入本仓库 `deploy/methods-services/`，
+配套脚本在 `scripts/deployment/`（setup/start/stop + 任务 URL 改写）。
+镜像获取、HF 任务素材自动下载与服务栈部署的完整第三方指南见
+`docs/deployment/methods-services.md`。该目录不在 parity 锁定范围内；
+`deploy/onlyoffice/` 是公开 CLI 路径的另一套独立编排，两者勿同时启动。
+
 ## 记录的偏离（2026-08-20，webmall 并行 runner 超时传参修复）
 
 `run_webmall_pipeline_parallel.py` 构造 `execute_task` 时漏传

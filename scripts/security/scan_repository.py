@@ -43,7 +43,8 @@ EXCLUDED_DIRECTORY_NAMES = frozenset(
 # 引用内网服务地址，方法代码包含 guest 标准路径与模型提示协议 token 字面量，
 # 这些环境耦合内容保持与迁移基线逐字一致，不做改写。方法区仍执行全部
 # 高置信度真实凭据规则；豁免的只有内网地址、开发者路径与宽泛的环境变量
-# 字面量规则。
+# 字面量规则。deploy/methods-services/ 是同一迁移口径的服务栈
+# （WebMall/OnlyOffice 验证时代码与文档），同样逐字保留。
 METHODS_ZONE_PREFIXES = (
     "src/parallel_benchmark/",
     "src/desktop_env/",
@@ -52,6 +53,7 @@ METHODS_ZONE_PREFIXES = (
     "src/mm_agents/",
     "src/config_loader.py",
     "src/__init__.py",
+    "deploy/methods-services/",
 )
 METHODS_ZONE_EXEMPT_RULE_IDS = frozenset(
     {

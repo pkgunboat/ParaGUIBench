@@ -57,3 +57,16 @@ configs/deploy.yaml
 /.zcode/
 /src/parallel_benchmark/tasks_list
 /src/extra_docker_env/
+
+# methods 验证栈（deploy/methods-services）的运行时产物：
+# WebMall 备份 tarball（GB 级，公网下载）、setup 标记、OnlyOffice 数据目录
+/deploy/methods-services/webmall/backup/
+/deploy/methods-services/onlyoffice/data/
+/deploy/methods-services/onlyoffice/data_2/
+/deploy/methods-services/onlyoffice/data_3/
+/deploy/methods-services/onlyoffice/logs/
+/deploy/methods-services/onlyoffice/logs_2/
+/deploy/methods-services/onlyoffice/logs_3/
+/deploy/methods-services/onlyoffice/shared_documents/
+/deploy/methods-services/onlyoffice/instance_2/
+/deploy/methods-services/onlyoffice/instance_3/
