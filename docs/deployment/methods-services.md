@@ -95,9 +95,11 @@ SHA-256 目录前缀 `6d8056d8…`）**没有公开分发渠道**。HuggingFace 
 ## 任务素材与答案文件的自动获取
 
 方法 runner 不需要手工下载数据集：任务 JSON 的 `prepare_script_path`
-以 `hf://` 形式编码了素材位置，`src/stages/task_data_cache.py` 会在
-首次执行任务时自动拉取并缓存（`rewrite_hf_url` 支持 `BENCH_HF_BASE`
-镜像前缀）。离线环境可预先用 `huggingface-cli download
+以 HuggingFace 数据集 tree URL 的形式编码了素材位置（指向
+`leeLegendary/Parallel_benchmark` 的 `benchmark_dataset/<uid>/` 目录），
+`src/stages/task_data_cache.py` 会在首次执行任务时自动拉取并缓存
+（`rewrite_hf_url` 支持 `BENCH_HF_BASE` 镜像前缀）。离线环境可预先用
+`huggingface-cli download
 leeLegendary/Parallel_benchmark --repo-type dataset` 整体下载后按
 `benchmark_dataset/<uid>/` 结构放入缓存目录。
 
