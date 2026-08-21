@@ -1766,7 +1766,7 @@ def main() -> None:
 
         match_detail = eval_out.get("match_detail", {})
         matched = match_detail.get("matched_count", 0)
-        total_targets = match_detail.get("total_targets", 0)
+        total_targets = match_detail.get("expected_count", 0)
 
         log.info(
             "  %s %s | 得分: %.2f (%d/%d URL){cost_str}".replace("{cost_str}", cost_str),

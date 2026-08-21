@@ -95,3 +95,13 @@ OnlineShopping 任务 JSON，与 ``parallel_benchmark/tasks`` 中同名文件字
 GUI worker 一轮未跑即超时）。原项目的非并行版与 QA runner 均显式传参
 （600/读 ABLATION_SUBTASK_TIMEOUT）。修复为与 QA 并行版一致的
 env 读取（默认 3600 秒）。
+
+## 记录的偏离（2026-08-20，webnavigate 并行 runner 汇总日志字段名修复）
+
+`run_webnavigate_pipeline_parallel.py` 末尾任务级汇总日志读取
+`match_detail.get("total_targets")`，而 webnavigate 书签评价器
+（`parallel_benchmark/eval/webnavigate_bookmark_evaluator.py`）的
+`match_detail` 顶层字段名为 `expected_count`——分母恒显示为
+`(0/0 URL)`。仅影响日志显示；分数与 PASS/FAIL 判定使用评价器返回的
+`score`/`pass`，不受影响。修复为读取 `expected_count`（缺失时仍回退 0，
+与 evaluator_error 等无 match_detail 的返回兼容）。

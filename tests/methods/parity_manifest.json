@@ -891,7 +891,7 @@
   "src/stages/run_QA_pipeline_parallel.py": "a1f38033de94f5683b548438daccbe81dbe3834598266f73a2fefe94a42b33f3",
   "src/stages/run_webmall_pipeline.py": "5d24d01fb0b6acb0ce1e339126befeec4df4bdd5d8357d6b2f65e17b43d8e03f",
   "src/stages/run_webmall_pipeline_parallel.py": "e7b1ec8cd243b2da3ea3aad37101bf71da0e6ec6ebadbd413e7ca6001094a138",
-  "src/stages/run_webnavigate_pipeline_parallel.py": "1c998ffe789eeeddf8aa6f4c3e52fdc44bbc3e3ae41cd78fdb88e981ea6ca778",
+  "src/stages/run_webnavigate_pipeline_parallel.py": "65eb35c674c9a395e6c39d7ed864696b9b46f2ed5f746f63399f2ffbcfd103f6",
   "src/stages/self_operation_pipeline/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "src/stages/self_operation_pipeline/run_searchwrite_pipeline_parallel.py": "4b26ef08b08e28f1d5b5e845742e87ee198de4be9a7bc626746aa9231e6c7631",
   "src/stages/self_operation_pipeline/run_self_operation_pipeline_parallel.py": "9282183bbbac09e450324e070157cb4c3f47614fcb58d68beec064c8e622e119",
