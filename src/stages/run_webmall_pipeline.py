@@ -63,10 +63,9 @@ from webmall_eval_assets.cart_evaluator_from_at import (
     create_checkpoints_from_urls,
     detect_vm_all_carts,
     evaluate_all_vms,
-    summarize_cart_evaluation,
 )
 from webmall_eval_assets.checkout_evaluator_from_at import (
-    expected_checkout_from_urls,
+    ExpectedCheckout,
     extract_checkout_info,
     extract_checkout_info_with_recovery,
     get_at as get_checkout_at,
@@ -76,7 +75,6 @@ from webmall_eval_assets.checkout_evaluator_from_at import (
 from webmall_eval_assets.webmall_identity import normalize_http_url
 from webmall_eval_assets.webmall_run_contracts import (
     build_evaluator_error,
-    build_task_provenance,
     classify_webmall_result,
     partition_skipped_tasks,
     summarize_webmall_results,
@@ -1423,16 +1421,38 @@ def stage3_evaluate(
 
         vm_eval_results = evaluate_all_vms(all_cart_results, checkpoints)
 
-        summary = summarize_cart_evaluation(checkpoints, vm_eval_results)
+        matched_count = sum(1 for cp in checkpoints if cp.flag)
+        total_expected = len(checkpoints)
+
+        # 统计各 VM 中的多余（unexpected）商品数
+        total_unexpected = sum(
+            len(res.unexpected_products)
+            for res in vm_eval_results.values()
+        )
+
+        # 严格判定：recall=1（全部期望商品匹配）且无多余商品
+        passed = (matched_count == total_expected and total_unexpected == 0) if total_expected else False
+        recall = matched_count / total_expected if total_expected else 0.0
+
+        # 修正 precision：matched / (matched + unexpected)
+        total_detected = matched_count + total_unexpected
+        precision = matched_count / total_detected if total_detected > 0 else (1.0 if matched_count == 0 else 0.0)
+        f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+
+        # 归一化 score 到 [0, 1]，与 pipeline_base 的 pass 判定 (score == 1.0) 兼容
+        score = matched_count / total_expected if total_expected > 0 else 0.0
 
         eval_result = {
-            **summary,
+            "score": score,
+            "matched_count": matched_count,
+            "max_score": total_expected,
+            "passed": passed,
+            "recall": recall,
+            "precision": precision,
+            "f1": f1,
             "matched_urls": [cp.value for cp in checkpoints if cp.flag],
             "missing_urls": [cp.value for cp in checkpoints if not cp.flag],
-            "detail": (
-                f"[cart/AT] 匹配 {summary['matched_count']}/{summary['max_score']} 个期望商品，"
-                f"多余商品 {summary['total_unexpected']} 个"
-            ),
+            "detail": f"[cart/AT] 匹配 {matched_count}/{total_expected} 个期望商品",
             "evaluation_results": {
                 vm_key: {
                     "score": res.score,
@@ -1450,13 +1470,17 @@ def stage3_evaluate(
         print("\ncheckout 任务评测方式：基于 Accessibility Tree 验证订单确认页")
         server_ports = list(range(5000, 5004 + 1))
 
-        # 从完整 expected_urls 构建期望的 checkout 信息
-        expected_checkout = expected_checkout_from_urls(
-            expected_urls,
-            user_details=task_config.get("user_details", {}),
-        )
+        # 从 task_config 构建期望的 checkout 信息
+        product_url = expected_urls[0] if expected_urls else ""
+        from urllib.parse import urlparse as _urlparse
+        product_slug = _urlparse(product_url).path.rstrip("/").split("/")[-1]
         user_details = task_config.get("user_details", {})
-        print(f"  期望商品 slug: {', '.join(expected_checkout.product_slugs)}")
+        expected_checkout = ExpectedCheckout(
+            product_slug=product_slug,
+            shop_port=_urlparse(product_url).port or 0,
+            user_details=user_details,
+        )
+        print(f"  期望商品 slug: {product_slug}")
         print(f"  用户信息: {user_details}")
 
         port_results = []
@@ -1484,9 +1508,6 @@ def stage3_evaluate(
                 "order_number": co_result.order_number,
                 "billing_info": co_result.billing_info,
                 "product_name": co_result.product_name,
-                "product_names": co_result.product_names,
-                "product_slugs": co_result.product_slugs,
-                "product_checks": co_result.product_checks,
                 "error": co_result.error,
                 "recovery_used": co_result.recovery_used,
                 "recovery_url": co_result.recovery_url,
@@ -1725,7 +1746,6 @@ def main() -> None:
         expected_answer = task_config.get("answer", "")
 
         task_result: Dict[str, Any] = {
-            **build_task_provenance(task_config),
             "task_uid": task_uid,
             "task_tag": task_config.get("task_tag", ""),
             "answer_type": task_config.get("answer_type", ""),

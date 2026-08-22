@@ -3,9 +3,10 @@
     "task_uid": "529636d9-fce1-44bd-a6bb-d1c231c8028e",
     "task_type": "QA",
     "task_tag": "WebSearch",
-    "instruction": "List the year between 2018 and 2021 when the proportion of female recipients of the NSF CAREER Award in computer science was highest, and list the names of all female recipients in that year. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
+    "instruction": "According to the VeriWeb V4_49 annotation, list the year from 2018 to 2021 reported as having the highest proportion of women among U.S. National Science Foundation (NSF) CAREER Award winners in computer science, followed by the reported female recipient name(s) for that year. Answer in the format: <answer>YEAR; NAME(S)</answer>. Only output the tags, no extra explanation.",
     "task_source": "VeriGUI",
-    "answer": "Yanfang Ye",
+    "answer": "2019; Yanfang Ye",
+    "answer_match_mode": "ordered_structured",
     "prepare_script_path": "",
     "evaluator_path": "",
     "original_task_id": "InformationRetrieval-WebSearch-Statisticsearch-029"

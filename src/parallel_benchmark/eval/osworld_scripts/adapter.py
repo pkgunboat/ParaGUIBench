@@ -5,7 +5,6 @@ OSWorld 评测脚本路径适配器
 """
 
 import os
-from typing import Optional
 
 
 # OSWorld 原生路径前缀 -> 并行评测环境路径前缀
@@ -32,6 +31,12 @@ def adapt_result_path(osworld_path: str) -> str:
         return osworld_path
     
     for old_prefix, new_prefix in PATH_MAPPING.items():
+        # ``/home/user/Desktop``（无尾斜杠）与
+        # ``/home/user/Desktop/...`` 必须映射到同一 shared 根目录。
+        # 若只判断带斜杠前缀，裸目录会落入下面的通用兜底，错误地变成
+        # ``/home/user/shared/Desktop``。
+        if osworld_path == old_prefix.rstrip("/"):
+            return new_prefix.rstrip("/")
         if osworld_path.startswith(old_prefix):
             return osworld_path.replace(old_prefix, new_prefix, 1)
     

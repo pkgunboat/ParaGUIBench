@@ -80,6 +80,9 @@
       }
     ],
     "func": "compare_images",
+    "options": {
+      "score_threshold": 0.75
+    },
     "result": {
       "type": "background_image_in_slide",
       "ppt_file_path": "/home/user/Desktop/Robotic_Workshop_Infographics.pptx",

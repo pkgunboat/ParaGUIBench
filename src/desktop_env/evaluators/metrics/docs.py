@@ -10,12 +10,7 @@ from PIL import Image
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT, WD_TAB_ALIGNMENT
 from docx.shared import RGBColor
-from odf.opendocument import load
-from odf.text import P
-from odf.text import Span
 from rapidfuzz import fuzz
-from skimage.color import deltaE_ciede2000
-from skimage.color import rgb2lab
 
 logger = logging.getLogger("desktopenv.metric.docs")
 
@@ -78,6 +73,8 @@ def compare_docx_files(file1, file2, **options):
         return 0
 
     def get_paragraph_texts_odt(document):
+        from odf.text import P
+
         paragraphs = document.getElementsByType(P)
         paragraph_texts = []
         for paragraph in paragraphs:
@@ -107,6 +104,8 @@ def compare_docx_files(file1, file2, **options):
             doc1_paragraphs = sorted(doc1_paragraphs)
             doc2_paragraphs = sorted(doc2_paragraphs)
     elif file1.endswith('.odt') and file2.endswith('.odt'):
+        from odf.opendocument import load
+
         try:
             doc1 = load(file1)
             doc2 = load(file2)
@@ -459,6 +458,9 @@ def evaluate_colored_words_in_tables(file_path1, file_path2, **kwargs):
     threshold = kwargs.get('threshold', 3.5)
 
     def _calculate_color_difference(rgb1, rgb2):
+        from skimage.color import deltaE_ciede2000
+        from skimage.color import rgb2lab
+
         srgb1 = [rgb1[0] / 255.0, rgb1[1] / 255.0, rgb1[2] / 255.0]
         srgb2 = [rgb2[0] / 255.0, rgb2[1] / 255.0, rgb2[2] / 255.0]
         lab1, lab2 = rgb2lab(srgb1), rgb2lab(srgb2)
@@ -487,6 +489,9 @@ def evaluate_colored_words_in_tables(file_path1, file_path2, **kwargs):
 
 
 def check_highlighted_words(file_path1, file_path2):
+    from odf.opendocument import load
+    from odf.text import Span
+
     if not file_path1 or not file_path2:
         return 0
 
@@ -919,6 +924,11 @@ def compare_references(file1, file2, **options):
 
     if content_only:
         def _normalize_reference_text(text):
+            """归一化单条参考文献文本。
+
+            输入参数：text 为原始引用字符串。
+            输出返回值：统一大小写、DOI 前缀与空白后的字符串。
+            """
             text = text.lower()
             text = re.sub(r'https?://doi\.org/', 'doi:', text)
             text = re.sub(r'\bdoi\s*:?\s*', 'doi:', text)
@@ -926,6 +936,11 @@ def compare_references(file1, file2, **options):
             return text
 
         def _tokens_for_reference(text):
+            """提取用于引用相似度比较的有效 token。
+
+            输入参数：text 为待分词的引用字符串。
+            输出返回值：移除协议、标点和常见停用词后的 token 列表。
+            """
             text = _normalize_reference_text(text)
             text = re.sub(r'https?://', ' ', text)
             text = re.sub(r'[^a-z0-9/.-]+', ' ', text)
@@ -937,6 +952,11 @@ def compare_references(file1, file2, **options):
                     if len(tok.strip('.-')) > 1 and tok.strip('.-') not in stop]
 
         def _token_f1(actual, expected):
+            """计算预测引用与 gold 引用的多重集 token F1。
+
+            输入参数：actual 为预测引用，expected 为期望引用。
+            输出返回值：取值范围为 0.0 到 1.0 的 F1 分数。
+            """
             actual_tokens = _tokens_for_reference(actual)
             expected_tokens = _tokens_for_reference(expected)
             if not actual_tokens or not expected_tokens:
@@ -961,6 +981,11 @@ def compare_references(file1, file2, **options):
             )
 
         def _extract_doi(text):
+            """从引用文本提取规范化 DOI。
+
+            输入参数：text 为单条引用字符串。
+            输出返回值：小写 DOI 字符串；未找到时返回 None。
+            """
             normalized = _normalize_reference_text(text)
             match = re.search(r'\bdoi:?(10\.\d{4,9}/[^\s,]+)', normalized)
             if not match:
@@ -968,6 +993,11 @@ def compare_references(file1, file2, **options):
             return match.group(1).rstrip(').,').lower()
 
         def _extract_urls(text):
+            """提取引用中的非 DOI HTTP(S) URL。
+
+            输入参数：text 为单条引用字符串。
+            输出返回值：去除结尾标点后的 URL 列表。
+            """
             urls = []
             for url in re.findall(r'https?://[^\s,]+', text.lower()):
                 cleaned = url.rstrip(').,')
@@ -977,16 +1007,55 @@ def compare_references(file1, file2, **options):
             return urls
 
         def _extract_year(text):
+            """提取 APA 引用括号中的出版年份。
+
+            输入参数：text 为单条引用字符串。
+            输出返回值：四位年份及可选字母后缀；未找到时返回 None。
+            """
             match = re.search(r'\((\d{4}[a-z]?)\)', text.lower())
             return match.group(1) if match else None
 
+        def _extract_author_tokens(text):
+            """
+            提取 APA 引用年份括号前的作者标识。
+
+            输入:
+                text: 单条引用文本。
+            输出:
+                忽略大小写与标点后的有序作者 token；无法定位年份时返回空列表。
+            """
+            match = re.match(r'\s*(.*?)\s*\(\d{4}[a-z]?\)', text.lower())
+            return _tokens_for_reference(match.group(1)) if match else []
+
+        def _extract_title_tokens(text):
+            """
+            提取 APA 引用年份后的首个标题句。
+
+            输入:
+                text: 单条引用文本。
+            输出:
+                忽略大小写与标点后的有序标题 token；结构无法识别时返回空列表。
+            """
+            match = re.search(r'\(\d{4}[a-z]?\)\.\s*(.*?)(?:\.\s|$)', text.lower())
+            return _tokens_for_reference(match.group(1)) if match else []
+
         def _extract_pages(text):
+            """提取并规范化引用中的页码区间。
+
+            输入参数：text 为单条引用字符串。
+            输出返回值：统一短横线且移除空白的页码区间列表。
+            """
             pages = []
             for match in re.findall(r'\b(?:pp?\.\s*)?(\d{1,5}\s*[-–]\s*\d{1,5})\b', text.lower()):
                 pages.append(re.sub(r'\s+', '', match).replace('–', '-'))
             return pages
 
         def _source_tokens(text):
+            """提取引用来源名称的有效 token。
+
+            输入参数：text 为单条引用字符串。
+            输出返回值：排除数字后的期刊或来源 token 列表；结构无效时为空。
+            """
             normalized = _normalize_reference_text(text)
             remainder = re.split(r'\(\d{4}[a-z]?\)\.\s*', normalized, maxsplit=1)
             if len(remainder) != 2:
@@ -1001,6 +1070,11 @@ def compare_references(file1, file2, **options):
             return [tok for tok in tokens if not tok.isdigit()]
 
         def _list_similarity(actual_items, expected_items):
+            """计算两个非空 token 列表的 Jaccard 相似度。
+
+            输入参数：actual_items 为预测列表，expected_items 为期望列表。
+            输出返回值：0.0 到 1.0 的相似度；任一列表为空时返回 None。
+            """
             if not actual_items or not expected_items:
                 return None
             actual_set = set(actual_items)
@@ -1008,6 +1082,19 @@ def compare_references(file1, file2, **options):
             return len(actual_set & expected_set) / len(actual_set | expected_set)
 
         def _fields_consistent(actual, expected):
+            """校验引用关键身份字段是否与 gold 一致。
+
+            输入参数：actual 为预测引用，expected 为期望引用。
+            输出返回值：作者、标题、年份、DOI、URL 与页码均满足约束时为 True。
+            """
+            expected_authors = _extract_author_tokens(expected)
+            if expected_authors and _extract_author_tokens(actual) != expected_authors:
+                return False
+
+            expected_title = _extract_title_tokens(expected)
+            if expected_title and _extract_title_tokens(actual) != expected_title:
+                return False
+
             actual_year = _extract_year(actual)
             expected_year = _extract_year(expected)
             if expected_year and actual_year != expected_year:
@@ -1015,22 +1102,22 @@ def compare_references(file1, file2, **options):
 
             actual_doi = _extract_doi(actual)
             expected_doi = _extract_doi(expected)
-            if actual_doi and expected_doi and actual_doi != expected_doi:
+            if expected_doi and actual_doi != expected_doi:
                 return False
 
             actual_urls = _extract_urls(actual)
             expected_urls = _extract_urls(expected)
-            if actual_urls and expected_urls and set(actual_urls) != set(expected_urls):
+            if expected_urls and set(actual_urls) != set(expected_urls):
                 return False
 
             actual_pages = _extract_pages(actual)
             expected_pages = _extract_pages(expected)
-            if actual_pages and expected_pages and set(actual_pages) != set(expected_pages):
+            if expected_pages and set(actual_pages) != set(expected_pages):
                 return False
 
             return True
 
-        identity_threshold = float(options.get('reference_identity_threshold', 0.72))
+        identity_threshold = float(options.get('reference_identity_threshold', 0.9))
         source_threshold = float(options.get('reference_source_threshold', 0.6))
         passed = 0
         for actual_ref, expected_ref in zip(ref1, ref2):

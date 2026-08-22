@@ -26,7 +26,9 @@ from task_scanner import scan_unified_tasks
 from run_webnavigate_pipeline_parallel import (
     reinitialize_vms,
     clear_bookmarks_parallel,
-    open_browser_parallel,
+    _bookmark_reset_succeeded,
+    _build_preflight_skip_result,
+    _prepare_browser_after_reset,
     stage2_execute_plan,
     stage2_execute_gui_only,
     stage3_evaluate,
@@ -100,7 +102,7 @@ class WebNavigatePipeline(BasePipeline):
 
     def stage_init(self, task, config, log):
         """
-        重建 VM + 清空收藏夹。
+        重建 VM、清空收藏夹，并按评价模式准备浏览器。
 
         输入:
             task: TaskItem
@@ -115,9 +117,58 @@ class WebNavigatePipeline(BasePipeline):
                                 task_uid=task.task_uid):
             return False
         vm_ports = config.get_server_ports()
-        clear_bookmarks_parallel(config.vm_ip, vm_ports, log)
-        open_browser_parallel(config.vm_ip, vm_ports, log)
-        return True
+        bookmark_reset = clear_bookmarks_parallel(
+            config.vm_ip,
+            vm_ports,
+            log,
+        )
+        if not _bookmark_reset_succeeded(bookmark_reset, vm_ports):
+            log.error(
+                "至少一台 VM 的书签重置失败，停止浏览器准备与 Agent 执行: %s",
+                bookmark_reset,
+            )
+            return False
+        return _prepare_browser_after_reset(
+            task.task_config,
+            config,
+            log,
+        )
+
+    def build_pre_execution_result(self, task):
+        """为 ``skip_eval`` 任务在统一调度前构造 SKIP 结果。
+
+        功能：覆写 BasePipeline 预执行钩子；隔离任务直接返回三态结果，
+        从而不获取 group、不分配端口、不创建容器，也不触发 active-tab
+        live VM。普通任务返回 ``None`` 并继续既有调度。
+        输入参数：
+            task: 待调度的 WebNavigate ``TaskItem``。
+        输出返回值：
+            完整 SKIP 结果字典，或普通任务的 ``None``。
+        """
+
+        if task.task_config.get("skip_eval") is not True:
+            return None
+        result = _build_preflight_skip_result(
+            task.task_id,
+            task.task_config,
+        )
+        result.update({
+            "pipeline": self.pipeline_name,
+            "agent_mode": self.args.agent_mode,
+            "gui_agent": self.args.gui_agent,
+            "status": "skip",
+            "score": None,
+            "pass": None,
+            "plan_rounds": 0,
+            "gui_rounds_total": 0,
+            "gui_steps_sequential": 0,
+            "token_plan": 0,
+            "token_gui": 0,
+            "token_total": 0,
+            "cost_usd": 0.0,
+            "elapsed_time_sec": 0.0,
+        })
+        return result
 
     def stage_execute(self, task, config, log):
         """

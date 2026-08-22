@@ -3,6 +3,7 @@
     "task_uid": "93b18f33-67b9-4225-a895-f833e1fd2f27",
     "task_type": "QA",
     "task_tag": "WebSearch",
+    "answer_match_mode": "exact",
     "instruction": "Among Southeast Asian countries, find the one with the highest compound annual growth rate (CAGR) of the statutory minimum wage between 2016 and 2024. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
     "task_source": "VeriGUI",
     "answer": "Indonesia",

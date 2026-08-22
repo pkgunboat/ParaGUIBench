@@ -97,7 +97,8 @@ class ProgressState:
         self.condition: Dict[str, Any] = {"current": "", "index": 0, "total": 0}
         self.pipeline: Dict[str, Any] = {"current": "", "index": 0, "total": 0}
         self.tasks: Dict[str, int] = {
-            "total": 0, "completed": 0, "passed": 0, "failed": 0, "errored": 0
+            "total": 0, "completed": 0, "passed": 0, "failed": 0,
+            "skipped": 0, "errored": 0
         }
         # 混跑模式下的 per-pipeline 完成度（{name: {total, completed, passed}}）
         self.per_pipeline: Dict[str, Dict[str, int]] = {}
@@ -137,7 +138,8 @@ class ProgressState:
         """
         with self._lock:
             self.tasks = {
-                "total": total, "completed": 0, "passed": 0, "failed": 0, "errored": 0
+                "total": total, "completed": 0, "passed": 0, "failed": 0,
+                "skipped": 0, "errored": 0
             }
             self.per_pipeline = {}
             self.threads = {}
@@ -191,9 +193,10 @@ class ProgressState:
 
         输入:
             task_id: 任务 ID
-            status: "pass" | "fail" | "error"
+            status: "pass" | "fail" | "skip" | "error"
                 - pass: 评估通过 (score == 1.0)
                 - fail: 评估不通过 (score < 1.0)
+                - skip: 任务被显式隔离，不进入有效评价分母
                 - error: 执行异常 (API 错误、超时等，未产生有效分数)
             elapsed: 总耗时秒数
             rounds: Plan Agent 轮次数
@@ -206,6 +209,8 @@ class ProgressState:
                 self.tasks["passed"] += 1
             elif status == "fail":
                 self.tasks["failed"] += 1
+            elif status == "skip":
+                self.tasks["skipped"] += 1
             else:
                 self.tasks["errored"] += 1
             if pipeline and pipeline in self.per_pipeline:
@@ -311,7 +316,8 @@ class DashboardRenderer:
         lines.append(f"Pipeline: {pipe['current']} ({pipe['index']}/{pipe['total']})")
         lines.append(
             f"Tasks: {completed}/{total} {bar} {pct:.0f}%   "
-            f"Pass: {tasks['passed']}  Fail: {tasks['failed']}  Err: {tasks['errored']}"
+            f"Pass: {tasks['passed']}  Fail: {tasks['failed']}  "
+            f"Skip: {tasks.get('skipped', 0)}  Err: {tasks['errored']}"
         )
         # 混跑模式：逐 pipeline 完成度
         per_pipeline = snap.get("per_pipeline") or {}
@@ -348,13 +354,15 @@ class DashboardRenderer:
             lines.append("")
             for r in recent[:3]:
                 icon = "\u2713" if r["status"] == "pass" else (
-                    "\u2717" if r["status"] == "fail" else "!"
+                    "\u2717" if r["status"] == "fail" else (
+                        "\u21b7" if r["status"] == "skip" else "!"
+                    )
                 )
                 tid = r["task_id"]
                 if len(tid) > 35:
                     tid = tid[:32] + "..."
                 lines.append(
-                    f"  {icon} {tid}  {r['elapsed']:.1f}s  "
+                    f"  {icon} [{r['status'].upper()}] {tid}  {r['elapsed']:.1f}s  "
                     f"{r['rounds']}rnd  ${r['cost']:.2f}"
                 )
 

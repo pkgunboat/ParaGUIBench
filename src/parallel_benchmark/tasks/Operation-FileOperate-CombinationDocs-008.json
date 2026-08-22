@@ -21,6 +21,12 @@
                     "p-2026-001_multi_modal_agent_rev1.0.pptx",
                     "p-2026-002_gui_benchmark_study_rev2.1.pptx",
                     "p-2026-003_parallel_execution_rev3.5.pptx"
+                ],
+                "validate_format": true,
+                "forbidden_filenames": [
+                    "GUI Benchmark Study.docx",
+                    "Multi Modal Agent.docx",
+                    "Parallel Execution.docx"
                 ]
             },
             "weight": 1.0,

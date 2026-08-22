@@ -21,16 +21,15 @@ import argparse
 import json
 import os
 from typing import Dict, List, Optional, Tuple
+from urllib.parse import urlparse
 
 from cart_evaluator_from_at import (
     create_checkpoints_from_urls,
     detect_vm_all_carts,
     evaluate_all_vms,
-    summarize_cart_evaluation,
 )
 from checkout_evaluator_from_at import (
     ExpectedCheckout,
-    expected_checkout_from_urls,
     extract_checkout_info,
     extract_checkout_info_with_recovery,
     get_at as get_checkout_at,
@@ -142,16 +141,28 @@ def evaluate_cart(
 
     eval_results = evaluate_all_vms(all_results, checkpoints)
 
-    summary = summarize_cart_evaluation(checkpoints, eval_results)
+    matched_count = sum(1 for cp in checkpoints if cp.flag)
+    total_expected = len(checkpoints)
+    total_unexpected = sum(
+        len(result.unexpected_products)
+        for result in eval_results.values()
+    )
+    # cart 是带副作用的闭集终态：最佳单 VM 必须包含全部期望商品，
+    # 且所有 VM 均不得出现额外或重复商品。
+    passed = (
+        matched_count == total_expected and total_unexpected == 0
+        if total_expected
+        else False
+    )
+    score = matched_count / total_expected if total_expected else 0.0
 
     return {
         "type": "cart",
-        "passed": summary["passed"],
-        "score": summary["score"],
-        "matched_count": summary["matched_count"],
-        "total_expected": summary["max_score"],
-        "total_unexpected": summary["total_unexpected"],
-        "unexpected_slugs": summary["unexpected_slugs"],
+        "passed": passed,
+        "score": score,
+        "matched_count": matched_count,
+        "total_expected": total_expected,
+        "unexpected_count": total_unexpected,
         "evaluation_results": {
             vm_key: {
                 "score": res.score,
@@ -167,8 +178,12 @@ def evaluate_cart(
 
 def build_expected_checkout(task_config: dict) -> ExpectedCheckout:
     answers = task_config["correct_answer"]["answers"]
-    return expected_checkout_from_urls(
-        answers,
+    product_url = answers[0] if answers else ""
+    product_slug = urlparse(product_url).path.rstrip("/").split("/")[-1]
+
+    return ExpectedCheckout(
+        product_slug=product_slug,
+        shop_port=urlparse(product_url).port or 0,
         user_details=task_config.get("user_details", {}),
     )
 
@@ -206,9 +221,6 @@ def evaluate_checkout(
                 "order_number": result.order_number,
                 "billing_info": result.billing_info,
                 "product_name": result.product_name,
-                "product_names": result.product_names,
-                "product_slugs": result.product_slugs,
-                "product_checks": result.product_checks,
                 "error": result.error,
                 "recovery_used": result.recovery_used,
                 "recovery_url": result.recovery_url,

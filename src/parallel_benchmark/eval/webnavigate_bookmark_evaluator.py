@@ -1,443 +1,370 @@
-"""
-Webnavigate 任务评估器：基于 Chrome 收藏夹（Bookmarks）评估。
+"""WebNavigate/Settings 书签任务评价器。
 
-评估逻辑：
-1. 从 VM 读取 Chrome Bookmarks 文件，提取所有书签 URL
-2. 根据任务 ID 获取对应的正则匹配规则
-3. 使用正则表达式匹配书签 URL
-4. 评分 = 匹配到的 URL 数 / 期望的 URL 数
-
-依赖：
-- bookmark_utils.py（递归提取书签 URL、探测 Bookmarks 路径）
+评价器使用 Chrome Bookmarks 作为可验证状态，按任务的独立语义目标评分。
+URL 规则通过 ``urlsplit`` 分离校验主机、路径和查询参数，不会将出现在
+Google 查询或恶意路径里的目标 URL 子串当作真实内容页。
+Settings-003 额外要求作者书签位于 ``bookmark_bar/My Favorite Authors``。
 """
 
 from __future__ import annotations
 
 import json
 import os
-import re
 import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Sequence, Union
 
-# ---------------------------------------------------------------------------
-# 路径设置：确保可以导入 bookmark_utils 和 desktop_env
-# ---------------------------------------------------------------------------
 _THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 _PARALLEL_BENCHMARK_DIR = os.path.dirname(_THIS_DIR)
-_UBUNTU_ENV_DIR = os.path.dirname(_PARALLEL_BENCHMARK_DIR)
-_WEBMALL_ASSETS_DIR = os.path.join(_UBUNTU_ENV_DIR, "examples", "webmall_eval_assets")
+_SRC_DIR = os.path.dirname(_PARALLEL_BENCHMARK_DIR)
+if _SRC_DIR not in sys.path:
+    sys.path.insert(0, _SRC_DIR)
 
-for _p in [_UBUNTU_ENV_DIR, _WEBMALL_ASSETS_DIR]:
-    if _p not in sys.path:
-        sys.path.insert(0, _p)
+from parallel_benchmark.eval.webnavigate_url_rules import match_semantic_groups
 
 
-# ---------------------------------------------------------------------------
-# 正则匹配规则注册表
-# ---------------------------------------------------------------------------
+def _rule(
+    hosts: Sequence[str],
+    *path_patterns: str,
+    fragment_patterns: Optional[Sequence[str]] = None,
+    query_equals: Optional[Dict[str, Sequence[str]]] = None,
+) -> Dict[str, Any]:
+    """构造一条结构化 URL 规则。
 
-REGEX_PATTERNS = {
+    功能：统一生成规则字典，避免大量任务配置重复声明可选字段。
+    输入参数：hosts 为允许的完整主机名；path_patterns 为完整路径正则；
+    fragment_patterns 为可选锚点规则；query_equals 为必须等于指定值的查询键。
+    输出返回值：可供 URL 规则匹配器消费的字典。
+    """
+    rule: Dict[str, Any] = {
+        "hosts": list(hosts),
+        "path_patterns": list(path_patterns),
+    }
+    if fragment_patterns is not None:
+        rule["fragment_patterns"] = list(fragment_patterns)
+    if query_equals is not None:
+        rule["query_equals"] = {
+            key: list(values) for key, values in query_equals.items()
+        }
+    return rule
+
+
+ACCuweather_HOSTS = ["accuweather.com", "www.accuweather.com"]
+AMAZON_HOSTS = ["amazon.com", "www.amazon.com"]
+TESLA_HOSTS = ["tesla.com", "www.tesla.com"]
+LIBREOFFICE_HOSTS = ["libreoffice.org", "www.libreoffice.org"]
+UNITREE_HOSTS = ["unitree.com", "www.unitree.com"]
+APPLE_SUPPORT_HOSTS = ["support.apple.com"]
+FDA_HOSTS = ["fda.gov", "www.fda.gov"]
+
+
+URL_RULES: Dict[str, Dict[str, Any]] = {
     "Operation-WebOperate-Settings-002": {
         "pattern_groups": [
-            {
-                "name": "MIT",
-                "patterns": [r'https?://(www\.)?mit\.edu/?(?:[?#].*)?$'],
-            },
-            {
-                "name": "University of Cambridge",
-                "patterns": [r'https?://(www\.)?cam\.ac\.uk/?(?:[?#].*)?$'],
-            },
-            {
-                "name": "University of Oxford",
-                "patterns": [r'https?://(www\.)?ox\.ac\.uk/?(?:[?#].*)?$'],
-            },
-            {
-                "name": "Harvard University",
-                "patterns": [r'https?://(www\.)?harvard\.edu/?(?:[?#].*)?$'],
-            },
-            {
-                "name": "Stanford University",
-                "patterns": [r'https?://(www\.)?stanford\.edu/?(?:[?#].*)?$'],
-            },
-            {
-                "name": "Imperial College London",
-                "patterns": [r'https?://(www\.)?imperial\.ac\.uk/?(?:[?#].*)?$'],
-            },
+            {"name": "MIT", "url_rules": [_rule(["mit.edu", "www.mit.edu"], r"/")]},
+            {"name": "University of Cambridge", "url_rules": [_rule(["cam.ac.uk", "www.cam.ac.uk"], r"/")]},
+            {"name": "University of Oxford", "url_rules": [_rule(["ox.ac.uk", "www.ox.ac.uk"], r"/")]},
+            {"name": "Harvard University", "url_rules": [_rule(["harvard.edu", "www.harvard.edu"], r"/")]},
+            {"name": "Stanford University", "url_rules": [_rule(["stanford.edu", "www.stanford.edu"], r"/")]},
+            {"name": "Imperial College London", "url_rules": [_rule(["imperial.ac.uk", "www.imperial.ac.uk"], r"/")]},
             {
                 "name": "ETH Zurich",
-                "patterns": [
-                    r'https?://(www\.)?ethz\.ch/?(?:[?#].*)?$',
-                    r'https?://(www\.)?ethz\.ch/(?:en|de)(?:\.html)?/?(?:[?#].*)?$',
-                ],
+                "url_rules": [_rule(["ethz.ch", "www.ethz.ch"], r"/", r"/(?:en|de)(?:\.html)?/?")],
             },
-            {
-                "name": "National University of Singapore",
-                "patterns": [r'https?://(www\.)?nus\.edu\.sg/?(?:[?#].*)?$'],
-            },
-            {
-                "name": "UCL",
-                "patterns": [r'https?://(www\.)?ucl\.ac\.uk/?(?:[?#].*)?$'],
-            },
-            {
-                "name": "UC Berkeley",
-                "patterns": [r'https?://(www\.)?berkeley\.edu/?(?:[?#].*)?$'],
-            },
+            {"name": "National University of Singapore", "url_rules": [_rule(["nus.edu.sg", "www.nus.edu.sg"], r"/")]},
+            {"name": "UCL", "url_rules": [_rule(["ucl.ac.uk", "www.ucl.ac.uk"], r"/")]},
+            {"name": "UC Berkeley", "url_rules": [_rule(["berkeley.edu", "www.berkeley.edu"], r"/")]},
         ],
-        "description": "2024 QS 前十学校官网书签"
+        "description": "2024 QS 前十学校官网书签",
     },
     "Operation-WebOperate-Settings-003": {
+        "required_folder_path": ["bookmark_bar", "My Favorite Authors"],
         "pattern_groups": [
             {
                 "name": "Jim Fan",
-                "patterns": [
-                    r'https?://(www\.)?jimfan\.me/?(?:[?#].*)?$',
-                    r'https?://research\.nvidia\.com/person/linxi-jim-fan/?(?:[?#].*)?$',
-                    r'https?://(www\.)?linkedin\.com/in/drjimfan/?(?:[?#].*)?$',
+                "url_rules": [
+                    _rule(["jimfan.me", "www.jimfan.me"], r"/"),
+                    _rule(["research.nvidia.com"], r"/person/linxi-jim-fan/?"),
+                    _rule(["linkedin.com", "www.linkedin.com"], r"/in/drjimfan/?"),
                 ],
             },
             {
                 "name": "De-An Huang",
-                "patterns": [
-                    r'https?://research\.nvidia\.com/person/de-an-huang/?(?:[?#].*)?$',
-                    r'https?://ai\.stanford\.edu/~dahuang/?(?:[?#].*)?$',
-                    r'https?://(www\.)?linkedin\.com/in/de-an-huang-38242a69/?(?:[?#].*)?$',
+                "url_rules": [
+                    _rule(["research.nvidia.com"], r"/person/de-an-huang/?"),
+                    _rule(["ai.stanford.edu"], r"/~dahuang/?"),
+                    _rule(["linkedin.com", "www.linkedin.com"], r"/in/de-an-huang-38242a69/?"),
                 ],
             },
             {
                 "name": "Yuke Zhu",
-                "patterns": [
-                    r'https?://(www\.)?yukezhu\.me/?(?:[?#].*)?$',
-                    r'https?://(www\.)?cs\.utexas\.edu/people/faculty-researchers/yuke-zhu/?(?:[?#].*)?$',
-                    r'https?://experts\.utexas\.edu/yuke_zhu/?(?:[?#].*)?$',
-                    r'https?://research\.nvidia\.com/person/yuke-zhu/?(?:[?#].*)?$',
-                    r'https?://(www\.)?linkedin\.com/in/yukez/?(?:[?#].*)?$',
+                "url_rules": [
+                    _rule(["yukezhu.me", "www.yukezhu.me"], r"/"),
+                    _rule(["cs.utexas.edu", "www.cs.utexas.edu"], r"/people/faculty-researchers/yuke-zhu/?"),
+                    _rule(["experts.utexas.edu"], r"/yuke_zhu/?"),
+                    _rule(["research.nvidia.com"], r"/person/yuke-zhu/?"),
+                    _rule(["linkedin.com", "www.linkedin.com"], r"/in/yukez/?"),
                 ],
             },
             {
                 "name": "Anima Anandkumar",
-                "patterns": [
-                    r'https?://tensorlab\.cms\.caltech\.edu/users/anima(?:/index\.html|/)?(?:[?#].*)?$',
-                    r'https?://(www\.)?eas\.caltech\.edu/people/anima/?(?:[?#].*)?$',
-                    r'https?://en\.wikipedia\.org/wiki/Anima_Anandkumar(?:[?#].*)?$',
-                    r'https?://(www\.)?linkedin\.com/in/anima-anandkumar/?(?:[?#].*)?$',
+                "url_rules": [
+                    _rule(["tensorlab.cms.caltech.edu"], r"/users/anima(?:/index\.html|/)?"),
+                    _rule(["eas.caltech.edu", "www.eas.caltech.edu"], r"/people/anima/?"),
+                    _rule(["en.wikipedia.org"], r"/wiki/Anima_Anandkumar/?"),
+                    _rule(["linkedin.com", "www.linkedin.com"], r"/in/anima-anandkumar/?"),
                 ],
             },
         ],
-        "description": "论文首位作者和最后三位作者个人网页书签"
+        "description": "指定论文四位作者的个人网页书签及文件夹层级",
     },
     "Operation-WebOperate-WebNavigate-001": {
         "pattern_groups": [
             {
                 "name": "Manchester monthly forecast",
-                "patterns": [
-                    r'https?://(www\.)?accuweather\.com/en/gb/manchester/[^?#]*/(?:[a-z]+-weather|weather-forecast|monthly-weather-forecast)/329260/?(?:[?#].*)?$',
-                    r'https?://(www\.)?accuweather\.com/en/gb/manchester/[^?#]*/monthly-weather-forecast/329260/?(?:[?#].*)?$',
-                    r'https?://(www\.)?accuweather\.com/en/gb/manchester/[^?#]*/month/?(?:[?#].*)?$',
-                ],
+                "url_rules": [_rule(
+                    ACCuweather_HOSTS,
+                    r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?gb/manchester/(?:m15-6/)?(?:monthly-weather-forecast|(?:january|february|march|april|may|june|july|august|september|october|november|december)-weather)/329260/?",
+                )],
             },
             {
-                "name": "Manchester Air Quality Index",
-                "patterns": [
-                    r'https?://(www\.)?accuweather\.com/en/gb/manchester/[^?#]*/air-quality-index/329260/?(?:[?#].*)?$',
-                ],
+                "name": "Manchester air quality index",
+                "url_rules": [_rule(
+                    ACCuweather_HOSTS,
+                    r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?gb/manchester/(?:m15-6/)?air-quality-index/329260/?",
+                )],
             },
         ],
-        "description": "accuweather manchester 天气和空气质量"
+        "description": "AccuWeather Manchester 月度天气和空气质量",
     },
     "Operation-WebOperate-WebNavigate-002": {
         "pattern_groups": [
             {
-                "name": "Amazon shipping questions",
-                "patterns": [
-                    r'^https?://shipping\.amazon\.com/help/?(?:[?#].*)?$',
-                    r'^https?://(www\.)?amazon\.com/(?:gp/)?help/.*shipping(?:[/?#].*)?$',
-                ],
+                "name": "Amazon Shipping help",
+                "url_rules": [_rule(["shipping.amazon.com"], r"/help/?")],
             },
             {
-                "name": "Amazon refunds and returns",
-                "patterns": [
-                    r'https?://(www\.)?amazon\.com/gp/help/customer/display\.html\?[^#]*nodeId=GKM69DUUYKQWKWX7(?:[&#].*)?$',
-                ],
+                "name": "Amazon returns policy",
+                "url_rules": [_rule(
+                    AMAZON_HOSTS,
+                    r"/gp/help/customer/display\.html/?",
+                    query_equals={"nodeId": ["GKM69DUUYKQWKWX7"]},
+                )],
             },
         ],
-        "description": "Amazon 运输和退换货政策"
+        "description": "Amazon 运输常见问题和退款退货政策",
     },
     "Operation-WebOperate-WebNavigate-003": {
         "pattern_groups": [
-            {
-                "name": "Tesla Model Y",
-                "patterns": [r'https?://(www\.)?tesla\.com/modely/?(?:[?#].*)?$'],
-            },
-            {
-                "name": "Tesla Model 3",
-                "patterns": [r'https?://(www\.)?tesla\.com/model3/?(?:[?#].*)?$'],
-            },
-            {
-                "name": "Tesla Model S",
-                "patterns": [r'https?://(www\.)?tesla\.com/models/?(?:[?#].*)?$'],
-            },
+            {"name": "Tesla Model Y", "url_rules": [_rule(TESLA_HOSTS, r"/(?:[a-z]{2}_[a-z]{2}/)?modely/?")]},
+            {"name": "Tesla Model 3", "url_rules": [_rule(TESLA_HOSTS, r"/(?:[a-z]{2}_[a-z]{2}/)?model3/?")]},
+            {"name": "Tesla Model S", "url_rules": [_rule(TESLA_HOSTS, r"/(?:[a-z]{2}_[a-z]{2}/)?models/?")]},
         ],
-        "description": "Tesla Model Y/3/S 车型页面"
+        "description": "Tesla Model Y、Model 3 和 Model S 官方车型页",
     },
     "Operation-WebOperate-WebNavigate-004": {
-        "patterns": [
-            r'libreoffice.*get-help.*install-howto.*(macos|os-x)',
-            r'libreoffice.*download.*download-libreoffice'
+        "pattern_groups": [
+            {
+                "name": "LibreOffice macOS installation",
+                "url_rules": [
+                    _rule(LIBREOFFICE_HOSTS, r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?get-help/install-howto/macos/?"),
+                    _rule(
+                        LIBREOFFICE_HOSTS,
+                        r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?installation-instructions/?",
+                        fragment_patterns=[r"macos"],
+                    ),
+                ],
+            },
+            {
+                "name": "LibreOffice Windows installation",
+                "url_rules": [
+                    _rule(LIBREOFFICE_HOSTS, r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?get-help/install-howto/windows/?"),
+                    _rule(
+                        LIBREOFFICE_HOSTS,
+                        r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?installation-instructions/?",
+                        fragment_patterns=[r"windows"],
+                    ),
+                ],
+            },
         ],
-        "expected_count": 2,
-        "description": "LibreOffice Mac 安装指南和下载页面"
+        "description": "LibreOffice macOS 和 Windows 安装指南",
     },
     "Operation-WebOperate-WebNavigate-005": {
         "pattern_groups": [
             {
                 "name": "deerAPI pricing",
-                "patterns": [
-                    r'https?://helpdoc\.deerapi\.com/about-price/?(?:[?#].*)?$',
-                    r'https?://api\.deerapi\.com/pricing/?(?:[?#].*)?$',
+                "url_rules": [
+                    _rule(["helpdoc.deerapi.com"], r"/about-price/?"),
+                    _rule(["api.deerapi.com"], r"/pricing/?"),
                 ],
             },
             {
-                "name": "Silicon Flow pricing",
-                "patterns": [r'https?://(www\.)?siliconflow\.com/pricing/?(?:[?#].*)?$'],
+                "name": "SiliconFlow pricing",
+                "url_rules": [_rule(["siliconflow.com", "www.siliconflow.com"], r"/pricing/?")],
             },
         ],
-        "description": "deerAPI 和 Silicon Flow API 价格页面"
+        "description": "deerAPI 和 SiliconFlow API 价格页",
     },
     "Operation-WebOperate-WebNavigate-007": {
         "pattern_groups": [
             {
                 "name": "Unitree About",
-                "patterns": [
-                    r'^https?://(www\.)?unitree\.com/(?:cn/)?about/?(?:[?#].*)?$',
-                ],
+                "url_rules": [_rule(UNITREE_HOSTS, r"/(?:[a-z]{2}/)?about/?")],
             },
             {
                 "name": "Unitree G1",
-                "patterns": [
-                    r'^https?://(www\.)?unitree\.com/(?:cn/)?g1/?(?:[?#].*)?$',
-                ],
+                "url_rules": [_rule(UNITREE_HOSTS, r"/(?:[a-z]{2}/)?(?:g1|unitree-g1)/?")],
             },
         ],
-        "description": "Unitree 关于我们和 G1 机器人页面"
+        "description": "Unitree 关于我们和 G1 人形机器人页",
     },
     "Operation-WebOperate-WebNavigate-008": {
         "pattern_groups": [
             {
-                "name": "Steam Battlefield 5 app page",
-                "patterns": [
-                    r'https?://store\.steampowered\.com/app/1238810(?:/[^/?#]*)?/?(?:[?#].*)?$',
-                ],
+                "name": "Steam Battlefield V",
+                "url_rules": [_rule(
+                    ["store.steampowered.com"],
+                    r"/app/1238810(?:/[^/]*)?/?",
+                )],
             },
         ],
-        "description": "Steam Battlefield 5 购买页面"
+        "description": "Steam Battlefield V 商店页",
     },
     "Operation-WebOperate-WebNavigate-010": {
         "pattern_groups": [
-            {
-                "name": "iPhone 15 Pro Max 111828",
-                "patterns": [
-                    r'^https?://support\.apple\.com/[^?#]*111828(?:[/?#].*)?$',
-                ],
-            },
-            {
-                "name": "iPhone 14 Pro Max 111846",
-                "patterns": [
-                    r'^https?://support\.apple\.com/[^?#]*111846(?:[/?#].*)?$',
-                ],
-            },
-            {
-                "name": "iPhone 13 Pro Max 111870",
-                "patterns": [
-                    r'^https?://support\.apple\.com/[^?#]*111870(?:[/?#].*)?$',
-                ],
-            },
+            {"name": "iPhone 15 Pro Max", "url_rules": [_rule(APPLE_SUPPORT_HOSTS, r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?111828/?")]},
+            {"name": "iPhone 14 Pro Max", "url_rules": [_rule(APPLE_SUPPORT_HOSTS, r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?111846/?")]},
+            {"name": "iPhone 13 Pro Max", "url_rules": [_rule(APPLE_SUPPORT_HOSTS, r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?111870/?")]},
         ],
-        "description": "Apple iPhone 15/14/13 Pro Max 技术规格页面"
+        "description": "Apple iPhone 15/14/13 Pro Max 技术规格页",
     },
     "Operation-WebOperate-WebNavigate-011": {
-        "patterns": [
-            r'fda.*drugs.*tamiflu.*consumer.*questions.*and.*answers'
+        "pattern_groups": [
+            {
+                "name": "FDA Tamiflu safety/history",
+                "url_rules": [
+                    _rule(
+                        FDA_HOSTS,
+                        r"/drugs/postmarket-drug-safety-information-patients-and-providers/tamiflu-consumer-questions-and-answers/?",
+                    ),
+                    _rule(
+                        FDA_HOSTS,
+                        r"/drugs/postmarket-drug-safety-information-patients-and-providers/tamiflu-pediatric-adverse-events-questions-and-answers/?",
+                    ),
+                ],
+            },
         ],
-        "expected_count": 1,
-        "description": "FDA Tamiflu 副作用和历史信息页面"
+        "description": "FDA Tamiflu 副作用及历史信息页",
     },
 }
 
+# 保留旧导出名，避免外部调试脚本因变量更名失效。
+REGEX_PATTERNS = URL_RULES
 
 UNSUPPORTED_TASKS = {
-    "Operation-WebOperate-Settings-001": (
-        "unsupported: 任务目标是修改书签网页中的用户名，当前 WebNavigate "
-        "书签 URL 评价器无法验证网页内状态；任务 JSON 也未声明可评测目标。"
-    ),
     "Operation-WebOperate-WebNavigate-009": (
-        "unsupported: 任务目标是生成 Google Shopping 商品列表，不是收藏目标网页；"
-        "当前书签 URL 评价器无法验证列表内容。"
+        "unsupported in bookmark mode: 原 OSWorld gold 检查活动标签页查询词、"
+        "已选筛选及无额外筛选；该任务应由 osworld_active_tab 路由评价。"
     ),
 }
 
 
 def has_rule(task_id: str) -> bool:
-    """返回指定任务是否有可执行的书签 URL 匹配规则。"""
-    return task_id in REGEX_PATTERNS
+    """返回任务是否有可执行 URL 规则。
+
+    输入参数：task_id 为 canonical 任务 ID。
+    输出返回值：规则表存在该任务时返回 True。
+    """
+    return task_id in URL_RULES
 
 
 def has_task_entry(task_id: str) -> bool:
-    """返回 evaluator 是否知道该任务，包括明确标注为不可验证的任务。"""
-    return task_id in REGEX_PATTERNS or task_id in UNSUPPORTED_TASKS
+    """返回评价器是否识别该任务。
 
-
-def _load_task(task: Union[Dict, str]) -> Dict:
+    输入参数：task_id 为 canonical 任务 ID。
+    输出返回值：有可执行规则或有明确不可评声明时返回 True。
     """
-    加载任务数据。
+    return task_id in URL_RULES or task_id in UNSUPPORTED_TASKS
 
-    输入:
-        task: 任务字典或任务 JSON 文件路径
-    输出:
-        任务字典
+
+def _load_task(task: Union[Dict[str, Any], str]) -> Dict[str, Any]:
+    """加载任务配置。
+
+    输入参数：task 为已解析字典或 JSON 文件路径。
+    输出返回值：解析后的任务字典。
     """
     if isinstance(task, dict):
         return task
     if isinstance(task, str):
-        with open(task, "r", encoding="utf-8") as f:
-            return json.load(f)
+        with open(task, "r", encoding="utf-8") as file_obj:
+            return json.load(file_obj)
     raise TypeError(f"不支持的任务类型: {type(task)}")
 
 
-def _match_urls_with_regex(
-    patterns: List[str],
-    bookmark_urls: List[str],
-    expected_count: int,
-) -> Dict[str, Any]:
+def _records_in_required_folder(
+    records: Sequence[Dict[str, Any]],
+    required_path: Sequence[str],
+) -> List[Dict[str, Any]]:
+    """筛选位于指定 Chrome 文件夹层级的 URL 记录。
+
+    输入参数：records 为保留 folder_path 的书签记录；required_path 为
+    从 Chrome roots 开始的完整期望路径。
+    输出返回值：类型为 url、URL 非空且路径与期望完全相等的记录列表。
     """
-    使用正则表达式匹配书签 URL。
+    expected = list(required_path)
+    selected: List[Dict[str, Any]] = []
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        url = str(record.get("url") or "").strip()
+        folder_path = record.get("folder_path")
+        record_type = record.get("type", "url")
+        if record_type == "url" and url and folder_path == expected:
+            selected.append(record)
+    return selected
 
-    输入:
-        patterns: 正则表达式列表
-        bookmark_urls: 书签中实际的 URL 列表
-        expected_count: 期望匹配到的 URL 数量
-    输出:
-        匹配详情字典，包含 matched 列表和分数
+
+def _read_records_from_controller(controller: Any) -> List[Dict[str, Any]]:
+    """从 VM controller 读取结构化书签记录。
+
+    输入参数：controller 为 PythonController 实例。
+    输出返回值：包含 URL 和 folder_path 的记录列表；读取失败时向上抛异常。
     """
-    matched = []
-    matched_urls = set()  # 避免重复计数
+    from stages.webmall_eval_assets.bookmark_utils import read_bookmark_records
 
-    for url in bookmark_urls:
-        for pattern in patterns:
-            if re.search(pattern, url, re.IGNORECASE):
-                if url not in matched_urls:
-                    matched.append({
-                        "url": url,
-                        "pattern": pattern
-                    })
-                    matched_urls.add(url)
-                break  # 一个 URL 只匹配一次
-
-    matched_count = len(matched)
-    score = min(matched_count / expected_count, 1.0) if expected_count > 0 else 0.0
-
-    return {
-        "expected_count": expected_count,
-        "matched_count": matched_count,
-        "score": score,
-        "matched": matched,
-    }
-
-
-def _match_urls_with_pattern_groups(
-    pattern_groups: List[Dict[str, Any]],
-    bookmark_urls: List[str],
-) -> Dict[str, Any]:
-    """
-    按目标分组匹配书签 URL。
-
-    每个分组代表一个必须完成的语义目标（例如一所学校或一位作者）。
-    一个分组命中任意候选 URL 即计 1 分，避免多个同类 URL 重复凑满数量。
-    """
-    group_results = []
-    matched = []
-
-    for group in pattern_groups:
-        group_name = group.get("name", "")
-        patterns = group.get("patterns", [])
-        group_matches = []
-
-        for url in bookmark_urls:
-            for pattern in patterns:
-                if re.search(pattern, url, re.IGNORECASE):
-                    group_matches.append({
-                        "url": url,
-                        "pattern": pattern,
-                    })
-                    break
-
-        group_passed = bool(group_matches)
-        group_result = {
-            "name": group_name,
-            "passed": group_passed,
-            "matched_count": len(group_matches),
-            "matched": group_matches,
-            "patterns": patterns,
-        }
-        group_results.append(group_result)
-
-        if group_passed:
-            first_match = group_matches[0]
-            matched.append({
-                "group": group_name,
-                "url": first_match["url"],
-                "pattern": first_match["pattern"],
-            })
-
-    expected_count = len(pattern_groups)
-    matched_count = sum(1 for item in group_results if item["passed"])
-    score = min(matched_count / expected_count, 1.0) if expected_count > 0 else 0.0
-
-    return {
-        "expected_count": expected_count,
-        "matched_count": matched_count,
-        "score": score,
-        "matched": matched,
-        "groups": group_results,
-    }
+    return read_bookmark_records(controller)
 
 
 def evaluate(
-    task: Union[Dict, str],
+    task: Union[Dict[str, Any], str],
     agent_answer: Optional[str] = None,
     *,
     vm_ip: Optional[str] = None,
     vm_port: Optional[int] = None,
     controller: Optional[Any] = None,
     bookmark_urls: Optional[List[str]] = None,
-    **kwargs,
+    bookmark_records: Optional[List[Dict[str, Any]]] = None,
+    **kwargs: Any,
 ) -> Dict[str, Any]:
-    """
-    评估 Webnavigate 任务：使用正则表达式匹配 Chrome 书签 URL。
+    """根据 Chrome 书签状态评估 WebNavigate/Settings 任务。
 
-    支持多种调用方式（按优先级）：
-    1. 直接传入 bookmark_urls（已预读的书签 URL 列表）
-    2. 传入 controller（PythonController 实例，用于从 VM 读取）
-    3. 传入 vm_ip + vm_port（自动创建 controller）
-
-    输入:
-        task: 任务字典或任务 JSON 文件路径
-        agent_answer: agent 输出（本 evaluator 不使用，保留接口兼容性）
-        vm_ip: VM IP 地址
-        vm_port: VM Python Server 端口
-        controller: PythonController 实例
-        bookmark_urls: 已预读的书签 URL 列表（跳过 VM 读取）
-    输出:
-        评估结果字典:
-            - pass: True/False/None
-            - score: 0.0 ~ 1.0
-            - status: "ok"/"error"/"skip"
-            - reason: 解释信息
-            - match_detail: 匹配详情
+    功能：获取扁平 URL 及可选层级记录，按独立语义目标一对一匹配；
+    对 Settings-003 先强制校验书签栏和指定文件夹。
+    输入参数：task 为任务配置；agent_answer 仅保留接口兼容；vm_ip/vm_port
+    或 controller 可用于现场读取；bookmark_urls/bookmark_records 为已预读证据。
+    输出返回值：包含 pass、score、status、reason、task_id 和 match_detail 的评价字典。
     """
+    del agent_answer, kwargs
     task_data = _load_task(task)
-    task_id = task_data.get("task_id", "unknown")
+    task_id = str(task_data.get("task_id") or "unknown")
 
-    # 1. 获取正则匹配规则
+    if task_data.get("skip_eval"):
+        return {
+            "pass": None,
+            "score": None,
+            "status": "skip",
+            "reason": task_data.get("skip_eval_reason") or "任务已标记 skip_eval=true。",
+            "task_id": task_id,
+        }
     if task_id in UNSUPPORTED_TASKS:
         return {
             "pass": False,
@@ -446,31 +373,21 @@ def evaluate(
             "reason": UNSUPPORTED_TASKS[task_id],
             "task_id": task_id,
         }
-
-    if task_id not in REGEX_PATTERNS:
-        # 任务在 evaluator 端未配置匹配规则；统一上报 evaluator_error，
-        # 让上层与 operation_evaluator 的状态语义保持一致
-        # （score=-1.0 哨兵表示评价器无法给出有意义的得分）
+    if task_id not in URL_RULES:
         return {
             "pass": False,
             "score": -1.0,
             "status": "evaluator_error",
-            "reason": f"任务 {task_id} 未在 webnavigate_bookmark_evaluator 中配置匹配规则。",
+            "reason": f"任务 {task_id} 未配置可执行的结构化 URL 规则。",
             "task_id": task_id,
         }
 
-    regex_config = REGEX_PATTERNS[task_id]
-    description = regex_config.get("description", "")
-
-    # 2. 获取书签 URL
-    actual_urls = bookmark_urls  # 优先使用直接传入的
-
-    if actual_urls is None and controller is not None:
+    actual_records = bookmark_records
+    actual_urls = bookmark_urls
+    if actual_records is None and actual_urls is None and controller is not None:
         try:
-            from bookmark_utils import read_bookmark_urls
-            actual_urls = read_bookmark_urls(controller)
+            actual_records = _read_records_from_controller(controller)
         except Exception as exc:
-            # 评价器无法获取必需输入（书签数据），归类为评价器故障
             return {
                 "pass": False,
                 "score": -1.0,
@@ -478,13 +395,13 @@ def evaluate(
                 "reason": f"通过 controller 读取书签失败: {exc}",
                 "task_id": task_id,
             }
-
-    if actual_urls is None and vm_ip and vm_port is not None:
+    if actual_records is None and actual_urls is None and vm_ip and vm_port is not None:
         try:
             from desktop_env.controllers.python import PythonController
-            from bookmark_utils import read_bookmark_urls
-            ctrl = PythonController(vm_ip=vm_ip, server_port=vm_port)
-            actual_urls = read_bookmark_urls(ctrl)
+
+            actual_records = _read_records_from_controller(
+                PythonController(vm_ip=vm_ip, server_port=vm_port)
+            )
         except Exception as exc:
             return {
                 "pass": False,
@@ -494,57 +411,69 @@ def evaluate(
                 "task_id": task_id,
             }
 
+    if actual_records is not None and actual_urls is None:
+        actual_urls = [
+            str(record.get("url") or "").strip()
+            for record in actual_records
+            if isinstance(record, dict) and str(record.get("url") or "").strip()
+        ]
     if actual_urls is None:
         return {
             "pass": False,
             "score": -1.0,
             "status": "evaluator_error",
-            "reason": "未提供书签数据来源（需 bookmark_urls / controller / vm_ip+vm_port 之一）。",
+            "reason": "未提供书签数据来源。",
             "task_id": task_id,
         }
 
-    # 3. 执行正则匹配
-    if "pattern_groups" in regex_config:
-        match_detail = _match_urls_with_pattern_groups(
-            regex_config["pattern_groups"],
-            actual_urls,
-        )
-    else:
-        patterns = regex_config["patterns"]
-        expected_count = regex_config["expected_count"]
-        match_detail = _match_urls_with_regex(patterns, actual_urls, expected_count)
+    config = URL_RULES[task_id]
+    scoring_urls = list(actual_urls)
+    required_path = config.get("required_folder_path")
+    hierarchy_ok = True
+    if required_path is not None:
+        if actual_records is None:
+            hierarchy_ok = False
+            scoring_urls = []
+        else:
+            selected_records = _records_in_required_folder(actual_records, required_path)
+            scoring_urls = [str(record["url"]).strip() for record in selected_records]
+            hierarchy_ok = bool(selected_records)
 
-    expected_count = match_detail["expected_count"]
-    score = match_detail["score"]
-    passed = score == 1.0
+    match_detail = match_semantic_groups(config["pattern_groups"], scoring_urls)
+    if required_path is not None:
+        match_detail["required_folder_path"] = list(required_path)
+        match_detail["hierarchy_evidence_present"] = hierarchy_ok
 
-    # 4. 构造结果
-    if match_detail["matched_count"] == 0:
+    score = float(match_detail["score"])
+    passed = hierarchy_ok and score == 1.0
+    missing_groups = [
+        str(item.get("name") or "")
+        for item in match_detail.get("groups", [])
+        if not item.get("passed")
+    ]
+    if required_path is not None and not hierarchy_ok:
         reason = (
-            f"{description}: 未匹配到任何 URL（期望 {expected_count} 个），"
-            f"书签中有 {len(actual_urls)} 个 URL。"
+            f"{config['description']}: 缺少层级证据，要求路径 "
+            f"{'/'.join(required_path)}。"
         )
-    elif not passed:
-        missing_groups = [
-            item.get("name", "")
-            for item in match_detail.get("groups", [])
-            if not item.get("passed")
-        ]
-        missing_suffix = (
-            f" 缺少: {', '.join(missing_groups)}。"
-            if missing_groups else ""
+    elif missing_groups:
+        reason = (
+            f"{config['description']}: 匹配 {match_detail['matched_count']}/"
+            f"{match_detail['expected_count']}，缺少: {', '.join(missing_groups)}。"
         )
-        reason = f"{description}: 部分匹配 {match_detail['matched_count']}/{expected_count}。{missing_suffix}"
     else:
-        reason = f"{description}: 全部匹配成功（{match_detail['matched_count']}/{expected_count}）。"
+        reason = (
+            f"{config['description']}: 全部匹配成功（{match_detail['matched_count']}/"
+            f"{match_detail['expected_count']}）。"
+        )
 
     return {
         "pass": passed,
         "score": score,
-        # 严格通过：score==1.0 才 pass（_match_urls_with_regex 已使用 min(...,1.0) 钳位）
         "status": "ok",
         "reason": reason,
         "task_id": task_id,
         "match_detail": match_detail,
-        "bookmark_urls": actual_urls,
+        "bookmark_urls": list(actual_urls),
+        "bookmark_records": actual_records,
     }

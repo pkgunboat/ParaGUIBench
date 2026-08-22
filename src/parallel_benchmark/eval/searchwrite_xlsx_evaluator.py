@@ -21,6 +21,7 @@ Search&Write xlsx 任务评估器。
 
 from __future__ import annotations
 
+import math
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -138,6 +139,8 @@ def _cell_to_str(value: Any) -> str:
     if value is None:
         return ""
     if isinstance(value, float):
+        if not math.isfinite(value):
+            return str(value)
         # 整数值去掉 .0（如 2012.0 → "2012"）
         if value == int(value):
             return str(int(value))
@@ -176,10 +179,13 @@ def match_cell(gt_val: str, result_val: str) -> Tuple[bool, str]:
     if _is_year(gt_val):
         return gt_val.strip() == result_val.strip(), "year"
 
-    # 数值匹配（±1% 误差）
+    # 整数型事实（年份、排名、数量等）使用数值精确匹配；只有明确带
+    # 小数的连续量才保留 ±1% 容差，避免 45 与 45.4、1096 与 1100 互认。
     if _is_number(gt_val) and _is_number(result_val):
         gt_num = _parse_number(gt_val)
         result_num = _parse_number(result_val)
+        if gt_num.is_integer():
+            return result_num == gt_num, "integer"
         if gt_num == 0:
             return result_num == 0, "number"
         return abs(gt_num - result_num) / abs(gt_num) <= 0.01, "number"
@@ -347,6 +353,7 @@ def evaluate_multi_file(
     file_results: Dict[str, Dict[str, Any]] = {}
     total_cells = 0
     total_matched = 0
+    evaluator_errors: List[str] = []
 
     for pair in file_pairs:
         name = pair.get("name", "unknown")
@@ -357,20 +364,49 @@ def evaluate_multi_file(
                 result_path=pair["result"],
             )
         except Exception as exc:
-            result = {
-                "score": 0.0,
-                "pass": False,
-                "total_cells": 0,
-                "matched_cells": 0,
-                "cell_details": {},
-                "error": str(exc),
-            }
+            try:
+                expected_cells = count_evaluable_cells(
+                    template_path=pair["template"],
+                    gt_path=pair["gt"],
+                )
+                result = {
+                    "score": 0.0,
+                    "pass": False,
+                    "status": "agent_result_error",
+                    "total_cells": expected_cells,
+                    "matched_cells": 0,
+                    "cell_details": {},
+                    "error": str(exc),
+                }
+            except Exception as count_exc:
+                evaluator_errors.append(f"{name}: {count_exc}")
+                result = {
+                    "score": -1.0,
+                    "pass": None,
+                    "status": "evaluator_error",
+                    "total_cells": 0,
+                    "matched_cells": 0,
+                    "cell_details": {},
+                    "error": str(count_exc),
+                }
 
         file_results[name] = result
         total_cells += result["total_cells"]
         total_matched += result["matched_cells"]
 
-    # 总分用单元格级汇总（而非文件级平均），对单元格数不均匀的情况更公平
+    if evaluator_errors:
+        return {
+            "score": -1.0,
+            "pass": None,
+            "status": "evaluator_error",
+            "reason": "无法读取模板或 GT: " + "; ".join(evaluator_errors),
+            "total_cells": total_cells,
+            "matched_cells": total_matched,
+            "file_results": file_results,
+        }
+
+    # 总分用单元格级汇总（而非文件级平均）；损坏的 Agent 文件仍按其
+    # GT 应评单元格数计入分母并记 0 分，不能被异常分支剔除。
     overall_score = total_matched / total_cells if total_cells > 0 else 0.0
 
     return {
@@ -380,3 +416,27 @@ def evaluate_multi_file(
         "matched_cells": total_matched,
         "file_results": file_results,
     }
+
+
+def count_evaluable_cells(
+    template_path: str,
+    gt_path: str,
+    sheet_name: Optional[str] = None,
+) -> int:
+    """只根据可信模板与 GT 统计单文件应评单元格数。
+
+    功能：当 Agent 结果文件损坏或无法解析时，仍为多文件聚合保留该
+    文件原本应占的分母；模板或 GT 本身损坏则由调用方归为评价器故障。
+    输入参数：template_path 为原始模板路径；gt_path 为 Ground Truth
+    路径；sheet_name 为可选工作表名称，None 时使用活动工作表。
+    输出返回值：该文件需要评价的单元格数量。
+    """
+    template_wb = load_workbook(template_path, data_only=True)
+    gt_wb = load_workbook(gt_path, data_only=True)
+    if sheet_name:
+        template_ws = template_wb[sheet_name]
+        gt_ws = gt_wb[sheet_name]
+    else:
+        template_ws = template_wb.active
+        gt_ws = gt_wb.active
+    return len(_find_evaluable_cells(template_ws, gt_ws))

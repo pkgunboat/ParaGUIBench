@@ -9,7 +9,8 @@
       "parameters": {
         "command": [
           "google-chrome",
-          "--remote-debugging-port=1337"
+          "--remote-debugging-port=1337",
+          "--lang=en-US"
         ]
       }
     },
@@ -27,7 +28,7 @@
       "type": "chrome_open_tabs",
       "parameters": {
         "urls_to_open": [
-          "https://shopping.google.com/"
+          "https://www.google.com/search?tbm=shop&hl=en&gl=us"
         ]
       }
     },
@@ -74,9 +75,15 @@
         "type": "rule",
         "rules": {
           "expected": {
-            "q": "drip coffee maker"
+            "q": [
+              "drip coffee maker",
+              "drip coffee maker sale",
+              "black drip coffee maker sale",
+              "black drip coffee maker sale between $25 and $60"
+            ]
           },
-          "expect_in_result": true
+          "expect_in_result": true,
+          "result_not_list": true
         }
       },
       {

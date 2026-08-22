@@ -38,7 +38,7 @@ DIMENSION_COLUMNS = [
     "vms_per_task", "oracle_plan_injected",
 ]
 METRIC_COLUMNS = [
-    "score", "pass", "interrupted",
+    "score", "pass", "status", "interrupted",
     "plan_rounds", "gui_rounds_total", "gui_steps_sequential",
     "token_plan", "token_gui", "token_total",
     "cost_usd", "elapsed_time_sec",
@@ -61,7 +61,7 @@ DEFAULTS: Dict[str, Any] = {
     "plan_model": "", "gui_agent": "", "agent_mode": "",
     "vms_per_task": 0, "oracle_plan_injected": False,
     # 指标
-    "score": "", "pass": "", "interrupted": "",
+    "score": "", "pass": "", "status": "", "interrupted": "",
     "plan_rounds": "", "gui_rounds_total": "", "gui_steps_sequential": "",
     "token_plan": "", "token_gui": "", "token_total": "",
     "cost_usd": "", "elapsed_time_sec": "",
@@ -125,6 +125,10 @@ def _coerce_value(col: str, raw: str) -> Any:
     输出:
         转换后的 Python 值；空字符串统一保留为空字符串（除 bool 列为 False）。
     """
+    # ``pass`` 是三态字段：空单元格表示未评价，不能按普通 bool 读成 False。
+    # 其余历史 bool 列仍保持“空即 False”的兼容行为。
+    if col == "pass" and raw == "":
+        return ""
     if col in BOOL_COLUMNS:
         if raw in ("", "false", "False", "0"):
             return False
@@ -157,6 +161,10 @@ def _serialize_value(col: str, val: Any) -> str:
     输出:
         字符串表示；bool 转 "true"/"false"。
     """
+    # SKIP/evaluator_error 的 pass=None 必须持久化为空；若写成 false，后续
+    # master_report 无法区分“评价失败”和“未进入二态评价”。
+    if col == "pass" and (val is None or val == ""):
+        return ""
     if col in BOOL_COLUMNS:
         return "true" if val else "false"
     if val is None:
@@ -371,8 +379,16 @@ def _fill_metric_columns(
 ) -> None:
     """从 pipeline result dict 中抽取指标字段写入 row。缺失字段填默认值。"""
     result = _backfill_gui_only_steps_for_master(row, result, context)
+    evaluator_output = result.get("evaluator_output")
+    inferred_status = str(result.get("status") or "").strip().lower()
+    if not inferred_status and isinstance(evaluator_output, dict):
+        inferred_status = str(evaluator_output.get("status") or "").strip().lower()
+    if not inferred_status and result.get("skipped"):
+        inferred_status = "skip"
     for col in METRIC_COLUMNS:
-        if col in result:
+        if col == "status":
+            row[col] = inferred_status
+        elif col in result:
             row[col] = result[col]
         else:
             row[col] = DEFAULTS[col]

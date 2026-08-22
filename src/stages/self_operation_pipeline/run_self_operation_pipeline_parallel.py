@@ -23,6 +23,7 @@ import json
 import logging
 import os
 import queue
+import shlex
 import shutil
 import subprocess
 import sys
@@ -1124,6 +1125,57 @@ def _flatten_shared_dir_with_ip(vm_ip: str, vm_port: int, subdir: str, log: logg
     return True
 
 
+def _build_prepare_exclusion_command(patterns: List[str]) -> str:
+    """构造删除 prepare 中应隔离文件的安全 find 命令。
+
+    输入:
+        patterns: 仅针对文件名的 glob 模式列表，例如 ["*_answer.docx"]。
+    输出:
+        一条仅在 /home/user/shared 下删除匹配普通文件的 shell 命令；
+        无有效模式时返回空字符串。
+    """
+    safe_patterns = [
+        pattern for pattern in patterns
+        if pattern and "/" not in pattern and "\\" not in pattern
+    ]
+    if not safe_patterns:
+        return ""
+    predicates = " -o ".join(
+        f"-name {shlex.quote(pattern)}" for pattern in safe_patterns
+    )
+    return (
+        "find /home/user/shared -type f "
+        f"\\( {predicates} \\) -delete"
+    )
+
+
+def _exclude_prepare_files_with_ip(
+    vm_ip: str,
+    vm_port: int,
+    patterns: List[str],
+    log: logging.Logger,
+) -> bool:
+    """在 Agent 启动前从共享目录隔离任务配置指定的 prepare 文件。
+
+    输入:
+        vm_ip: VM 服务 IP。
+        vm_port: VM server 端口。
+        patterns: 文件名 glob 模式列表。
+        log: 任务 logger。
+    输出:
+        无模式或删除成功返回 True；VM 命令失败返回 False。
+    """
+    command = _build_prepare_exclusion_command(patterns)
+    if not command:
+        return True
+    result = execute_on_vm_with_ip(vm_ip, vm_port, command, timeout=30)
+    if result.get("status") != "success":
+        log.error("prepare 敏感文件隔离失败: %s", result.get("error", "Unknown"))
+        return False
+    log.info("prepare 文件隔离完成: %s", ", ".join(patterns))
+    return True
+
+
 # ============================================================
 # 覆写 init_vm_parallel：下载后调用 flatten
 # ============================================================
@@ -1138,6 +1190,7 @@ def init_vm_with_flatten(
     vm_ip: str,
     is_first_vm: bool,
     rebuilt: bool,
+    prepare_exclude_patterns: List[str],
     log: logging.Logger,
 ) -> bool:
     """
@@ -1157,6 +1210,7 @@ def init_vm_with_flatten(
         vm_ip: 宿主机 IP
         is_first_vm: 是否为该组的第一个 VM（仅第一个 VM 下载数据）
         rebuilt: 是否为重建后首次初始化
+        prepare_exclude_patterns: 下载后、Agent 启动前需要隔离的文件名模式。
         log: logger
 
     输出:
@@ -1238,6 +1292,10 @@ def init_vm_with_flatten(
                     _flatten_shared_dir_with_ip(vm_ip, vm_port, subdir, log)
             except Exception as exc:
                 log.warning("扁平化目录失败（非致命）: %s", exc)
+            if not _exclude_prepare_files_with_ip(
+                vm_ip, vm_port, prepare_exclude_patterns, log
+            ):
+                return False
         else:
             log.info("[5/6] 任务未提供 prepare_script_path，跳过下载")
     else:
@@ -1326,6 +1384,7 @@ def stage1_initialize_with_flatten(
             vm_ip=config.vm_ip,
             is_first_vm=(idx == 0),
             rebuilt=True,
+            prepare_exclude_patterns=task_config.get("prepare_exclude_patterns", []),
             log=log,
         ):
             success_count += 1

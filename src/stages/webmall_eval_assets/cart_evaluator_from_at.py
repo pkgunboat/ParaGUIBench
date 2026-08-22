@@ -604,25 +604,36 @@ def evaluate_all_vms(
     checkpoints: List[Checkpoint]
 ) -> Dict[str, EvaluationResult]:
     """
-    评价所有虚拟机的购物车检测结果
-    
-    参数:
+    逐 VM 独立评价购物车，并投影最佳单 VM 的完成度。
+
+    功能:
+        每台 VM 使用独立匹配状态生成 matched/unmatched/score，禁止把
+        不同 VM 的互补商品合并为完整购物车。所有 VM 完成评价后，只将
+        命中检查点数量最多的一台 VM 投影回输入 ``Checkpoint.flag``；
+        同分时保持 ``all_results`` 输入顺序。若同一期望商品出现在多台
+        VM，第二台及后续 VM 仍记录为重复外部副作用。
+    输入参数:
         all_results: 所有虚拟机的检测结果 {vm_key: [CartDetectionResult, ...]}
         checkpoints: 检查点列表
-        
-    返回:
+    输出返回值:
         评价结果字典
     """
-    evaluation_results = {}
-    
+
+    evaluation_results: Dict[str, EvaluationResult] = {}
+    matched_details_by_vm: Dict[str, Dict[str, Dict[str, Any]]] = {}
+
+    # 调用方可能复用 Checkpoint 实例；进入本轮评价时必须清除旧投影。
+    for checkpoint in checkpoints:
+        checkpoint.flag = False
+
     for vm_key, shop_results in all_results.items():
         eval_result = EvaluationResult(vm_key=vm_key)
         eval_result.shop_results = shop_results
-        
+        matched_details_by_vm[vm_key] = {}
+
         # 构建 商店端口 -> 检测到的 slug 集合 的映射
-        port_to_slugs = {}
-        all_detected_slugs = set()
-        
+        port_to_slugs: Dict[int, Set[str]] = {}
+
         for shop_result in shop_results:
             if shop_result.error or not shop_result.is_cart_page:
                 continue
@@ -630,17 +641,16 @@ def evaluate_all_vms(
             if port not in port_to_slugs:
                 port_to_slugs[port] = set()
             port_to_slugs[port].update(shop_result.product_slugs)
-            all_detected_slugs.update(shop_result.product_slugs)
-        
-        # 评价每个检查点
+
+        # 每台 VM 独立评价全部检查点；不得读取或写入共享 cp.flag。
         for cp in checkpoints:
             # 从检查点的域名中提取端口
             cp_port = int(cp.domain.split(":")[-1]) if ":" in cp.domain else 0
-            
+
             # 检查该端口的商店是否检测到了对应的 slug
             matched = False
             matched_detected_slug = ""
-            
+
             if cp_port in port_to_slugs:
                 # 仅对 amp 词元的 WooCommerce 差异容忍，其余词元和数字
                 # 型号必须完整一致。
@@ -650,26 +660,20 @@ def evaluate_all_vms(
                         matched_detected_slug = detected_slug
                         port_to_slugs[cp_port].discard(detected_slug)
                         break
-            
+
             if matched:
-                if not cp.flag:
-                    cp.flag = True
-                    eval_result.score += cp.weight
-                    eval_result.matched_checkpoints.append(cp)
-                else:
-                    # 同一期望商品已在其他 VM 命中，当前 VM 再次加购是
-                    # 额外外部副作用，不应被全局 checkpoint.flag 静默合并。
-                    eval_result.unexpected_products.append({
-                        "shop_port": cp_port,
-                        "slug": matched_detected_slug,
-                        "reason": "duplicate_expected_product_across_vms",
-                    })
+                eval_result.score += cp.weight
+                eval_result.matched_checkpoints.append(cp)
+                matched_details_by_vm[vm_key][cp.id] = {
+                    "shop_port": cp_port,
+                    "slug": matched_detected_slug,
+                }
             else:
                 eval_result.unmatched_checkpoints.append(cp)
-        
+
         # 计算总权重
         eval_result.total_weight = sum(cp.weight for cp in checkpoints)
-        
+
         # 找出意外的商品
         expected_pairs = []
         for cp in checkpoints:
@@ -689,59 +693,36 @@ def evaluate_all_vms(
                         "shop_port": shop_result.shop_port,
                         "slug": slug,
                     })
-        
+
         evaluation_results[vm_key] = eval_result
-    
+
+    # 保留“同一期望商品被多个 VM 重复加购”的既有严格副作用语义。
+    first_vm_by_checkpoint: Dict[str, str] = {}
+    for vm_key in all_results:
+        for checkpoint_id, detail in matched_details_by_vm[vm_key].items():
+            if checkpoint_id not in first_vm_by_checkpoint:
+                first_vm_by_checkpoint[checkpoint_id] = vm_key
+                continue
+            evaluation_results[vm_key].unexpected_products.append({
+                "shop_port": detail["shop_port"],
+                "slug": detail["slug"],
+                "reason": "duplicate_expected_product_across_vms",
+            })
+
+    # 兼容现有 runner：它们通过输入 checkpoint.flag 计算总体 recall。
+    # 这里只投影最佳单 VM 的匹配集合，绝不对 VM 结果求并集。
+    if evaluation_results:
+        best_result = max(
+            evaluation_results.values(),
+            key=lambda result: len(result.matched_checkpoints),
+        )
+        best_checkpoint_ids = {
+            checkpoint.id for checkpoint in best_result.matched_checkpoints
+        }
+        for checkpoint in checkpoints:
+            checkpoint.flag = checkpoint.id in best_checkpoint_ids
+
     return evaluation_results
-
-
-def summarize_cart_evaluation(
-    checkpoints: List[Checkpoint],
-    evaluation_results: Dict[str, EvaluationResult],
-) -> Dict[str, Any]:
-    """
-    汇总多 VM cart 评价结果。
-
-    checkpoint.flag 表示跨 VM 合并后的唯一期望商品匹配；unexpected 也应按
-    合并后的唯一 slug 计算，避免 n>1 时同一多余商品被重复计入 precision 分母。
-    """
-    matched_count = sum(1 for cp in checkpoints if cp.flag)
-    total_expected = len(checkpoints)
-    unexpected_slugs = sorted({
-        product.get("slug", "")
-        for result in evaluation_results.values()
-        for product in result.unexpected_products
-        if product.get("slug")
-    })
-    total_unexpected = len(unexpected_slugs)
-
-    passed = (
-        matched_count == total_expected and total_unexpected == 0
-    ) if total_expected else False
-    recall = matched_count / total_expected if total_expected else 0.0
-    total_detected = matched_count + total_unexpected
-    precision = (
-        matched_count / total_detected
-        if total_detected > 0
-        else (1.0 if matched_count == 0 else 0.0)
-    )
-    f1 = (
-        2 * precision * recall / (precision + recall)
-        if (precision + recall) > 0 else 0.0
-    )
-    score = matched_count / total_expected if total_expected > 0 else 0.0
-
-    return {
-        "score": score,
-        "matched_count": matched_count,
-        "max_score": total_expected,
-        "passed": passed,
-        "recall": recall,
-        "precision": precision,
-        "f1": f1,
-        "total_unexpected": total_unexpected,
-        "unexpected_slugs": unexpected_slugs,
-    }
 
 
 def create_checkpoints_from_urls(urls: List[str]) -> List[Checkpoint]:
@@ -1005,3 +986,59 @@ def main():
 
 if __name__ == "__main__":
     exit(main())
+
+
+# 以下汇总函数自 2026-07-21 WebMall 恢复线补回：跨 VM 合并后按唯一 slug 计算
+# unexpected，避免同一多余商品在 n>1 时被重复计入 precision 分母。
+# 由 tests/test_webmall_cart_evaluator.py 断言。
+
+
+def summarize_cart_evaluation(
+    checkpoints: List[Checkpoint],
+    evaluation_results: Dict[str, EvaluationResult],
+) -> Dict[str, Any]:
+    """
+    汇总多 VM cart 评价结果。
+
+    checkpoint.flag 表示跨 VM 合并后的唯一期望商品匹配；unexpected 也应按
+    合并后的唯一 slug 计算，避免 n>1 时同一多余商品被重复计入 precision 分母。
+    """
+    matched_count = sum(1 for cp in checkpoints if cp.flag)
+    total_expected = len(checkpoints)
+    unexpected_slugs = sorted({
+        product.get("slug", "")
+        for result in evaluation_results.values()
+        for product in result.unexpected_products
+        if product.get("slug")
+    })
+    total_unexpected = len(unexpected_slugs)
+
+    passed = (
+        matched_count == total_expected and total_unexpected == 0
+    ) if total_expected else False
+    recall = matched_count / total_expected if total_expected else 0.0
+    total_detected = matched_count + total_unexpected
+    precision = (
+        matched_count / total_detected
+        if total_detected > 0
+        else (1.0 if matched_count == 0 else 0.0)
+    )
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall) > 0 else 0.0
+    )
+    score = matched_count / total_expected if total_expected > 0 else 0.0
+
+    return {
+        "score": score,
+        "matched_count": matched_count,
+        "max_score": total_expected,
+        "passed": passed,
+        "recall": recall,
+        "precision": precision,
+        "f1": f1,
+        "total_unexpected": total_unexpected,
+        "unexpected_slugs": unexpected_slugs,
+    }
+
+

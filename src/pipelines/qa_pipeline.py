@@ -18,6 +18,7 @@ if SCRIPT_DIR not in sys.path:
 
 from pipeline_base import BasePipeline, TaskItem, UNIFIED_TASKS_DIR
 from task_scanner import scan_unified_tasks
+from parallel_benchmark.eval.qa_run_contracts import build_skipped_task_result
 
 # 导入 QA 特有的业务函数
 from run_QA_pipeline import (
@@ -91,6 +92,40 @@ class QAPipeline(BasePipeline):
             bool
         """
         return stage1_initialize_parallel(task.task_config, config, log)
+
+    def build_pre_execution_result(self, task):
+        """为 ``skip_eval`` QA 任务在调度前构造 SKIP 结果。
+
+        功能：覆写 BasePipeline 钩子；隔离任务直接返回三态结果，从而不获取
+        容器组、不执行 stage_init/stage_execute；普通任务返回 None。
+        输入参数：task 为待调度 QA TaskItem。
+        输出返回值：SKIP 结果字典，或普通任务的 None。
+        """
+        if task.task_config.get("skip_eval") is not True:
+            return None
+        result = build_skipped_task_result(
+            task.task_uid,
+            task.task_path,
+            task.task_config,
+        )
+        result.update({
+            "task_id": task.task_id,
+            "pipeline": self.pipeline_name,
+            "agent_mode": self.args.agent_mode,
+            "gui_agent": self.args.gui_agent,
+            "status": "skip",
+            "score": None,
+            "pass": None,
+            "plan_rounds": 0,
+            "gui_rounds_total": 0,
+            "gui_steps_sequential": 0,
+            "token_plan": 0,
+            "token_gui": 0,
+            "token_total": 0,
+            "cost_usd": 0.0,
+            "elapsed_time_sec": 0.0,
+        })
+        return result
 
     def stage_execute(self, task, config, log):
         """

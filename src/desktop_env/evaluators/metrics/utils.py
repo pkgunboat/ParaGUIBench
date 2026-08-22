@@ -651,17 +651,43 @@ def _match_value_to_rule(value: V, rule: Dict[str, Union[str, V]]) -> bool:
 
 
 def are_lists_equal(list1, list2, comparison_func):
-    # First check if both lists have the same length
+    """
+    按调用方提供的等价关系判断两个列表是否存在一一对应匹配。
+
+    输入:
+        list1 / list2: 待比较的两个序列。
+        comparison_func: 接收左右元素并返回是否等价的函数。
+    输出:
+        存在覆盖双方全部元素的二分图完美匹配时返回 ``True``；否则返回
+        ``False``。右侧元素一旦匹配便会被消耗，重复元素不能重复占用同一候选。
+    """
     if len(list1) != len(list2):
         return False
 
-    # Now make sure each element in one list has an equal element in the other list
-    for item1 in list1:
-        # Use the supplied function to test for an equal item
-        if not any(comparison_func(item1, item2) for item2 in list2):
-            return False
+    matched_right = {}
 
-    # If all items match, the lists are equal
+    def _augment(left_index, visited_right):
+        """为一个左侧元素寻找或重排可用右侧匹配。
+
+        输入参数：left_index 为左侧元素下标；visited_right 为本轮已访问
+        的右侧下标集合。
+        输出返回值：找到增广路径并完成匹配时返回 True，否则返回 False。
+        """
+        for right_index, right_item in enumerate(list2):
+            if right_index in visited_right:
+                continue
+            if not comparison_func(list1[left_index], right_item):
+                continue
+            visited_right.add(right_index)
+            previous_left = matched_right.get(right_index)
+            if previous_left is None or _augment(previous_left, visited_right):
+                matched_right[right_index] = left_index
+                return True
+        return False
+
+    for left_index in range(len(list1)):
+        if not _augment(left_index, set()):
+            return False
     return True
 
 

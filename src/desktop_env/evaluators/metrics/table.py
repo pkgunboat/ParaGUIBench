@@ -99,19 +99,26 @@ def _load_sheet(book: BOOK, index: str) -> SHEET:
 def compare_table(result: str, expected: str = None, **options) -> float:
     #  function compare_table {{{ # 
     """
-    Args:
-        result (str): path to result xlsx
-        expected (str): path to golden xlsx
-        rules (List[Dict[str, Any]]): list of dict like
+    输入:
+        result: agent 结果 xlsx 路径。
+        expected: gold xlsx 路径。
+        rules: 非空的顺序规则列表，每项形如
           {
             "type": str,
             <str as parameters>: anything
           }
           as sequential rules
 
-    Returns:
-        float: the score
+    输出:
+        全部规则通过返回 1.0，否则返回 0.0。
+    异常:
+        rules 为空或 expected 侧规则引用不存在的 sheet 时抛出 ``ValueError``，
+        由 OSWorld dispatcher 归类为 evaluator_error。
     """
+
+    rules = options.get("rules")
+    if not isinstance(rules, list) or not rules:
+        raise ValueError("compare_table rules 必须是非空列表")
 
     if result is None:
         return 0.
@@ -140,7 +147,7 @@ def compare_table(result: str, expected: str = None, **options) -> float:
         )
 
     passes = True
-    for r in options["rules"]:
+    for r in rules:
         if r["type"] == "sheet_name":
             #  Compare Sheet Names {{{ # 
             metric: bool = worksheetr_names == worksheete_names
@@ -158,6 +165,10 @@ def compare_table(result: str, expected: str = None, **options) -> float:
             if sheet1 is None:
                 return 0.
             sheet2: pd.DataFrame = _load_sheet(*parse_idx(r["sheet_idx1"], pdworkbookr, pdworkbooke))
+            if sheet2 is None:
+                raise ValueError(
+                    f"expected sheet 不存在或无法读取: {r['sheet_idx1']}"
+                )
 
             sheet1 = sheet1.round(error_limit)
             sheet2 = sheet2.round(error_limit)
@@ -181,6 +192,10 @@ def compare_table(result: str, expected: str = None, **options) -> float:
             if sheet1 is None:
                 return 0.
             sheet2: List[str] = _load_sheet(*parse_idx(r["sheet_idx1"], result, expected))
+            if sheet2 is None:
+                raise ValueError(
+                    f"expected print sidecar 不存在或无法读取: {r['sheet_idx1']}"
+                )
             if r.get("ignore_case", False):
                 sheet1 = [l.lower() for l in sheet1]
                 sheet2 = [l.lower() for l in sheet2]

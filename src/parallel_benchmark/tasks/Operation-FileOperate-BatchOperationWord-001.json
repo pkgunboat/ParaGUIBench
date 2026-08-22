@@ -11,13 +11,23 @@
     "original_task_id": "Operation-FileOperate-BatchoperationWord-001",
     "eval_rules": [
         {
-            "check": "check_heading_style_exists",
+            "check": "check_heading_hierarchy",
             "file_pattern": "*.docx",
             "params": {
-                "style_name": "Heading 1"
+                "threshold": 1.0,
+                "rules": [
+                    {
+                        "pattern": "^(?:Project Background|Algorithm Principles|Results Analysis|Basic Requirements|Information Security|Performance and Assessment|\\d+\\.(?!\\d))",
+                        "expected_style": "Heading 1"
+                    },
+                    {
+                        "pattern": "^\\d+\\.\\d+",
+                        "expected_style": "Heading 2"
+                    }
+                ]
             },
             "weight": 1.0,
-            "description": "检查是否存在 Heading 1 样式"
+            "description": "章标题映射 Heading 1，节标题映射 Heading 2"
         }
     ]
 }

@@ -88,6 +88,10 @@ from run_QA_pipeline_parallel import (  # noqa: E402
     disable_screensaver_parallel,
 )
 from run_QA_pipeline import ensure_conda_env  # noqa: E402
+from parallel_benchmark.eval.qa_run_contracts import (  # noqa: E402
+    format_task_status,
+    summarize_qa_results,
+)
 
 # ── 线程局部上下文：用于向 stage2_execute_agent_parallel 传递 per-task logger ──
 _thread_context = threading.local()
@@ -762,9 +766,29 @@ class BasePipeline(ABC):
 
         dashboard = getattr(self, '_dashboard', None)
         with dashboard_session(dashboard):
+            runnable_tasks: List[TaskItem] = []
+            for task in tasks:
+                precomputed_result = self.build_pre_execution_result(task)
+                if precomputed_result is None:
+                    runnable_tasks.append(task)
+                    continue
+                # 预计算结果在 executor 提交前写入，不获取 group_id、
+                # 不分配端口，也不启动容器或 Agent。
+                self.record_task_result(
+                    task,
+                    precomputed_result,
+                    dashboard=dashboard,
+                )
+                self.log.info(
+                    "[%s] 预执行状态: %s | %s",
+                    task.task_id,
+                    format_task_status(precomputed_result),
+                    precomputed_result.get("skip_eval_reason", ""),
+                )
+
             with ThreadPoolExecutor(max_workers=args.max_parallel_tasks) as executor:
                 futures = {}
-                for task in tasks:
+                for task in runnable_tasks:
                     future = executor.submit(self._run_single_task_wrapper, task)
                     futures[future] = task
 
@@ -942,18 +966,28 @@ class BasePipeline(ABC):
         return total
 
     def _run_single_task_wrapper(self, task: TaskItem) -> Dict[str, Any]:
-        """
-        import os  # 用于 INIT_ONLY 环境变量检查
-        单任务执行包装器（模板方法）。
+        """执行单个任务，并保证 group、内存与容器资源成对管理。
 
         流程:
             0. 从队列获取 group_id
-            1. 申请内存额度
+            1. 申请内存额度；超时则在端口扫描和 Stage 1 前稳定中断
             2. 分配端口
             3. 调用 stage_init
             4. 调用 stage_execute
             5. 调用 stage_evaluate
-            6. finally: 清理容器、释放内存、归还 group_id
+            6. finally: 清理容器、按实际获取状态释放内存、归还 group_id
+
+        输入参数:
+            task: 当前待执行的统一任务对象，提供任务标识、配置与指令。
+
+        输出返回值:
+            标准任务结果字典；内存预算申请超时时返回
+            ``interrupted=True`` 且 ``interrupt_reason`` 为
+            ``memory_guard_timeout``。
+
+        资源不变量:
+            group_id 无论成功、失败或异常都必须归还；只有
+            ``MemoryGuard.acquire`` 明确返回 True 后才允许调用 release。
         """
         group_id = self._available_groups.get()
         args = self.args
@@ -986,9 +1020,49 @@ class BasePipeline(ABC):
         log.addHandler(_stage_file_handler)
         task_logger.info("Task started: %s (uid=%s)", task.task_id, task.task_uid)
 
+        memory_acquired = False
         try:
             # 1. 申请内存
-            self._memory_guard.acquire(args.vms_per_task)
+            memory_acquired = self._memory_guard.acquire(args.vms_per_task)
+            if not memory_acquired:
+                elapsed = round(time.time() - start_time, 2)
+                task_logger.error(
+                    "内存预算申请超时，任务在端口扫描和 Stage 1 前中断"
+                )
+                timeout_result = {
+                    "task_id": task.task_id,
+                    "task_uid": task.task_uid,
+                    "pipeline": self.pipeline_name,
+                    "instruction": task.task_config.get("instruction", ""),
+                    "agent_mode": args.agent_mode,
+                    "gui_agent": args.gui_agent,
+                    "status": "interrupted",
+                    "score": 0.0,
+                    "pass": False,
+                    "plan_rounds": 0,
+                    "gui_rounds_total": 0,
+                    "gui_steps_sequential": 0,
+                    "token_plan": 0,
+                    "token_gui": 0,
+                    "token_total": 0,
+                    "cost_usd": 0.0,
+                    "elapsed_time_sec": elapsed,
+                    "interrupted": True,
+                    "interrupt_reason": "memory_guard_timeout",
+                    "group_id": group_id,
+                    "result_dir": log_dir,
+                }
+                self._finalize_run(
+                    result=timeout_result,
+                    logs_dir=_run_ctx["logs_dir"],
+                    condition=_run_ctx["condition"],
+                    host=_run_ctx["host"],
+                    timestamp=_run_ctx["timestamp"],
+                    run_dir=log_dir,
+                    started_at=_run_started_at,
+                    ended_at=datetime.now().isoformat(timespec="seconds"),
+                )
+                return timeout_result
 
             # 2. 分配端口
             creds = get_ssh_credentials(args.vm_ip)
@@ -1116,11 +1190,15 @@ class BasePipeline(ABC):
                 except Exception as e:
                     task_logger.warning("[EXEC_RECORD] 保存失败: %s", e)
 
-            # 记录最终结果到 task log
-            task_logger.info("[RESULT] Score: %s | Pass: %s | Elapsed: %.1fs",
-                           eval_result.get("score", 0.0),
-                           eval_result.get("score", 0.0) == 1.0,
-                           time.time() - start_time)
+            # 记录评价器原生三态，不把 skip/evaluator_error 压成 FAIL。
+            task_logger.info(
+                "[RESULT] Status: %s | Score: %s | Pass: %s | Reason: %s | Elapsed: %.1fs",
+                eval_result.get("status", "ok"),
+                eval_result.get("score"),
+                eval_result.get("pass", eval_result.get("passed")),
+                eval_result.get("reason", ""),
+                time.time() - start_time,
+            )
 
             # 6. 组装结果 — 提取标准化指标
             elapsed = round(time.time() - start_time, 2)
@@ -1142,19 +1220,22 @@ class BasePipeline(ABC):
             token_gui = token_usage.get("gui_agent", {}).get("total_tokens", 0)
             cost_usd = token_usage.get("total_cost_usd", 0.0)
 
+            evaluator_status = str(eval_result.get("status") or "ok").lower()
             score = eval_result.get("score")
-            if score is None:
-                score = 0.0
 
             # 优先使用 evaluator 自身的 pass 判定（兼容 "pass" 和 "passed" 两种 key）
             # 某些 evaluator（如 webmall）会综合 precision/recall 判定 passed，
             # 比单纯的 score >= 1.0 更准确（避免假阳性）
-            # 注意：skip_eval 任务 evaluator 返回 pass=None, score=None，此处需兜底
             _eval_pass = eval_result.get("pass", eval_result.get("passed", None))
-            if _eval_pass is not None:
+            if evaluator_status in {"skip", "evaluator_error"}:
+                task_pass = None
+                score = None
+            elif _eval_pass is not None:
                 task_pass = bool(_eval_pass)
             else:
-                task_pass = score >= 1.0 - 1e-6
+                numeric_score = float(score) if score is not None else 0.0
+                task_pass = numeric_score >= 1.0 - 1e-6
+                score = numeric_score
 
             result = {
                 # 基本信息
@@ -1168,6 +1249,14 @@ class BasePipeline(ABC):
                 # 1. 分数与成功
                 "score": score,
                 "pass": task_pass,
+                "status": evaluator_status,
+                "skipped": evaluator_status == "skip",
+                "skip_eval_reason": (
+                    eval_result.get("skip_eval_reason")
+                    if evaluator_status == "skip"
+                    else ""
+                ),
+                "evaluation_reason": eval_result.get("reason", ""),
 
                 # 2. 轮次
                 "plan_rounds": plan_rounds,
@@ -1266,7 +1355,8 @@ class BasePipeline(ABC):
                     pass
                 with self._active_groups_lock:
                     self._active_groups.pop(group_id, None)
-            self._memory_guard.release(args.vms_per_task)
+            if memory_acquired:
+                self._memory_guard.release(args.vms_per_task)
             self._available_groups.put(group_id)
 
             # 清理线程局部上下文
@@ -1342,6 +1432,20 @@ class BasePipeline(ABC):
             tasks: 待执行的任务列表
         """
         pass
+
+    def build_pre_execution_result(
+        self,
+        task: TaskItem,
+    ) -> Optional[Dict[str, Any]]:
+        """在 executor 提交之前为无需执行的任务构造结果。
+
+        功能：提供子类钩子，使隔离、静态完成或其他无需 Agent/VM 的任务可在
+        ThreadPoolExecutor 提交前直接持久化结果。默认返回 None，不改变现有
+        pipeline 的执行路径。
+        输入参数：task 为待调度的 TaskItem。
+        输出返回值：应直接记录的结果字典；仍需执行时返回 None。
+        """
+        return None
 
     def service_health_pipeline_names(self, tasks: List[TaskItem]) -> List[str]:
         """
@@ -1471,10 +1575,11 @@ class BasePipeline(ABC):
             progress = self._load_final_progress()
             task_key = task_result.get("task_uid") or task_result.get("task_id")
             if not task_result.get("interrupted", False):
+                status_label = format_task_status(task_result).lower()
                 progress["tasks"][task_key] = {
                     "pipeline": task_result.get("pipeline", self.pipeline_name),
-                    "status": "pass" if task_result.get("pass", False) else "fail",
-                    "score": task_result.get("score", 0.0),
+                    "status": status_label,
+                    "score": task_result.get("score"),
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "agent_mode": task_result.get("agent_mode", ""),
                     "gui_agent": task_result.get("gui_agent", ""),
@@ -1785,20 +1890,14 @@ class BasePipeline(ABC):
 
         # 更新 ProgressState
         if getattr(self, '_progress_state', None):
-            score = result.get("score", 0.0)
-            interrupted = result.get("interrupted", False)
-            eval_status = str((result.get("evaluator_output") or {}).get("status")
-                              or result.get("status") or "")
-            # 评价器错误(哨兵 score<0 或 status==evaluator_error)与执行异常同归 error 桶,
-            # 不计入 fail; PASS/FAIL 判定统一用权威 pass 字段(与最终统计口径一致),
-            # 不再用 score == 1.0(与 pass 字段可能不一致)。
-            if interrupted or eval_status == "evaluator_error" or (
-                    isinstance(score, (int, float)) and score < 0):
-                status = "error"
-            elif result.get("pass"):
-                status = "pass"
-            else:
-                status = "fail"
+            status_label = format_task_status(result)
+            status = {
+                "PASS": "pass",
+                "FAIL": "fail",
+                "SKIP": "skip",
+                "INTERRUPTED": "error",
+                "EVALUATOR_ERROR": "error",
+            }[status_label]
             self._progress_state.complete_task(
                 task.task_id, status,
                 result.get("elapsed_time_sec", 0),
@@ -1833,23 +1932,31 @@ class BasePipeline(ABC):
             t.task_id for t in getattr(self, "_prepared_tasks", [])
         ]
 
-        from report_generator import generate_report, _task_bucket
-
-        # 统计
-        total = len(results)
-        buckets = [_task_bucket(r) for r in results.values()]
-        passed = sum(1 for b in buckets if b == "passed")
-        failed = sum(1 for b in buckets if b == "failed")
-        interrupted = sum(1 for b in buckets if b == "interrupted")
-        eval_error = sum(1 for b in buckets if b == "eval_error")
+        # 统计：SKIP 和 evaluator_error 单列，不进入有效评价分母。
+        outcome_summary = summarize_qa_results(results.values())
         self.log.info("=" * 60)
         self.log.info(
-            "[%s] 完成: PASS=%d, FAIL=%d, INTERRUPTED=%d, EVALERR=%d, TOTAL=%d",
-            self.pipeline_name, passed, failed, interrupted, eval_error, total,
+            "[%s] 完成: PASS=%d, FAIL=%d, SKIP=%d, EVALUATOR_ERROR=%d, "
+            "INTERRUPTED=%d, VALID=%d, TOTAL=%d",
+            self.pipeline_name,
+            outcome_summary["passed"],
+            outcome_summary["failed"],
+            outcome_summary["skipped"],
+            outcome_summary["evaluator_errors"],
+            outcome_summary["interrupted"],
+            outcome_summary["valid_evaluations"],
+            outcome_summary["total"],
         )
+        if outcome_summary["pass_rate"] is not None:
+            self.log.info(
+                "[%s] 有效评价通过率: %.2f%%",
+                self.pipeline_name,
+                outcome_summary["pass_rate"] * 100,
+            )
         self.log.info("=" * 60)
 
         # 生成统计报告
+        from report_generator import generate_report
         report_dir = generate_report(results, self.get_output_dir(), log=self.log)
         self.log.info("统计报告: %s", report_dir)
 

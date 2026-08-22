@@ -130,11 +130,21 @@ def check_slide_numbers_color(pptx_file_path):
 #     return similarity_index
 
 def compare_pptx_files(file1_path, file2_path, **options):
+    """
+    按幻灯片、形状、文本、格式与备注比较两个 PPTX 文件。
+
+    输入:
+        file1_path / file2_path: agent 与 gold PPTX 路径。
+        **options: 各比较维度开关；``examine_number_of_shapes`` 默认启用。
+    输出:
+        所有启用维度一致时返回 1，否则返回 0。
+    """
     # todo: not strictly match since not all information is compared because we cannot get the info through pptx
     prs1 = Presentation(file1_path)
     prs2 = Presentation(file2_path)
 
     examine_number_of_slides = options.get("examine_number_of_slides", True)
+    examine_number_of_shapes = options.get("examine_number_of_shapes", True)
     examine_shape = options.get("examine_shape", True)
     examine_text = options.get("examine_text", True)
     examine_indent = options.get("examine_indent", True)
@@ -165,6 +175,9 @@ def compare_pptx_files(file1_path, file2_path, **options):
     # compare the content of each slide
     for slide1, slide2 in zip(prs1.slides, prs2.slides):
         slide_idx += 1
+
+        if examine_number_of_shapes and len(slide1.shapes) != len(slide2.shapes):
+            return 0
 
         def get_slide_background_color(slide):
             background = slide.background

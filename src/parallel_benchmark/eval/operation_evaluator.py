@@ -33,6 +33,7 @@ eval_rules 最简格式（只需 check + description）:
     ]
 """
 
+import fnmatch
 import glob
 import logging
 import os
@@ -50,6 +51,7 @@ from eval.operation_checks.docx_checks import (
     # 扩展函数
     check_heading_style_exists,
     check_has_table,
+    check_table_contains_expected_values,
     check_vowels_colored_red,
     check_uppercase_words_have_parentheses,
     check_highlighted_words_capitalized,
@@ -57,6 +59,7 @@ from eval.operation_checks.docx_checks import (
     check_misspelled_words_highlighted,
     check_heading_colors_different,
     check_heading_colors_in_palette,
+    check_heading_palette_and_references,
     check_image_name_matches_doc,
     check_docx_image_width,
     check_docx_word_count,
@@ -69,17 +72,18 @@ from eval.operation_checks.xlsx_checks import (
     check_header_bold,
     check_column_alignment,
     check_sort_order,
-    check_n_sorted_copies,
+    check_sort_order_by_header_keywords,
     check_has_sum_row,
     check_batchexcel001_annual_sum,
     check_batchexcel002_header_bold,
     check_batchexcel002_range_right_align,
     # 扩展函数
     check_cell_contains_string,
-    check_sort_order_by_header_keywords,
     check_values_are_decimals,
+    check_values_scaled_from_source,
     check_negative_values_colored,
     check_sorted_columns_exist,
+    check_sorted_copies_preserve_rows,
     check_no_na_values,
     check_sequential_numbers,
     check_multi_cell_values,
@@ -135,13 +139,15 @@ CHECK_REGISTRY: Dict[str, _RegistryEntry] = {
     # ---- docx 扩展 ----
     "check_heading_style_exists":        (check_heading_style_exists, "*.docx"),
     "check_has_table":                   (check_has_table, "*.docx"),
+    "check_table_contains_expected_values": (check_table_contains_expected_values, "*.docx"),
     "check_vowels_colored_red":          (check_vowels_colored_red, "*.docx"),
     "check_uppercase_words_have_parentheses": (check_uppercase_words_have_parentheses, "*.docx"),
     "check_highlighted_words_capitalized": (check_highlighted_words_capitalized, "*.docx"),
-    "check_highlighted_words_bold":        (check_highlighted_words_bold, "*.docx"),
+    "check_highlighted_words_bold":      (check_highlighted_words_bold, "*.docx"),
     "check_misspelled_words_highlighted": (check_misspelled_words_highlighted, "*.docx"),
     "check_heading_colors_different":    (check_heading_colors_different, "*.docx"),
-    "check_heading_colors_in_palette":    (check_heading_colors_in_palette, "*.docx"),
+    "check_heading_colors_in_palette":   (check_heading_colors_in_palette, "*.docx"),
+    "check_heading_palette_and_references": (check_heading_palette_and_references, "*", True),
     "check_image_name_matches_doc":      (check_image_name_matches_doc, "*.docx"),
     "check_docx_image_width":            (check_docx_image_width, "*.docx"),
     "check_docx_word_count":            (check_docx_word_count, "*.docx"),
@@ -153,7 +159,7 @@ CHECK_REGISTRY: Dict[str, _RegistryEntry] = {
     "check_header_bold":                 (check_header_bold, "*.xlsx"),
     "check_column_alignment":            (check_column_alignment, "*.xlsx"),
     "check_sort_order":                  (check_sort_order, "*.xlsx"),
-    "check_n_sorted_copies":             (check_n_sorted_copies, "*.xlsx", True),
+    "check_sort_order_by_header_keywords": (check_sort_order_by_header_keywords, "*.xlsx"),
     "check_has_sum_row":                 (check_has_sum_row, "*.xlsx"),
     # ---- xlsx 任务专用 ----
     "check_batchexcel001_annual_sum":    (check_batchexcel001_annual_sum, "*.xlsx"),
@@ -161,10 +167,11 @@ CHECK_REGISTRY: Dict[str, _RegistryEntry] = {
     "check_batchexcel002_range_right_align": (check_batchexcel002_range_right_align, "*.xlsx"),
     # ---- xlsx 扩展 ----
     "check_cell_contains_string":         (check_cell_contains_string, "*.xlsx"),
-    "check_sort_order_by_header_keywords": (check_sort_order_by_header_keywords, "*.xlsx"),
     "check_values_are_decimals":         (check_values_are_decimals, "*.xlsx"),
+    "check_values_scaled_from_source":   (check_values_scaled_from_source, "*.xlsx"),
     "check_negative_values_colored":     (check_negative_values_colored, "*.xlsx"),
     "check_sorted_columns_exist":        (check_sorted_columns_exist, "*.xlsx"),
+    "check_sorted_copies_preserve_rows": (check_sorted_copies_preserve_rows, "*", True),
     "check_no_na_values":                (check_no_na_values, "*.xlsx"),
     "check_sequential_numbers":          (check_sequential_numbers, "*.xlsx"),
     "check_multi_cell_values":           (check_multi_cell_values, "*.xlsx"),
@@ -191,13 +198,18 @@ CHECK_REGISTRY: Dict[str, _RegistryEntry] = {
 # 文件匹配
 # ==================================================================
 
-def _find_matching_files(result_dir: str, file_pattern: str) -> List[str]:
+def _find_matching_files(
+    result_dir: str,
+    file_pattern: str,
+    exclude_patterns: List[str] | None = None,
+) -> List[str]:
     """
     在结果目录中查找匹配 glob 模式的文件。
 
     输入:
         result_dir: Agent 产出文件所在目录
         file_pattern: glob 模式（如 "*.docx", "report_*.xlsx"）
+        exclude_patterns: 要排除的文件名或相对路径 glob 模式列表。
     输出:
         匹配文件路径列表（绝对路径），按文件名排序
     """
@@ -208,6 +220,17 @@ def _find_matching_files(result_dir: str, file_pattern: str) -> List[str]:
     files.extend(glob.glob(recursive_pattern, recursive=True))
     # 去重并排序
     unique = sorted(set(files))
+    if exclude_patterns:
+        unique = [
+            path for path in unique
+            if not any(
+                fnmatch.fnmatch(os.path.basename(path), exclude_pattern)
+                or fnmatch.fnmatch(
+                    os.path.relpath(path, result_dir), exclude_pattern
+                )
+                for exclude_pattern in exclude_patterns
+            )
+        ]
     return unique
 
 
@@ -217,6 +240,11 @@ def _is_agent_output_exception(exc: Exception) -> bool:
 
     这类情况应按普通 FAIL 计入分母；未知异常仍按 evaluator_error，
     避免把检查器脚本 bug 当成模型失败。
+
+    输入:
+        exc: 检查函数抛出的异常
+    输出:
+        True 表示异常源自 agent 产物本身，应按 FAIL 处理
     """
     if isinstance(exc, (
         FileNotFoundError,
@@ -256,6 +284,17 @@ def _is_agent_output_exception(exc: Exception) -> bool:
 
 
 def _check_exception_result(check_name: str, fpath: str, exc: Exception) -> Dict[str, Any]:
+    """
+    把文件级检查异常转换为标准结果字典。
+
+    输入:
+        check_name: 检查函数名
+        fpath: 触发异常的文件路径
+        exc: 捕获到的异常
+    输出:
+        agent 产物问题返回 score=0.0 的 FAIL；否则返回 score=-1.0 且
+        status="evaluator_error" 的评价器故障，使其退出有效评价分母
+    """
     if _is_agent_output_exception(exc):
         return {
             "pass": False,
@@ -331,21 +370,17 @@ def _execute_single_rule(
             dir_result = check_fn(result_dir, params)
         except Exception as exc:
             logger.error("目录级检查函数 %s 执行异常 (%s): %s", check_name, result_dir, exc)
-            dir_result = {
-                "pass": False,
-                "score": -1.0,
-                "status": "evaluator_error",
-                "reason": f"异常: {exc}",
-            }
+            dir_result = {"pass": False, "score": 0.0, "reason": f"异常: {exc}"}
 
         score_val = float(dir_result.get("score", 0.0))
         pass_val = bool(dir_result.get("pass", False))
         dir_reason = dir_result.get("reason", "")
-        rule_result = {
+        return {
             "check": check_name,
             "description": description,
             "weight": weight,
             "score": round(score_val, 4),
+            "_raw_score": score_val,
             "pass": pass_val,
             "file_results": [{
                 "file": os.path.basename(os.path.normpath(result_dir)) or result_dir,
@@ -356,14 +391,12 @@ def _execute_single_rule(
             }],
             "reason": f"{description}: {dir_reason}" if dir_reason else description,
         }
-        if dir_result.get("status"):
-            rule_result["status"] = dir_result.get("status")
-        return rule_result
 
     file_pattern = rule.get("file_pattern", default_pattern)
+    exclude_patterns = rule.get("exclude_patterns", [])
 
     # 查找匹配文件
-    matched_files = _find_matching_files(result_dir, file_pattern)
+    matched_files = _find_matching_files(result_dir, file_pattern, exclude_patterns)
     if not matched_files:
         return {
             "check": check_name,
@@ -422,6 +455,7 @@ def _execute_single_rule(
         "description": description,
         "weight": weight,
         "score": round(avg_score, 4),
+        "_raw_score": avg_score,
         "pass": all_passed,
         "file_results": file_results,
         "reason": reason,
@@ -506,22 +540,23 @@ def evaluate(result_dir: str, task_config: dict) -> dict:
         weighted_score = 0.0
     else:
         weighted_score = sum(
-            r["score"] * r["weight"] for r in rule_results
+            r.get("_raw_score", r["score"]) * r["weight"]
+            for r in rule_results
         ) / total_weight
 
-    weighted_score = round(weighted_score, 4)
+    display_score = round(weighted_score, 4)
     passed_rules = sum(1 for r in rule_results if r["pass"])
 
     reason = (
         f"任务 {task_id}: "
-        f"加权得分 {weighted_score:.2f}/1.00（严格通过 "
+        f"加权得分 {display_score:.2f}/1.00（严格通过 "
         f"{passed_rules}/{len(rule_results)} 条规则）"
     )
     logger.info(reason)
 
     return {
-        "score": weighted_score,
-        # 严格通过：浮点容差仅用于消除 round 误差
+        "score": display_score,
+        # 严格通过使用未取整分数；取整仅用于展示。
         "pass": weighted_score >= 1.0 - 1e-9,
         "status": "ok",
         "reason": reason,

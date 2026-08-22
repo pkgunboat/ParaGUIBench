@@ -560,11 +560,10 @@ def get_ssh_credentials(vm_ip: str) -> Dict[str, Any]:
     deploy = DeployConfig()
     vm_user = os.environ.get("BENCH_SSH_USER") or deploy.vm_user
     password = get_ssh_password()
-    required_env = os.environ.get("REQUIRED_CONDA_ENV", "parallelbenchmark")
-    conda_activate = os.environ.get(
-        "BENCH_CONDA_ACTIVATE",
-        f"source /home/{vm_user}/miniconda3/etc/profile.d/conda.sh "
-        f"&& conda activate {required_env}",
+    conda_activate = build_explicit_conda_activation(
+        vm_user,
+        os.environ.get("BENCH_CONDA_ACTIVATE", ""),
+        os.environ.get("REQUIRED_CONDA_ENV", ""),
     )
     if not password:
         raise RuntimeError(
@@ -691,6 +690,12 @@ from parallel_agents_as_tools.seed18_gui_agent_as_tool import Seed18GUIAgentTool
 from parallel_agents_as_tools.claude_gui_agent_as_tool import ClaudeGUIAgentTool  # noqa: E402
 from parallel_agents_as_tools.kimi_gui_agent_as_tool import KimiGUIAgentTool  # noqa: E402
 from parallel_agents_as_tools.result_utils import stringify_model_output  # noqa: E402
+from parallel_benchmark.eval.qa_run_contracts import (  # noqa: E402
+    build_explicit_conda_activation,
+    format_task_status,
+    partition_skipped_tasks,
+    summarize_qa_results,
+)
 
 # ============================================================
 # 常量
@@ -2251,28 +2256,61 @@ def main() -> None:
         log.warning("未找到 QA 任务，退出")
         return
 
-    # 创建内存管理器
-    memory_guard = MemoryGuard(args.memory_limit_gb, args.vm_memory)
+    # 在 executor 提交之前剔除隔离任务。SKIP 结果仍会立即持久化，
+    # 但不会进入 run_single_task，因而不会申请内存、分配端口或启动容器/Agent。
+    runnable_task_items, skipped_output_results = partition_skipped_tasks(task_items)
+    total_count = len(task_items)
+    skipped_count = len(skipped_output_results)
+    log.info(
+        "调度前分流: 可执行 %d | SKIP %d | 总计 %d",
+        len(runnable_task_items),
+        skipped_count,
+        total_count,
+    )
+
+    # 只有存在可执行任务时才创建内存管理器；全为 SKIP 时不得触发资源路径。
+    memory_guard = (
+        MemoryGuard(args.memory_limit_gb, args.vm_memory)
+        if runnable_task_items
+        else None
+    )
 
     # 创建 group_id 池（线程安全队列）
     # 保证同一 group_id 不会被两个线程同时使用，避免容器名称冲突
     available_groups: queue.Queue = queue.Queue()
-    for g in range(args.max_parallel_tasks):
+    for g in range(args.max_parallel_tasks if runnable_task_items else 0):
         available_groups.put(g)
-    log.info("已初始化 %d 个容器组槽位", args.max_parallel_tasks)
+    log.info(
+        "已初始化 %d 个容器组槽位",
+        args.max_parallel_tasks if runnable_task_items else 0,
+    )
 
     # 启动全局防黑屏心跳守护线程
     heartbeat = GlobalScreensaverHeartbeat(vm_ip=args.vm_ip, interval_sec=180)
-    heartbeat.start()
+    if runnable_task_items:
+        heartbeat.start()
 
     # 结果收集
-    output_results: Dict[str, Any] = {}
+    output_results: Dict[str, Any] = dict(skipped_output_results)
     results_lock = threading.Lock()
     os.makedirs(os.path.dirname(OUTPUT_JSON_PATH), exist_ok=True)
+    with open(OUTPUT_JSON_PATH, "w", encoding="utf-8") as output_file:
+        json.dump(output_results, output_file, ensure_ascii=False, indent=2)
 
     # 并行调度
-    completed_count = 0
-    total_count = len(task_items)
+    completed_count = skipped_count
+    for skip_index, (task_uid, skipped_result) in enumerate(
+        skipped_output_results.items(),
+        start=1,
+    ):
+        log.info(
+            "任务完成 %d/%d | UID: %s | 状态: %s | 原因: %s",
+            skip_index,
+            total_count,
+            task_uid[:8],
+            format_task_status(skipped_result),
+            skipped_result.get("skip_eval_reason", ""),
+        )
 
     with ThreadPoolExecutor(
         max_workers=args.max_parallel_tasks,
@@ -2280,9 +2318,12 @@ def main() -> None:
     ) as executor:
         futures = {}
 
-        for i, (task_uid, task_path, task_config) in enumerate(task_items):
+        for i, (task_uid, task_path, task_config) in enumerate(
+            runnable_task_items,
+            start=skipped_count + 1,
+        ):
             log.info("提交任务 %d/%d | UID: %s",
-                     i + 1, total_count, task_uid[:8])
+                     i, total_count, task_uid[:8])
 
             fut = executor.submit(
                 run_single_task,
@@ -2290,7 +2331,7 @@ def main() -> None:
                 available_groups, args, memory_guard,
                 output_results, results_lock, OUTPUT_JSON_PATH,
             )
-            futures[fut] = (task_uid, i + 1)
+            futures[fut] = (task_uid, i)
 
         # 收集结果
         for fut in as_completed(futures):
@@ -2310,10 +2351,7 @@ def main() -> None:
                 completed_count += 1
 
             # 实时持久化中间结果（防止意外中断丢失数据）
-            evaluator_output = task_result.get("evaluator_output")
-            status = "PASS" if evaluator_output and evaluator_output.get("pass") else "FAIL"
-            if task_result.get("interrupted"):
-                status = "INTERRUPTED"
+            status = format_task_status(task_result)
 
             # 构造 token 消耗摘要
             token_info = task_result.get("token_usage") or {}
@@ -2342,7 +2380,8 @@ def main() -> None:
                 log.warning("写入中间结果失败: %s", exc)
 
     # 停止心跳
-    heartbeat.stop()
+    if runnable_task_items:
+        heartbeat.stop()
 
     # 写入最终结果
     with open(OUTPUT_JSON_PATH, "w", encoding="utf-8") as f:
@@ -2354,11 +2393,7 @@ def main() -> None:
     log.info("=" * 80)
 
     # 统计汇总
-    passed = sum(
-        1 for r in output_results.values()
-        if r.get("evaluator_output") and r.get("evaluator_output", {}).get("pass")
-    )
-    interrupted = sum(1 for r in output_results.values() if r.get("interrupted"))
+    outcome_summary = summarize_qa_results(output_results.values())
 
     # Token 数目与费用汇总。total_tokens 已包含 provider 返回的 cache tokens。
     total_plan_tokens = 0
@@ -2380,7 +2415,19 @@ def main() -> None:
 
     total_all_tokens = total_plan_tokens + total_gui_tokens
 
-    log.info("统计: 通过 %d | 中断 %d | 总计 %d", passed, interrupted, total_count)
+    log.info(
+        "统计: 通过 %d | 失败 %d | SKIP %d | 中断 %d | "
+        "评价器错误 %d | 有效评价 %d | 任务总计 %d",
+        outcome_summary["passed"],
+        outcome_summary["failed"],
+        outcome_summary["skipped"],
+        outcome_summary["interrupted"],
+        outcome_summary["evaluator_errors"],
+        outcome_summary["valid_evaluations"],
+        outcome_summary["total"],
+    )
+    if outcome_summary["pass_rate"] is not None:
+        log.info("有效评价通过率: %.2f%%", outcome_summary["pass_rate"] * 100)
     if total_all_tokens > 0:
         log.info(
             "Token 消耗: Plan Agent total=%s | GUI Agent total=%s | 总计=%s",

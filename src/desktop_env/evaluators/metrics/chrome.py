@@ -94,7 +94,13 @@ def is_expected_tabs(open_tabs: List[Dict[str, str]], rule: Dict[str, Any]) -> f
 
 def is_expected_bookmarks(bookmarks: List[str], rule: Dict[str, Any]) -> float:
     """
-    Checks if the expected bookmarks are in Chrome.
+    校验 Chrome 书签结构、目标文件夹名及文件夹内 URL 集合。
+
+    输入:
+        bookmarks: Chrome Bookmarks 的 ``roots`` 字典。
+        rule: OSWorld 书签规则；liked_authors 类型从 ``names`` 读取文件夹名。
+    输出:
+        结构与 URL 一一匹配时返回 1.0，否则返回 0.0。
     """
     if not bookmarks:
         return 0.
@@ -107,24 +113,26 @@ def is_expected_bookmarks(bookmarks: List[str], rule: Dict[str, Any]) -> float:
                                       bookmark['type'] == 'url']
         return 1. if set(bookmark_bar_websites_urls) == set(rule['urls']) else 0.
     elif rule['type'] == "liked_authors_websites_urls":
-        # Check if "liked authors" folder exists
+        expected_names = rule.get("names", [])
+        if not expected_names:
+            raise ValueError("liked_authors_websites_urls 缺少 names 配置")
+        expected_folder_name = expected_names[0]
         liked_authors_folder = next((bookmark for bookmark in bookmarks['bookmark_bar']['children'] if
-                                     bookmark['type'] == 'folder' and bookmark['name'] == 'Liked Authors'), None)
+                                     bookmark['type'] == 'folder' and
+                                     bookmark['name'] == expected_folder_name), None)
         if liked_authors_folder:
             # Check if it contains the specified URLs
             liked_authors_urls = [bookmark['url'] for bookmark in liked_authors_folder['children'] if
                                   bookmark['type'] == 'url']
 
-            urls = rule['urls']
-
-            for idx, url in enumerate(urls):
-                if isinstance(url, str):
-                    urls[idx] = [url]
+            urls = [([url] if isinstance(url, str) else list(url))
+                    for url in rule['urls']]
 
             combinations = product(*urls)
 
             for combination in combinations:
-                if set(combination) == set(liked_authors_urls):
+                if (len(combination) == len(liked_authors_urls) and
+                        set(combination) == set(liked_authors_urls)):
                     return 1.
             return 0.
         else:
@@ -144,10 +152,17 @@ def is_expected_search_query(active_tab_info: Dict[str, str], rules: Dict[str, A
 
 def compare_pdfs(pdf1_path: Union[str, List[str]], pdf2_path: Union[str, List[str]]):
     """
-    Compare two PDF files.
+    按一一对应关系比较 PDF 的可提取文本。
+
+    输入:
+        pdf1_path / pdf2_path: 单个路径或等长路径列表。
+    输出:
+        各文件文本相似度平均值；列表长度不等、空列表或双方均无文本时返回 0。
     """
-    if type(pdf2_path) != list:
-        pdf1_path, pdf2_path = [pdf1_path], [pdf2_path]
+    pdf1_paths = pdf1_path if isinstance(pdf1_path, list) else [pdf1_path]
+    pdf2_paths = pdf2_path if isinstance(pdf2_path, list) else [pdf2_path]
+    if not pdf1_paths or len(pdf1_paths) != len(pdf2_paths):
+        return 0.0
 
     def extract_text_from_pdf(pdf_path):
         """Extract text from each page of the PDF."""
@@ -158,21 +173,20 @@ def compare_pdfs(pdf1_path: Union[str, List[str]], pdf2_path: Union[str, List[st
         return text.strip()
 
     score = 0.
-    for path1, path2 in zip(pdf1_path, pdf2_path):
+    for path1, path2 in zip(pdf1_paths, pdf2_paths):
         try:
             text1 = extract_text_from_pdf(path1)
             text2 = extract_text_from_pdf(path2)
+            if not text1 and not text2:
+                continue
             score += fuzz.ratio(text1, text2) / 100
         except Exception as e:
             logger.info(f"[ERROR]: unexpected error occurred when comparing PDF files: {e}")
-    return score / len(pdf2_path)
+    return score / len(pdf2_paths)
 
 
 import fitz
 from PIL import Image
-from borb.pdf import Document
-from borb.pdf import PDF
-
 from pathlib import Path
 import typing
 
@@ -196,6 +210,9 @@ def compare_pdf_images(pdf1_path: str, pdf2_path: str, **kwargs) -> float:
         return images
 
     def fix_pdf(in_path: Path, out_path: Path) -> None:
+        from borb.pdf import Document
+        from borb.pdf import PDF
+
         doc: typing.Optional[Document] = None
         with open(in_path, "rb") as fh:
             doc = PDF.loads(fh)
@@ -220,7 +237,13 @@ def compare_pdf_images(pdf1_path: str, pdf2_path: str, **kwargs) -> float:
 
 def compare_archive(pred_path: str, gold_path: str, **kwargs) -> float:
     """
-    Compare two archives. Note that the files in the archives should be of the same type.
+    对压缩包成员名和成员内容进行一一比较。
+
+    输入:
+        pred_path / gold_path: agent 与 gold 压缩包路径。
+        **kwargs: file_path、file_type 及底层 metric 参数。
+    输出:
+        成员集合相同后的平均内容分；双方均为空时返回 1.0。
     """
     file_path = kwargs.pop('file_path', '')
     score_threshold = kwargs.pop('score_threshold', None)
@@ -244,6 +267,8 @@ def compare_archive(pred_path: str, gold_path: str, **kwargs) -> float:
 
     if pred_files != gold_files:
         return 0.
+    if not pred_files:
+        return 1.0
 
     def get_compare_function():
         file_type = kwargs.pop('file_type', 'text')
@@ -259,7 +284,7 @@ def compare_archive(pred_path: str, gold_path: str, **kwargs) -> float:
             from .slides import compare_pptx_files
             return compare_pptx_files
         elif file_type == 'image':
-            from .vlc import compare_images
+            from .image import compare_images
             return compare_images
         elif file_type == 'csv':
             from .table import compare_csv

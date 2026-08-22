@@ -11,20 +11,24 @@
     "original_task_id": "Operation-FileOperate-Batchoperationexcel-007",
     "eval_rules": [
         {
-            "check": "check_n_sorted_copies",
-            "file_pattern": "*.xlsx",
+            "check": "check_sorted_copies_preserve_rows",
+            "file_pattern": "*",
             "params": {
-                "columns": [
-                    "A",
-                    "B",
-                    "C",
-                    "D"
-                ],
-                "order": "asc",
-                "data_start_row": 4
+                "source_filename": "Company_Sales_Data.xlsx",
+                "header_row": 3,
+                "column_count": 4,
+                "expected_data_rows": 50,
+                "expected_total_rows": 51,
+                "source_data_sha256": "3ff60c88368d5deda80ad30518d24f3c53e0ee647bf755890f314f3c687ab99a",
+                "required_sorts": [
+                    {"column": "A", "order": "asc"},
+                    {"column": "B", "order": "asc"},
+                    {"column": "C", "order": "asc"},
+                    {"column": "D", "order": "asc"}
+                ]
             },
             "weight": 1.0,
-            "description": "检查四份副本分别按日期/姓名/订单号/销售额升序排序"
+            "description": "四个完整数据副本分别按日期、姓名、订单号和销售额升序排列"
         }
     ]
 }

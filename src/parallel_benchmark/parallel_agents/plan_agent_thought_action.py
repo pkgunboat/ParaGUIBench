@@ -17,6 +17,23 @@ from openai import OpenAI
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
+    from parallel_benchmark.eval.answer_extraction import (
+        extract_last_complete_answer_tag as _extract_last_complete_answer_tag,
+    )
+    from parallel_benchmark.eval.qa_answer_contracts import (
+        build_plan_summary_prompt,
+        should_short_circuit_summary,
+    )
+except ImportError:
+    from eval.answer_extraction import (  # type: ignore[no-redef]
+        extract_last_complete_answer_tag as _extract_last_complete_answer_tag,
+    )
+    from eval.qa_answer_contracts import (  # type: ignore[no-redef]
+        build_plan_summary_prompt,
+        should_short_circuit_summary,
+    )
+
+try:
     from config.api_config import get_api_config
 except ImportError:
     # 远程环境可能没有 config 模块；调用方应通过 api_key / base_url 参数传入
@@ -92,27 +109,19 @@ def _is_transient_api_error_text(error_text: str) -> bool:
 
 
 def _local_clean_answer(raw) -> str:
-    """
-    在不调用模型的前提下对 thought 中提取出的 <answer> 内容做轻量本地清洗。
+    """在不调用模型的前提下轻量清洗显式答案。
 
-    清洗规则：
-        - 去首尾空白
-        - 去外层同种引号（"" 或 ''）
-        - 去括号补充说明（Malaysia (not Myanmar) → Malaysia）
-        - 若仍含 <answer> tag，取第一个 tag 内容
-
-    输入:
-        raw: 原始字符串（Optional，None 视为空串）
-    输出:
-        str: 清洗后答案文本
+    功能：去除首尾空白和成对外层引号；若输入仍包含 answer 标签，则使用最后
+    一个完整标签。函数不再删除任意括号内容，避免把否定或关键限定词清掉。
+    输入参数：raw，原始答案对象；None 视为空串，其余对象转为字符串。
+    输出返回值：清洗后的答案字符串；最后一个完整空标签保留为空字符串。
     """
-    text = (raw or "").strip()
+    text = str(raw or "").strip()
+    tagged_answer = _extract_last_complete_answer_tag(text)
+    if tagged_answer is not None:
+        text = tagged_answer
     if len(text) >= 2 and text[0] in "\"'" and text[-1] == text[0]:
         text = text[1:-1].strip()
-    text = re.sub(r"\s*\([^)]*\)", "", text).strip()
-    inner = re.findall(r"<answer>(.*?)</answer>", text, flags=re.DOTALL | re.IGNORECASE)
-    if inner:
-        text = inner[0].strip()
     return text
 
 
@@ -617,6 +626,9 @@ class PlanAgentThoughtAction:
         
         # 用于跟踪连续无工具调用的轮次
         consecutive_no_tool_calls = 0
+        # 只有显式 answer 标签可以以非哨兵答案短路总结阶段。
+        # “task completed”等无工具叙述不能设置此标记。
+        explicit_answer_tag_detected = False
         # 用于跟踪连续 API 致命错误的轮次（如 GUI Agent API 欠费 403）
         self._consecutive_api_fatal_rounds = 0
         max_rounds_exhausted = False
@@ -773,9 +785,8 @@ class PlanAgentThoughtAction:
             # 检测 <answer> 标签：如果 LLM 在 thought 中给出了最终答案，立即终止循环
             # 防止 Plan Agent 在已得出答案后继续发起不必要的验证轮次
             if message.content:
-                _answer_match = re.search(r"<answer>(.*?)</answer>", message.content, re.DOTALL | re.IGNORECASE)
-                if _answer_match:
-                    _raw_answer = _answer_match.group(1).strip()
+                _raw_answer = _extract_last_complete_answer_tag(message.content)
+                if _raw_answer is not None:
                     # P0-2: 本地清洗，避免二次模型调用修改答案内容
                     _extracted_answer = _local_clean_answer(_raw_answer)
                     # 保留 planner 显式答案；最近 GUI 轮全失败时只记录低置信 warning。
@@ -787,6 +798,7 @@ class PlanAgentThoughtAction:
                         f"raw='{_raw_answer}' cleaned='{_extracted_answer}'. Terminating loop."
                     )
                     self.recorder.set_final_answer(_extracted_answer)
+                    explicit_answer_tag_detected = True
                     self.execution_log["rounds"].append(round_log)
                     break
 
@@ -916,10 +928,8 @@ class PlanAgentThoughtAction:
                             if any(keyword in thought_lower for keyword in completion_keywords):
                                 self.task_logger.info(f"Previous round succeeded and LLM confirmed completion - task completed")
                                 # 注意：这里的round_log已经在上面被记录到recorder了，无需重复记录
-                                # Extract and set final answer
-                                final_answer = round_log.get("thought", "")
-                                if final_answer:
-                                    self.recorder.set_final_answer(final_answer)
+                                # 完成叙述不是答案：保持 recorder.final_answer 为空，
+                                # 让统一 summary 阶段从全部 GUI 证据中提取结构化答案。
                                 break
                             else:
                                 self.task_logger.info(f"Previous round succeeded but LLM didn't confirm completion - continuing")
@@ -945,10 +955,8 @@ class PlanAgentThoughtAction:
                     if consecutive_no_tool_calls >= 3:
                         self.task_logger.info(f"Three consecutive rounds without tool calls - ending execution")
                         # 注意：这里的round_log已经在上面被记录到recorder了，无需重复记录
-                        # Extract and set final answer
-                        final_answer = round_log.get("thought", "")
-                        if final_answer:
-                            self.recorder.set_final_answer(final_answer)
+                        # 连续无工具的 narrative 不能当作 final_answer；如果
+                        # 已有 GUI 执行历史，循环后的 summary 阶段仍会正常运行。
                         break
                     continue
             
@@ -1586,11 +1594,11 @@ class PlanAgentThoughtAction:
             self.recorder.set_final_answer("INSUFFICIENT_EVIDENCE")
 
         # === 总结步骤：额外调用一次模型，从完整对话历史中提取简洁的最终答案 ===
-        # P0-2 修复: 若 thought 分支已通过 [ANSWER DETECTED] 设置 final_answer，
-        # 跳过二次模型调用，避免模型改写答案（如 Malaysia → myanmar）
-        _has_prior_answer = bool(
-            getattr(self.recorder, "final_answer", None)
-            and str(self.recorder.final_answer).strip()
+        # 只允许显式 <answer> 标签或明确弃答哨兵短路；完成关键词与连续
+        # 无工具 narrative 均必须继续进入 summary，避免把整句过程描述当答案。
+        _has_prior_answer = should_short_circuit_summary(
+            getattr(self.recorder, "final_answer", None),
+            explicit_answer_tag=explicit_answer_tag_detected,
         )
         if _has_prior_answer:
             self.task_logger.info(
@@ -1599,21 +1607,7 @@ class PlanAgentThoughtAction:
             )
         elif len(history) > 0:
             try:
-                summary_prompt = (
-                    "The task execution is now complete. Based on ALL the information gathered "
-                    "from the GUI agents above, please provide the FINAL ANSWER to the original task.\n\n"
-                    "CRITICAL RULES:\n"
-                    "1. Your answer MUST be wrapped in <answer></answer> tags.\n"
-                    "2. The answer inside the tags should be as CONCISE as possible:\n"
-                    "   - If the answer is a number, just write the number: <answer>3</answer>\n"
-                    "   - If the answer is a name/keyword, just write it: <answer>EUR</answer>\n"
-                    "   - If the answer is a file name, write it WITHOUT extension: <answer>meeting1</answer>\n"
-                    "   - If multiple items, separate with commas: <answer>Samsung, Xiaomi</answer>\n"
-                    "3. Do NOT include explanations, full sentences, or extra context inside <answer> tags.\n"
-                    "4. If the task asks 'which file/document', answer with the file name (without extension).\n"
-                    "5. Review ALL rounds of execution results carefully before answering.\n"
-                    "6. ALWAYS answer in English, even if the task instruction is in Chinese."
-                )
+                summary_prompt = build_plan_summary_prompt()
                 messages.append({"role": "user", "content": summary_prompt})
 
                 self.task_logger.info("[SUMMARY] Calling model for final answer extraction...")
@@ -1661,9 +1655,8 @@ class PlanAgentThoughtAction:
                 self.task_logger.info(f"[SUMMARY] Response:\n{summary_content[:500]}")
 
                 # 提取 <answer> 标签
-                answer_match = re.search(r"<answer>(.*?)</answer>", summary_content, re.DOTALL | re.IGNORECASE)
-                if answer_match:
-                    extracted = answer_match.group(1).strip()
+                extracted = _extract_last_complete_answer_tag(summary_content)
+                if extracted is not None:
                     self.task_logger.info(f"[SUMMARY] Extracted answer: '{extracted}'")
                     self.recorder.set_final_answer(extracted)
                 else:
@@ -2212,36 +2205,32 @@ class PlanAgentThoughtAction:
         history: List[Dict[str, Any]],
         messages: List[Dict[str, Any]],
     ) -> Optional[str]:
-        """
-        从执行历史中搜索已产出的 <answer> 标签，作为 summary 阶段的 fallback。
+        """从执行历史中搜索最近的最终 answer 标签。
 
-        搜索顺序（后产出的优先）：
+        功能：按以下来源优先级倒序扫描，并在每个文本内部统一取最后一个完整
+        标签，作为 summary 阶段的 fallback：
         1. Plan Agent 各轮 response 中的 <answer> 标签（倒序扫描）
         2. messages 中 assistant 消息里的 <answer> 标签（倒序扫描）
         3. GUI Agent 返回结果中的 result 字段
-
-        Args:
-            history: Plan Agent 执行历史（各轮记录）
-            messages: 完整对话消息列表
-
-        Returns:
-            提取到的答案字符串，未找到则返回 None
+        输入参数：history 为 Plan Agent 执行历史；messages 为完整对话消息列表。
+        输出返回值：找到时返回最近文本中最后一个完整标签的内容；否则返回
+        None。完整空标签返回空字符串，不回退到同一文本的旧标签。
         """
         # 策略 1：从 execution_log 的 thought 中倒序搜索 <answer> 标签
         rounds = self.execution_log.get("rounds", [])
         for round_log in reversed(rounds):
             thought = round_log.get("thought", "") or ""
-            match = re.search(r"<answer>(.*?)</answer>", thought, re.DOTALL | re.IGNORECASE)
-            if match:
-                return match.group(1).strip()
+            extracted = _extract_last_complete_answer_tag(thought)
+            if extracted is not None:
+                return extracted
 
         # 策略 2：从 messages 中 assistant 消息倒序搜索 <answer> 标签
         for msg in reversed(messages):
             if msg.get("role") == "assistant":
                 content = msg.get("content", "") or ""
-                match = re.search(r"<answer>(.*?)</answer>", content, re.DOTALL | re.IGNORECASE)
-                if match:
-                    return match.group(1).strip()
+                extracted = _extract_last_complete_answer_tag(content)
+                if extracted is not None:
+                    return extracted
 
         # 策略 3：从 GUI Agent 的结果中提取（最后一轮优先）
         for round_record in reversed(history):
@@ -2251,9 +2240,9 @@ class PlanAgentThoughtAction:
                     result_text = result_data.get("result", "")
                     if result_text and isinstance(result_text, str):
                         # 检查 GUI Agent 返回的 result 中是否有 <answer> 标签
-                        match = re.search(r"<answer>(.*?)</answer>", result_text, re.DOTALL | re.IGNORECASE)
-                        if match:
-                            return match.group(1).strip()
+                        extracted = _extract_last_complete_answer_tag(result_text)
+                        if extracted is not None:
+                            return extracted
 
         return None
 
@@ -2286,28 +2275,24 @@ class PlanAgentThoughtAction:
 
     @staticmethod
     def _clean_summary_as_answer(text: str) -> str:
-        """
-        清理 summary 文本，去掉明显的思考/计划性内容，尽量保留有效答案。
+        """清理 summary 文本并尽量保留最终有效答案。
 
-        处理规则：
+        功能：按以下规则依次处理：
         1. 如果文本中有 <answer> 标签，直接提取
         2. 如果文本以数字开头且较短（<20字符），直接返回
         3. 否则取最后一个句子（通常包含结论）
-
-        Args:
-            text: 原始 summary 文本
-
-        Returns:
-            清理后的文本
+        输入参数：text，原始 summary 文本。
+        输出返回值：最后一个完整 answer 标签内容，或按短文本/结论句规则清理后
+        的答案字符串；空输入返回空字符串。
         """
         text = text.strip()
         if not text:
             return ""
 
         # 先尝试提取 <answer> 标签
-        match = re.search(r"<answer>(.*?)</answer>", text, re.DOTALL | re.IGNORECASE)
-        if match:
-            return match.group(1).strip()
+        extracted = _extract_last_complete_answer_tag(text)
+        if extracted is not None:
+            return extracted
 
         # 如果是短文本且看起来像答案（纯数字、简短词组），直接返回
         if len(text) <= 50:

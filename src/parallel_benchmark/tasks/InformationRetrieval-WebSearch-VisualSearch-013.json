@@ -3,6 +3,7 @@
     "task_uid": "4e4f6413-46c0-4dfd-af58-ba7c8f07944f",
     "task_type": "QA",
     "task_tag": "WebSearch",
+    "answer_match_mode": "numeric",
     "instruction": "As of 2025, how many of the eight member universities listed on the Ivy League's official website have a Latin motto on their official university seal or coat of arms? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
     "task_source": "self",
     "answer": "7",

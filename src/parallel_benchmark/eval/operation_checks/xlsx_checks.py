@@ -8,8 +8,12 @@ Excel 表格（.xlsx）属性检查原语。
 """
 
 import glob
+import hashlib
+import json
 import logging
+import math
 import os
+from collections import Counter
 from typing import Any, Dict, List, Optional
 
 import openpyxl
@@ -357,9 +361,13 @@ def check_sort_order(file_path: str, params: dict) -> dict:
         if len(values) <= 1:
             return _ok("数据量不足，无需排序检查")
 
-        # 检查排序
-        is_ascending = all(values[i] <= values[i + 1] for i in range(len(values) - 1))
-        is_descending = all(values[i] >= values[i + 1] for i in range(len(values) - 1))
+        # 混合数值/文本类型是 Agent 输出问题，应评为失败，
+        # 不应将 TypeError 上抛为评价器故障。
+        try:
+            is_ascending = all(values[i] <= values[i + 1] for i in range(len(values) - 1))
+            is_descending = all(values[i] >= values[i + 1] for i in range(len(values) - 1))
+        except TypeError:
+            return _fail(f"列 {column} 包含无法互相比较的混合类型")
 
         if order == "asc" and is_ascending:
             return _ok(f"列 {column} 升序排列正确（{len(values)} 行）")
@@ -369,105 +377,20 @@ def check_sort_order(file_path: str, params: dict) -> dict:
         # 计算乱序程度（逆序对比例）
         inversions = 0
         total_pairs = 0
-        for i in range(len(values) - 1):
-            total_pairs += 1
-            if order == "asc" and values[i] > values[i + 1]:
-                inversions += 1
-            elif order == "desc" and values[i] < values[i + 1]:
-                inversions += 1
+        try:
+            for i in range(len(values) - 1):
+                total_pairs += 1
+                if order == "asc" and values[i] > values[i + 1]:
+                    inversions += 1
+                elif order == "desc" and values[i] < values[i + 1]:
+                    inversions += 1
+        except TypeError:
+            return _fail(f"列 {column} 包含无法互相比较的混合类型")
 
         ratio = 1.0 - (inversions / total_pairs) if total_pairs else 1.0
         return _partial(
             ratio,
             f"列 {column} 排序不完全（有序比例 {ratio:.1%}，期望 {order}）"
-        )
-    finally:
-        wb.close()
-
-
-def check_sort_order_by_header_keywords(file_path: str, params: dict) -> dict:
-    """
-    按表头关键字定位列并检查排序。
-
-    比固定列号更贴近“按 sales amount 排序”这类任务，避免 agent 只把
-    B 列排好但真实销售额列未排序也通过。
-    """
-    keywords = [str(k).lower() for k in params.get("header_keywords", [])]
-    order = params.get("order", "desc")
-    sheet_name = params.get("sheet_name")
-    header_rows = int(params.get("header_rows", 5))
-    skip_header = params.get("skip_header", True)
-
-    if not keywords:
-        return _config_error("参数缺少 header_keywords")
-
-    wb = _load_workbook(file_path, data_only=True)
-    if wb is None:
-        return _fail(f"无法打开文件: {file_path}")
-
-    try:
-        ws = _get_sheet(wb, sheet_name)
-        if ws is None:
-            return _fail(f"工作表不存在: {sheet_name}")
-
-        best = None
-        for row_idx in range(1, min(header_rows, ws.max_row) + 1):
-            for col_idx in range(1, ws.max_column + 1):
-                value = ws.cell(row=row_idx, column=col_idx).value
-                if value is None:
-                    continue
-                text = str(value).lower()
-                if all(keyword in text for keyword in keywords):
-                    best = (row_idx, col_idx, value)
-                    break
-            if best:
-                break
-
-        if not best:
-            return _fail(f"未找到包含关键字 {keywords} 的表头")
-
-        header_row, col_idx, header_value = best
-        start_row = header_row + 1 if skip_header else header_row
-        values = []
-        for row_idx in range(start_row, ws.max_row + 1):
-            val = ws.cell(row=row_idx, column=col_idx).value
-            if val is None:
-                continue
-            if isinstance(val, str):
-                normalized = val.replace(",", "").strip()
-                try:
-                    val = float(normalized)
-                except ValueError:
-                    continue
-            values.append(val)
-
-        if len(values) <= 1:
-            return _ok(f"列 {header_value} 数据量不足，无需排序检查")
-
-        try:
-            is_ascending = all(values[i] <= values[i + 1] for i in range(len(values) - 1))
-            is_descending = all(values[i] >= values[i + 1] for i in range(len(values) - 1))
-        except TypeError:
-            return _fail(f"列 {header_value} 含不可比较值")
-
-        if order == "asc" and is_ascending:
-            return _ok(f"列 {header_value} 升序排列正确（{len(values)} 行）")
-        if order == "desc" and is_descending:
-            return _ok(f"列 {header_value} 降序排列正确（{len(values)} 行）")
-
-        inversions = 0
-        total_pairs = 0
-        for i in range(len(values) - 1):
-            total_pairs += 1
-            if order == "asc" and values[i] > values[i + 1]:
-                inversions += 1
-            elif order == "desc" and values[i] < values[i + 1]:
-                inversions += 1
-
-        ratio = 1.0 - (inversions / total_pairs) if total_pairs else 1.0
-        return _partial(
-            ratio,
-            f"列 {header_value} 排序不完全（有序比例 {ratio:.1%}，期望 {order}）"
         )
     finally:
         wb.close()
@@ -845,6 +768,87 @@ def check_values_are_decimals(file_path: str, params: dict) -> dict:
         wb.close()
 
 
+def check_values_scaled_from_source(file_path: str, params: dict) -> dict:
+    """检查单元格值是否按指定倍率从已知源数据换算。
+
+    输入:
+        file_path: xlsx 文件路径。
+        params:
+            start_cell (str): 目标区域起始单元格。
+            end_cell (str): 目标区域结束单元格。
+            source_values_by_file (dict[str, list[number]]): 按文件名保存的
+                源区域行优先数值。
+            divisor (number): 换算除数，例如元转万元为 10000。
+            relative_tolerance (float): 相对容差，默认 0.001。
+            absolute_tolerance (float): 绝对容差，默认 0.005。
+            sheet_name (str, 可选): 工作表名。
+    输出:
+        所有单元格符合 source/divisor 时返回通过。
+    """
+    start_cell = params.get("start_cell", "")
+    end_cell = params.get("end_cell", "")
+    source_by_file = params.get("source_values_by_file", {})
+    divisor = params.get("divisor")
+    relative_tolerance = float(params.get("relative_tolerance", 0.001))
+    absolute_tolerance = float(params.get("absolute_tolerance", 0.005))
+    sheet_name = params.get("sheet_name")
+    if not start_cell or not end_cell or not source_by_file or not divisor:
+        return _config_error(
+            "参数缺少 start_cell/end_cell/source_values_by_file/divisor"
+        )
+    filename = os.path.basename(file_path)
+    source_values = source_by_file.get(filename)
+    if not source_values:
+        return _config_error(f"未配置 {filename} 的源数据")
+
+    wb = _load_workbook(file_path, data_only=True)
+    if wb is None:
+        return _fail(f"无法打开文件: {file_path}")
+    try:
+        ws = _get_sheet(wb, sheet_name)
+        if ws is None:
+            return _fail(f"工作表不存在: {sheet_name}")
+        start_col = column_index_from_string(''.join(filter(str.isalpha, start_cell)))
+        start_row = int(''.join(filter(str.isdigit, start_cell)))
+        end_col = column_index_from_string(''.join(filter(str.isalpha, end_cell)))
+        end_row = int(''.join(filter(str.isdigit, end_cell)))
+        actual_values = [
+            ws.cell(row=row, column=col).value
+            for row in range(start_row, end_row + 1)
+            for col in range(start_col, end_col + 1)
+        ]
+        if len(actual_values) != len(source_values):
+            return _config_error(
+                f"区域有 {len(actual_values)} 个单元格，"
+                f"但配置了 {len(source_values)} 个源值"
+            )
+        matched = 0
+        failures = []
+        for index, (actual, source) in enumerate(zip(actual_values, source_values)):
+            expected = float(source) / float(divisor)
+            if (
+                isinstance(actual, (int, float))
+                and not isinstance(actual, bool)
+                and math.isclose(
+                    float(actual), expected,
+                    rel_tol=relative_tolerance,
+                    abs_tol=absolute_tolerance,
+                )
+            ):
+                matched += 1
+            else:
+                failures.append(f"#{index + 1}: {actual!r} != {expected:g}")
+        if matched == len(source_values):
+            return _ok(f"全部 {matched} 个数值均按 1/{divisor:g} 换算")
+        return _partial(
+            matched / len(source_values),
+            f"仅 {matched}/{len(source_values)} 个数值换算正确: "
+            f"{'; '.join(failures[:3])}",
+        )
+    finally:
+        wb.close()
+
+
 def _rgb_is_red(rgb) -> bool:
     """
     判断一个 openpyxl 颜色 rgb 值是否属于“红色”。
@@ -903,6 +907,7 @@ def _cell_is_red(cell) -> bool:
     except Exception:
         pass
     return False
+
 
 
 def check_negative_values_colored(file_path: str, params: dict) -> dict:
@@ -984,6 +989,199 @@ def check_sorted_columns_exist(file_path: str, params: dict) -> dict:
     # 此函数实际需要检查多个文件，所以使用 check_sort_order
     # 这里复用 check_sort_order 的逻辑
     return check_sort_order(file_path, params)
+
+
+def _worksheet_value_rows(ws, start_row: int, column_count: int) -> List[tuple]:
+    """提取工作表的固定列数值行。
+
+    输入:
+        ws: openpyxl Worksheet 对象。
+        start_row: 起始行号（1-based）。
+        column_count: 需要提取的列数。
+    输出:
+        从 start_row 到末行的元组列表，全空行被忽略。
+    """
+    rows = []
+    for row_index in range(start_row, ws.max_row + 1):
+        row = tuple(
+            ws.cell(row=row_index, column=column_index).value
+            for column_index in range(1, column_count + 1)
+        )
+        if any(value is not None for value in row):
+            rows.append(row)
+    return rows
+
+
+def _rows_digest(rows: List[tuple]) -> str:
+    """计算工作表值行的稳定 SHA-256。
+
+    输入:
+        rows: 值行元组列表。
+    输出:
+        UTF-8 JSON 序列化后的六十四位 SHA-256 十六进制字符串。
+    """
+    payload = json.dumps(rows, ensure_ascii=False, default=str, separators=(",", ":"))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _is_monotonic_values(values: List[Any], order: str) -> bool:
+    """判断值序列是否按指定方向单调。
+
+    输入:
+        values: 待比较的非空值列表。
+        order: "asc" 或 "desc"。
+    输出:
+        序列可比且单调时返回 True；混合类型返回 False。
+    """
+    try:
+        if order == "desc":
+            return all(left >= right for left, right in zip(values, values[1:]))
+        return all(left <= right for left, right in zip(values, values[1:]))
+    except TypeError:
+        return False
+
+
+def _has_distinct_sort_assignment(candidates: List[set], requirement_count: int) -> bool:
+    """检查排序要求能否一对一分配给不同文件。
+
+    输入:
+        candidates: 每个副本可覆盖的排序要求索引集合。
+        requirement_count: 排序要求总数。
+    输出:
+        存在覆盖全部要求的不同文件匹配时返回 True。
+    """
+    matched_file_by_requirement = {}
+
+    def assign(file_index: int, seen: set) -> bool:
+        """尝试为单个副本分配一个尚可增广的排序要求。
+
+        输入:
+            file_index: candidates 中的副本索引。
+            seen: 本轮增广已访问的要求索引。
+        输出:
+            成功新建或重排一条匹配时返回 True。
+        """
+        for requirement_index in candidates[file_index]:
+            if requirement_index in seen:
+                continue
+            seen.add(requirement_index)
+            previous_file = matched_file_by_requirement.get(requirement_index)
+            if previous_file is None or assign(previous_file, seen):
+                matched_file_by_requirement[requirement_index] = file_index
+                return True
+        return False
+
+    for file_index in range(len(candidates)):
+        assign(file_index, set())
+    return len(matched_file_by_requirement) == requirement_count
+
+
+def check_sorted_copies_preserve_rows(result_dir: str, params: dict) -> dict:
+    """检查多个排序副本是否保留源表全部数据并覆盖指定列。
+
+    输入:
+        result_dir: Agent 产出根目录。
+        params:
+            source_filename (str): 应保留的源工作簿文件名。
+            header_row (int): 表头行，默认 1。
+            column_count (int): 参与完整性比较的列数。
+            required_sorts (list[dict]): 每项包含 column 与 order。
+            source_data_sha256 (str): 初始源值行的稳定摘要。
+            expected_data_rows (int): 参与排序的初始数据行数；表尾
+                汇总行不计入。
+            expected_total_rows (int): 含表尾汇总行的源值行总数。
+    输出:
+        源数据未被替换、每个副本行多重集一致，且每个排序要求
+        均由不同副本覆盖时返回通过。
+    """
+    source_filename = params.get("source_filename", "")
+    header_row = int(params.get("header_row", 1))
+    column_count = int(params.get("column_count", 0))
+    required_sorts = params.get("required_sorts", [])
+    expected_digest = params.get("source_data_sha256", "")
+    expected_data_rows = int(params.get("expected_data_rows", 0))
+    expected_total_rows = int(params.get("expected_total_rows", 0))
+    if not source_filename or column_count <= 0 or not required_sorts or not expected_digest:
+        return _config_error(
+            "参数缺少 source_filename/column_count/required_sorts/source_data_sha256"
+        )
+
+    source_matches = sorted(
+        path for path in glob.glob(os.path.join(result_dir, "**", source_filename), recursive=True)
+        if os.path.isfile(path)
+    )
+    if len(source_matches) != 1:
+        return _fail(f"源文件 {source_filename} 期望唯一，实际 {len(source_matches)} 个")
+
+    source_wb = _load_workbook(source_matches[0], data_only=True)
+    if source_wb is None:
+        return _fail(f"无法打开源文件 {source_filename}")
+    try:
+        source_ws = source_wb.active
+        source_rows = _worksheet_value_rows(source_ws, header_row + 1, column_count)
+    finally:
+        source_wb.close()
+    if expected_total_rows and len(source_rows) != expected_total_rows:
+        return _fail(f"源值行总数 {len(source_rows)} != {expected_total_rows}")
+    if expected_data_rows <= 0 or expected_data_rows > len(source_rows):
+        return _config_error("expected_data_rows 必须在源值行数范围内")
+    if _rows_digest(source_rows) != expected_digest:
+        return _fail("源工作簿数据已被替换或篡改")
+
+    source_counter = Counter(source_rows)
+    all_xlsx = sorted(
+        path for path in glob.glob(os.path.join(result_dir, "**", "*.xlsx"), recursive=True)
+        if os.path.isfile(path) and not os.path.basename(path).startswith("~$")
+    )
+    copy_paths = [path for path in all_xlsx if os.path.realpath(path) != os.path.realpath(source_matches[0])]
+    if len(copy_paths) < len(required_sorts):
+        return _fail(f"仅找到 {len(copy_paths)} 个排序副本，期望 {len(required_sorts)} 个")
+
+    candidates = []
+    invalid_copies = []
+    for path in copy_paths:
+        workbook = _load_workbook(path, data_only=True)
+        if workbook is None:
+            invalid_copies.append(os.path.basename(path))
+            continue
+        try:
+            worksheet = workbook.active
+            rows = _worksheet_value_rows(worksheet, header_row + 1, column_count)
+        finally:
+            workbook.close()
+        if Counter(rows) != source_counter:
+            invalid_copies.append(os.path.basename(path))
+            continue
+        coverage = set()
+        sortable_rows = rows[:expected_data_rows]
+        for requirement_index, requirement in enumerate(required_sorts):
+            column = requirement.get("column")
+            try:
+                column_index = (
+                    int(column) if isinstance(column, int)
+                    else column_index_from_string(str(column))
+                ) - 1
+            except (TypeError, ValueError):
+                return _config_error(f"无法解析排序列: {column}")
+            values = [
+                row[column_index] for row in sortable_rows
+                if row[column_index] is not None
+            ]
+            if _is_monotonic_values(values, requirement.get("order", "asc")):
+                coverage.add(requirement_index)
+        candidates.append(coverage)
+
+    if invalid_copies:
+        return _fail(
+            f"排序副本与源数据行多重集不一致: "
+            f"{', '.join(invalid_copies[:5])}"
+        )
+    if not _has_distinct_sort_assignment(candidates, len(required_sorts)):
+        return _fail("未由四个不同完整副本覆盖全部排序列")
+    return _ok(
+        f"{len(required_sorts)} 个排序要求均由保留全部 "
+        f"{len(source_rows)} 行源数据的不同副本覆盖"
+    )
 
 
 def check_no_na_values(file_path: str, params: dict) -> dict:
@@ -1251,133 +1449,101 @@ def check_cells_filled(file_path: str, params: dict) -> dict:
         wb.close()
 
 
-def _is_monotonic(values: List[Any], order: str) -> bool:
+# ---- 以下一项自 2026-07 审计修复线补回 ----
+# 线 C 的 Excel-003 仍按固定列号判排序，无法发现「B 列排好但真实销售额列未排序」
+# 的情形；此函数按表头关键字定位列，为 BatchOperationExcel-003 所引用。
+
+
+def check_sort_order_by_header_keywords(file_path: str, params: dict) -> dict:
     """
-    安全判定一列数值是否按指定方向单调。
+    按表头关键字定位列并检查排序。
 
-    输入:
-        values: 已剔除 None 的单元格值列表
-        order: "asc"（升序）或 "desc"（降序）
-    输出:
-        bool；元素类型不可比较（TypeError）时视为未排序返回 False
+    比固定列号更贴近“按 sales amount 排序”这类任务，避免 agent 只把
+    B 列排好但真实销售额列未排序也通过。
     """
-    if len(values) <= 1:
-        return True
-    try:
-        if order == "asc":
-            return all(values[i] <= values[i + 1] for i in range(len(values) - 1))
-        return all(values[i] >= values[i + 1] for i in range(len(values) - 1))
-    except TypeError:
-        return False
-
-
-def check_n_sorted_copies(result_dir: str, params: dict) -> dict:
-    """
-    目录级检查：结果目录中是否存在 N 份 xlsx 副本，每份分别按一个不同的目标列排序。
-
-    针对"将同一表格分别按多个字段排序另存为多份副本"类任务：单条 check_sort_order
-    只能验证一个字段，无法覆盖 4 个字段。本函数遍历目录内全部 *.xlsx，统计每个文件
-    在哪些目标列上有序，再用二分图匹配确保每个目标列由**不同**文件覆盖（一份文件即便
-    在多列上恰好有序，也只能认领一列），从而要求覆盖全部 N 个字段。
-
-    输入:
-        result_dir: Agent 产出文件所在目录（目录级 check，直接接收 result_dir）
-        params:
-            columns (list): 目标列标识列表（字母/表头名/列号），如 ["A","B","C","D"]
-            order (str): "asc"（升序）或 "desc"（降序），默认 "asc"
-            data_start_row (int): 数据起始行（1-based），默认 4
-                                  （适配含 2 行标题块 + 1 行表头的表格布局）
-            sheet_name (str, 可选): 工作表名称，默认活动表
-            require_distinct_files (bool): 是否要求每个字段由不同文件覆盖，默认 True
-    输出:
-        {"pass": bool, "score": float, "reason": str}
-        score = 已覆盖字段数 / len(columns)，全部覆盖时 pass=True
-    """
-    columns = params.get("columns")
-    order = params.get("order", "asc")
+    keywords = [str(k).lower() for k in params.get("header_keywords", [])]
+    order = params.get("order", "desc")
     sheet_name = params.get("sheet_name")
-    data_start_row = params.get("data_start_row", 4)
-    require_distinct_files = params.get("require_distinct_files", True)
+    header_rows = int(params.get("header_rows", 5))
+    skip_header = params.get("skip_header", True)
 
-    if not columns:
-        return _config_error("参数缺少 columns")
+    if not keywords:
+        return _config_error("参数缺少 header_keywords")
 
-    # 收集目录内全部 xlsx（含子目录），与 _find_matching_files 行为一致
-    xlsx_files = sorted(set(
-        glob.glob(os.path.join(result_dir, "*.xlsx"))
-        + glob.glob(os.path.join(result_dir, "**", "*.xlsx"), recursive=True)
-    ))
-    if not xlsx_files:
-        return _fail("未找到 xlsx 文件")
+    wb = _load_workbook(file_path, data_only=True)
+    if wb is None:
+        return _fail(f"无法打开文件: {file_path}")
 
-    target = [str(c) for c in columns]
-    n_required = len(target)
+    try:
+        ws = _get_sheet(wb, sheet_name)
+        if ws is None:
+            return _fail(f"工作表不存在: {sheet_name}")
 
-    # 统计每个文件在哪些目标列上有序
-    file_sorted_cols: Dict[str, set] = {}
-    for fpath in xlsx_files:
-        wb = _load_workbook(fpath, data_only=True)
-        if wb is None:
-            continue
-        try:
-            ws = _get_sheet(wb, sheet_name)
-            if ws is None:
+        best = None
+        for row_idx in range(1, min(header_rows, ws.max_row) + 1):
+            for col_idx in range(1, ws.max_column + 1):
+                value = ws.cell(row=row_idx, column=col_idx).value
+                if value is None:
+                    continue
+                text = str(value).lower()
+                if all(keyword in text for keyword in keywords):
+                    best = (row_idx, col_idx, value)
+                    break
+            if best:
+                break
+
+        if not best:
+            # 定位不到待检查的列属于规则配置与数据不匹配，不是 agent 失败；
+            # 判 FAIL 会让该任务对所有模型系统性失败，故按评价器故障处理，
+            # 使其退出成功率分母并在报告中显式暴露。
+            return _config_error(
+                f"未找到包含关键字 {keywords} 的表头（前 {header_rows} 行）"
+            )
+
+        header_row, col_idx, header_value = best
+        start_row = header_row + 1 if skip_header else header_row
+        values = []
+        for row_idx in range(start_row, ws.max_row + 1):
+            val = ws.cell(row=row_idx, column=col_idx).value
+            if val is None:
                 continue
-            sorted_here = set()
-            for col in columns:
-                col_idx = _resolve_column(col, ws)
-                if col_idx is None:
+            if isinstance(val, str):
+                normalized = val.replace(",", "").strip()
+                try:
+                    val = float(normalized)
+                except ValueError:
                     continue
-                values = [
-                    ws.cell(row=r, column=col_idx).value
-                    for r in range(data_start_row, ws.max_row + 1)
-                ]
-                values = [v for v in values if v is not None]
-                # 数据量不足无法证明"按该列排序"，不计入覆盖
-                if len(values) <= 1:
-                    continue
-                if _is_monotonic(values, order):
-                    sorted_here.add(str(col))
-            file_sorted_cols[fpath] = sorted_here
-        finally:
-            wb.close()
+            values.append(val)
 
-    if require_distinct_files:
-        # 二分图最大匹配（增广路）：文件 -> 目标列，保证每列由不同文件认领
-        match_col: Dict[str, str] = {}
+        if len(values) <= 1:
+            return _ok(f"列 {header_value} 数据量不足，无需排序检查")
 
-        def _try_assign(fpath: str, seen: set) -> bool:
-            for col in file_sorted_cols.get(fpath, set()):
-                if col not in target or col in seen:
-                    continue
-                seen.add(col)
-                if col not in match_col or _try_assign(match_col[col], seen):
-                    match_col[col] = fpath
-                    return True
-            return False
+        try:
+            is_ascending = all(values[i] <= values[i + 1] for i in range(len(values) - 1))
+            is_descending = all(values[i] >= values[i + 1] for i in range(len(values) - 1))
+        except TypeError:
+            return _fail(f"列 {header_value} 含不可比较值")
 
-        for fpath in xlsx_files:
-            _try_assign(fpath, set())
-        covered = set(match_col.keys())
-    else:
-        covered = set()
-        for cols in file_sorted_cols.values():
-            covered |= (cols & set(target))
+        if order == "asc" and is_ascending:
+            return _ok(f"列 {header_value} 升序排列正确（{len(values)} 行）")
+        if order == "desc" and is_descending:
+            return _ok(f"列 {header_value} 降序排列正确（{len(values)} 行）")
 
-    n_covered = len(covered)
-    missing = [c for c in target if c not in covered]
-    ratio = n_covered / n_required if n_required else 0.0
+        inversions = 0
+        total_pairs = 0
+        for i in range(len(values) - 1):
+            total_pairs += 1
+            if order == "asc" and values[i] > values[i + 1]:
+                inversions += 1
+            elif order == "desc" and values[i] < values[i + 1]:
+                inversions += 1
 
-    detail = "; ".join(
-        f"{os.path.basename(f)}:[{','.join(sorted(cols & set(target))) or '无'}]"
-        for f, cols in file_sorted_cols.items()
-    )
-    if n_covered >= n_required:
-        return _ok(
-            f"{n_required} 个字段各由不同文件按 {order} 排序覆盖（{detail}）"
+        ratio = 1.0 - (inversions / total_pairs) if total_pairs else 1.0
+        return _partial(
+            ratio,
+            f"列 {header_value} 排序不完全（有序比例 {ratio:.1%}，期望 {order}）"
         )
-    return _partial(
-        ratio,
-        f"仅覆盖 {n_covered}/{n_required} 个排序字段（缺 {','.join(missing)}），"
-        f"要求每字段由不同文件覆盖={require_distinct_files}；明细: {detail}"
-    )
+    finally:
+        wb.close()
+
+

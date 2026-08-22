@@ -127,7 +127,19 @@ from onlyoffice_benchmark_utils import (  # noqa: E402
 # ============================================================
 
 sys.path.insert(0, os.path.join(parallel_benchmark_dir, "eval"))
-from searchwrite_xlsx_evaluator import evaluate, evaluate_multi_file  # noqa: E402
+from searchwrite_xlsx_evaluator import (  # noqa: E402
+    count_evaluable_cells,
+    evaluate,
+    evaluate_multi_file,
+)
+from operation_evaluator import evaluate as operation_evaluate  # noqa: E402
+from searchwrite_run_contracts import (  # noqa: E402
+    build_searchwrite_evaluator_error,
+    classify_searchwrite_result,
+    missing_expected_searchwrite_files,
+    summarize_searchwrite_results,
+    uses_osworld_evaluator,
+)
 
 # ============================================================
 # 常量
@@ -287,14 +299,14 @@ class GlobalScreensaverHeartbeat:
         logging.getLogger("pipeline.heartbeat").info("GlobalScreensaverHeartbeat 已停止")
 
 
-# 6 个 Search&Write 任务的 task_id 列表
+# 6 个 SearchAndWrite 代表任务的当前规范 task_id 列表。
 SEARCHWRITE_TASK_IDS = {
-    "Operation-FileOperate-Search&write-006",
-    "Operation-FileOperate-Search&write-008",
+    "Operation-FileOperate-SearchAndWrite-006",
+    "Operation-FileOperate-SearchAndWrite-008",
     "Operation-FileOperate-SearchAndWrite-002",
     "Operation-FileOperate-SearchAndWrite-004",
     "Operation-FileOperate-SearchAndWrite-005",
-    "Operation-WebOperate-Search&write-001",
+    "Operation-WebOperate-SearchAndWrite-001",
 }
 
 
@@ -339,6 +351,14 @@ def scan_searchwrite_tasks(
             results.append((task_uid, task_path, config))
 
     results.sort(key=lambda x: x[2].get("task_id", ""))
+    found_ids = {item[2].get("task_id", "") for item in results}
+    missing_ids = sorted(set(target_ids) - found_ids)
+    if missing_ids:
+        logging.getLogger("pipeline").warning(
+            "SearchWrite 白名单中有 %d 个任务未匹配: %s",
+            len(missing_ids),
+            missing_ids,
+        )
     return results
 
 
@@ -789,7 +809,7 @@ def stage2_5_trigger_save(
     share_urls: Dict[str, str],
     onlyoffice_base_url: str,
     log: logging.Logger,
-) -> bool:
+) -> bool | None:
     """
     Stage 2.5：关闭所有 VM 的 Chrome → 等待 OnlyOffice 回调保存。
 
@@ -804,7 +824,9 @@ def stage2_5_trigger_save(
         log: logger
 
     输出:
-        bool（保存是否成功触发）
+        True 表示文档可读且内容已变更；False 表示下载或内容
+        可用性验证失败；None 表示文档可读但与模板一致，无法
+        仅凭哈希区分“Agent 未编辑”与“回写未发生”。
     """
     log.info("STAGE 2.5: 触发 OnlyOffice 保存")
 
@@ -819,11 +841,12 @@ def stage2_5_trigger_save(
     log.info("  等待 20 秒让 OnlyOffice 完成文档保存回调...")
     time.sleep(20)
 
-    # 验证文件已更新：仅"可下载且非空"不构成证据——share server 在回调
-    # 失败时返回的就是原始模板。与 stage0 上传的模板做内容哈希对比，
-    # 哈希仍一致说明编辑内容从未回写到 share server。
+    # 验证文件可下载且非空，并与 stage0 模板做哈希对比。
+    # 哈希相同只是“没有可见内容变化”，不能单独证明回调失败：
+    # Agent 从未编辑时也会产生同样结果，因此该情形交给评价器计为普通失败。
     uid_short = task_uid.split("-")[0]
     all_ok = True
+    unchanged_files: List[str] = []
     for filename in share_urls:
         stem = os.path.splitext(filename)[0]
         doc_id = f"{uid_short}_{stem}"
@@ -848,22 +871,80 @@ def stage2_5_trigger_save(
             content_md5 = hashlib.md5(content).hexdigest()
             if content_md5 == template_md5:
                 log.warning(
-                    "  文件 %s 内容与原始模板一致 (md5=%s)，"
-                    "OnlyOffice 编辑结果未回写到 share server",
+                    "  文件 %s 内容与原始模板一致 (md5=%s)；"
+                    "该现象无法区分 Agent 未编辑与 OnlyOffice 未回写",
                     doc_id, content_md5,
                 )
-                all_ok = False
+                unchanged_files.append(filename)
             else:
                 log.info("  文件 %s 已更新 (%d bytes)", doc_id, len(content))
         else:
             log.info("  文件 %s 可下载 (%d bytes，无模板可比对)", doc_id, len(content))
 
-    return all_ok
+    if not all_ok:
+        return False
+    if unchanged_files:
+        log.warning(
+            "  %d 个文档与模板一致，继续交由评价器判定 Agent 结果: %s",
+            len(unchanged_files),
+            sorted(unchanged_files),
+        )
+        return None
+    return True
 
 
 # ============================================================
 # Stage 3: 评估
 # ============================================================
+
+def _persist_downloaded_searchwrite_results(
+    downloaded_results: List[Dict[str, str]],
+    save_result_dir: str,
+    task_id: str,
+    log: logging.Logger,
+) -> str:
+    """在评价前持久化已成功下载的 SearchWrite 结果文档。
+
+    功能：即使另一个文件下载失败、GT 缺失或评价器异常，
+    仍保留已取得的 Agent 产物供诊断，且只使用文件名的 basename
+    防止越界写入。
+    输入参数：downloaded_results 为名称与临时路径映射列表；
+    save_result_dir 为可选持久化根目录；task_id 为任务 ID；log 为
+    日志记录器。
+    输出返回值：成功创建的任务结果目录；未启用或创建失败时
+    返回空字符串。
+    """
+    if not save_result_dir or not downloaded_results:
+        return ""
+
+    task_save_dir = os.path.join(save_result_dir, task_id)
+    try:
+        os.makedirs(task_save_dir, exist_ok=True)
+        for item in downloaded_results:
+            safe_name = os.path.basename(item["name"])
+            shutil.copy2(item["result"], os.path.join(task_save_dir, safe_name))
+        log.info("Agent 结果文件已保存到: %s", task_save_dir)
+        return task_save_dir
+    except Exception as exc:
+        log.warning("保存 Agent 结果文件失败: %s", exc)
+        return ""
+
+
+def _attach_saved_result_path(
+    evaluator_result: Dict[str, Any],
+    saved_result_path: str,
+) -> Dict[str, Any]:
+    """为任意 SearchWrite 评价三态结果补充产物保存路径。
+
+    功能：在不改变 PASS、FAIL、UNKNOWN 或 evaluator_error 语义的
+    前提下，统一写入 ``saved_result_path`` 诊断字段。
+    输入参数：evaluator_result 为评价结果字典；saved_result_path 为
+    持久化目录或空字符串。
+    输出返回值：已补充路径字段的原结果字典。
+    """
+    evaluator_result["saved_result_path"] = saved_result_path
+    return evaluator_result
+
 
 def stage3_evaluate(
     task_uid: str,
@@ -872,6 +953,7 @@ def stage3_evaluate(
     onlyoffice_base_url: str,
     log: logging.Logger,
     save_result_dir: str = "",
+    config: ContainerSetConfig | None = None,
 ) -> Dict[str, Any]:
     """
     Stage 3：下载 Agent 编辑后的 xlsx 并与 GT 进行逐单元格比对评估。
@@ -890,6 +972,7 @@ def stage3_evaluate(
         onlyoffice_base_url: OnlyOffice base URL
         log: logger
         save_result_dir: 结果文件持久化目录（可选，为空则不保存）
+        config: 可选容器配置；OSWorld JSON 评价路径需要其 VM 连接信息
 
     输出:
         评估结果字典（包含 saved_result_path 字段）
@@ -898,14 +981,60 @@ def stage3_evaluate(
     uid_short = task_uid.split("-")[0]
     log.info("STAGE 3: 评估 %s", task_id)
 
+    evaluator_path = str(task_config.get("evaluator_path") or "")
+    if evaluator_path.endswith(".json"):
+        if config is None:
+            return build_searchwrite_evaluator_error(
+                "OSWorld 评价路径缺少容器连接配置"
+            )
+        try:
+            from osworld_evaluator import evaluate_osworld_task
+
+            evaluator_json_path = os.path.join(
+                parallel_benchmark_dir,
+                evaluator_path,
+            )
+            vm_port = config.get_vm_pairs()[0][0]
+            return evaluate_osworld_task(
+                evaluator_json_path=evaluator_json_path,
+                vm_ip=config.vm_ip,
+                vm_port=vm_port,
+                shared_host_dir=config.shared_host_dir,
+                log=log,
+                save_result_dir=(
+                    os.path.join(save_result_dir, task_id)
+                    if save_result_dir
+                    else ""
+                ),
+            )
+        except Exception as exc:
+            return build_searchwrite_evaluator_error(
+                f"OSWorld 评测异常: {exc}"
+            )
+
     xlsx_files = list(share_urls.keys())
 
     if not xlsx_files:
-        return {"score": 0.0, "pass": False, "reason": "无 xlsx 文件可评估"}
+        return build_searchwrite_evaluator_error("无共享 xlsx 文件可评估")
+
+    expected_documents = _get_task_xlsx_files(task_uid)
+    missing_document_links = missing_expected_searchwrite_files(
+        expected_documents,
+        xlsx_files,
+    )
+    collection_errors: List[str] = []
+    if missing_document_links:
+        collection_errors.append(
+            "OnlyOffice 共享文档集不完整: "
+            + ", ".join(missing_document_links)
+        )
 
     file_pairs: List[Dict[str, str]] = []
+    downloaded_results: List[Dict[str, str]] = []
+    download_errors: List[str] = []
     # 追踪已下载但无 GT 的 Agent 结果文件（用于人工评价模式）
     result_only_files: List[Dict[str, str]] = []
+    missing_template_files: List[str] = []
 
     for xlsx_name in xlsx_files:
         stem = os.path.splitext(xlsx_name)[0]
@@ -916,10 +1045,12 @@ def stage3_evaluate(
             content = fetch_document_file_via_api(onlyoffice_base_url, doc_id)
         except Exception as exc:
             log.error("下载结果文件失败 %s: %s", doc_id, exc)
+            download_errors.append(f"{xlsx_name}: {exc}")
             continue
 
         if not content:
             log.error("结果文件为空: %s", doc_id)
+            download_errors.append(f"{xlsx_name}: empty content")
             continue
 
         # 保存到临时文件
@@ -933,6 +1064,7 @@ def stage3_evaluate(
         with open(result_tmp, "wb") as f:
             f.write(content)
         log.info("  结果文件已下载: %s (%d bytes)", xlsx_name, len(content))
+        downloaded_results.append({"name": xlsx_name, "result": result_tmp})
 
         # 本地 GT 路径
         gt_path = os.path.join(HF_DATA_DIR, "answer_files", task_uid, xlsx_name)
@@ -947,6 +1079,7 @@ def stage3_evaluate(
         )
         if not os.path.isfile(template_path):
             log.error("模板文件不存在: %s", template_path)
+            missing_template_files.append(xlsx_name)
             continue
 
         file_pairs.append({
@@ -956,21 +1089,72 @@ def stage3_evaluate(
             "result": result_tmp,
         })
 
+    saved_path = _persist_downloaded_searchwrite_results(
+        downloaded_results,
+        save_result_dir,
+        task_id,
+        log,
+    )
+
+    if download_errors:
+        collection_errors.append(
+            "OnlyOffice 结果下载不完整: " + "; ".join(download_errors)
+        )
+    if collection_errors:
+        return _attach_saved_result_path(
+            build_searchwrite_evaluator_error("; ".join(collection_errors)),
+            saved_path,
+        )
+
+    eval_rules = task_config.get("eval_rules", [])
+    if eval_rules:
+        if not downloaded_results:
+            return _attach_saved_result_path(
+                build_searchwrite_evaluator_error(
+                    "eval_rules 未收集到任何 Agent 结果文件"
+                ),
+                saved_path,
+            )
+        eval_result_dir = tempfile.mkdtemp(
+            prefix=f"paraguibench_searchwrite_{uid_short}_"
+        )
+        try:
+            for item in downloaded_results:
+                shutil.copy2(
+                    item["result"],
+                    os.path.join(eval_result_dir, os.path.basename(item["name"])),
+                )
+            eval_result = operation_evaluate(eval_result_dir, task_config)
+        except Exception as exc:
+            eval_result = build_searchwrite_evaluator_error(
+                f"operation_evaluator 评估异常: {exc}"
+            )
+        finally:
+            shutil.rmtree(eval_result_dir, ignore_errors=True)
+
+        return _attach_saved_result_path(eval_result, saved_path)
+
+    if missing_template_files:
+        return _attach_saved_result_path(
+            build_searchwrite_evaluator_error(
+                "评价模板集不完整: "
+                + ", ".join(sorted(missing_template_files))
+            ),
+            saved_path,
+        )
+
+    if file_pairs and result_only_files:
+        return _attach_saved_result_path(
+            build_searchwrite_evaluator_error(
+                "Ground Truth 文件集不完整: "
+                + ", ".join(sorted(item["name"] for item in result_only_files))
+            ),
+            saved_path,
+        )
+
     # 所有文件都没有 GT：保存 Agent 结果供人工评价
     if not file_pairs and result_only_files:
         log.warning("GT 不可用，跳过自动评估，保存 Agent 结果供人工评价")
-        saved_path = ""
-        if save_result_dir:
-            try:
-                task_save_dir = os.path.join(save_result_dir, task_id)
-                os.makedirs(task_save_dir, exist_ok=True)
-                for item in result_only_files:
-                    dst = os.path.join(task_save_dir, item["name"])
-                    shutil.copy2(item["result"], dst)
-                saved_path = task_save_dir
-                log.info("Agent 结果已保存: %s", task_save_dir)
-            except Exception as exc:
-                log.warning("保存结果失败: %s", exc)
         return {
             "score": -1, "pass": None, "status": "unknown",
             "reason": f"GT 不可用 ({task_id})，已保存结果供人工评价",
@@ -978,21 +1162,10 @@ def stage3_evaluate(
         }
 
     if not file_pairs:
-        return {"score": 0.0, "pass": False, "reason": "无有效文件可评估"}
-
-    # 先保存结果文件（在评估之前，确保即使评估崩溃也能保留 Agent 产物）
-    saved_path = ""
-    if save_result_dir and file_pairs:
-        try:
-            task_save_dir = os.path.join(save_result_dir, task_id)
-            os.makedirs(task_save_dir, exist_ok=True)
-            for pair in file_pairs:
-                dst = os.path.join(task_save_dir, pair["name"])
-                shutil.copy2(pair["result"], dst)
-            saved_path = task_save_dir
-            log.info("Agent 结果文件已保存到: %s", task_save_dir)
-        except Exception as exc:
-            log.warning("保存结果文件失败: %s", exc)
+        return _attach_saved_result_path(
+            build_searchwrite_evaluator_error("无有效文件可评估"),
+            saved_path,
+        )
 
     # 单文件直接评估，多文件用 evaluate_multi_file
     if len(file_pairs) == 1:
@@ -1005,23 +1178,32 @@ def stage3_evaluate(
             )
         except Exception as exc:
             log.error("评估异常: %s", exc)
-            eval_result = {
-                "score": -1.0,
-                "pass": False,
-                "status": "evaluator_error",
-                "reason": str(exc),
-            }
+            try:
+                expected_cells = count_evaluable_cells(
+                    pair["template"],
+                    pair["gt"],
+                )
+            except Exception as count_exc:
+                eval_result = build_searchwrite_evaluator_error(
+                    f"模板或 GT 无法读取: {count_exc}"
+                )
+            else:
+                eval_result = {
+                    "score": 0.0,
+                    "pass": False,
+                    "status": "agent_result_error",
+                    "reason": f"Agent 结果文件无法解析: {exc}",
+                    "total_cells": expected_cells,
+                    "matched_cells": 0,
+                }
     else:
         try:
             eval_result = evaluate_multi_file(file_pairs)
         except Exception as exc:
             log.error("评估异常: %s", exc)
-            eval_result = {
-                "score": -1.0,
-                "pass": False,
-                "status": "evaluator_error",
-                "reason": str(exc),
-            }
+            eval_result = build_searchwrite_evaluator_error(
+                f"多文件评价器异常: {exc}"
+            )
 
     log.info("评估结果: score=%.2f, pass=%s, cells=%d/%d",
              eval_result.get("score", 0),
@@ -1031,26 +1213,6 @@ def stage3_evaluate(
 
     eval_result["saved_result_path"] = saved_path
     return eval_result
-
-
-def _is_evaluator_error_output(evaluator_output: Any) -> bool:
-    if not isinstance(evaluator_output, dict):
-        return False
-    if str(evaluator_output.get("status") or "") == "evaluator_error":
-        return True
-    score = evaluator_output.get("score")
-    return isinstance(score, (int, float)) and score < 0
-
-
-def _task_outcome_bucket(task_result: Dict[str, Any]) -> str:
-    if task_result.get("interrupted"):
-        return "interrupted"
-    evaluator_output = task_result.get("evaluator_output")
-    if _is_evaluator_error_output(evaluator_output):
-        return "eval_error"
-    if isinstance(evaluator_output, dict) and evaluator_output.get("pass"):
-        return "passed"
-    return "failed"
 
 
 # ============================================================
@@ -1329,20 +1491,31 @@ def run_single_task(
         # 注册端口到心跳服务
         register_group_ports(group_id, config.get_server_ports())
 
-        # Stage 1: VM 初始化
-        if not stage1_initialize(config, log):
+        # Stage 1: OSWorld 任务必须执行 prepare/postconfig 兼容的
+        # shared 目录准备；OnlyOffice 任务仍使用轻量初始化。
+        if uses_osworld_evaluator(task_config):
+            from self_operation_pipeline.run_self_operation_pipeline_parallel import (
+                stage1_initialize_with_flatten,
+            )
+            initialized = stage1_initialize_with_flatten(task_config, config, log)
+        else:
+            initialized = stage1_initialize(config, log)
+        if not initialized:
             task_result["interrupted"] = True
             task_result["interrupt_reason"] = "stage1_initialize_failed"
             log.error("VM 初始化失败，跳过任务")
             return task_result
 
         # Stage 2: Agent 执行（注入共享链接到 instruction）
-        augmented_instruction = _build_instruction_with_share_urls(
-            instruction, task_share_urls,
-        )
-        # 临时替换 instruction
-        modified_config = dict(task_config)
-        modified_config["instruction"] = augmented_instruction
+        if uses_osworld_evaluator(task_config):
+            modified_config = task_config
+        else:
+            augmented_instruction = _build_instruction_with_share_urls(
+                instruction, task_share_urls,
+            )
+            # 临时替换 instruction
+            modified_config = dict(task_config)
+            modified_config["instruction"] = augmented_instruction
 
         agent_mode = getattr(args, "agent_mode", "plan")
         try:
@@ -1443,10 +1616,19 @@ def run_single_task(
             (args.onlyoffice_url or "").split(",")[0].strip(),
         )
 
-        # Stage 2.5: 触发 OnlyOffice 保存
-        stage2_5_trigger_save(
-            config, task_uid, task_share_urls, task_oo_url, log,
-        )
+        # Stage 2.5: 只对 OnlyOffice 任务触发关闭与回写验证。
+        if not uses_osworld_evaluator(task_config):
+            save_verified = stage2_5_trigger_save(
+                config, task_uid, task_share_urls, task_oo_url, log,
+            )
+            task_result["onlyoffice_save_verified"] = save_verified
+            if save_verified is False:
+                task_result["evaluator_output"] = build_searchwrite_evaluator_error(
+                    "OnlyOffice 编辑结果未完成回写验证"
+                )
+                task_result["run_status"] = "EVALUATOR_ERROR"
+                log.error("OnlyOffice 回写验证失败，不将其计为 Agent 普通失败")
+                return task_result
 
         # Stage 3: 评估
         try:
@@ -1457,15 +1639,14 @@ def run_single_task(
                 onlyoffice_base_url=task_oo_url,
                 log=log,
                 save_result_dir=getattr(args, "save_result_dir", ""),
+                config=config,
             )
             task_result["evaluator_output"] = eval_result
         except Exception as exc:
-            task_result["evaluator_output"] = {
-                "pass": False,
-                "score": -1.0,
-                "status": "evaluator_error",
-                "reason": f"evaluator_exception: {exc}",
-            }
+            task_result["evaluator_output"] = build_searchwrite_evaluator_error(
+                f"evaluator_exception: {exc}"
+            )
+            task_result["run_status"] = "EVALUATOR_ERROR"
             log.error("评估失败: %s", exc)
 
         log.info("任务 %s 执行完成", task_uid[:8])
@@ -1756,15 +1937,20 @@ def main() -> None:
     for i, (uid, _, cfg) in enumerate(task_items):
         log.info("  [%d] %s (UID: %s)", i + 1, cfg.get("task_id", ""), uid[:8])
 
-    # Stage 0: 准备文档（串行）
+    # Stage 0: 仅 OnlyOffice 任务上传共享文档；OSWorld 任务由
+    # Stage 1 prepare 将文件放入 VM/shared 目录。
+    onlyoffice_items = [
+        item for item in task_items
+        if not uses_osworld_evaluator(item[2])
+    ]
     share_urls_map = stage0_prepare_documents(
-        task_items, args.onlyoffice_url, args.onlyoffice_host_ip, log,
+        onlyoffice_items, args.onlyoffice_url, args.onlyoffice_host_ip, log,
     )
 
-    # 过滤无共享链接的任务
+    # OSWorld 任务无需共享链接；OnlyOffice 任务仍要求 Stage0 成功。
     valid_items = [
         (uid, path, cfg) for uid, path, cfg in task_items
-        if uid in share_urls_map
+        if uses_osworld_evaluator(cfg) or uid in share_urls_map
     ]
     if not valid_items:
         log.error("所有任务的文档准备失败，退出")
@@ -1831,14 +2017,9 @@ def main() -> None:
                 output_results[task_uid] = task_result
                 completed_count += 1
 
-            # 打印状态
+            # 打印互斥三态，避免 pass=None 被误报为 FAIL。
             evaluator_output = task_result.get("evaluator_output")
-            if task_result.get("interrupted"):
-                status = "INTERRUPTED"
-            elif evaluator_output and evaluator_output.get("pass"):
-                status = "PASS"
-            else:
-                status = "FAIL"
+            status = classify_searchwrite_result(task_result)
 
             task_id = task_result.get("task_id", "")
             score_str = ""
@@ -1868,16 +2049,21 @@ def main() -> None:
     log.info("输出结果文件: %s", output_json_path)
     log.info("=" * 80)
 
-    # 统计汇总
-    buckets = [_task_outcome_bucket(r) for r in output_results.values()]
-    passed = sum(1 for b in buckets if b == "passed")
-    failed = sum(1 for b in buckets if b == "failed")
-    interrupted = sum(1 for b in buckets if b == "interrupted")
-    eval_error = sum(1 for b in buckets if b == "eval_error")
-
+    # 统计汇总：有效分母只包含真实 PASS/FAIL。
+    outcome_summary = summarize_searchwrite_results(output_results.values())
+    pass_rate = outcome_summary["pass_rate"]
+    pass_rate_text = f"{pass_rate:.2%}" if pass_rate is not None else "N/A"
     log.info(
-        "统计: 通过 %d | 失败 %d | 中断 %d | 评价器错误 %d | 总计 %d",
-        passed, failed, interrupted, eval_error, total_count,
+        "统计: PASS=%d | FAIL=%d | EVALUATOR_ERROR=%d | INTERRUPTED=%d | "
+        "UNKNOWN=%d | 有效分母=%d | 通过率=%s | 总计=%d",
+        outcome_summary["passed"],
+        outcome_summary["failed"],
+        outcome_summary["evaluator_errors"],
+        outcome_summary["interrupted"],
+        outcome_summary["unknown"],
+        outcome_summary["valid_evaluations"],
+        pass_rate_text,
+        outcome_summary["total"],
     )
 
     # 输出详细得分
@@ -1885,15 +2071,13 @@ def main() -> None:
     for uid, res in sorted(output_results.items(), key=lambda x: x[1].get("task_id", "")):
         tid = res.get("task_id", uid[:8])
         ev = res.get("evaluator_output")
-        bucket = _task_outcome_bucket(res)
-        if bucket == "interrupted":
+        status = classify_searchwrite_result(res)
+        if status == "INTERRUPTED":
             log.info("  %s: INTERRUPTED (%s)", tid, res.get("interrupt_reason", ""))
-        elif bucket == "eval_error":
-            log.info("  %s: EVALUATOR_ERROR (%s)", tid, ev.get("reason", ""))
         elif ev:
             log.info("  %s: %s (score=%.2f, cells=%d/%d)",
                      tid,
-                     "PASS" if ev.get("pass") else "FAIL",
+                     status,
                      ev.get("score", 0),
                      ev.get("matched_cells", 0),
                      ev.get("total_cells", 0))

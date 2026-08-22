@@ -11,25 +11,14 @@
     "original_task_id": "Operation-FileOperate-BatchoperationWord-011",
     "eval_rules": [
         {
-            "check": "check_heading_colors_different",
-            "file_pattern": "*.docx",
+            "check": "check_heading_palette_and_references",
+            "file_pattern": "*",
             "params": {
-                "heading_styles": ["Heading 1", "Heading 2", "Heading 3"],
-                "threshold": 0.8
+                "expected_files": ["Doc_A.docx", "Doc_B.docx", "Doc_C.docx", "Doc_D.docx", "Doc_E.docx"],
+                "palette": ["FF0000", "FFFF00", "0000FF", "00B050", "00FF00", "008000"]
             },
-            "weight": 0.5,
-            "description": "标题颜色互不相同"
-        },
-        {
-            "check": "check_heading_colors_in_palette",
-            "file_pattern": "*.docx",
-            "params": {
-                "heading_styles": ["Heading 1", "Heading 2", "Heading 3"],
-                "allowed_colors": ["FF0000", "FFFF00", "0000FF", "00FF00"],
-                "threshold": 1.0
-            },
-            "weight": 0.5,
-            "description": "标题颜色限定为红、黄、蓝、绿"
+            "weight": 1.0,
+            "description": "主标题使用红黄蓝绿色板，互引文档颜色不同"
         }
     ]
 }

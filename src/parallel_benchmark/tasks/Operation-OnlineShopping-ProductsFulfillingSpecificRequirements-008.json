@@ -4,26 +4,21 @@
     "source_task_id": "products_fulfilling_specific_requirements_task_4",
     "task_type": "QA",
     "task_tag": "ProductsFulfillingSpecificRequirements",
-    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all offers for AIO liquid cpu coolers from ASUS which can display GIFs.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
+    "instruction": "You have access to the following four online shops:\n- E-Store Athletes: http://10.1.110.114:9081\n- TechTalk: http://10.1.110.114:9082\n- CamelCases: http://10.1.110.114:9083\n- Hardware Cafe: http://10.1.110.114:9084\n\nFind all currently in-stock and purchasable offers for ASUS all-in-one (AIO) liquid CPU coolers whose own offer-page product description explicitly contains the term \"GIF\" or \"GIFs\". Do not infer GIF support merely from an LCD, OLED, AniMe Matrix, customizable-display, or animation claim.\n\n[BOOKMARK_EVAL_MODE]\nAfter completing the task:\n- Do NOT manually type or copy any URL into the final answer.\n- For each correct product offer page you find, add it to Chrome bookmarks (Ctrl+D) and confirm it is saved.\n- If there are multiple correct offers, bookmark all of them.\n- When you are done, respond with \"Done\".\n",
     "task_source": "WebMall",
     "evaluator_type": "QuestionAnswering",
-    "answer": "http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software-black###http://10.1.110.114:9081/product/asus-rog-ryujin-iii-360-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software-black###http://10.1.110.114:9082/product/asus-rog-ryujin-ii-argb-360mm-liquid-cpu-cooler-3-x-12cm-rog-argb-fans-customisable-3-5-lcd-display###http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360mm-liquid-cpu-cooler-3x-12cm-pwm-noctua-fans-full-colour-customisable-lcd-display###http://10.1.110.114:9082/product/asus-rog-ryuo-120mm-liquid-cpu-cooler-1-x-12cm-pwm-fan-full-colour-oled-display-rgb###http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360-eva-02-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software###http://10.1.110.114:9083/product/asus-rog-ryujin-ii-argb-360mm-liquid-cpu-cooler-3-x-12cm-rog-argb-fans-customisable-3-5-lcd-display###http://10.1.110.114:9083/product/asus-rog-ryujin-iii-360mm-liquid-cpu-cooler-3x-12cm-pwm-noctua-fans-full-colour-customisable-lcd-display###http://10.1.110.114:9083/product/asus-rog-ryuo-120mm-liquid-cpu-cooler-1-x-12cm-pwm-fan-full-colour-oled-display-rgb###http://10.1.110.114:9083/product/asus-rog-ryujin-iii-360-eva-02-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software###http://10.1.110.114:9084/product/asus-rog-strix-lc-iii-240-argb-white-liquid-cpu-cooler-240mm-7th-gen-v2-asetek-pump-argb-fans-customisable-lcd-display-rotatable-water-block",
+    "answer": "http://10.1.110.114:9081/product/asus-rog-ryujin-iii-360-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software-black###http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software-black###http://10.1.110.114:9082/product/asus-rog-ryuo-120mm-liquid-cpu-cooler-1-x-12cm-pwm-fan-full-colour-oled-display-rgb###http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360mm-liquid-cpu-cooler-3x-12cm-pwm-noctua-fans-full-colour-customisable-lcd-display",
     "evaluator_path": "evaluators/string_url_evaluator.py",
-  "answer_type": "string",
-  "skip_eval": true,
-  "skip_eval_reason": "GIF capability is not represented consistently in the live catalog. The legacy gold includes LCD/OLED offers whose pages do not always state GIF support, omits five in-stock ASUS Ryuo III AniMe Matrix offers, and omits the 9081 duplicate of a 9084 Strix LC III gold slug; a display-capability rule must be defined before exact-set scoring is re-enabled.",
-  "expected_urls": [
-        "http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software-black",
+    "answer_type": "string",
+    "expected_urls": [
         "http://10.1.110.114:9081/product/asus-rog-ryujin-iii-360-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software-black",
-        "http://10.1.110.114:9082/product/asus-rog-ryujin-ii-argb-360mm-liquid-cpu-cooler-3-x-12cm-rog-argb-fans-customisable-3-5-lcd-display",
-        "http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360mm-liquid-cpu-cooler-3x-12cm-pwm-noctua-fans-full-colour-customisable-lcd-display",
+        "http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software-black",
         "http://10.1.110.114:9082/product/asus-rog-ryuo-120mm-liquid-cpu-cooler-1-x-12cm-pwm-fan-full-colour-oled-display-rgb",
-        "http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360-eva-02-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software",
-        "http://10.1.110.114:9083/product/asus-rog-ryujin-ii-argb-360mm-liquid-cpu-cooler-3-x-12cm-rog-argb-fans-customisable-3-5-lcd-display",
-        "http://10.1.110.114:9083/product/asus-rog-ryujin-iii-360mm-liquid-cpu-cooler-3x-12cm-pwm-noctua-fans-full-colour-customisable-lcd-display",
-        "http://10.1.110.114:9083/product/asus-rog-ryuo-120mm-liquid-cpu-cooler-1-x-12cm-pwm-fan-full-colour-oled-display-rgb",
-        "http://10.1.110.114:9083/product/asus-rog-ryujin-iii-360-eva-02-argb-360mm-liquid-cpu-cooler-3x-rog-argb-fans-customisable-3-5-lcd-display-new-control-software",
-        "http://10.1.110.114:9084/product/asus-rog-strix-lc-iii-240-argb-white-liquid-cpu-cooler-240mm-7th-gen-v2-asetek-pump-argb-fans-customisable-lcd-display-rotatable-water-block"
+        "http://10.1.110.114:9082/product/asus-rog-ryujin-iii-360mm-liquid-cpu-cooler-3x-12cm-pwm-noctua-fans-full-colour-customisable-lcd-display"
     ],
-    "original_task_id": "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-ba65d33f3b29492fb8cb30a14b915d66"
+    "original_task_id": "TaskExecution-MultiShopShopping-ProductsFulfillingSpecificRequirements-ba65d33f3b29492fb8cb30a14b915d66",
+    "task_revision": 2,
+    "gold_snapshot_id": "webmall-reannotation-20260726",
+    "gold_snapshot_path": "docs/eval_repair_20260714/WEBMALL_DYNAMIC_GOLD_SNAPSHOT_20260726.json",
+    "gold_catalog_sha256": "cc4dac0a1c912214669f97622ce9c5e501856a15782d8ac6e219de94c257ceb6"
 }

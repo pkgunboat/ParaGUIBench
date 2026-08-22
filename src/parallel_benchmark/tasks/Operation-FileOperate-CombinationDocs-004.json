@@ -6,6 +6,7 @@
     "instruction": "Check if the charts and content in PPT match the descriptions in the Word report text. Answer yes or no.",
     "task_source": "",
     "answer": "no",
+    "answer_match_mode": "exact",
     "skip_eval": false,
     "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/04a0b25e-f726-40a0-a88d-69bbf538f634",
     "evaluator_path": "",

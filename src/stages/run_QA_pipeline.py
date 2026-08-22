@@ -205,6 +205,17 @@ if ubuntu_env_dir not in sys.path:
     sys.path.insert(0, ubuntu_env_dir)
 
 from desktop_env.controllers.python import PythonController
+from parallel_benchmark.eval.answer_extraction import extract_last_complete_answer_tag
+from parallel_benchmark.eval.qa_answer_contracts import (
+    build_gui_answer_extraction_prompt,
+    extract_obvious_short_answer,
+)
+from parallel_benchmark.eval.qa_run_contracts import (
+    build_explicit_conda_activation,
+    build_skipped_task_result,
+    scan_qa_pipeline_tasks,
+    summarize_qa_results,
+)
 from parallel_agents.plan_agent_thought_action import PlanAgentThoughtAction
 from parallel_agents_as_tools.result_utils import stringify_model_output
 from config.api_config import get_api_config
@@ -212,7 +223,8 @@ from config.api_config import get_api_config
 # 多机同步：当前节点 host_tag，作为 logs/ 下的命名空间目录名
 from pipelines._host_tag import get_host_tag
 
-TASKS_LIST_DIR = os.path.join(parallel_benchmark_dir, "tasks_list")
+# 独立 QA CLI 与统一 pipeline 共用唯一真实任务目录。
+TASKS_LIST_DIR = os.path.join(parallel_benchmark_dir, "tasks")
 DEFAULT_QA_EVALUATOR_PATH = os.path.join("eval", "file_search_readonly_evaluator.py")
 OUTPUT_JSON_PATH = os.path.join(
     ubuntu_env_dir, "logs", get_host_tag(), "run_qa_pipeline_all.json")
@@ -332,36 +344,14 @@ def load_task_config(task_path: str) -> Dict[str, Any]:
 
 def scan_qa_tasks(tasks_dir: str) -> List[Tuple[str, str, Dict[str, Any]]]:
     """
-    扫描 tasks_list 目录，筛选 task_type=QA 的任务。
+    扫描权威 tasks 目录，筛选完整 QA pipeline 任务集合。
 
     输入:
-        tasks_dir: tasks_list 目录路径
+        tasks_dir: tasks 目录路径
     输出:
         [(task_uid, task_path, task_config), ...]
     """
-    if not os.path.isdir(tasks_dir):
-        raise FileNotFoundError(f"未找到任务目录: {tasks_dir}")
-
-    qa_tasks: List[Tuple[str, str, Dict[str, Any]]] = []
-    for root, _, files in os.walk(tasks_dir):
-        for filename in files:
-            if not filename.endswith(".json"):
-                continue
-            task_path = os.path.join(root, filename)
-            try:
-                task_config = load_task_config(task_path)
-            except Exception:
-                continue
-            if task_config.get("task_type") != "QA":
-                continue
-            task_uid = task_config.get("task_uid", "")
-            if not task_uid:
-                continue
-            qa_tasks.append((task_uid, task_path, task_config))
-
-    # 保持稳定顺序：优先按 task_id，再按 task_uid
-    qa_tasks.sort(key=lambda item: (item[2].get("task_id", ""), item[0]))
-    return qa_tasks
+    return scan_qa_pipeline_tasks(tasks_dir)
 
 
 def parse_prepare_script_path(url: str) -> Tuple[str, str, str]:
@@ -629,10 +619,11 @@ def rebuild_containers() -> bool:
         "-o", "UserKnownHostsFile=/dev/null",
         "-o", "LogLevel=ERROR",
     ]
-    # conda 环境激活命令；可通过 env BENCH_CONDA_ACTIVATE 自定义
-    conda_activate = os.environ.get(
-        "BENCH_CONDA_ACTIVATE",
-        f"source /home/{vm_user}/miniconda3/etc/profile.d/conda.sh && conda activate parallelbenchmark",
+    # 仅使用显式环境配置；当前工作树使用 .venv，不能猜测并激活老 conda 环境。
+    conda_activate = build_explicit_conda_activation(
+        vm_user,
+        os.environ.get("BENCH_CONDA_ACTIVATE", ""),
+        os.environ.get("REQUIRED_CONDA_ENV", ""),
     )
 
     containers = [
@@ -1032,28 +1023,26 @@ def load_evaluator(evaluator_path: str):
 
 def _extract_answer_via_llm(final_answer: str, task_instruction: str,
                             steps: list = None) -> str:
-    """
-    当 GUI Agent 的输出是描述式文本（而非结构化 <answer> 标签）时，
-    调用 LLM 从执行记录中提取简洁答案。
+    """从 GUI Agent 输出中取得最终简洁答案。
 
-    输入:
-        final_answer: GUI Agent 的原始输出文本
-        task_instruction: 任务指令（包含答案格式要求）
-        steps: GUI Agent 的执行步骤列表（可选），用于提供更多上下文
-    输出:
-        提取后的答案文本（不含 <answer> 标签）
+    功能：若原输出已有一个或多个完整 answer 标签，直接返回最后一个；否则对
+    描述式文本调用 LLM 提取。LLM 响应若也含多个标签，同样只采用最后一个。
+    输入参数：final_answer 为 GUI Agent 原始输出；task_instruction 为任务指令；
+    steps 为可选执行步骤，用于为无标签输出提供上下文。
+    输出返回值：最终答案文本，不含 answer 标签；提取服务失败时返回原输出。
     """
-    import re
     final_answer = str(final_answer or "")
 
     # 已经包含 <answer> 标签 → 直接提取
-    match = re.search(r'<answer>(.*?)</answer>', final_answer, re.DOTALL)
-    if match:
-        return match.group(1).strip()
+    tagged_answer = extract_last_complete_answer_tag(final_answer)
+    if tagged_answer is not None:
+        return tagged_answer
 
-    # 短答案且非描述式 → 直接返回
-    if len(final_answer) < 50 and not final_answer.lower().startswith("i "):
-        return final_answer
+    # 短答案只在纯值或可保守剝离明确 Answer 前缀时本地短路。
+    # 其他叙述性短文本仍交给提取模型，避免 exact/numeric 评价全串。
+    obvious_short_answer = extract_obvious_short_answer(final_answer)
+    if obvious_short_answer is not None:
+        return obvious_short_answer
 
     # 从最后几轮 steps 的 thought 中提取上下文（agent 的推理过程常包含答案线索）
     steps_context = ""
@@ -1081,15 +1070,10 @@ def _extract_answer_via_llm(final_answer: str, task_instruction: str,
             base_url=api_config["base_url"],
         )
 
-        prompt = (
-            "你是一个答案提取助手。根据以下任务指令、GUI Agent 的执行总结和推理过程，"
-            "提取最终答案。\n\n"
-            f"任务指令：\n{task_instruction}\n\n"
-            f"Agent 执行总结：\n{final_answer[:2000]}"
-            f"{steps_context[:3000]}\n\n"
-            "请根据 Agent 的推理过程和发现，直接输出最可能的答案值。"
-            "不要加 <answer> 标签或任何解释。"
-            "如果完全无法推断答案，输出 unknown。"
+        prompt = build_gui_answer_extraction_prompt(
+            task_instruction=task_instruction,
+            final_answer=final_answer,
+            steps_context=steps_context,
         )
 
         request_kwargs = {
@@ -1108,9 +1092,9 @@ def _extract_answer_via_llm(final_answer: str, task_instruction: str,
         extracted = response.choices[0].message.content.strip()
 
         # LLM 可能返回带标签的答案
-        match = re.search(r'<answer>(.*?)</answer>', extracted, re.DOTALL)
-        if match:
-            extracted = match.group(1).strip()
+        tagged_answer = extract_last_complete_answer_tag(extracted)
+        if tagged_answer is not None:
+            extracted = tagged_answer
 
         print(f"  LLM 答案提取: '{final_answer[:80]}...' → '{extracted}'")
         return extracted
@@ -1276,6 +1260,21 @@ def main() -> None:
             "interrupt_reason": "",
         }
 
+        # 在 stage1 初始化之前持久化 SKIP，不启动容器或 Agent。
+        if task_config.get("skip_eval") is True:
+            task_result = build_skipped_task_result(
+                task_uid,
+                task_path,
+                task_config,
+            )
+            output_results[task_uid] = task_result
+            save_output_checkpoint(output_results, OUTPUT_JSON_PATH)
+            print(
+                "\n↷ SKIP | "
+                f"UID: {task_uid} | 原因: {task_result['skip_eval_reason']}"
+            )
+            continue
+
         try:
             if not stage1_initialize(task_config):
                 task_result["interrupted"] = True
@@ -1333,6 +1332,17 @@ def main() -> None:
     print("全部任务执行完成")
     print("=" * 80)
     print(f"输出结果文件: {OUTPUT_JSON_PATH}")
+    outcome_summary = summarize_qa_results(output_results.values())
+    print(
+        "统计: "
+        f"PASS={outcome_summary['passed']} | "
+        f"FAIL={outcome_summary['failed']} | "
+        f"SKIP={outcome_summary['skipped']} | "
+        f"EVALUATOR_ERROR={outcome_summary['evaluator_errors']} | "
+        f"INTERRUPTED={outcome_summary['interrupted']} | "
+        f"VALID={outcome_summary['valid_evaluations']} | "
+        f"TOTAL={outcome_summary['total']}"
+    )
 
 
 if __name__ == "__main__":

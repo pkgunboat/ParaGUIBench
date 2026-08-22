@@ -20,7 +20,8 @@
                     "Employee_Directory.pdf",
                     "Product_Catalog.pdf",
                     "Training_Program.pdf"
-                ]
+                ],
+                "validate_format": true
             },
             "weight": 1.0,
             "description": "所有文档均已导出为同名PDF文件"

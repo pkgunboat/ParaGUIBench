@@ -3,6 +3,7 @@
     "task_uid": "2b49d58c-521c-4e5a-963c-fc476c80534d",
     "task_type": "QA",
     "task_tag": "FileSearch",
+    "answer_match_mode": "exact",
     "instruction": "This system architecture diagram might have come from which paper in the ‘shared’ folder? Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
     "task_source": "self",
     "answer": "paper3",

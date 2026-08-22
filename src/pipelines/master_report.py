@@ -39,11 +39,6 @@ def _load_typed() -> List[Dict[str, Any]]:
     return mt.load_master()
 
 
-def _is_eval_error_row(row: Dict[str, Any]) -> bool:
-    score = row.get("score")
-    return isinstance(score, (int, float)) and score < 0
-
-
 # ============================================================
 # Sheet: Main
 # ============================================================
@@ -79,17 +74,22 @@ def build_coverage(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     out = []
     for (mode, cond, pipeline), group in sorted(by_group.items()):
         total = len(group)
-        passed = sum(1 for g in group if g.get("pass") is True)
+        outcomes = _summarize_master_outcomes(group)
+        passed = outcomes["pass"]
         empty = sum(1 for g in group if g.get("empty") is True)
         error = sum(1 for g in group if g.get("error") is True)
         needs_rerun = sum(1 for g in group if g.get("needs_rerun") is True)
-        ran = total - empty  # empty 记为未跑
-        coverage = ran / total if total else 0.0
+        eligible = total - outcomes["skip"]
+        ran = max(0, eligible - empty)
+        coverage = ran / eligible if eligible else 0.0
         out.append({
             "mode": mode, "condition": cond, "pipeline": pipeline,
-            "total": total,
+            "total": total, "eligible": eligible,
             "ran": ran,
             "pass": passed,
+            "skip": outcomes["skip"],
+            "evaluator_error": outcomes["evaluator_error"],
+            "interrupted": outcomes["interrupted"],
             "empty": empty,
             "error": error,
             "needs_rerun": needs_rerun,
@@ -163,6 +163,80 @@ def select_oracle_ablation(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 # 聚合指标（复用 report_generator 的思路）
 # ============================================================
 
+def _is_eval_error_score(score: Any) -> bool:
+    """判断分数是否为评价器故障哨兵。
+
+    输入参数：score 为记录中的分数字段，可能是数值、空串或 None。
+    输出返回值：分数为负数时返回 True；代码库中没有任何合法模型结果
+    使用负分，因此负分一律代表评价器自身故障或 GT 缺失。
+    """
+    return isinstance(score, (int, float)) and not isinstance(score, bool) and score < 0
+
+
+def _classify_master_outcome(row: Dict[str, Any]) -> str:
+    """按互斥优先级判定一条 master 记录的评价结果。
+
+    功能：依次识别 SKIP、EVALUATOR_ERROR、INTERRUPTED、PASS、FAIL；空任务、
+    执行错误及旧 CSV 中没有可用 pass/status 的记录归为 NOT_EVALUATED。
+    输入参数：row 为 ``master.csv`` 的一条已类型化记录。
+    输出返回值：上述六种大写状态之一。
+    """
+    status = str(row.get("status") or "").strip().lower()
+    if status == "skip":
+        return "SKIP"
+    if status == "evaluator_error":
+        return "EVALUATOR_ERROR"
+    # 旧 CSV 没有 status 列，评价器故障只以 score=-1 哨兵体现；缺这一路会把
+    # 评价器故障当成模型失败并计入成功率分母。
+    if not status and _is_eval_error_score(row.get("score")):
+        return "EVALUATOR_ERROR"
+    if row.get("interrupted") is True:
+        return "INTERRUPTED"
+    if row.get("empty") is True or row.get("error") is True:
+        return "NOT_EVALUATED"
+    if row.get("pass") is True:
+        return "PASS"
+    if row.get("pass") is False:
+        return "FAIL"
+    return "NOT_EVALUATED"
+
+
+def _summarize_master_outcomes(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """汇总 master 记录并只用 PASS+FAIL 计算有效评价通过率。
+
+    功能：以 ``_classify_master_outcome`` 的互斥分类统计六种结果，保证
+    SKIP、评价器错误、中断和未评价记录均不进入有效评价分母。
+    输入参数：rows 为同一实验分组的 master 记录列表。
+    输出返回值：含 total、valid、各状态计数和 rate 的字典；无有效评价时
+    rate 返回 None。
+    """
+    counts = {
+        "pass": 0,
+        "fail": 0,
+        "skip": 0,
+        "evaluator_error": 0,
+        "interrupted": 0,
+        "not_evaluated": 0,
+    }
+    key_by_status = {
+        "PASS": "pass",
+        "FAIL": "fail",
+        "SKIP": "skip",
+        "EVALUATOR_ERROR": "evaluator_error",
+        "INTERRUPTED": "interrupted",
+        "NOT_EVALUATED": "not_evaluated",
+    }
+    for row in rows:
+        counts[key_by_status[_classify_master_outcome(row)]] += 1
+    valid = counts["pass"] + counts["fail"]
+    return {
+        "total": len(rows),
+        "valid": valid,
+        **counts,
+        "rate": counts["pass"] / valid if valid else None,
+    }
+
+
 def _aggregate_by(rows: List[Dict[str, Any]], group_key: str) -> List[Dict[str, Any]]:
     """
     按 group_key 列聚合，计算 Pass/Rate/Token/Cost/Time 等合计。
@@ -180,31 +254,26 @@ def _aggregate_by(rows: List[Dict[str, Any]], group_key: str) -> List[Dict[str, 
 
     out = []
     for key, group in sorted(grouped.items(), key=lambda kv: str(kv[0])):
-        total = len(group)
-        passed = sum(1 for g in group if g.get("pass") is True)
-        interrupted = sum(1 for g in group if g.get("interrupted") is True)
-        eval_error = sum(1 for g in group
-                         if not g.get("interrupted", False)
-                         and _is_eval_error_row(g))
-        fail = sum(1 for g in group
-                   if g.get("pass") is False
-                   and not g.get("empty", False)
-                   and not g.get("interrupted", False)
-                   and not _is_eval_error_row(g))
-        scored = passed + fail
-        rate = passed / scored if scored else 0.0
+        outcomes = _summarize_master_outcomes(group)
         sum_plan = _safe_sum(group, "plan_rounds")
         sum_gui_total = _safe_sum(group, "gui_rounds_total")
         sum_gui_seq = _safe_sum(group, "gui_steps_sequential")
         parallelism = (sum_gui_total / sum_gui_seq) if sum_gui_seq else 0.0
         out.append({
             group_key: key,
-            "total": total,
-            "pass": passed,
-            "fail": fail,
-            "interrupted": interrupted,
-            "eval_error": eval_error,
-            "rate": round(rate, 3),
+            "total": outcomes["total"],
+            "valid": outcomes["valid"],
+            "pass": outcomes["pass"],
+            "fail": outcomes["fail"],
+            "skip": outcomes["skip"],
+            "evaluator_error": outcomes["evaluator_error"],
+            "interrupted": outcomes["interrupted"],
+            "not_evaluated": outcomes["not_evaluated"],
+            "rate": (
+                round(outcomes["rate"], 3)
+                if outcomes["rate"] is not None
+                else None
+            ),
             "plan_rounds": sum_plan,
             "gui_rounds_total": sum_gui_total,
             "gui_steps_sequential": sum_gui_seq,
@@ -306,7 +375,7 @@ def _aggregate_main_by_pipeline(rows: List[Dict[str, Any]]) -> List[Dict[str, An
     Main 表按 (condition, pipeline) 双维度展开，聚合列与 Ablation 子表对齐。
 
     输出字段（与 _aggregate_by 返回的 15 个指标对齐）:
-        condition, pipeline, total, pass, fail, interrupted, eval_error, rate,
+        condition, pipeline, total, pass, fail, interrupted, rate,
         plan_rounds, gui_rounds_total, gui_steps_sequential, parallelism,
         token_plan, token_gui, token_total, cost_usd, elapsed_time_sec
     """
@@ -315,19 +384,7 @@ def _aggregate_main_by_pipeline(rows: List[Dict[str, Any]]) -> List[Dict[str, An
         grouped[(r["condition"], r["pipeline"])].append(r)
     out = []
     for (cond, pipeline), group in sorted(grouped.items()):
-        total = len(group)
-        passed = sum(1 for g in group if g.get("pass") is True)
-        interrupted = sum(1 for g in group if g.get("interrupted") is True)
-        eval_error = sum(1 for g in group
-                         if not g.get("interrupted", False)
-                         and _is_eval_error_row(g))
-        fail = sum(1 for g in group
-                   if g.get("pass") is False
-                   and not g.get("empty", False)
-                   and not g.get("interrupted", False)
-                   and not _is_eval_error_row(g))
-        scored = passed + fail
-        rate = passed / scored if scored else 0.0
+        outcomes = _summarize_master_outcomes(group)
         sum_plan = _safe_sum(group, "plan_rounds")
         sum_gui_total = _safe_sum(group, "gui_rounds_total")
         sum_gui_seq = _safe_sum(group, "gui_steps_sequential")
@@ -335,12 +392,19 @@ def _aggregate_main_by_pipeline(rows: List[Dict[str, Any]]) -> List[Dict[str, An
         out.append({
             "condition": cond,
             "pipeline": pipeline,
-            "total": total,
-            "pass": passed,
-            "fail": fail,
-            "interrupted": interrupted,
-            "eval_error": eval_error,
-            "rate": round(rate, 3),
+            "total": outcomes["total"],
+            "valid": outcomes["valid"],
+            "pass": outcomes["pass"],
+            "fail": outcomes["fail"],
+            "skip": outcomes["skip"],
+            "evaluator_error": outcomes["evaluator_error"],
+            "interrupted": outcomes["interrupted"],
+            "not_evaluated": outcomes["not_evaluated"],
+            "rate": (
+                round(outcomes["rate"], 3)
+                if outcomes["rate"] is not None
+                else None
+            ),
             "plan_rounds": sum_plan,
             "gui_rounds_total": sum_gui_total,
             "gui_steps_sequential": sum_gui_seq,

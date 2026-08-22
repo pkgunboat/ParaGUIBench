@@ -36,6 +36,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
+from urllib.parse import unquote, urlsplit
 
 import requests
 
@@ -100,7 +101,23 @@ from config.api_config import get_api_config, get_model_name  # noqa: E402
 
 from webmall_eval_assets.bookmark_utils import (  # noqa: E402
     close_chrome_and_clear_bookmarks,
-    read_bookmark_urls,
+    read_bookmark_records,
+)
+from parallel_benchmark.eval.osworld_evaluator import (  # noqa: E402
+    evaluate_osworld_task,
+    prepare_osworld_task,
+)
+from parallel_benchmark.eval.active_tab_evaluator import (  # noqa: E402
+    ActiveTabResultProvider,
+)
+from parallel_benchmark.eval.active_tab_probe import (  # noqa: E402
+    capture_active_tab_snapshot,
+)
+from parallel_benchmark.eval.webnavigate_evaluation_router import (  # noqa: E402
+    aggregate_active_tab_vm_results,
+    aggregate_any_complete_vm_results,
+    build_browser_vm_endpoints,
+    resolve_evaluation_mode,
 )
 
 # ============================================================
@@ -109,7 +126,7 @@ from webmall_eval_assets.bookmark_utils import (  # noqa: E402
 
 TASKS_LIST_DIR = os.path.join(parallel_benchmark_dir, "tasks")
 
-# 覆盖的任务 ID 列表（WebNavigate-001~011 + Settings-001~003）
+# 覆盖的任务 ID 列表（Webnavigate-001~011 + settings-001~003）
 DEFAULT_TASK_IDS = [
     "Operation-WebOperate-WebNavigate-001",
     "Operation-WebOperate-WebNavigate-002",
@@ -141,53 +158,6 @@ _active_groups_lock = threading.Lock()
 # 任务扫描
 # ============================================================
 
-def _load_task_id_mapping(tasks_dir: str) -> Dict[str, str]:
-    mapping_path = os.path.join(tasks_dir, "id_mapping.json")
-    if not os.path.isfile(mapping_path):
-        return {}
-    try:
-        with open(mapping_path, "r", encoding="utf-8") as file_obj:
-            data = json.load(file_obj)
-    except Exception:
-        return {}
-    return {
-        str(key): str(value)
-        for key, value in data.items()
-        if isinstance(key, str) and isinstance(value, str)
-    }
-
-
-def _task_filename_index(tasks_dir: str) -> Dict[str, str]:
-    try:
-        filenames = os.listdir(tasks_dir)
-    except OSError:
-        return {}
-    return {
-        filename[:-5].lower(): filename[:-5]
-        for filename in filenames
-        if filename.endswith(".json") and filename != "id_mapping.json"
-    }
-
-
-def _resolve_task_id_case(tasks_dir: str, task_id: str) -> str:
-    """
-    Resolve historical Webnavigate/settings spelling to canonical task_id.
-
-    Linux filesystems are case-sensitive, so path probing must not rely on
-    macOS' case-insensitive behavior.
-    """
-    task_id = task_id.strip()
-    if os.path.exists(os.path.join(tasks_dir, f"{task_id}.json")):
-        return task_id
-
-    mapped = _load_task_id_mapping(tasks_dir).get(task_id)
-    if mapped and os.path.exists(os.path.join(tasks_dir, f"{mapped}.json")):
-        return mapped
-
-    filename_index = _task_filename_index(tasks_dir)
-    return filename_index.get(task_id.lower(), task_id)
-
-
 def scan_webnavigate_tasks(
     tasks_dir: str,
     task_ids: Optional[List[str]] = None,
@@ -205,14 +175,13 @@ def scan_webnavigate_tasks(
     results = []
 
     for tid in target_ids:
-        resolved_tid = _resolve_task_id_case(tasks_dir, tid)
-        path = os.path.join(tasks_dir, f"{resolved_tid}.json")
+        path = os.path.join(tasks_dir, f"{tid}.json")
         if not os.path.exists(path):
             logging.getLogger("webnavigate").warning("任务文件不存在: %s", path)
             continue
         with open(path, "r", encoding="utf-8") as f:
             config = json.load(f)
-        results.append((config.get("task_id", resolved_tid), path, config))
+        results.append((tid, path, config))
 
     return results
 
@@ -510,6 +479,320 @@ def open_browser_parallel(
             log.warning("  VM %d Chrome 启动失败: %s", port, exc)
 
 
+def _wait_for_chromium_debug_endpoints(
+    endpoints: List[Any],
+    log: logging.Logger,
+    timeout_sec: float = 20.0,
+    poll_interval_sec: float = 0.5,
+) -> bool:
+    """等待当前容器组的全部动态 CDP 端点完成页面级握手。
+
+    功能：在 Agent 开始前先轮询每台 VM 对应的 ``/json/version``，
+    再通过实际 Playwright CDP 探针读取活动页，并确认原 config 已打开
+    Google Shopping；两层均成功才将端点标记为就绪，避免端口转发
+    存活、但浏览器页面不可附着或初始标签页未打开的假就绪。
+    输入参数：
+        endpoints: 具有 ``vm_ip``、``chromium_port`` 的成对 VM 端点。
+        log: 当前任务日志器。
+        timeout_sec: 整组共享的最长等待秒数。
+        poll_interval_sec: 未全部就绪时的轮询间隔秒数。
+    输出返回值：
+        全部端点在期限内就绪返回 ``True``，否则返回 ``False``。
+    """
+
+    pending = {
+        (
+            str(endpoint.vm_ip),
+            int(endpoint.server_port),
+            int(endpoint.chromium_port),
+        )
+        for endpoint in endpoints
+    }
+    if not pending:
+        log.error("active-tab Stage 1 没有可等待的 Chromium 端点")
+        return False
+
+    last_errors: Dict[Tuple[str, int, int], str] = {}
+    deadline = time.monotonic() + max(0.0, timeout_sec)
+    while pending and time.monotonic() <= deadline:
+        for vm_ip, server_port, chromium_port in list(pending):
+            url = f"http://{vm_ip}:{chromium_port}/json/version"
+            try:
+                response = requests.get(url, timeout=2)
+                payload = response.json() if response.status_code == 200 else {}
+                if payload.get("Browser") or payload.get("webSocketDebuggerUrl"):
+                    snapshot = capture_active_tab_snapshot(
+                        vm_ip,
+                        chromium_port,
+                        log,
+                        server_port=server_port,
+                    )
+                    if snapshot.page_kind != "google_shopping":
+                        raise RuntimeError(
+                            "CDP 可读，但活动页不是原 OSWorld config "
+                            "要求的 Google Shopping"
+                        )
+                    locale = str(snapshot.locale or "").lower()
+                    if not locale.startswith("en"):
+                        raise RuntimeError(
+                            "CDP 可读且活动页是 Google Shopping，"
+                            f"但实际页面 locale 不是英文: {snapshot.locale!r}"
+                        )
+                    pending.remove((vm_ip, server_port, chromium_port))
+                    last_errors.pop(
+                        (vm_ip, server_port, chromium_port),
+                        None,
+                    )
+                    log.info(
+                        "  Chromium CDP 页面握手已就绪: %s:%d",
+                        vm_ip,
+                        chromium_port,
+                    )
+            except Exception as exc:
+                last_errors[
+                    (vm_ip, server_port, chromium_port)
+                ] = str(exc)
+                continue
+        if pending and time.monotonic() <= deadline:
+            time.sleep(max(0.0, poll_interval_sec))
+
+    if pending:
+        log.error(
+            "Chromium CDP 未在 %.1f 秒内就绪: %s",
+            timeout_sec,
+            sorted(pending),
+        )
+        for endpoint in sorted(pending):
+            if endpoint in last_errors:
+                log.error(
+                    "  CDP %s:%d 最后错误: %s",
+                    endpoint[0],
+                    endpoint[2],
+                    last_errors[endpoint],
+                )
+        return False
+    return True
+
+
+def _prepare_browser_after_reset(
+    task_config: Dict[str, Any],
+    config: ContainerSetConfig,
+    log: logging.Logger,
+) -> bool:
+    """在清空书签并关闭 Chrome 后按评价模式重建浏览器状态。
+
+    功能：
+        历史 bookmark 任务继续使用普通 Chrome 启动；OSWorld 模式
+        均在每台 VM 上执行原 JSON 的 config。active-tab 还需等待
+        同容器动态 CDP 与 Google Shopping 页面全部就绪；
+        profile-state 只要求原 config 成功，不误用 Shopping 专用握手。
+    输入参数：
+        task_config: 含 ``evaluation_mode`` 与 ``evaluator_path`` 的任务。
+        config: 当前容器组配置，包含同 VM 成对端口和共享目录。
+        log: 当前任务日志器。
+    输出返回值：
+        浏览器已按对应协议准备完成返回 ``True``；任一 VM 初始化或
+        CDP readiness 失败返回 ``False``。
+    """
+
+    evaluation_mode = resolve_evaluation_mode(task_config)
+    endpoints = build_browser_vm_endpoints(config)
+    if evaluation_mode == "bookmark":
+        open_browser_parallel(
+            config.vm_ip,
+            [endpoint.server_port for endpoint in endpoints],
+            log,
+        )
+        return True
+
+    evaluator_path = _resolve_osworld_evaluator_path(task_config)
+    for endpoint in endpoints:
+        prepared = prepare_osworld_task(
+            evaluator_path,
+            endpoint.vm_ip,
+            endpoint.server_port,
+            config.shared_host_dir,
+            log,
+        )
+        if not prepared:
+            log.error(
+                "VM server_port=%d 的 OSWorld config 初始化失败",
+                endpoint.server_port,
+            )
+            return False
+    if evaluation_mode == "osworld_profile_state":
+        return True
+    return _wait_for_chromium_debug_endpoints(endpoints, log)
+
+
+def prepare_agent_start_context(
+    task_config: Dict[str, Any],
+    config: ContainerSetConfig,
+    log: logging.Logger,
+) -> Dict[str, Any]:
+    """根据任务配置向 Agent 显式呈现已下载的本地 PDF。
+
+    功能：仅对声明了 ``agent_start_context`` 的任务生效；先校验
+    guest 路径位于 ``/home/user/shared``、文件名与
+    ``prepare_script_path`` 的下载对象一致，再通过 VM 的参数化
+    ``/execute`` 端点检查 PDF 签名并在 Chrome 中打开本地文件。
+    这一步位于 Agent 执行前，任一目标 VM 失败都会返回失败，
+    由调用方中断任务，避免 Agent 在指称对象不可见时继续执行。
+
+    输入参数：
+        task_config: 任务 JSON 配置；``agent_start_context`` 可选。
+        config: 容器组配置，提供 VM IP 和 server 端口。
+        log: 当前任务日志器。
+    输出返回值：
+        结果字典；``ok`` 表示是否就绪，``applied`` 表示是否
+        存在任务级启动上下文，失败时 ``errors`` 列出端口与原因。
+    """
+    start_context = task_config.get("agent_start_context")
+    if start_context in (None, ""):
+        return {"ok": True, "applied": False, "reason": "not_configured"}
+    if not isinstance(start_context, dict):
+        reason = "agent_start_context 必须是对象"
+        log.error(reason)
+        return {"ok": False, "applied": True, "errors": [reason]}
+
+    context_type = str(start_context.get("type") or "").strip()
+    open_with = str(start_context.get("open_with") or "").strip()
+    guest_path = str(start_context.get("guest_path") or "").strip()
+    target = str(start_context.get("target") or "all_vms").strip()
+
+    if context_type != "local_pdf" or open_with != "chrome":
+        reason = (
+            "agent_start_context 仅支持 "
+            "type=local_pdf 且 open_with=chrome"
+        )
+        log.error(reason)
+        return {"ok": False, "applied": True, "errors": [reason]}
+
+    shared_root = "/home/user/shared"
+    normalized_path = os.path.normpath(guest_path)
+    try:
+        is_shared_path = (
+            os.path.isabs(normalized_path)
+            and os.path.commonpath([shared_root, normalized_path]) == shared_root
+            and normalized_path != shared_root
+        )
+    except ValueError:
+        is_shared_path = False
+    if not is_shared_path or not normalized_path.lower().endswith(".pdf"):
+        reason = (
+            "agent_start_context.guest_path 必须是 "
+            "/home/user/shared 下的 PDF 绝对路径"
+        )
+        log.error("%s: %s", reason, guest_path)
+        return {"ok": False, "applied": True, "errors": [reason]}
+
+    prepare_urls = [
+        item.strip()
+        for item in str(task_config.get("prepare_script_path") or "").split(",")
+        if item.strip()
+    ]
+    prepared_filenames = {
+        unquote(os.path.basename(urlsplit(url).path))
+        for url in prepare_urls
+        if os.path.basename(urlsplit(url).path)
+    }
+    if os.path.basename(normalized_path) not in prepared_filenames:
+        reason = (
+            "agent_start_context.guest_path 文件名与 "
+            "prepare_script_path 下载对象不一致"
+        )
+        log.error("%s: %s", reason, normalized_path)
+        return {"ok": False, "applied": True, "errors": [reason]}
+
+    vm_ports = list(config.get_server_ports())
+    if target == "first_vm":
+        vm_ports = vm_ports[:1]
+    elif target != "all_vms":
+        reason = "agent_start_context.target 仅支持 all_vms 或 first_vm"
+        log.error(reason)
+        return {"ok": False, "applied": True, "errors": [reason]}
+    if not vm_ports:
+        reason = "agent_start_context 没有可用的目标 VM"
+        log.error(reason)
+        return {"ok": False, "applied": True, "errors": [reason]}
+
+    ready_marker = "agent_start_context_ready:"
+    launch_script = (
+        "import os, subprocess, time\n"
+        "from pathlib import Path\n"
+        f"path = {normalized_path!r}\n"
+        f"shared_root = {shared_root!r}\n"
+        "real_path = os.path.realpath(path)\n"
+        "real_root = os.path.realpath(shared_root)\n"
+        "if os.path.commonpath([real_root, real_path]) != real_root:\n"
+        "    raise RuntimeError('prepared PDF escapes shared root')\n"
+        "if not os.path.isfile(real_path) or os.path.getsize(real_path) <= 5:\n"
+        "    raise RuntimeError('prepared PDF is missing or empty')\n"
+        "with open(real_path, 'rb') as file_obj:\n"
+        "    if file_obj.read(5) != b'%PDF-':\n"
+        "        raise RuntimeError('prepared object is not a PDF')\n"
+        "env = os.environ.copy()\n"
+        "env['DISPLAY'] = ':0'\n"
+        "result = subprocess.run(\n"
+        "    ['google-chrome', '--no-first-run', '--no-default-browser-check', "
+        "     '--new-window', Path(real_path).as_uri()],\n"
+        "    env=env, capture_output=True, text=True, timeout=20,\n"
+        ")\n"
+        "if result.returncode != 0:\n"
+        "    raise RuntimeError('Chrome failed: ' + result.stderr[-500:])\n"
+        "time.sleep(2)\n"
+        f"print({ready_marker!r} + real_path)\n"
+    )
+
+    errors: List[str] = []
+    for port in vm_ports:
+        try:
+            response = requests.post(
+                f"http://{config.vm_ip}:{port}/execute",
+                json={
+                    "command": ["python", "-c", launch_script],
+                    "shell": False,
+                },
+                timeout=30,
+            )
+            response_data = response.json() if response.status_code == 200 else {}
+            output = str(response_data.get("output") or "")
+            if (
+                response.status_code != 200
+                or response_data.get("status") != "success"
+                or response_data.get("returncode") != 0
+                or ready_marker not in output
+            ):
+                detail = (
+                    response_data.get("error")
+                    or response_data.get("message")
+                    or output
+                    or f"HTTP {response.status_code}"
+                )
+                errors.append(f"VM {port}: {detail}")
+                continue
+            log.info("  VM %d 已在 Chrome 打开任务 PDF: %s", port, normalized_path)
+        except Exception as exc:
+            errors.append(f"VM {port}: {exc}")
+
+    if errors:
+        for error in errors:
+            log.error("Agent 启动上下文准备失败: %s", error)
+        return {
+            "ok": False,
+            "applied": True,
+            "guest_path": normalized_path,
+            "errors": errors,
+        }
+
+    return {
+        "ok": True,
+        "applied": True,
+        "guest_path": normalized_path,
+        "prepared_vm_ports": vm_ports,
+    }
+
+
 def clear_bookmarks_parallel(
     vm_ip: str,
     vm_ports: List[int],
@@ -536,6 +819,38 @@ def clear_bookmarks_parallel(
             results[port] = {"ok": False, "error": str(exc), "server_port": port}
             log.warning("  VM %d 收藏夹清空失败: %s", port, exc)
     return results
+
+
+def _bookmark_reset_succeeded(
+    reset_results: Dict[int, Dict[str, Any]],
+    vm_ports: List[int],
+) -> bool:
+    """判断全部预期 VM 是否完成无错误的书签重置。
+
+    功能：把 ``clear_bookmarks_parallel`` 的逐 VM 诊断转换为 Stage 1
+    门禁；要求每个预期端口都有字典结果、``ok`` 严格为 ``True``，且
+    ``error`` 与 ``clear_errors`` 均为空。这样可避免 Chrome 未关闭、
+    旧书签残留或备份文件清理失败后继续执行，污染任务隔离与评分。
+    输入参数：
+        reset_results: 以 VM server 端口为键的书签清理结果。
+        vm_ports: 本轮任务必须成功重置的完整 VM server 端口列表。
+    输出返回值：
+        全部 VM 均有无错误成功证据时返回 ``True``，否则返回 ``False``。
+    """
+
+    if not vm_ports:
+        return False
+    for port in vm_ports:
+        vm_result = reset_results.get(port)
+        if not isinstance(vm_result, dict):
+            return False
+        if vm_result.get("ok") is not True:
+            return False
+        if str(vm_result.get("error") or "").strip():
+            return False
+        if vm_result.get("clear_errors"):
+            return False
+    return True
 
 
 # ============================================================
@@ -805,6 +1120,13 @@ def stage2_execute_plan(
     if not task_instruction:
         raise ValueError("任务配置缺少 instruction")
 
+    start_context_result = prepare_agent_start_context(task_config, config, log)
+    if not start_context_result.get("ok"):
+        raise RuntimeError(
+            "agent_start_context_failed: "
+            + "; ".join(start_context_result.get("errors") or ["未知错误"])
+        )
+
     log.info("任务描述: %s", task_instruction[:200])
 
     vm_ports = config.get_server_ports()
@@ -922,6 +1244,13 @@ def stage2_execute_gui_only(
     task_instruction = task_config.get("instruction", "")
     if not task_instruction:
         raise ValueError("任务配置缺少 instruction")
+
+    start_context_result = prepare_agent_start_context(task_config, config, log)
+    if not start_context_result.get("ok"):
+        raise RuntimeError(
+            "agent_start_context_failed: "
+            + "; ".join(start_context_result.get("errors") or ["未知错误"])
+        )
 
     log.info("任务描述: %s", task_instruction[:200])
     log.info("GUI Agent: %s | 最大轮次: %d | 超时: %ds", gui_agent, max_rounds, gui_timeout)
@@ -1087,50 +1416,343 @@ def _webnavigate_bookmark_evaluator_knows_task(task_config: Dict[str, Any]) -> b
     return False
 
 
+def _has_supported_webnavigate_evaluation(
+    task_config: Dict[str, Any],
+) -> bool:
+    """判断任务是否声明了当前 runner 可执行的评价协议。
+
+    功能：
+        历史 bookmark 任务继续接受内置规则，或非空 answer 与
+        evaluator_path 的旧组合；OSWorld 模式不依赖 bookmark answer。
+        active-tab 要求 Google Shopping adapter，profile-state 要求
+        Chrome profile adapter；二者均要求显式 JSON 路径和
+        any-complete 聚合声明。未知模式返回不支持。
+    输入参数：
+        task_config: 待执行的 WebNavigate 任务配置。
+    输出返回值：
+        当前 runner 能安全分派该任务时返回 ``True``。
+    """
+
+    try:
+        evaluation_mode = resolve_evaluation_mode(task_config)
+    except Exception:
+        return False
+
+    if evaluation_mode == "osworld_active_tab":
+        return bool(
+            str(task_config.get("evaluator_path") or "").strip()
+            and task_config.get("active_tab_adapter")
+            == "google_shopping_selected_filters_v1"
+            and task_config.get("vm_aggregation") == "any_complete"
+        )
+
+    if evaluation_mode == "osworld_profile_state":
+        return bool(
+            str(task_config.get("evaluator_path") or "").strip()
+            and task_config.get("profile_state_adapter")
+            == "chrome_profile_name_v1"
+            and task_config.get("vm_aggregation") == "any_complete"
+        )
+
+    if _webnavigate_bookmark_evaluator_knows_task(task_config):
+        return True
+    return bool(
+        str(task_config.get("answer") or "").strip()
+        and str(task_config.get("evaluator_path") or "").strip()
+    )
+
+
+def _resolve_osworld_evaluator_path(
+    task_config: Dict[str, Any],
+) -> str:
+    """安全解析 WebNavigate 任务声明的 OSWorld evaluator JSON。
+
+    功能：以 ``src/parallel_benchmark`` 为唯一可信根目录解析任务中的
+    ``evaluator_path``，拒绝绝对路径、父目录逃逸、非 JSON 文件以及
+    不存在的配置，避免评价路由读取任务范围外的文件。
+    输入参数：
+        task_config: 含相对 ``evaluator_path`` 的任务配置字典。
+    输出返回值：
+        已确认存在且位于可信根目录内的 evaluator JSON 绝对路径。
+    异常：
+        路径为空、逃逸可信目录、扩展名错误或文件不存在时抛出
+        ``ValueError``。
+    """
+
+    raw_path = task_config.get("evaluator_path", "")
+    if not isinstance(raw_path, str) or not raw_path.strip():
+        raise ValueError("OSWorld 任务缺少 evaluator_path")
+
+    trusted_root = os.path.realpath(parallel_benchmark_dir)
+    resolved_path = os.path.realpath(
+        os.path.join(trusted_root, raw_path.strip())
+    )
+    try:
+        inside_trusted_root = (
+            os.path.commonpath([trusted_root, resolved_path])
+            == trusted_root
+        )
+    except ValueError:
+        inside_trusted_root = False
+    if not inside_trusted_root:
+        raise ValueError("evaluator_path 逃逸 parallel_benchmark 可信目录")
+    if not resolved_path.lower().endswith(".json"):
+        raise ValueError("OSWorld evaluator_path 必须指向 JSON 文件")
+    if not os.path.isfile(resolved_path):
+        raise ValueError(f"OSWorld evaluator JSON 不存在: {resolved_path}")
+    return resolved_path
+
+
+def _evaluate_active_tab_task(
+    task_config: Dict[str, Any],
+    config: ContainerSetConfig,
+    log: logging.Logger,
+) -> Dict[str, Any]:
+    """逐 VM 完整评价 OSWorld active-tab 状态并执行 any-complete 聚合。
+
+    功能：从每条容器记录构造同 VM 的 server/CDP 端点，为每台 VM
+    创建独立但可在该 VM 多指标间复用的 ``ActiveTabResultProvider``，
+    调用 generic OSWorld evaluator 完成整组 AND 指标后，才在 VM 间
+    聚合；禁止把不同 VM 的 query 与 filter 子指标拼接。
+    输入参数：
+        task_config: active-tab 任务配置，含 adapter、聚合方式和 JSON 路径。
+        config: 当前容器组配置及共享目录。
+        log: 当前任务日志器。
+    输出返回值：
+        含整体三态评分与 ``per_vm_results`` 诊断的评价结果字典。
+    异常：
+        adapter、聚合方式、路径或端点配置无效时抛出 ``ValueError``。
+    """
+
+    adapter = task_config.get("active_tab_adapter")
+    if adapter != "google_shopping_selected_filters_v1":
+        raise ValueError(f"不支持的 active_tab_adapter: {adapter!r}")
+    aggregation = task_config.get("vm_aggregation")
+    if aggregation != "any_complete":
+        raise ValueError(f"不支持的 active-tab vm_aggregation: {aggregation!r}")
+
+    evaluator_path = _resolve_osworld_evaluator_path(task_config)
+    endpoints = build_browser_vm_endpoints(config)
+    per_vm_results: List[Dict[str, Any]] = []
+    for vm_index, endpoint in enumerate(endpoints):
+        provider = ActiveTabResultProvider(
+            lambda endpoint=endpoint: capture_active_tab_snapshot(
+                endpoint.vm_ip,
+                endpoint.chromium_port,
+                log,
+                server_port=endpoint.server_port,
+            )
+        )
+        vm_result = evaluate_osworld_task(
+            evaluator_path,
+            endpoint.vm_ip,
+            endpoint.server_port,
+            config.shared_host_dir,
+            log,
+            result_provider=provider,
+        )
+        annotated_result = dict(vm_result)
+        annotated_result.update({
+            "vm_index": vm_index,
+            "server_port": endpoint.server_port,
+            "chromium_port": endpoint.chromium_port,
+        })
+        per_vm_results.append(annotated_result)
+
+    aggregated = aggregate_active_tab_vm_results(per_vm_results)
+    aggregated.update({
+        "task_id": task_config.get("task_id", ""),
+        "evaluation_mode": "osworld_active_tab",
+        "vm_aggregation": aggregation,
+    })
+    return aggregated
+
+
+def _evaluate_profile_state_task(
+    task_config: Dict[str, Any],
+    config: ContainerSetConfig,
+    log: logging.Logger,
+) -> Dict[str, Any]:
+    """逐 VM 评价 Chrome Profile 状态并执行 any-complete 聚合。
+
+    功能：
+        对每台 VM 独立调用通用 OSWorld evaluator，完整读取并精确匹配
+        该 VM 的 Chrome Profile 状态；只有单台 VM 的整组评价通过后
+        才允许整体通过，不跨 VM 拼接状态或分数。
+    输入参数：
+        task_config: profile-state 任务配置，含 adapter、聚合方式和
+            OSWorld evaluator JSON 路径。
+        config: 当前容器组配置及共享目录。
+        log: 当前任务日志器。
+    输出返回值：
+        含整体三态评分、公开模式和 ``per_vm_results`` 诊断的字典。
+    异常：
+        adapter、聚合方式、路径或端点配置无效时抛出 ``ValueError``。
+    """
+
+    adapter = task_config.get("profile_state_adapter")
+    if adapter != "chrome_profile_name_v1":
+        raise ValueError(f"不支持的 profile_state_adapter: {adapter!r}")
+    aggregation = task_config.get("vm_aggregation")
+    if aggregation != "any_complete":
+        raise ValueError(
+            f"不支持的 profile-state vm_aggregation: {aggregation!r}"
+        )
+
+    evaluator_path = _resolve_osworld_evaluator_path(task_config)
+    endpoints = build_browser_vm_endpoints(config)
+    per_vm_results: List[Dict[str, Any]] = []
+    for vm_index, endpoint in enumerate(endpoints):
+        vm_result = evaluate_osworld_task(
+            evaluator_path,
+            endpoint.vm_ip,
+            endpoint.server_port,
+            config.shared_host_dir,
+            log,
+        )
+        annotated_result = dict(vm_result)
+        annotated_result.update({
+            "vm_index": vm_index,
+            "server_port": endpoint.server_port,
+            "chromium_port": endpoint.chromium_port,
+        })
+        per_vm_results.append(annotated_result)
+
+    aggregated = aggregate_any_complete_vm_results(
+        per_vm_results,
+        evaluation_label="profile-state",
+    )
+    aggregated.update({
+        "task_id": task_config.get("task_id", ""),
+        "evaluation_mode": "osworld_profile_state",
+        "vm_aggregation": aggregation,
+    })
+    return aggregated
+
+
 def stage3_evaluate(
     task_config: Dict[str, Any],
     config: ContainerSetConfig,
     log: logging.Logger,
 ) -> Dict[str, Any]:
     """
-    从所有 VM 读取 Chrome 收藏夹，与任务 answer 中的目标 URL 做匹配。
+    按任务声明分派 bookmark、OSWorld active-tab 或 profile-state 评价。
 
     输入:
-        task_config: 任务配置（含 answer 字段）
+        task_config: 含 ``evaluation_mode`` 的任务配置；旧任务缺省 bookmark
         config: 容器组配置
         log: logger
     输出:
-        评估结果字典
+        带 ``status``、``pass``、``score`` 的评估结果字典
     """
+    try:
+        evaluation_mode = resolve_evaluation_mode(task_config)
+    except Exception as exc:
+        return {
+            "pass": False,
+            "score": -1.0,
+            "status": "evaluator_error",
+            "reason": f"WebNavigate 评价模式配置错误: {exc}",
+            "task_id": task_config.get("task_id", ""),
+        }
+
+    if evaluation_mode == "osworld_active_tab":
+        log.info("STAGE 3: OSWorld active-tab 评估")
+        try:
+            return _evaluate_active_tab_task(task_config, config, log)
+        except Exception as exc:
+            log.error("active-tab 评价失败: %s", exc, exc_info=True)
+            return {
+                "pass": False,
+                "score": -1.0,
+                "status": "evaluator_error",
+                "reason": f"active-tab evaluator_exception: {exc}",
+                "task_id": task_config.get("task_id", ""),
+                "evaluation_mode": evaluation_mode,
+            }
+
+    if evaluation_mode == "osworld_profile_state":
+        log.info("STAGE 3: OSWorld Chrome profile-state 评估")
+        try:
+            return _evaluate_profile_state_task(task_config, config, log)
+        except Exception as exc:
+            log.error("profile-state 评价失败: %s", exc, exc_info=True)
+            return {
+                "pass": False,
+                "score": -1.0,
+                "status": "evaluator_error",
+                "reason": f"profile-state evaluator_exception: {exc}",
+                "task_id": task_config.get("task_id", ""),
+                "evaluation_mode": evaluation_mode,
+            }
+
     log.info("STAGE 3: 书签评估")
 
     vm_ip = config.vm_ip
     vm_ports = config.get_server_ports()
 
-    # 1. 从所有 VM 读取书签 URL（合并去重）
-    per_vm_urls: Dict[int, List[str]] = {}
+    # 1. 从所有 VM 读取结构化书签（合并时保留文件夹层级）
+    per_vm_records: Dict[int, List[Dict[str, Any]]] = {}
     errors: Dict[int, str] = {}
-    all_urls: List[str] = []
+    all_records: List[Dict[str, Any]] = []
+    successful_reads = 0
 
     for port in vm_ports:
         controller = PythonController(vm_ip=vm_ip, server_port=port)
         try:
-            urls = read_bookmark_urls(controller)
+            records = read_bookmark_records(controller)
+            successful_reads += 1
         except Exception as exc:
-            urls = []
+            records = []
             errors[port] = str(exc)
-        per_vm_urls[port] = urls
-        all_urls.extend(urls)
+        per_vm_records[port] = records
+        all_records.extend(records)
 
-    merged_urls = list(dict.fromkeys(all_urls))  # 去重保序
+    # 相同 URL 位于不同文件夹时是不同状态证据，不得仅按 URL 去重。
+    merged_records: List[Dict[str, Any]] = []
+    seen_record_keys: set[Tuple[str, Tuple[str, ...]]] = set()
+    for record in all_records:
+        url = str(record.get("url") or "").strip()
+        folder_path = tuple(str(item) for item in (record.get("folder_path") or []))
+        key = (url, folder_path)
+        if url and key not in seen_record_keys:
+            seen_record_keys.add(key)
+            merged_records.append(record)
+    merged_urls = list(dict.fromkeys(
+        str(record.get("url") or "").strip()
+        for record in merged_records
+        if str(record.get("url") or "").strip()
+    ))
 
-    log.info("收藏夹合并后 URL 数量: %d", len(merged_urls))
-    for i, url in enumerate(merged_urls, 1):
-        log.info("  %d. %s", i, url)
+    log.info(
+        "收藏夹合并后记录数: %d | 唯一 URL 数: %d",
+        len(merged_records),
+        len(merged_urls),
+    )
+    for index, record in enumerate(merged_records, 1):
+        log.info(
+            "  %d. %s | folder=%s",
+            index,
+            record.get("url", ""),
+            "/".join(record.get("folder_path") or []),
+        )
 
     if errors:
         for port, err in errors.items():
             log.warning("  VM %d 读取书签失败: %s", port, err)
+
+    if successful_reads == 0:
+        return {
+            "pass": False,
+            "score": -1.0,
+            "status": "evaluator_error",
+            "reason": "所有 VM 的 Bookmarks 文件均读取失败，无法评分。",
+            "task_id": task_config.get("task_id", ""),
+            "bookmark_per_vm_records": {
+                str(key): value for key, value in per_vm_records.items()
+            },
+            "bookmark_errors": {str(key): value for key, value in errors.items()},
+        }
 
     # 2. 调用 evaluator
     evaluator_module = _load_webnavigate_bookmark_evaluator()
@@ -1138,10 +1760,21 @@ def stage3_evaluate(
     eval_result = evaluator_module.evaluate(
         task=task_config,
         bookmark_urls=merged_urls,
+        bookmark_records=merged_records,
     )
 
     # 附加 per-VM 调试信息
-    eval_result["bookmark_per_vm_urls"] = {str(k): v for k, v in per_vm_urls.items()}
+    eval_result["bookmark_per_vm_records"] = {
+        str(key): value for key, value in per_vm_records.items()
+    }
+    eval_result["bookmark_per_vm_urls"] = {
+        str(key): list(dict.fromkeys(
+            str(record.get("url") or "").strip()
+            for record in value
+            if str(record.get("url") or "").strip()
+        ))
+        for key, value in per_vm_records.items()
+    }
     eval_result["bookmark_errors"] = {str(k): v for k, v in errors.items()}
 
     log.info(
@@ -1282,9 +1915,25 @@ def run_single_task(
         task_result["bookmark_reset"] = clear_bookmarks_parallel(
             config.vm_ip, vm_ports, log
         )
+        if not _bookmark_reset_succeeded(
+            task_result["bookmark_reset"],
+            vm_ports,
+        ):
+            task_result["interrupted"] = True
+            task_result["interrupt_reason"] = "bookmark_reset_failed"
+            log.error(
+                "至少一台 VM 的书签重置失败，停止浏览器准备与 Agent 执行: %s",
+                task_result["bookmark_reset"],
+            )
+            return task_result
 
-        # 重新打开浏览器（清空书签时会关闭 Chrome）
-        open_browser_parallel(config.vm_ip, vm_ports, log)
+        # 清空书签会关闭 Chrome；按评价模式选择普通启动或原 OSWorld
+        # remote-debugging config，且必须在 Agent 执行前确认就绪。
+        if not _prepare_browser_after_reset(task_config, config, log):
+            task_result["interrupted"] = True
+            task_result["interrupt_reason"] = "browser_prepare_failed"
+            log.error("浏览器评价环境准备失败，跳过当前任务")
+            return task_result
 
         # 5. Agent 执行任务
         try:
@@ -1362,25 +2011,15 @@ def run_single_task(
             except Exception as _save_exc:
                 log.warning("[中间保存] 写入失败: %s", _save_exc)
 
-        # 6. 书签评估（无 answer/evaluator_path 且无内置规则的任务跳过自动评估）
-        answer = task_config.get("answer", "")
-        evaluator_path = task_config.get("evaluator_path", "")
-        evaluator_knows_task = _webnavigate_bookmark_evaluator_knows_task(task_config)
-        if (
-            not evaluator_knows_task
-            and (
-                not answer
-                or not str(answer).strip()
-                or not str(evaluator_path).strip()
-            )
-        ):
-            # 任务自身未声明评价目标或评价器路径 → 统一标记为 evaluator_error，
-            # 由上层从 PASS/FAIL 统计中剔除（与 operation_evaluator 状态语义一致）
+        # 6. 按显式模式评价；active-tab 不依赖 bookmark answer。
+        if not _has_supported_webnavigate_evaluation(task_config):
+            # 任务未声明当前 runner 支持的完整评价协议 → 统一标记为
+            # evaluator_error，由上层从 PASS/FAIL 统计中剔除。
             task_result["evaluator_output"] = {
                 "score": -1.0, "pass": False, "status": "evaluator_error",
-                "reason": "任务未声明 answer 或 evaluator_path，无法自动评价",
+                "reason": "任务未声明当前 WebNavigate runner 支持的完整评价协议",
             }
-            log.info("任务 %s 未配置自动评价目标，跳过书签评估", task_id)
+            log.info("任务 %s 未配置受支持评价协议，跳过 Stage 3", task_id)
         else:
             try:
                 eval_result = stage3_evaluate(task_config, config, log)
@@ -1398,15 +2037,23 @@ def run_single_task(
 
     finally:
         # 7. 清理
-        unregister_group_ports(group_id)
-        cleanup_group_containers(config, log)
-        memory_guard.release(config.num_vms)
-
-        with _active_groups_lock:
-            _active_groups.pop(group_id, None)
-
-        available_groups.put(group_id)
-        log.info("组 %d 已释放", group_id)
+        # 每一级都用 finally 保护下一级：端口注销或容器清理失败不得阻断
+        # 内存额度、active group 与队列槽位的归还。
+        try:
+            try:
+                try:
+                    unregister_group_ports(group_id)
+                finally:
+                    cleanup_group_containers(config, log)
+            finally:
+                memory_guard.release(config.num_vms)
+        finally:
+            try:
+                with _active_groups_lock:
+                    _active_groups.pop(group_id, None)
+            finally:
+                available_groups.put(group_id)
+                log.info("组 %d 已释放", group_id)
 
 
 # ============================================================
@@ -1533,8 +2180,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--task-ids",
         type=str, default="",
-        help="指定任务 ID 列表（逗号分隔，如 WebNavigate-001,Settings-002）。"
-             "会自动补全为完整 task_id 格式。为空则使用默认任务列表。",
+        help="指定任务 ID 列表（逗号分隔，如 Webnavigate-001,settings-002）。"
+             "会自动补全为完整 task_id 格式。为空则使用全部 9 个默认任务。",
     )
     parser.add_argument(
         "--task-list-file",
@@ -1561,22 +2208,64 @@ def _expand_task_id(short_id: str) -> str:
     将简短的任务 ID 扩展为完整格式。
 
     输入:
-        short_id: 如 "WebNavigate-001" 或 "Settings-002"
+        short_id: 如 "Webnavigate-001" 或 "settings-002"
     输出:
-        完整 task_id: 如 "Operation-WebOperate-WebNavigate-001"
+        完整 task_id: 如 "Operation-WebOperate-Webnavigate-001"
     """
     short_id = short_id.strip()
-    if short_id.startswith("Operation-"):
-        return short_id
-    if short_id.lower().startswith("webnavigate"):
-        suffix = short_id.split("-", 1)[1] if "-" in short_id else short_id[len("webnavigate"):]
-        suffix = suffix.lstrip("-")
-        return f"Operation-WebOperate-WebNavigate-{suffix}"
-    if short_id.lower().startswith("settings"):
-        suffix = short_id.split("-", 1)[1] if "-" in short_id else short_id[len("settings"):]
-        suffix = suffix.lstrip("-")
-        return f"Operation-WebOperate-Settings-{suffix}"
-    return short_id
+    candidate = short_id
+    if not candidate.startswith("Operation-") and (
+        candidate.lower().startswith("webnavigate")
+        or candidate.lower().startswith("settings")
+    ):
+        candidate = f"Operation-WebOperate-{candidate}"
+
+    # CLI 历史示例使用 Webnavigate/settings，但文件系统上的 canonical
+    # 名称为 WebNavigate/Settings。按 casefold 映射既保留兼容，又避免构造
+    # 一个实际不存在的文件路径。
+    for canonical_id in DEFAULT_TASK_IDS:
+        if canonical_id.casefold() == candidate.casefold():
+            return canonical_id
+    return candidate
+
+
+def _build_preflight_skip_result(
+    task_id: str,
+    task_config: Dict[str, Any],
+) -> Dict[str, Any]:
+    """为 skip_eval 任务构造无需启动 Agent/VM 的结果。
+
+    功能：在并行调度前保留任务完整性和跳过原因，同时明确产生
+    ``status=skip`` 三态结果，避免不可评任务消耗模型与容器资源。
+    输入参数：task_id 为 canonical ID；task_config 为任务 JSON 配置。
+    输出返回值：与 run_single_task 主要字段兼容的跳过结果字典。
+    """
+    reason = str(
+        task_config.get("skip_eval_reason")
+        or "任务已标记 skip_eval=true，跳过执行与评估。"
+    )
+    return {
+        "task_id": task_id,
+        "task_uid": task_config.get("task_uid", ""),
+        "instruction": task_config.get("instruction", ""),
+        "answer": task_config.get("answer", ""),
+        "model_output_answer": "",
+        "evaluator_output": {
+            "pass": None,
+            "score": None,
+            "status": "skip",
+            "reason": reason,
+            "task_id": task_id,
+        },
+        "interrupted": False,
+        "interrupt_reason": "",
+        "group_id": None,
+        "token_usage": None,
+        "bookmark_reset": {},
+        "skipped": True,
+        "skip_eval_reason": reason,
+        "evaluation_reason": reason,
+    }
 
 
 # ============================================================
@@ -1686,6 +2375,20 @@ def main() -> None:
         log.warning("未找到 Webnavigate 任务（全部已跳过或无匹配），退出")
         return
 
+    preflight_skips = {
+        task_id: _build_preflight_skip_result(task_id, task_config)
+        for task_id, _, task_config in task_items
+        if task_config.get("skip_eval")
+    }
+    task_items = [
+        item for item in task_items if not item[2].get("skip_eval")
+    ]
+    if preflight_skips:
+        log.info(
+            "调度前跳过 %d 个 skip_eval 任务，不启动 Agent 或 VM。",
+            len(preflight_skips),
+        )
+
     # 创建内存管理器
     memory_guard = MemoryGuard(args.memory_limit_gb, args.vm_memory)
 
@@ -1696,11 +2399,13 @@ def main() -> None:
     log.info("已初始化 %d 个容器组槽位", args.max_parallel_tasks)
 
     # 启动全局防黑屏心跳
-    heartbeat = GlobalScreensaverHeartbeat(vm_ip=args.vm_ip, interval_sec=180)
-    heartbeat.start()
+    heartbeat = None
+    if task_items:
+        heartbeat = GlobalScreensaverHeartbeat(vm_ip=args.vm_ip, interval_sec=180)
+        heartbeat.start()
 
     # 结果收集
-    output_results: Dict[str, Any] = {}
+    output_results: Dict[str, Any] = dict(preflight_skips)
     results_lock = threading.Lock()
     output_json_path = os.path.abspath(
         args.output_json_path if args.output_json_path else OUTPUT_JSON_PATH
@@ -1708,8 +2413,8 @@ def main() -> None:
     os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
 
     # 并行调度
-    completed_count = 0
-    total_count = len(task_items)
+    completed_count = len(preflight_skips)
+    total_count = completed_count + len(task_items)
 
     with ThreadPoolExecutor(
         max_workers=args.max_parallel_tasks,
@@ -1718,7 +2423,8 @@ def main() -> None:
         futures = {}
 
         for i, (task_id, task_path, task_config) in enumerate(task_items):
-            log.info("提交任务 %d/%d | %s", i + 1, total_count, task_id)
+            submitted_index = len(preflight_skips) + i + 1
+            log.info("提交任务 %d/%d | %s", submitted_index, total_count, task_id)
 
             fut = executor.submit(
                 run_single_task,
@@ -1727,7 +2433,7 @@ def main() -> None:
                 os.path.dirname(output_json_path),
                 output_results, results_lock, output_json_path,
             )
-            futures[fut] = (task_id, i + 1)
+            futures[fut] = (task_id, submitted_index)
 
         # 收集结果
         for fut in as_completed(futures):
@@ -1775,7 +2481,8 @@ def main() -> None:
                 log.warning("写入中间结果失败: %s", exc)
 
     # 停止心跳
-    heartbeat.stop()
+    if heartbeat is not None:
+        heartbeat.stop()
 
     # 写入最终结果
     with open(output_json_path, "w", encoding="utf-8") as f:
@@ -1790,16 +2497,21 @@ def main() -> None:
     fail_count = 0
     interrupt_count = 0
     eval_error_count = 0
+    skip_count = 0
     total_cost = 0.0
 
     for tid, res in output_results.items():
         eval_out = res.get("evaluator_output") or {}
         is_passed = eval_out.get("pass", False)
-        score = eval_out.get("score", 0.0)
+        raw_score = eval_out.get("score")
+        score = float(raw_score) if isinstance(raw_score, (int, float)) else 0.0
 
         if res.get("interrupted"):
             status = "INTERRUPTED"
             interrupt_count += 1
+        elif eval_out.get("status") == "skip":
+            status = "SKIP"
+            skip_count += 1
         elif eval_out.get("status") == "evaluator_error":
             status = "EVALUATOR_ERROR"
             eval_error_count += 1
@@ -1817,7 +2529,9 @@ def main() -> None:
 
         match_detail = eval_out.get("match_detail", {})
         matched = match_detail.get("matched_count", 0)
-        total_targets = match_detail.get("expected_count", 0)
+        total_targets = match_detail.get(
+            "expected_count", match_detail.get("total_targets", 0)
+        )
 
         log.info(
             "  %s %s | 得分: %.2f (%d/%d URL){cost_str}".replace("{cost_str}", cost_str),
@@ -1826,9 +2540,17 @@ def main() -> None:
 
     log.info("-" * 40)
     log.info(
-        "  PASS: %d | FAIL: %d | INTERRUPTED: %d | EVALUATOR_ERROR: %d | 总计: %d",
-        pass_count, fail_count, interrupt_count, eval_error_count, total_count,
+        "  PASS: %d | FAIL: %d | SKIP: %d | INTERRUPTED: %d | EVALUATOR_ERROR: %d | 总计: %d",
+        pass_count, fail_count, skip_count, interrupt_count, eval_error_count, total_count,
     )
+    effective_count = pass_count + fail_count
+    if effective_count:
+        log.info(
+            "  有效评价通过率: %.2f%% (%d/%d；已剔除 SKIP/INTERRUPTED/EVALUATOR_ERROR)",
+            pass_count * 100.0 / effective_count,
+            pass_count,
+            effective_count,
+        )
     if total_cost > 0:
         log.info("  总 Token 费用: $%.4f", total_cost)
     log.info("输出结果文件: %s", output_json_path)

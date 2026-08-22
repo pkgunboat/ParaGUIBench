@@ -3,6 +3,7 @@
     "task_uid": "06b65a9a-7fe5-4fa0-a8b7-27275d8c29e9",
     "task_type": "QA",
     "task_tag": "FileSearch",
+    "answer_match_mode": "exact",
     "instruction": "Check if the title of each PPT is centered. Answer yes or no. Answer in the format: <answer>VALUE</answer>. Only output the tags, no extra explanation.",
     "task_source": "self",
     "answer": "yes",

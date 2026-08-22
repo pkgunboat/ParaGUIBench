@@ -3,7 +3,7 @@
     "task_uid": "c2ec79c0-bb7c-4f45-b5e5-437d15d518cb",
     "task_type": "OSWorld脚本",
     "task_tag": "FileOperate",
-    "instruction": "Please convert these .xlsx files in LibreOffice Calc to .html files and open them all in Chrome.",
+    "instruction": "Using LibreOffice Calc, convert each provided .xlsx file to an .html file. Save every .html file in the same directory as its source .xlsx file and use the same base name.",
     "task_source": "OSWorld",
     "answer": "",
     "prepare_script_path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/tree/main/benchmark_dataset/c2ec79c0-bb7c-4f45-b5e5-437d15d518cb",
@@ -14,10 +14,12 @@
             "check": "check_html_files_for_xlsx",
             "file_pattern": "*.xlsx",
             "params": {
-                "validate_content": true
+                "validate_content": true,
+                "min_match_ratio": 0.8,
+                "sample_cell_limit": 24
             },
             "weight": 1.0,
-            "description": "每个xlsx文件都有对应的同名html文件"
+            "description": "每个 xlsx 都有同目录同名 HTML 表格且内容一致"
         }
     ]
 }

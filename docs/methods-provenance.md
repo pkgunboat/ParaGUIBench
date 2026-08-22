@@ -3,12 +3,55 @@
 ## 基线
 
 - 迁移源：私有 dev 仓库 `ParaGUIBench-dev`（GitHub `pkgunboat/ParaGUIBench-dev`）。
-- **当前基线：dev 库 main `509ad920`（2026-08-21）**。2026-08-19 首次迁移时的基线是
-  `8d36e157` 工作树；2026-08-21 dev 库把散落的评价器审计修复收敛进 main 后，
-  基线随之推进（见下节"基线推进"）。
+- **当前基线：dev 库 main `7fe05d3e`（2026-08-22）**。2026-08-19 首次迁移时的基线是
+  `8d36e157` 工作树；此后经两轮基线推进（2026-08-21 的评价器审计修复同步、
+  2026-08-22 的源修复线合并同步），见下两节。
 - 首次迁移日期：2026-08-19；迁移方式 `rsync`，除排除项外**零改动**。
   一致性由 `tests/methods/test_methods_parity.py` + `tests/methods/parity_manifest.json`
   锁定：任何对迁移文件的修改都会使测试失败，必须显式更新清单并在本文件追加记录。
+
+## 基线推进（2026-08-22，源修复线合并同步）
+
+2026-08-21 同步之后发现，dev 库服务器上还存在一个未提交的工作区
+（`ParaGUIBench-eval-audit-fix-20260714`），保存着 2026-07-14 至 07-28 期间完成的
+**完整**评价器修复工作，覆盖面显著大于 2026-08-21 同步进来的两条修复线。dev 库已
+于 2026-08-22 以该修复线为权威基线合并进 main（`7fe05d3e`），另两条线独有且未被
+覆盖的修复逐项补回，未做回退。本仓库同步跟进。
+
+同步范围：锁定树内 150 个变更路径——139 个覆盖、11 个新增、0 个删除。
+parity manifest 条目 908 → 919。新增的 11 个全部是评价器源码：`metrics/image.py`、
+`active_tab_evaluator.py`、`active_tab_probe.py`、`answer_extraction.py`、
+`external_asset_repair.py`、`json_object_metric.py`、`qa_answer_contracts.py`、
+`qa_run_contracts.py`、`searchwrite_run_contracts.py`、
+`webnavigate_evaluation_router.py`、`webnavigate_url_rules.py`。
+
+需要注意的口径变化：
+
+- **有效分母恢复为全量**：`skip_eval` 任务由 12 个降至 **0 个**。2026-08-21 同步时
+  按歧义退出分母的 8 个 OnlineShopping 任务，在本修复线中已通过 07-26 的动态 gold
+  重标注给出确定答案（`WEBMALL_DYNAMIC_GOLD_REVIEW_20260726.md`），无需再退出分母。
+  233 个任务全部参与评分。
+- **WebMall gold 追溯**：8 个重标注任务补齐 `task_revision`、`gold_snapshot_id`
+  （`webmall-reannotation-20260726`）、`gold_snapshot_path` 与 `gold_catalog_sha256`；
+  后者定义为四店原始目录 JSON 哈希按端口升序以 `端口:哈希` 用 `|` 连接后的
+  SHA-256，可从快照文件复算。
+- **WebNavigate 评价重构**：由正则匹配改为主机白名单加路径语义组
+  （`webnavigate_url_rules.py` / `webnavigate_evaluation_router.py`），判定更严：
+  WebNavigate-001 只认月度预报页，011 拒绝 `search.fda.gov` 与搜索引擎结果页。
+  Settings-001 由书签评价改为 OSWorld Chrome Profile 名称评价。
+- **评价器故障与模型失败分离**：Operation 检查函数抛出的异常按来源分类，agent 产物
+  损坏（BadZipFile、文件缺失等）计 FAIL 并保留在分母，其余异常记 `evaluator_error`
+  并退出成功率分母；旧 CSV 无 `status` 列时以 `score=-1` 哨兵识别。互斥优先级统一为
+  SKIP → EVALUATOR_ERROR → INTERRUPTED → PASS/FAIL。
+- **ReadonlyPPT-004 匹配模式**：answer 形如 `match:2,3,5;unmatch:8`，组内页码无序，
+  匹配模式由 `exact` 改为 `keyed_numeric_set`，避免组内换序被误判为错误。
+
+无遗留偏离项：2026-08-21 记录的三处偏离（OCR metric 移除、webmall
+`timeout_per_subtask`、webnavigate `expected_count`）此前已全部回填 dev main，
+本次同步后公开库与 dev 库锁定树逐字节一致。
+
+同步前的公开库原件备份见仓库外
+`github_release/backups/20260822-lineC-merge-preimage/`（含两库 git bundle 与还原说明）。
 
 ## 基线推进（2026-08-21，评价器审计修复同步）
 

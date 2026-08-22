@@ -15,11 +15,12 @@
             "file_pattern": "*",
             "params": {
                 "file_groups": [
-                    ["McDonald_finacial_report.docx", "McDonalds_Monthly_Data.xlsx"],
-                    ["Conference.pptx"],
-                    ["Eval_framework.docx"],
-                    ["Presentation_Strategy.pptx", "McDonalds_powerpoint_report.pptx"]
-                ]
+                    ["McDonald_finacial_report.docx", "McDonalds_Monthly_Data.xlsx", "McDonalds_powerpoint_report.pptx"],
+                    ["Presentation_Strategy.pptx", "Conference.pptx", "Eval_framework.docx"]
+                ],
+                "require_subfolder": true,
+                "require_distinct_group_folders": true,
+                "min_distinct_folders": 2
             },
             "weight": 0.6,
             "description": "文件按主题分类到同一子文件夹中"

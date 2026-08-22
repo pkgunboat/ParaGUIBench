@@ -314,15 +314,26 @@ if not path:
 else:
     total = 0
     errs = []
+    removed_invalid_backups = []
     for fp in [path, path + ".bak"]:
         if os.path.exists(fp):
             try:
                 total += int(clear_file(fp))
                 out["cleared"].append(fp)
+            except json.JSONDecodeError as e:
+                if fp == path + ".bak":
+                    try:
+                        os.remove(fp)
+                        removed_invalid_backups.append(fp)
+                    except Exception as remove_error:
+                        errs.append(f"{fp}: {repr(remove_error)}")
+                else:
+                    errs.append(f"{fp}: {repr(e)}")
             except Exception as e:
                 errs.append(f"{fp}: {repr(e)}")
     out["ok"] = True
     out["removed_url_nodes"] = total
+    out["removed_invalid_backups"] = removed_invalid_backups
     out["clear_errors"] = errs
     print(json.dumps(out, ensure_ascii=False))
 """
@@ -422,15 +433,26 @@ if not p:
 else:
     total = 0
     errs = []
+    removed_invalid_backups = []
     for fp in [p, p + ".bak"]:
         if os.path.exists(fp):
             try:
                 total += int(clear_file(fp))
                 out["cleared"].append(fp)
+            except json.JSONDecodeError as e:
+                if fp == p + ".bak":
+                    try:
+                        os.remove(fp)
+                        removed_invalid_backups.append(fp)
+                    except Exception as remove_error:
+                        errs.append(f"{fp}: {repr(remove_error)}")
+                else:
+                    errs.append(f"{fp}: {repr(e)}")
             except Exception as e:
                 errs.append(f"{fp}: {repr(e)}")
     out["ok"] = True
     out["removed_url_nodes"] = total
+    out["removed_invalid_backups"] = removed_invalid_backups
     out["clear_errors"] = errs
 
 print(json.dumps(out, ensure_ascii=False))

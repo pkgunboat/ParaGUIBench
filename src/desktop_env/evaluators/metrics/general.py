@@ -1,3 +1,4 @@
+import ast
 import csv
 import datetime
 import difflib
@@ -13,7 +14,6 @@ from typing import Callable, Any, Union
 from typing import Dict, List, Pattern
 
 import lxml.etree
-import pdfplumber
 import yaml
 from docx import Document
 from lxml.cssselect import CSSSelector
@@ -296,59 +296,56 @@ def check_json(result: str, rules: Dict[str, List[Dict[str, Union[List[str], str
 
 def check_direct_json_object(result, rules) -> float:
     """
-    One of the most commonly used function to evalute.
-    Compare two json objects directly.
+    解析并比较 agent 输出的 JSON 对象。
+
+    输入:
+        result: 字典、标准 JSON 字符串，或兼容旧脚本的 Python 字典文本。
+        rules: 含非空 ``expected`` 字典及匹配选项的 evaluator 规则。
+    输出:
+        agent 输出无法解析或内容不匹配时返回 0.0，匹配时返回 1.0。
+    异常:
+        gold 规则缺失或为空时抛出 ``ValueError``，交由 dispatcher 记 evaluator_error。
     """
     if isinstance(result, str):
-        # remove blanks before and after result
-        result = result.strip()
-        # replace all ' with "
-        result = result.replace("'", '"')
-        # load json object
-        result = json.loads(result)
-    if result is None:
+        raw_result = result.strip()
+        try:
+            result = json.loads(raw_result)
+        except json.JSONDecodeError:
+            # 仅在标准 JSON 失败后兼容 Python repr；不能全局替换撇号，
+            # 否则合法值 ``Alberta's Rockies`` 会被破坏。
+            try:
+                result = ast.literal_eval(raw_result)
+            except (ValueError, SyntaxError):
+                return 0.0
+    if not isinstance(result, dict):
         return 0.
-    try:
-        expect_in_result = rules.get("expect_in_result", False)
-        if not expect_in_result:
-            expected_json = rules["expected"]
-            for key in expected_json.keys():
-                expected_value = expected_json.get(key)
-                if expected_value != result.get(key):
-                    return 0.
-            return 1.0
-        else:
-            expected_json = rules["expected"]
+    if not isinstance(rules, dict):
+        raise ValueError("check_direct_json_object rules 必须是字典")
+    expected_json = rules.get("expected")
+    if not isinstance(expected_json, dict) or not expected_json:
+        raise ValueError("check_direct_json_object expected 必须是非空字典")
 
-            for key in expected_json.keys():
-                if isinstance(expected_json.get(key), list):
-                    flag = 0
-                    expected_value_list = expected_json.get(key)
-                    result_value = result.get(key)
-                    for each_expected_value in expected_value_list:
-                        if isinstance(result_value, list) and each_expected_value in result_value:
-                            flag = 1
-                            break
-                        # result_not_list: result value is a plain string (e.g. a
-                        # single filename) rather than a list; require an exact
-                        # candidate match to avoid accepting prefix/substring
-                        # collisions such as "kili_wrong.jpg".
-                        if rules.get("result_not_list", False) and isinstance(result_value, str) \
-                                and each_expected_value == result_value:
-                            flag = 1
-                            break
-                    if flag == 0:
-                        return 0.
-                elif isinstance(expected_json.get(key), str):
-                    if expected_json.get(key) not in result.get(key):
-                        return 0.
-                else:
-                    logger.debug("check_direct_json_object: expected value type not supported")
-                    return 0.
-            return 1.0
-    except:
-        logger.debug("check_direct_json_object: result is not a valid json object")
-        return 0.
+    if not rules.get("expect_in_result", False):
+        return float(all(result.get(key) == value for key, value in expected_json.items()))
+
+    for key, expected_value in expected_json.items():
+        result_value = result.get(key)
+        if isinstance(expected_value, list):
+            if isinstance(result_value, list):
+                matched = any(candidate in result_value for candidate in expected_value)
+            elif rules.get("result_not_list", False) and isinstance(result_value, str):
+                matched = result_value in expected_value
+            else:
+                matched = False
+            if not matched:
+                return 0.0
+        elif isinstance(expected_value, str):
+            if not isinstance(result_value, (str, list)) or expected_value not in result_value:
+                return 0.0
+        else:
+            logger.debug("check_direct_json_object: expected value type not supported")
+            return 0.0
+    return 1.0
 
 
 def compare_time_in_speedtest_results(speedtest_result_path, time_diff):
@@ -406,6 +403,8 @@ def is_gold_text_included_in_pdf(pdf_file_path, gold_text_path):
     # gold file is a json file, we need to check all the value in json are included in pdf file.
     with open(gold_text_path, 'r') as f:
         gold_json = json.load(f)
+    import pdfplumber
+
     with pdfplumber.open(pdf_file_path) as pdf:
         text = ''
         for page in pdf.pages:

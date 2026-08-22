@@ -12,6 +12,7 @@ import os
 import fnmatch
 import shutil
 import sys
+import tempfile
 
 # pipeline_base 已统一设置 sys.path
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -39,6 +40,11 @@ from run_QA_pipeline_parallel import (
     stage2_execute_agent_parallel,
 )
 from parallel_benchmark.eval.operation_evaluator import evaluate as operation_evaluate
+from parallel_benchmark.eval.searchwrite_run_contracts import (
+    build_searchwrite_evaluator_error,
+    missing_expected_searchwrite_files,
+    uses_osworld_evaluator,
+)
 
 
 class SearchWritePipeline(BasePipeline):
@@ -135,14 +141,10 @@ class SearchWritePipeline(BasePipeline):
         输入:
             tasks: 待执行的任务列表
         """
-        def _is_osworld_task(task):
-            cfg = task.task_config
-            return (
-                cfg.get("task_type") == "OSWorld脚本"
-                or cfg.get("evaluator_path", "").endswith(".json")
-            )
-
-        onlyoffice_tasks = [t for t in tasks if not _is_osworld_task(t)]
+        onlyoffice_tasks = [
+            task for task in tasks
+            if not uses_osworld_evaluator(task.task_config)
+        ]
         if not onlyoffice_tasks:
             self.log.info("未检测到 OnlyOffice 类型 SearchWrite 任务，跳过 Stage0")
             for task in tasks:
@@ -204,11 +206,7 @@ class SearchWritePipeline(BasePipeline):
         输出:
             bool
         """
-        evaluator_path = task.task_config.get("evaluator_path", "")
-        if (
-            task.task_config.get("task_type") == "OSWorld脚本"
-            or evaluator_path.endswith(".json")
-        ):
+        if uses_osworld_evaluator(task.task_config):
             return op_stage1_initialize_with_flatten(task.task_config, config, log)
         return sw_stage1_initialize(config, log)
 
@@ -251,20 +249,51 @@ class SearchWritePipeline(BasePipeline):
 
         # Stage 2.5: 触发 OnlyOffice 保存（路由到该任务所属实例）
         if share_urls:
-            stage2_5_trigger_save(
+            save_verified = stage2_5_trigger_save(
                 config, task.task_uid, share_urls,
                 self._task_onlyoffice_url(task), log,
             )
+            if isinstance(result, dict):
+                result["onlyoffice_save_verified"] = save_verified
 
         return result, ctrl
 
     def _save_onlyoffice_results_for_eval_rules(self, task, task_result_dir, log):
-        """
-        eval_rules uses operation_evaluator, which expects local result files.
-        For SearchWrite OnlyOffice tasks, download the edited shared document first.
+        """下载供 eval_rules 使用的完整 OnlyOffice 结果集合。
+
+        功能：将当前任务全部共享文档下载到本地评价目录；只有每个预期
+        文档均下载成功时才返回成功，避免多文件任务用残缺集合评分。
+        输入参数：task 为任务对象；task_result_dir 为本地结果目录；
+        log 为日志记录器。
+        输出返回值：全部预期文件均非空且成功落盘时为 True，否则 False。
         """
         share_urls = task.extra.get("share_urls", {})
         if not share_urls:
+            return False
+
+        patterns = self._eval_rule_file_patterns(
+            task.task_config.get("eval_rules", [])
+        )
+        template_dir = os.path.join(
+            SRC_DIR,
+            "parallel_benchmark",
+            "hf_data",
+            "benchmark_dataset",
+            task.task_uid,
+        )
+        expected_names = set()
+        if os.path.isdir(template_dir):
+            expected_names = {
+                filename
+                for filename in os.listdir(template_dir)
+                if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns)
+            }
+        missing_links = missing_expected_searchwrite_files(
+            expected_names,
+            share_urls.keys(),
+        )
+        if missing_links:
+            log.warning("OnlyOffice 共享文档集不完整: %s", missing_links)
             return False
 
         os.makedirs(task_result_dir, exist_ok=True)
@@ -292,7 +321,14 @@ class SearchWritePipeline(BasePipeline):
             saved += 1
             log.info("OnlyOffice 结果已保存供 eval_rules 使用: %s", dst)
 
-        return saved > 0
+        expected_count = len(share_urls)
+        if saved != expected_count:
+            log.warning(
+                "OnlyOffice 结果集合不完整: %d/%d",
+                saved,
+                expected_count,
+            )
+        return expected_count > 0 and saved == expected_count
 
     def _eval_rule_file_patterns(self, eval_rules):
         """
@@ -325,13 +361,14 @@ class SearchWritePipeline(BasePipeline):
         return deduped
 
     def _save_shared_results_for_eval_rules(self, task, config, task_result_dir, log):
-        """
-        eval_rules may target OSWorld-style local files instead of OnlyOffice.
+        """收集供 eval_rules 使用的 VM shared 结果文件。
 
-        In SearchWrite, those files are prepared in the VM shared directory
-        (config.shared_host_dir). If there is no OnlyOffice result to download,
-        copy matching files from that shared directory into agent_results so
-        operation_evaluator can inspect them.
+        功能：针对不走 OnlyOffice 的 SearchWrite/OSWorld 风格任务，按规则
+        文件模式及模板文件名从 shared 目录复制 Agent 产物；模板集合已知
+        时要求全部到齐，防止多文件任务以残缺集合得分。
+        输入参数：task 为任务对象；config 为容器配置；task_result_dir
+        为本地评价目录；log 为日志记录器。
+        输出返回值：所需文件集合完整时为 True，否则 False。
         """
         patterns = self._eval_rule_file_patterns(task.task_config.get("eval_rules", []))
         if not patterns:
@@ -353,6 +390,7 @@ class SearchWritePipeline(BasePipeline):
                     target_names.add(filename)
 
         copied = 0
+        copied_names = set()
         for root, _, files in os.walk(shared_dir):
             for filename in files:
                 if filename.startswith(".") or filename.startswith("~$"):
@@ -369,6 +407,7 @@ class SearchWritePipeline(BasePipeline):
                 try:
                     shutil.copy2(src, dst)
                     copied += 1
+                    copied_names.add(filename)
                     log.info("shared 结果已保存供 eval_rules 使用: %s", dst)
                 except Exception as exc:
                     log.warning("复制 shared 结果失败 %s: %s", src, exc)
@@ -381,7 +420,7 @@ class SearchWritePipeline(BasePipeline):
                 )
             else:
                 log.warning("shared 目录未找到匹配 eval_rules 的结果文件: %s", patterns)
-        return copied > 0
+        return target_names.issubset(copied_names) if target_names else copied > 0
 
     def stage_evaluate(self, task, agent_result, config, log):
         """
@@ -397,37 +436,48 @@ class SearchWritePipeline(BasePipeline):
         输出:
             评估结果字典
         """
+        if (
+            task.extra.get("share_urls")
+            and isinstance(agent_result, dict)
+            and agent_result.get("onlyoffice_save_verified") is False
+        ):
+            return build_searchwrite_evaluator_error(
+                "OnlyOffice 编辑结果未完成回写验证"
+            )
+
         # 路径 0：如果任务配置中有 eval_rules，使用 operation_evaluator
         eval_rules = task.task_config.get("eval_rules", [])
         if eval_rules:
             log.info("检测到 eval_rules，使用 operation_evaluator 进行评估")
-            result_dir = self.args.save_result_dir
-            if not result_dir:
-                log.warning("save_result_dir 未设置，operation_evaluator 需要结果目录")
-                return {"score": 0.0, "pass": False, "reason": "save_result_dir 未设置"}
+            result_dir = self.args.save_result_dir or os.path.join(
+                tempfile.gettempdir(),
+                "paraguibench_searchwrite_eval",
+            )
 
             task_result_dir = os.path.join(result_dir, task.task_config.get("task_id", ""))
-            saved_for_eval = self._save_onlyoffice_results_for_eval_rules(
-                task, task_result_dir, log
-            )
-            if not saved_for_eval:
+            if task.extra.get("share_urls"):
+                # OnlyOffice 任务下载不完时必须保留基础设施
+                # 错误语义，不能再从可能含旧文件的 shared 目录兜底。
+                saved_for_eval = self._save_onlyoffice_results_for_eval_rules(
+                    task, task_result_dir, log
+                )
+            else:
+                # OSWorld/shared 任务没有 OnlyOffice 链接，按规则
+                # 文件模式收集 VM 产物。
                 saved_for_eval = self._save_shared_results_for_eval_rules(
                     task, config, task_result_dir, log
                 )
-            if not os.path.isdir(task_result_dir):
-                log.warning("结果目录不存在: %s", task_result_dir)
-                return {"score": 0.0, "pass": False, "reason": f"结果目录不存在: {task_result_dir}"}
+            if not saved_for_eval or not os.path.isdir(task_result_dir):
+                log.warning("没有可供 eval_rules 评价的结果文件: %s", task_result_dir)
+                return build_searchwrite_evaluator_error(
+                    f"结果文件收集失败: {task_result_dir}"
+                )
 
             try:
                 return operation_evaluate(task_result_dir, task.task_config)
             except Exception as exc:
                 log.error("operation_evaluator 评估失败: %s", exc)
-                return {
-                    "score": -1.0,
-                    "pass": False,
-                    "status": "evaluator_error",
-                    "reason": f"评估异常: {exc}",
-                }
+                return build_searchwrite_evaluator_error(f"评估异常: {exc}")
 
         # 路径 1：如果有 evaluator_path 且为 .json，使用 OSWorld 评价器
         evaluator_path = task.task_config.get("evaluator_path", "")
@@ -452,12 +502,9 @@ class SearchWritePipeline(BasePipeline):
                 )
             except Exception as exc:
                 log.error("OSWorld 评测执行失败: %s", exc, exc_info=True)
-                return {
-                    "score": -1.0,
-                    "pass": False,
-                    "status": "evaluator_error",
-                    "reason": f"OSWorld 评测异常: {exc}",
-                }
+                return build_searchwrite_evaluator_error(
+                    f"OSWorld 评测异常: {exc}"
+                )
 
         # 路径 2：否则使用原有的 xlsx 评估逻辑（路由到该任务所属实例）
         share_urls = task.extra.get("share_urls", {})
