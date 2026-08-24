@@ -1459,16 +1459,35 @@ def check_sort_order_by_header_keywords(file_path: str, params: dict) -> dict:
     按表头关键字定位列并检查排序。
 
     比固定列号更贴近“按 sales amount 排序”这类任务，避免 agent 只把
-    B 列排好但真实销售额列未排序也通过。
+    B 列排好但真实销售额列未排序也通过；同时按表头所在行定位数据起始行，
+    不会把标题行与表头行当成数据参与比较。
+
+    输入:
+        file_path: xlsx 文件路径。
+        params:
+            header_keywords (list[str]): 单组关键字，需全部命中同一表头单元格。
+            header_keyword_groups (list[list[str]]): 备选关键字组，任一组全部
+                命中即可；用于同一任务的工作簿存在多语言表头的情形。
+            order (str): "asc" 或 "desc"，默认 "desc"。
+            sheet_name (str|None): 指定工作表；默认活动表。
+            header_rows (int): 在前若干行内搜索表头，默认 5。
+    输出:
+        {"pass": bool, "score": float, "reason": str}；表头定位不到时返回
+        status="evaluator_error" 的配置错误结果。
     """
-    keywords = [str(k).lower() for k in params.get("header_keywords", [])]
+    groups = params.get("header_keyword_groups")
+    if groups:
+        keyword_groups = [[str(k).lower() for k in group] for group in groups]
+    else:
+        keyword_groups = [[str(k).lower() for k in params.get("header_keywords", [])]]
+    keyword_groups = [group for group in keyword_groups if group]
     order = params.get("order", "desc")
     sheet_name = params.get("sheet_name")
     header_rows = int(params.get("header_rows", 5))
     skip_header = params.get("skip_header", True)
 
-    if not keywords:
-        return _config_error("参数缺少 header_keywords")
+    if not keyword_groups:
+        return _config_error("参数缺少 header_keywords 或 header_keyword_groups")
 
     wb = _load_workbook(file_path, data_only=True)
     if wb is None:
@@ -1479,14 +1498,22 @@ def check_sort_order_by_header_keywords(file_path: str, params: dict) -> dict:
         if ws is None:
             return _fail(f"工作表不存在: {sheet_name}")
 
+        # 跨语言的表头关键字常常也出现在首行大标题里（如「2026年营业额统计」），
+        # 匹配到标题会把空行当数据、得出「数据量不足」的假通过。表头行至少有两个
+        # 非空单元格，而标题行通常只占一格，据此排除。
+        min_header_cells = int(params.get("min_header_cells", 2))
         best = None
         for row_idx in range(1, min(header_rows, ws.max_row) + 1):
-            for col_idx in range(1, ws.max_column + 1):
-                value = ws.cell(row=row_idx, column=col_idx).value
+            row_values = [ws.cell(row=row_idx, column=c).value
+                          for c in range(1, ws.max_column + 1)]
+            if sum(1 for v in row_values if v is not None and str(v).strip()) < min_header_cells:
+                continue
+            for col_idx, value in enumerate(row_values, start=1):
                 if value is None:
                     continue
                 text = str(value).lower()
-                if all(keyword in text for keyword in keywords):
+                if any(all(keyword in text for keyword in group)
+                       for group in keyword_groups):
                     best = (row_idx, col_idx, value)
                     break
             if best:
@@ -1497,7 +1524,7 @@ def check_sort_order_by_header_keywords(file_path: str, params: dict) -> dict:
             # 判 FAIL 会让该任务对所有模型系统性失败，故按评价器故障处理，
             # 使其退出成功率分母并在报告中显式暴露。
             return _config_error(
-                f"未找到包含关键字 {keywords} 的表头（前 {header_rows} 行）"
+                f"未找到匹配 {keyword_groups} 任一组关键字的表头（前 {header_rows} 行）"
             )
 
         header_row, col_idx, header_value = best

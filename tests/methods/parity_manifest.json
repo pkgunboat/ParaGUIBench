@@ -1,5 +1,5 @@
 {
-  "baseline": "ParaGUIBench-dev 7fe05d3e main (2026-08-22 线 C 权威基线合并同步；无遗留偏离项)",
+  "baseline": "ParaGUIBench-dev 028ddd0f main (2026-08-22 线 C 权威基线合并同步 + Excel-003 表头可达性修正；无遗留偏离项)",
   "files": {
     "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "src/config_loader.py": "94346f34609e6632bb7ef11e54e838c3a5548d132d496d19532ded80c9218ec7",
@@ -487,7 +487,7 @@
     "src/parallel_benchmark/eval/operation_checks/docx_checks.py": "c0c953af72b5f408bee3372d73f67bbbad8c41260e86f6c42e1adb99dc4c96f2",
     "src/parallel_benchmark/eval/operation_checks/file_checks.py": "7f852b840b65dd9f7eb049da2dffe88a6808d370d4c3b33a89eca8d4a1c3fe65",
     "src/parallel_benchmark/eval/operation_checks/pptx_checks.py": "9e32598867fb5340dd72a84f8d393cf083c4be9e3ece2a9e492cd68f2e44e505",
-    "src/parallel_benchmark/eval/operation_checks/xlsx_checks.py": "187a06b9298195b8de9aec0d754e2aeed968ae98e0886919d56bc513cdb43245",
+    "src/parallel_benchmark/eval/operation_checks/xlsx_checks.py": "863420029fe9a797d83bc7bd54d615c4022f4703edda9a146ee09ecdcfd1aae5",
     "src/parallel_benchmark/eval/operation_evaluator.py": "f96b763c3874fe2cbc35349b6f88af1a47f328774ff9f58f2010ca1c92bd014d",
     "src/parallel_benchmark/eval/osworld_evaluator.py": "67ac156b32d75b3a38f0945ce870ae5fc4d89b3e9fd664b5810c6c678dcd6c79",
     "src/parallel_benchmark/eval/osworld_scripts/14b28a49-e101-4458-835e-2067823ddefb.json": "c007b5912a261eaf5a6b65443cd6e04d891eb1821fa9c0625571cfb7f077a087",
@@ -670,7 +670,7 @@
     "src/parallel_benchmark/tasks/Operation-FileOperate-BatchOperation-003.json": "c5dc113a82cac6e32cfaad0590343968cc86982b832072de6b0b408bb38bb0f3",
     "src/parallel_benchmark/tasks/Operation-FileOperate-BatchOperationExcel-001.json": "877e0eba3e79ac2a58cb60150824d471f8950a28f4f4d4eafb5f3452213a9067",
     "src/parallel_benchmark/tasks/Operation-FileOperate-BatchOperationExcel-002.json": "a33b035cb27fed34dac66c5283d8d1c42b5c1e7df7963263742dd84f619dccb9",
-    "src/parallel_benchmark/tasks/Operation-FileOperate-BatchOperationExcel-003.json": "15ab74e7b5eb869e8f011613b7bf9192bead02b35f6f4ebfa1a1f9e9652a6bf5",
+    "src/parallel_benchmark/tasks/Operation-FileOperate-BatchOperationExcel-003.json": "8c27d2220f0e649f6c131ca028e1bd8c82fba743b837df443c03706de8ac0408",
     "src/parallel_benchmark/tasks/Operation-FileOperate-BatchOperationExcel-004.json": "0490aa1fc67957c33e086fbc904b323f13996c7c79c438abf04c5e346b0a20eb",
     "src/parallel_benchmark/tasks/Operation-FileOperate-BatchOperationExcel-005.json": "2442095a11fdfa799e129e53fa93b2a107aeae529581970cb2cc83ed4ba6dc1c",
     "src/parallel_benchmark/tasks/Operation-FileOperate-BatchOperationExcel-006.json": "6a1d55cc6c4793cea4d56b17e1f6baec3d82c82d1f976e5a54d810dabb31f824",

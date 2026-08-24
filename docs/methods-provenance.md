@@ -3,7 +3,7 @@
 ## 基线
 
 - 迁移源：私有 dev 仓库 `ParaGUIBench-dev`（GitHub `pkgunboat/ParaGUIBench-dev`）。
-- **当前基线：dev 库 main `7fe05d3e`（2026-08-22）**。2026-08-19 首次迁移时的基线是
+- **当前基线：dev 库 main `028ddd0f`（2026-08-22）**。2026-08-19 首次迁移时的基线是
   `8d36e157` 工作树；此后经两轮基线推进（2026-08-21 的评价器审计修复同步、
   2026-08-22 的源修复线合并同步），见下两节。
 - 首次迁移日期：2026-08-19；迁移方式 `rsync`，除排除项外**零改动**。
@@ -49,6 +49,17 @@ parity manifest 条目 908 → 919。新增的 11 个全部是评价器源码：
 无遗留偏离项：2026-08-21 记录的三处偏离（OCR metric 移除、webmall
 `timeout_per_subtask`、webnavigate `expected_count`）此前已全部回填 dev main，
 本次同步后公开库与 dev 库锁定树逐字节一致。
+
+合并后用服务器上的真实工作簿复核了 BatchOperationExcel-003 的排序检查，发现两条
+修复线在该任务上均失效：四个源工作簿的表头位于第 3 行，分别是 `Sales
+revenue(yuan)`、`Sales revenue(dollars)`、`营业额（元）`、`营业额（元）`，其一
+所用的关键字 `["sales","amount"]` 要求同一单元格同时含两词，四个工作簿无一可达；
+另一所用的固定 B 列则自第 1 行起读取，把标题字符串混入数值列而报类型不可比。两者
+都会使该任务对所有模型恒为 0 分。现改为 `check_sort_order_by_header_keywords`
+支持 `header_keyword_groups` 备选关键字组（任一组全部命中即可），并要求表头行至少
+有两个非空单元格，以免命中同样含「营业额」的首行大标题、进而从空行读数据得出
+「数据量不足」的假通过；该任务参数设为 `[["sales","revenue"], ["营业额"]]`。dev
+库对应提交 `028ddd0f`，中英文表头下已排序判通过、未排序判不通过均已实测。
 
 同步前的公开库原件备份见仓库外
 `github_release/backups/20260822-lineC-merge-preimage/`（含两库 git bundle 与还原说明）。

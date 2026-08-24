@@ -14,7 +14,15 @@
             "check": "check_sort_order_by_header_keywords",
             "file_pattern": "*.xlsx",
             "params": {
-                "header_keywords": ["sales", "amount"],
+                "header_keyword_groups": [
+                    [
+                        "sales",
+                        "revenue"
+                    ],
+                    [
+                        "营业额"
+                    ]
+                ],
                 "order": "desc",
                 "header_rows": 5
             },
