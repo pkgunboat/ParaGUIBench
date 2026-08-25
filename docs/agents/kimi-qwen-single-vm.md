@@ -1,6 +1,6 @@
 # Kimi + Qwen 单 VM 串行 ParaGUI
 
-`paragui-single-vm` 是 ParaGUIBench 0.1 preview 中的实验性 Agent System：
+`paragui-single-vm` 是 ParaGUIBench 0.2 preview 中的实验性 Agent System：
 `kimi-k2.6` 负责一次规划和最终答案汇总，Qwen 3.7 GUI worker 负责
 在一个持久 OSWorld VM 中依次执行子任务。该路径已通过无网络纵向
 契约测试，并于 2026-08-01 完成一次实机执行；但该运行与 Seed18

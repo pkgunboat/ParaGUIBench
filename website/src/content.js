@@ -46,7 +46,7 @@ export const content = {
       primary: "Get started",
       secondary: "Explore 233 tasks",
       status: {
-        preview: "v0.1 Preview",
+        preview: "v0.2 Preview",
         canonical: "canonical tasks",
         localReady: "local components ready (not live-validated)",
         localIncomplete: "local components incomplete",
@@ -319,7 +319,7 @@ paraguibench doctor --repo-root . \\
       primary: "开始使用",
       secondary: "浏览 233 个任务",
       status: {
-        preview: "v0.1 预览版",
+        preview: "v0.2 预览版",
         canonical: "个 canonical 任务",
         localReady: "个本地组件已闭合任务（非实机验证）",
         localIncomplete: "个本地组件未闭合任务",

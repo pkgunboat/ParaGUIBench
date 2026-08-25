@@ -219,11 +219,15 @@ DocumentServer 与 ParaGUIBench share service；其余 6 项仍走 OSWorld / Lib
 - [第三方来源与发布边界](docs/licenses/third-party-sources.md)
 - [安全配置示例](configs/examples/README.md)
 - [贡献指南](CONTRIBUTING.md)
+- [变更日志](CHANGELOG.md)
 - [GitHub Pages 源码与本地预览](website/README.md)
 
 ## 论文与引用
 
-论文在 arXiv 发布后，我们将在此补充预印本链接和 BibTeX。
+本仓库对应论文《Beyond Sequential Interaction: Benchmarking Parallel Execution and
+Coordination for GUI Agents》。论文在 arXiv 发布后将在此补充预印本链接和 BibTeX；
+在此之前，软件本身的机器可读引用信息见 [`CITATION.cff`](CITATION.cff)，GitHub 会
+在 **Cite this repository** 中渲染。
 
 ## 许可证
 

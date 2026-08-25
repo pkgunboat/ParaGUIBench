@@ -1,6 +1,6 @@
 # OSWorld Linux 从源码部署
 
-本文档给出 ParaGUIBench 0.1 preview 的最小可复现路径：从公开源码 checkout
+本文档给出 ParaGUIBench 0.2 preview 的最小可复现路径：从公开源码 checkout
 创建隔离 Python 环境，准备固定 OSWorld 镜像和任务资产，通过全部部署门禁，
 再对首个候选任务 `InformationRetrieval-FileSearch-Readonly-001`
 执行带 RunStore v2 版本向量的真实环境复验。
@@ -26,12 +26,16 @@ live 结果；后者固定单 VM 串行，不是多 VM 并行 ParaGUI。
 > 或物化结果手工写回 manifest 以绕过身份门禁。镜像
 > 再分发边界和分层许可仍在审计；获取或使用前应自行确认上游条款。
 
-## 从 dirty 工作树构建 cleanroom release
+## 构建 cleanroom release 归档
 
-迁移分支尚未形成可公开 checkout 时，不应仅记录 Git HEAD：HEAD 不能唯一
-标识已修改文件和必要的非忽略 untracked 迁移源码。在可信的本地工作树
-运行下列命令；输出目录放在 checkout 之外，且不向脚本传递任何凭据、
-endpoint 或内网主机参数：
+本仓库已可公开 `git clone`，日常安装直接用 checkout 即可，本节不是必经步骤。
+保留该打包器有两个用途：一是产出确定性归档（同一组路径与字节恒得到同一
+source-tree 与 archive SHA-256），便于评审方或第三方对所用代码做字节级核对；
+二是从含未提交改动的本地工作树打包时，Git HEAD 不足以唯一标识实际内容——
+它不覆盖已修改文件与必要的非忽略 untracked 源码，此时须以归档摘要为准。
+
+在可信的本地工作树运行下列命令；输出目录放在 checkout 之外，且不向脚本
+传递任何凭据、endpoint 或内网主机参数：
 
 ```bash
 RELEASE_OUT="/tmp/paraguibench-cleanroom-release"
@@ -64,7 +68,7 @@ tar，避免自引用；文件顺序、tar mtime/uid/gid/mode 和 gzip mtime 均
 依赖关系为：
 
 ```text
-dirty Git tree
+Git working tree (clean or dirty)
   → static security scanner
   → fixed public-source allowlist + nofollow/type/size/collision gates
   → strict empty-value root .env.example semantic gate

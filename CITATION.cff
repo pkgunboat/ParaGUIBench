@@ -1,0 +1,91 @@
+cff-version: 1.2.0
+message: "If you use ParaGUIBench in your research, please cite the preprint below."
+title: "ParaGUIBench: Benchmarking Parallel Execution and Coordination for GUI Agents"
+abstract: >-
+  ParaGUIBench is a 233-task benchmark for planning, coordinating, and evaluating
+  concurrent GUI work across browsers, desktops, and shared resources. It ships
+  task contracts, deterministic evaluators, a run store, and reference agent
+  systems for both sequential GUI-only and parallel ParaGUI execution.
+type: software
+license: Apache-2.0
+repository-code: "https://github.com/pkgunboat/ParaGUIBench"
+version: "0.2.0.dev0"
+date-released: "2026-08-24"
+keywords:
+  - GUI agent
+  - benchmark
+  - parallel execution
+  - multi-agent coordination
+  - large language model
+authors:
+  - family-names: "Yu"
+    given-names: "Zedong"
+    affiliation: "Beijing University of Posts and Telecommunications; State Key Laboratory for General Artificial Intelligence, BIGAI"
+    email: "yzd0812z2@bupt.edu.cn"
+  - family-names: "Li"
+    given-names: "Qianxing"
+    affiliation: "China University of Geosciences (Beijing); State Key Laboratory for General Artificial Intelligence, BIGAI"
+    email: "1004236211@email.cugb.edu.cn"
+  - family-names: "Gao"
+    given-names: "Zhi"
+    affiliation: "Beijing Institute of Technology; State Key Laboratory for General Artificial Intelligence, BIGAI"
+    email: "gaozhibit@bit.edu.cn"
+  - family-names: "Xiang"
+    given-names: "Liuyu"
+    affiliation: "Beijing University of Posts and Telecommunications"
+    email: "xiangly@bupt.edu.cn"
+  - family-names: "Shi"
+    given-names: "Chenrui"
+    affiliation: "Beijing Institute of Technology; State Key Laboratory for General Artificial Intelligence, BIGAI"
+    email: "shichenrui@bit.edu.cn"
+  - family-names: "Liu"
+    given-names: "Yang"
+    affiliation: "State Key Laboratory for General Artificial Intelligence, BIGAI"
+    email: "liuyang1@bigai.ai"
+  - family-names: "Wu"
+    given-names: "Huiming"
+    affiliation: "State Key Laboratory for General Artificial Intelligence, BIGAI"
+    email: "hwubl@connect.ust.hk"
+  - family-names: "Wei"
+    given-names: "Yujie"
+    affiliation: "Beijing University of Posts and Telecommunications"
+    email: "yujie.wei@bupt.edu.cn"
+  - family-names: "Fei"
+    given-names: "Yuhao"
+    affiliation: "Beijing University of Posts and Telecommunications"
+    email: "2022213322@bupt.cn"
+  - family-names: "Fu"
+    given-names: "Yubo"
+    affiliation: "Beijing University of Posts and Telecommunications"
+    email: "fuyubo23@bupt.edu.cn"
+  - family-names: "He"
+    given-names: "Zhaofeng"
+    affiliation: "Beijing University of Posts and Telecommunications"
+    email: "zhaofenghe@bupt.edu.cn"
+preferred-citation:
+  type: article
+  title: "Beyond Sequential Interaction: Benchmarking Parallel Execution and Coordination for GUI Agents"
+  year: 2026
+  authors:
+    - family-names: "Yu"
+      given-names: "Zedong"
+    - family-names: "Li"
+      given-names: "Qianxing"
+    - family-names: "Gao"
+      given-names: "Zhi"
+    - family-names: "Xiang"
+      given-names: "Liuyu"
+    - family-names: "Shi"
+      given-names: "Chenrui"
+    - family-names: "Liu"
+      given-names: "Yang"
+    - family-names: "Wu"
+      given-names: "Huiming"
+    - family-names: "Wei"
+      given-names: "Yujie"
+    - family-names: "Fei"
+      given-names: "Yuhao"
+    - family-names: "Fu"
+      given-names: "Yubo"
+    - family-names: "He"
+      given-names: "Zhaofeng"

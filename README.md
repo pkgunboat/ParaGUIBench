@@ -249,11 +249,16 @@ fail-closed.
 - [Third-party sources and release boundaries](docs/licenses/third-party-sources.md)
 - [Safe configuration examples](configs/examples/README.md)
 - [Contributing](CONTRIBUTING.md)
+- [Changelog](CHANGELOG.md)
 - [GitHub Pages source and local preview](website/README.md)
 
 ## Paper and citation
 
-The preprint link and BibTeX entry will be added after the paper is available on arXiv.
+This repository accompanies "Beyond Sequential Interaction: Benchmarking Parallel
+Execution and Coordination for GUI Agents". The preprint link and BibTeX entry will
+be added once the paper is available on arXiv; until then, machine-readable citation
+metadata for the software is in [`CITATION.cff`](CITATION.cff), which GitHub renders
+under **Cite this repository**.
 
 ## License
 

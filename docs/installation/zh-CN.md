@@ -1,6 +1,6 @@
 # ParaGUIBench 安装指南
 
-ParaGUIBench 0.1 preview 将安装边界分成两层。**Core** 包含 benchmark
+ParaGUIBench 0.2 preview 将安装边界分成两层。**Core** 包含 benchmark
 协议、framework、agents、评价器、RunStore 和 CLI，不引入第三方运行依赖；
 **Live OSWorld** 在 Core 上增加候选 Linux/KVM 真实运行路径所需的模型、
 图像、HTTP 和 Chrome CDP 探针依赖。该路径已有历史冒烟证据，但当前 manifest 中版本化

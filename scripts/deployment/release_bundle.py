@@ -44,6 +44,7 @@ ROOT_FILE_ALLOWLIST = frozenset(
     {
         ".env.example",
         ".gitignore",
+        "CHANGELOG.md",
         "CITATION.cff",
         "CONTEXT.md",
         "CONTRIBUTING.md",

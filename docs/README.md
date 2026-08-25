@@ -1,4 +1,4 @@
-# ParaGUIBench 0.1 用户手册
+# ParaGUIBench 0.2 用户手册
 
 公开文档只保留安装、部署、评价边界和可运行 Agent 路径。根目录
 [INSTALL.md](../INSTALL.md) 是英文安装入口。

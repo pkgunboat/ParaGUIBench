@@ -1,6 +1,6 @@
 # Installation dependency tree
 
-This tree is normative for the 0.1 preview installation paths. Package names
+This tree is normative for the 0.2 preview installation paths. Package names
 and version ranges come from `pyproject.toml`; system prerequisites are not
 Python dependencies and are never installed by ParaGUIBench.
 
