@@ -110,7 +110,7 @@ _LAST_FOUR_NON_ASSET_SHA256 = {
         "b6cfcf13d1cc734bd6f5f1fa1c81b641647275021c5869eca1e396b2017e2caf"
     ),
     "Operation-FileOperate-SearchAndWrite-007": (
-        "e77fc41e71a3c9d96c09d5dd978b7aefeca68e999d7eae080476cd817dc44221"
+        "225d9f8c10b1b9516e3f9a4bbb8bf9eb00277b5377edc1bbb3b40277b6ed9588"
     ),
 }
 _LAST_FOUR_RULE_SET_SHA256 = {

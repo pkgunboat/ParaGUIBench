@@ -721,7 +721,7 @@ def test_webmall_url_multiset_site_projection_changes_exactly_67_tasks() -> None
     )
     assert len(unchanged_tasks) == 158
     assert hashlib.sha256(stable_projection).hexdigest() == (
-        "6f7caf61d2f5f22f85e3f67e256588899738adc7d90682b1a82bbe34ee497ca3"
+        "66310d0488f88387c03345be9af543f8a65947b42da3c54ec4001e23281c32f5"
     )
     assert VALUE_LABELS["evaluation_protocol"][protocol] == {
         "en": "WebMall URL Multiset",

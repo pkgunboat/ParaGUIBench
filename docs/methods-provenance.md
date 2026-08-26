@@ -211,3 +211,12 @@ env 读取（默认 3600 秒）。
 **状态更新（2026-08-21）**：该修复已回填 dev 库 main（`509ad920`）。
 批次 A 重写 bookmark 评价器后 `expected_count` 仍是分母字段名，修复继续适用；
 自新基线起不再构成偏离。
+
+## 2026-08-26 SearchAndWrite-007 路由修正（公开 `post-f4eb6f8`）
+
+SW-007 的 `task_type` 为 `OSWorld脚本` 但 `evaluator_path` 为空、`eval_rules` 齐备，
+`uses_osworld_evaluator` 因此把它排除出 searchwrite Stage 0 的 OnlyOffice 模板上传，
+评价时报「无共享 xlsx 文件可评估」（evaluator_error，probe-retry-20260826 实跑复现）。
+修正：`task_type` 改为 `self` 对齐 002/004/006；`benchmark/tasks` 副本同步；
+`onlyoffice/contracts.py` 的两个闭集把 007 从 OSWorld 集移入 OnlyOffice 集（5/5），
+`test_task_routing.py` 断言同步。parity 清单哈希已更新。dev 库同文件同改动回填。

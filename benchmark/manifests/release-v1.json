@@ -767,7 +767,7 @@
       "task_id": "Operation-FileOperate-SearchAndWrite-007",
       "task_uid": "6f137b26-6efd-45e7-bd3c-034c81ddc790",
       "path": "benchmark/tasks/Operation-FileOperate-SearchAndWrite-007.json",
-      "sha256": "0b026f9adca4bc26b0a9c7e91fd53b9fc5957956b68c1771321b71211c171812"
+      "sha256": "cd8b5c8a0a52bb82c9ad7012369f1e304134f891398315c8d8ac53abb9b6838b"
     },
     {
       "task_id": "Operation-FileOperate-SearchAndWrite-008",

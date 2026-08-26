@@ -10,22 +10,22 @@ ONLYOFFICE_SHARED_DOCUMENT_TASK_IDS: frozenset[str] = frozenset(
         "Operation-FileOperate-SearchAndWrite-002",
         "Operation-FileOperate-SearchAndWrite-004",
         "Operation-FileOperate-SearchAndWrite-006",
+        "Operation-FileOperate-SearchAndWrite-007",
         "Operation-FileOperate-SearchAndWrite-008",
     }
 )
-"""必须走 OnlyOffice 共享文档服务的精确 4 项任务。"""
+"""必须走 OnlyOffice 共享文档服务的精确 5 项任务。"""
 
 OSWORLD_SEARCH_AND_WRITE_TASK_IDS: frozenset[str] = frozenset(
     {
         "Operation-FileOperate-SearchAndWrite-001",
         "Operation-FileOperate-SearchAndWrite-003",
         "Operation-FileOperate-SearchAndWrite-005",
-        "Operation-FileOperate-SearchAndWrite-007",
         "Operation-FileOperate-SearchAndWrite-009",
         "Operation-WebOperate-SearchAndWrite-001",
     }
 )
-"""必须继续走 OSWorld / LibreOffice 路径的精确 6 项 SearchAndWrite 任务。"""
+"""必须继续走 OSWorld / LibreOffice 路径的精确 5 项 SearchAndWrite 任务。"""
 
 SEARCH_AND_WRITE_TASK_IDS: frozenset[str] = (
     ONLYOFFICE_SHARED_DOCUMENT_TASK_IDS | OSWORLD_SEARCH_AND_WRITE_TASK_IDS
@@ -65,7 +65,7 @@ def uses_onlyoffice_shared_document(task_id: str) -> bool:
 
     功能：
         只根据规范闭集分流，不得根据资产是否为 xlsx 推断。
-        SearchAndWrite-007 含 xlsx 资产，但仍返回 False。
+        SearchAndWrite-007 含 xlsx 资产，已改走 OnlyOffice 共享链路，返回 True。
     输入参数：
         task_id：canonical 任务 ID。
     输出返回值：

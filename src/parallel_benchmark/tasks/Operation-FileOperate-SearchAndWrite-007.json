@@ -1,7 +1,7 @@
 {
     "task_id": "Operation-FileOperate-SearchAndWrite-007",
     "task_uid": "6f137b26-6efd-45e7-bd3c-034c81ddc790",
-    "task_type": "OSWorld脚本",
+    "task_type": "self",
     "task_tag": "FileOperate",
     "instruction": "I now want to count the host cities of these three machine learning conferences over the past decade, from 2013 to 2019 (including 2013 and 2019). I have already listed the conference names and years in Excel. Please fill in the blank locations.",
     "task_source": "OSWorld",

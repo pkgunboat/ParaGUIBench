@@ -3,12 +3,12 @@
   "input_manifests": {
     "release": {
       "id": "release-v1",
-      "sha256": "af0f2939bd50518e38de211795c1874494e3b64049d6242e1c5228f8609f9a5d",
+      "sha256": "3742c5468269afdd33bb363ea3dac4cbcdb77820b4c0e936c97a501d65ee59fb",
       "task_count": 233
     },
     "runtime_support": {
       "id": "runtime-support-v1",
-      "sha256": "06570e163e0b6bbc7159b0b2b132b801dba4f4dd32adc32669ece54fba0e4b26",
+      "sha256": "a049386dcbf5a4153bac882d986024c75803953073d523af4b1b9c73ca2f0ca1",
       "task_count": 233
     }
   },
@@ -444,10 +444,10 @@
     },
     "task_count": 233,
     "type_counts": {
-      "OSWorld脚本": 18,
+      "OSWorld脚本": 17,
       "OSWorld脚本改造": 10,
       "QA": 169,
-      "self": 32,
+      "self": 33,
       "unspecified": 4
     }
   },
@@ -2490,7 +2490,7 @@
       "support_status": "blocked",
       "tag": "FileOperate",
       "task_id": "Operation-FileOperate-SearchAndWrite-007",
-      "type": "OSWorld脚本"
+      "type": "self"
     },
     {
       "asset_status": "pinned_download_manifest",
