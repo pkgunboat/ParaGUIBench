@@ -231,7 +231,7 @@ _BATCH_OPERATION_OFFICE_ASSET_MANIFEST_SHA256: dict[str, str] = {
         "8dae2c991df40eabcd529e330048da91d5008449a3645e23244b0fe9f027934e"
     ),
     "Operation-FileOperate-BatchOperationExcel-002": (
-        "eb36a3428be51eb19038bbc16f0eb96d20dee5b8daaffeee451741cd024436ba"
+        "3f46763cbac0a1c7c55ed426c4c155f1fa788ce31ad64a151e445219eb4f69be"
     ),
     "Operation-FileOperate-BatchOperationExcel-003": (
         "3e0e9070ad0e4513886b496d03e01eb92ad84a774a0eed09e930e1a25b4aeaca"

@@ -81,7 +81,7 @@
     ],
     "func": "compare_images",
     "options": {
-      "score_threshold": 0.75
+      "score_threshold": 0.85
     },
     "result": {
       "type": "background_image_in_slide",
@@ -91,7 +91,7 @@
     },
     "expected": {
       "type": "cloud_file",
-      "path": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5/landscape.png",
+      "path": "https://huggingface.co/datasets/leeLegendary/Parallel_benchmark/resolve/b5f29e9cb725c80973af55f97b12fd279f066e3a/answer_files/9b5220d5-f1f0-4db9-902d-ad41aae4d775/landscape.png",
       "dest": "gold_landscape.png"
     }
   },

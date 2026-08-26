@@ -17,6 +17,8 @@ from typing import Any
 
 LEE_REPOSITORY = "leeLegendary/Parallel_benchmark"
 LEE_REVISION = "13bf942dfab6f9d71f16f0958f1edd8b436c7afa"
+# Excel-002 初始资产于 20260726 重制（取消预完成加粗/右对齐），以独立 commit 固定。
+EXCEL002_LEE_REVISION = "b5f29e9cb725c80973af55f97b12fd279f066e3a"
 XLANG_REPOSITORY = "xlangai/ubuntu_osworld_file_cache"
 XLANG_REVISION = "711e0811642364e7aa8f10a8918367d0b626d578"
 _MANIFEST_ROOT = PurePosixPath("benchmark/assets/manifests")
@@ -31,7 +33,35 @@ _MARKDOWN = "text/markdown"
 _CSV = "text/csv"
 _HTML = "text/html"
 
-# Excel-001/-002/-003 的公开目录内容逐字节相同，但仍由各自 UID 保留来源身份。
+# Excel-001/-003 的公开目录内容逐字节相同，仍由各自 UID 保留来源身份；
+# Excel-002 的初始资产已重制（A3:C3 取消加粗、B4:C15 居中），不再与二者相同。
+_REPAIRED_EXCEL002_WORKBOOKS = (
+    (
+        "store1.xlsx",
+        5_632,
+        "9fdb36b01e7c12835f080279b0666b2f7e6171eaa05617ef79f9a5d39ae008d7",
+        _XLSX,
+    ),
+    (
+        "store2.xlsx",
+        5_641,
+        "2850627275e5d78efbb26a95d959120218f5eae0a94add74e2f302693a053d1f",
+        _XLSX,
+    ),
+    (
+        "store3.xlsx",
+        5_553,
+        "dc95fc6f4daaa743d053c2a19705565b8e9e4a1ec87a3756af0be5e23f266b0b",
+        _XLSX,
+    ),
+    (
+        "store4.xlsx",
+        5_551,
+        "aecc7c83c35444753b130037322cb6f65fbf77482b90702742baa4f91141dd9f",
+        _XLSX,
+    ),
+)
+
 _COMMON_STORE_WORKBOOKS = (
     (
         "store1.xlsx",
@@ -93,7 +123,7 @@ _TASK_ASSETS: dict[
     ),
     "Operation-FileOperate-BatchOperationExcel-002": (
         "a1510a05-9fca-46ba-b95d-451dd5779194",
-        _COMMON_STORE_WORKBOOKS,
+        _REPAIRED_EXCEL002_WORKBOOKS,
     ),
     "Operation-FileOperate-BatchOperationExcel-003": (
         "fdb089b8-070f-4ccc-9612-e4599db799be",
@@ -932,6 +962,11 @@ _TASK_ASSETS: dict[
 # 只有 SearchAndWrite-007 来自 OSWorld 文件缓存；其他任务仍必须
 # 精确绑定 Lee 仓库与 revision，不允许以宽泛来源 schema 混用。
 _TASK_SOURCE_OVERRIDES: dict[str, tuple[str, str, str]] = {
+    "Operation-FileOperate-BatchOperationExcel-002": (
+        LEE_REPOSITORY,
+        EXCEL002_LEE_REVISION,
+        "benchmark_dataset/a1510a05-9fca-46ba-b95d-451dd5779194",
+    ),
     "Operation-FileOperate-SearchAndWrite-007": (
         XLANG_REPOSITORY,
         XLANG_REVISION,

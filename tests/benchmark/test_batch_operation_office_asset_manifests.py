@@ -22,6 +22,8 @@ from paraguibench.runtime.assets import (
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PINNED_REVISION = "13bf942dfab6f9d71f16f0958f1edd8b436c7afa"
+# Excel-002 初始资产 20260726 重制后的独立发布 revision。
+EXCEL002_PINNED_REVISION = "b5f29e9cb725c80973af55f97b12fd279f066e3a"
 XLANG_PINNED_REVISION = "711e0811642364e7aa8f10a8918367d0b626d578"
 PPTX_MEDIA_TYPE = (
     "application/vnd.openxmlformats-officedocument.presentationml.presentation"
@@ -1861,7 +1863,7 @@ def test_batch_operation_excel_002_resolves_four_workbooks() -> None:
     assert resolved.mode is TaskAssetMode.PINNED_DOWNLOAD_MANIFEST
     manifest = resolved.manifest
     assert manifest is not None
-    assert manifest.source.revision == PINNED_REVISION
+    assert manifest.source.revision == EXCEL002_PINNED_REVISION
     assert manifest.source.base_path == (
         "benchmark_dataset/a1510a05-9fca-46ba-b95d-451dd5779194"
     )
@@ -1871,26 +1873,26 @@ def test_batch_operation_excel_002_resolves_four_workbooks() -> None:
     ] == [
         (
             "store1.xlsx",
-            9_258,
-            "1a5a69985b303f96d18d29d73b2c47653f662403484a36b5761f5635d4153a70",
+            5_632,
+            "9fdb36b01e7c12835f080279b0666b2f7e6171eaa05617ef79f9a5d39ae008d7",
             XLSX_MEDIA_TYPE,
         ),
         (
             "store2.xlsx",
-            9_279,
-            "23f584f69a818fe2dbc5e1dfcaa6ac103464edcb095c5ecf7de2ec50477ccd80",
+            5_641,
+            "2850627275e5d78efbb26a95d959120218f5eae0a94add74e2f302693a053d1f",
             XLSX_MEDIA_TYPE,
         ),
         (
             "store3.xlsx",
-            5_561,
-            "cff0d19540c2e56c6355691c2ac41aafca059e6ce5aa2e9a79bffaa6c0b7c041",
+            5_553,
+            "dc95fc6f4daaa743d053c2a19705565b8e9e4a1ec87a3756af0be5e23f266b0b",
             XLSX_MEDIA_TYPE,
         ),
         (
             "store4.xlsx",
-            5_559,
-            "683d3a4728beb8072649ae50babbf98b5a1a64e280ba2b0770bb264f23428fe7",
+            5_551,
+            "aecc7c83c35444753b130037322cb6f65fbf77482b90702742baa4f91141dd9f",
             XLSX_MEDIA_TYPE,
         ),
     ]
