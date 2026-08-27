@@ -51,7 +51,7 @@
     "src/desktop_env/providers/docker/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "src/desktop_env/providers/docker/manager.py": "879bccb7a1c2a89eb8b94ce6f7fc83f4dc6efa3ad6922654e9fc67d4433c8d7d",
     "src/desktop_env/providers/docker/parallel_manager.py": "ad8af76c47b1efc221ee1de912ecd14b59272a49b045f61242f144db2b8f40bb",
-    "src/desktop_env/providers/docker/provider.py": "02fd21d8010866bff5adec0ce8bacd85a5aa842b8f65172ec34148456b370a9d",
+    "src/desktop_env/providers/docker/provider.py": "22ea05a5ba00df593f59b90965c763b0c2a0816d9fc3993898745b34a695386a",
     "src/desktop_env/providers/docker_server/DOCKER_GUIDELINE.md": "867234c5a926781cc1082285a53f4ad721a8dcd64eb34199206d06a3d00aafe8",
     "src/desktop_env/providers/docker_server/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "src/desktop_env/providers/docker_server/manager.py": "e2433a5585ba1719e5f61bcaa67dd34183f6151c8286a5cb717bb17ad2e8d862",

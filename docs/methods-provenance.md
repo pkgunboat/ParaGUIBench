@@ -220,3 +220,10 @@ SW-007 的 `task_type` 为 `OSWorld脚本` 但 `evaluator_path` 为空、`eval_r
 修正：`task_type` 改为 `self` 对齐 002/004/006；`benchmark/tasks` 副本同步；
 `onlyoffice/contracts.py` 的两个闭集把 007 从 OSWorld 集移入 OnlyOffice 集（5/5），
 `test_task_routing.py` 断言同步。parity 清单哈希已更新。dev 库同文件同改动回填。
+
+## 2026-08-27 DockerProvider 容器清理补 v=True（公开 `post-b76e4c6`）
+
+`stop_emulator` 与异常路径的 `container.remove()` 未带 `v=True`，osworld 镜像
+`VOLUME /storage` 的匿名卷随每个 VM 泄漏（服务器实测累计 13,540 个孤儿卷）。
+补上 `v=True` 两处，与 QA/webmall 路径既有的 `docker rm -fv` 语义对齐。
+parity 清单哈希已更新；dev 库同文件同改动回填。
