@@ -1,6 +1,6 @@
 # OSWorld Linux 从源码部署
 
-本文档给出 ParaGUIBench 0.2 preview 的最小可复现路径：从公开源码 checkout
+本文档给出 ParaGUIBench 0.3 preview 的最小可复现路径：从公开源码 checkout
 创建隔离 Python 环境，准备固定 OSWorld 镜像和任务资产，通过全部部署门禁，
 再对首个候选任务 `InformationRetrieval-FileSearch-Readonly-001`
 执行带 RunStore v2 版本向量的真实环境复验。

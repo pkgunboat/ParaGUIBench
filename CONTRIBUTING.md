@@ -1,6 +1,6 @@
 # Contributing to ParaGUIBench
 
-ParaGUIBench is currently a `0.2` preview. Contributions are welcome, but a new task
+ParaGUIBench is currently a `0.3` preview. Contributions are welcome, but a new task
 definition is not considered locally runnable until its assets, environment protocol,
 and evaluator are declared independently. `live_validated` additionally requires
 versioned live evidence; its absence must not be confused with local executability.

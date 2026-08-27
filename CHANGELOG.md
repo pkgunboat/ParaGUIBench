@@ -15,8 +15,30 @@ As of the latest entry, all 233 canonical tasks are locally declared and
 
 ## [Unreleased]
 
+## [0.3] - 2026-08-26
+
 ### Fixed
 
+- Excel-002 always-passed half of its score before any agent action: the four
+  published initial workbooks already had A3:C3 bolded and column B
+  right-aligned. Repaired workbooks (bold removed, B4:C15 centered) were
+  published to the dataset and pinned to immutable revision `b5f29e9c`; the
+  asset manifest, deterministic generator, runtime-support digest table, and
+  parity baseline were updated in lockstep. Verified live: the do-nothing
+  score drops from 0.75 to 0.0.
+- Excel-005's historical answer workbook carried a decimal-shift typo
+  (`1.2093` instead of `12.093` at `store1.xlsx!B8`). The corrected answer is
+  published at `answer_files/cccf5baf…/store1.xlsx` under the same revision.
+- Settings-001's published gold frame actually sat at ~9.04 s while the
+  instruction asks for the 00:08 frame. A re-extracted 8.008 s frame is
+  published at `answer_files/9b5220d5…/landscape.png`; the two evaluator
+  scripts and the dataviewer copy now point at it and raise the image
+  score threshold 0.75 → 0.85.
+- SearchAndWrite-007 declared `task_type=OSWorld脚本` with an empty
+  `evaluator_path`, which excluded it from OnlyOffice template upload and made
+  evaluation fail with `无共享 xlsx 文件可评估`. Its `task_type` is now `self`
+  (aligned with 002/004/006) and the OnlyOffice/OSWorld closed task sets moved
+  from 4/6 to 5/5.
 - Sorting evaluation for `Operation-FileOperate-BatchOperationExcel-003` failed
   for every model regardless of agent behavior. Verified against the source
   workbooks: headers sit on row 3 and differ by language
@@ -38,8 +60,21 @@ As of the latest entry, all 233 canonical tasks are locally declared and
   match mode changed from `exact` to `keyed_numeric_set` so reordering within a
   group is no longer scored as an error.
 
+### Verified
+
+- Live smoke evidence now covers all five pipelines with zero evaluator
+  errors: Operation (6 tasks incl. the three repaired asset chains), QA
+  (1 task live; 334 adversarial probe cases offline), SearchWrite (10/10
+  tasks auto-evaluated after the fixes above), WebMall (5 representative
+  task types), WebNavigate (1 task live). Operational note: the
+  SearchWrite runtime consumes gold answer files from a local
+  `hf_data/answer_files/` cache that is not auto-downloaded; SearchAndWrite-008
+  requires this cache to be pre-populated before a batch run.
+
 ### Changed
 
+- Documentation, website, and packaging metadata now consistently state 0.3
+  preview.
 - Baseline advanced to the complete upstream evaluator fix line (dev `028ddd0f`).
   A larger, previously uncommitted fix line from 2026-07-14 to 07-28 superseded
   the two partial lines merged on 2026-08-21; fixes unique to those lines were
@@ -59,8 +94,6 @@ As of the latest entry, all 233 canonical tasks are locally declared and
   `gold_snapshot_id`, `gold_snapshot_path`, and `gold_catalog_sha256`, the last
   defined as the SHA-256 over the four stores' catalog JSON hashes joined as
   `port:hash` in ascending port order, recomputable from the snapshot file.
-- Documentation, website, and packaging metadata now consistently state 0.2
-  preview; several files still declared 0.1.
 
 ### Added
 
@@ -115,6 +148,7 @@ As of the latest entry, all 233 canonical tasks are locally declared and
   single-VM smoke evidence exists but carries no versioned run vector, so it is
   retained only as a historical unversioned record.
 
-[Unreleased]: https://github.com/pkgunboat/ParaGUIBench/compare/v0.2...HEAD
+[Unreleased]: https://github.com/pkgunboat/ParaGUIBench/compare/v0.3...HEAD
+[0.3]: https://github.com/pkgunboat/ParaGUIBench/compare/v0.2...v0.3
 [0.2]: https://github.com/pkgunboat/ParaGUIBench/compare/v0.1...v0.2
 [0.1]: https://github.com/pkgunboat/ParaGUIBench/releases/tag/v0.1

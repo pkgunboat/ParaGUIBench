@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "paraguibench"
-version = "0.2.0.dev0"
+version = "0.3.0.dev0"
 description = "A benchmark and execution framework for parallel GUI agents"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"

@@ -1,6 +1,6 @@
 # Installation
 
-ParaGUIBench 0.2 preview has two installation layers. **Core** installs the
+ParaGUIBench 0.3 preview has two installation layers. **Core** installs the
 benchmark contracts, framework, evaluators, RunStore, and CLI without GUI
 runtime dependencies. **Live OSWorld** adds the model client, image handling,
 HTTP client, and CDP probe client needed by the candidate Linux/KVM execution

@@ -6,12 +6,14 @@
 GUI Agents》**（超越串行交互：GUI 智能体并行执行与协调基准）的官方项目仓库。
 
 > [!IMPORTANT]
-> 当前版本是 **0.2 preview**。相对 0.1，原项目的 **GUI-Only** 与 **ParaGUI**
-> 两个方法已作为权威实现迁入（方法代码与源项目逐字节一致，由 parity manifest
-> 锁定），并已在真实宿主上端到端验证跑通：每个方法各运行一个任务走完
-> VM 装配、Agent 循环与类型化评价的完整管线，全程零中断。完整任务集的全集
-> 验证尚未进行，将通过后作为正式版发布的门槛。正式的 `live_validated`
-> 晋级链（runtime-support manifest）保持不变：目前仍无任务标记为
+> 当前版本是 **0.3 preview**。在 0.2 方法迁移（GUI-Only 与 ParaGUI 作为权威
+> 实现，逐字节一致并由 parity manifest 锁定）的基础上，0.3 收紧评价链路：
+> Excel-002 重制初始工作簿、Excel-005 修正答案与 Settings-001 重提 gold 已
+> 发布并钉定到不可变数据集 revision；修复了导致 SearchAndWrite-007 评价失败的
+> 任务路由缺陷；五类管线（QA、WebMall、WebNavigate、Operation、SearchWrite）
+> 均有零评价器错误的实跑冒烟证据。完整任务集的全集验证尚未进行，将通过后
+> 作为正式版发布的门槛。正式的 `live_validated` 晋级链（runtime-support
+> manifest）保持不变：目前仍无任务标记为
 > `live_validated`。任务定义已发布不代表其环境、资产、评价器和 Agent
 > System 已能在当前 preview 中执行。
 
