@@ -1348,21 +1348,44 @@ def stage1_initialize_with_flatten(
     if not prepare_url:
         log.warning("任务配置缺少 prepare_script_path，将跳过下载步骤但继续执行任务")
 
-    # 通过 SSH 在宿主机上创建共享目录
-    log.info("通过 SSH 在宿主机上创建共享目录: %s", config.shared_host_dir)
+    # 通过 SSH 在宿主机上创建共享目录，并做写能力探测（fail-fast）：
+    # 目录存在但属主不符（例如曾以 sudo 运行留下 root 目录）、只读挂载等
+    # 情况都会在此立刻失败并给出属主信息，而不是等到任务中途爆 Errno 13。
+    log.info("通过 SSH 在宿主机上准备共享目录: %s", config.shared_host_dir)
     _creds = get_ssh_credentials(config.vm_ip)
+    probe_cmd = (
+        f"mkdir -p {config.shared_host_dir} 2>/dev/null; "
+        f"chmod 777 {config.shared_host_dir} 2>/dev/null; "
+        f"if echo ok > {config.shared_host_dir}/.write_probe 2>/dev/null "
+        f"&& rm -f {config.shared_host_dir}/.write_probe 2>/dev/null; "
+        f"then echo PROBE_OK; else "
+        f"stat -c 'owner=%U group=%G mode=%a' {config.shared_host_dir} 2>&1; "
+        f"echo PROBE_FAIL; fi"
+    )
     try:
         result = run_ssh_command(
             _creds["ssh_password"], _creds["ssh_opts"], _creds["ssh_host"],
-            f"mkdir -p {config.shared_host_dir} && chmod 777 {config.shared_host_dir}",
+            probe_cmd,
             timeout=30,
         )
-        if result.returncode == 0:
-            log.info("共享目录创建成功")
+        probe_output = (result.stdout or "").strip()
+        if "PROBE_OK" in probe_output:
+            log.info("共享目录就绪（写入探测通过）")
         else:
-            log.warning("共享目录创建失败: %s", result.stderr)
+            detail = probe_output.replace("PROBE_FAIL", "").strip() or (
+                result.stderr or "未知原因"
+            )
+            log.error(
+                "共享目录不可写: %s（%s）。请确保运行 SSH 用户对该目录有写"
+                "权限：属主不符时用 chown 修正或更换 --shared-base-dir；不要"
+                "以 sudo 运行 runner，否则会留下 root 属主目录。",
+                config.shared_host_dir,
+                detail,
+            )
+            return False
     except Exception as exc:
-        log.warning("创建共享目录异常: %s", exc)
+        log.error("共享目录准备异常: %s", exc)
+        return False
 
     # 重建容器
     rebuilt = rebuild_containers_parallel(config, log)

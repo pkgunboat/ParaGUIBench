@@ -160,6 +160,15 @@ python scripts/security/scan_repository.py --root .
 运行日志、资产缓存、VM 和 secret 均应放在源码 checkout 外。下面只创建目录和
 空 secret 文件，不包含任何 endpoint 或 key 值：
 
+**shared 目录两条纪律**（`--shared-base-dir`，各 runner 会在其下建 `group_N`
+子目录并 sshfs 挂入 VM）：
+
+1. **该目录必须由运行 runner 的 SSH 用户可写**。每个任务初始化时会做写入
+   探测；不可写会在开跑最初几秒失败并打印目录属主（`owner=...`），属主不符时
+   用 `chown` 修正或更换 `--shared-base-dir`。
+2. **不要以 sudo 运行 runner**。sudo 会在 shared 目录下留下 root 属主的
+   `group_N` 子目录，之后普通用户的所有任务在该组上都会失败。
+
 ```bash
 export PARAGUIBENCH_ASSET_CACHE_ROOT="${XDG_CACHE_HOME:-$HOME/.cache}/paraguibench/assets"
 export PARAGUIBENCH_GOLD_CACHE_ROOT="${XDG_CACHE_HOME:-$HOME/.cache}/paraguibench/gold"

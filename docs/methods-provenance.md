@@ -227,3 +227,12 @@ SW-007 的 `task_type` 为 `OSWorld脚本` 但 `evaluator_path` 为空、`eval_r
 `VOLUME /storage` 的匿名卷随每个 VM 泄漏（服务器实测累计 13,540 个孤儿卷）。
 补上 `v=True` 两处，与 QA/webmall 路径既有的 `docker rm -fv` 语义对齐。
 parity 清单哈希已更新；dev 库同文件同改动回填。
+
+## 2026-08-28 shared 目录写探测 fail-fast（公开 `post-e5673a7`）
+
+四个 runner 的共享目录准备从"mkdir+chmod 失败仅告警继续"升级为写入探测：
+创建后实际写入并删除探针文件，失败立即中断（QA/selfop 返回 False，
+WebMall/WebNavigate 记 `shared_dir_not_writable` 中断），错误信息含
+`stat` 属主与修正指引（chown / 更换 --shared-base-dir / 勿用 sudo）。
+消除 group 目录属主不符时任务中途爆 Errno 13 的晚失败。部署文档
+osworld-linux.md 同步两条纪律。dev 库同文件同改动回填。

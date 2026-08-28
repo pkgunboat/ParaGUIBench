@@ -1471,14 +1471,40 @@ def run_single_webmall_task(
         vm_ports = config.get_server_ports()
         register_group_ports(group_id, vm_ports)
 
-        # 确保远端共享目录存在
+        # 确保远端共享目录存在且可写（fail-fast 写入探测）：
+        # 目录存在但属主不符（如曾以 sudo 运行留下 root 目录）、只读挂载等
+        # 情况在此立刻失败并给出属主信息，而不是等到任务中途爆 Errno 13。
         _creds = get_ssh_credentials(config.vm_ip)
-        mkdir_cmd = f"{_creds['conda_activate']} && mkdir -p {config.shared_host_dir}"
-        subprocess.run(
+        probe_cmd = (
+            f"{_creds['conda_activate']} && "
+            f"mkdir -p {config.shared_host_dir} 2>/dev/null; "
+            f"chmod 777 {config.shared_host_dir} 2>/dev/null; "
+            f"if echo ok > {config.shared_host_dir}/.write_probe 2>/dev/null "
+            f"&& rm -f {config.shared_host_dir}/.write_probe 2>/dev/null; "
+            f"then echo PROBE_OK; else "
+            f"stat -c 'owner=%U group=%G mode=%a' {config.shared_host_dir} 2>&1; "
+            f"echo PROBE_FAIL; fi"
+        )
+        probe_result = subprocess.run(
             ["sshpass", "-p", _creds["ssh_password"], "ssh"]
-            + _creds["ssh_opts"] + [_creds["ssh_host"], mkdir_cmd],
+            + _creds["ssh_opts"] + [_creds["ssh_host"], probe_cmd],
             capture_output=True, text=True, timeout=30,
         )
+        probe_output = (probe_result.stdout or "").strip()
+        if "PROBE_OK" not in probe_output:
+            detail = probe_output.replace("PROBE_FAIL", "").strip() or (
+                probe_result.stderr or "未知原因"
+            )
+            log.error(
+                "共享目录不可写: %s（%s）。请确保运行 SSH 用户对该目录有写"
+                "权限：属主不符时用 chown 修正或更换 --shared-base-dir；不要"
+                "以 sudo 运行 runner，否则会留下 root 属主目录。",
+                config.shared_host_dir,
+                detail,
+            )
+            task_result["interrupted"] = True
+            task_result["interrupt_reason"] = "shared_dir_not_writable"
+            return task_result
 
         # 3. 重建容器 + 初始化 VM
         if not reinitialize_vms_parallel(
