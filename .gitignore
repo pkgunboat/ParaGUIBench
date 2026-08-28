@@ -28,8 +28,9 @@ configs/deploy.yaml
 /downloads/
 *.log
 
-# 本地 live-validation 执行计划包含尚未授权的证据编排，不进入发布闭集。
-/PARAGUIBENCH_LIVE_VALIDATION_EXECUTION_PLAN.local.md
+# 本地工作文档（执行计划、进度记录、扫描结论）含尚未授权的证据编排与内网事实，
+# 不进入发布闭集。约定以 .local.md 结尾。
+*.local.md
 
 # OnlyOffice 单实例的本地 compose 环境与误建在仓库内的运行状态。
 /deploy/onlyoffice/.env

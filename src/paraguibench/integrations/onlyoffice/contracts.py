@@ -69,7 +69,7 @@ def uses_onlyoffice_shared_document(task_id: str) -> bool:
     输入参数：
         task_id：canonical 任务 ID。
     输出返回值：
-        属于 4 项 OnlyOffice 任务时为 True，否则为 False。
+        属于 5 项 OnlyOffice 任务时为 True，否则为 False。
     """
 
     return task_id in ONLYOFFICE_SHARED_DOCUMENT_TASK_IDS
