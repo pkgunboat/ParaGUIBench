@@ -140,7 +140,7 @@ python -m paraguibench.methods_runner <category> [原 runner 参数...]
 | 方法选择 | `ABLATION_AGENT_MODE` / `--agent-mode` | `plan`（ParaGUI）或 `gui_only`；gui_only 模式仅要求 GUI worker 凭据 |
 | GUI agent 选择 | `ABLATION_GUI_AGENT` / `--gui-agent` | `qwen` |
 | 跳过 conda 检查 | `REQUIRED_CONDA_ENV_STRICT=0` | 服务器 venv 部署时使用 |
-| 宿主机 SSH 用户 | `BENCH_SSH_USER` | 宿主机登录名（如 `yuzedong`）；密码经 `BENCH_SSH_PASSWORD` 提供（sudo docker 与 guest sshfs 回挂均使用） |
+| 宿主机 SSH 用户 | `BENCH_SSH_USER` | 宿主机登录名（如 `yuzedong`）；密码经 `BENCH_SSH_PASSWORD` 提供——**必须是部署机本机登录密码**，三层用途：宿主 `sudo -S docker`（容器构建/重建）、runner SSH 到 `127.0.0.1`（已配公钥免密时密码不参与认证，但变量仍须非空）、guest sshfs 回挂共享目录（密码认证到宿主 sshd，无法用密钥绕过）。含特殊字符的密码写入 env 文件时须单引号包裹（如 ``BENCH_SSH_PASSWORD='`'``），并经 `set -a` source 导出 |
 | VM 就绪等待 | `ABLATION_VM_READY_WAIT` / `..._REBUILT` / `..._PROBE_TIMEOUT` | 高负载宿主机上建议 300/600/10 |
 
 **参数格式注意**：`--vm-memory` 必须带单位（如 `8G`）。无单位的裸数字会被镜像内
@@ -153,8 +153,11 @@ QEMU 包装器按 MiB 解释（`-m 8` = 8 MiB），guest 永远无法完成引�
   依赖构建，`ensure_docker_image_with_sshfs`）。
 - qcow2：历史 6d 镜像（`~/.local/share/paraguibench/osworld/6d8056d8…/Ubuntu.qcow2`），
   guest 内 pyautogui/pyperclip 已实测可用（2026-08-19 探针）。
-- 注意：开源默认 6bf archive 镜像 guest 内缺 pyautogui，打字类任务不可用；
-  两个组合内容不同（见 README 的镜像身份说明）。
+- 注意：开源默认 6bf archive 镜像 guest 内 pyautogui 已于 2026-08-28
+  全新部署实测确认在位（click/截图经动作服务器正常执行，五类管线各 1 任务
+  端到端跑通；打字动作该轮未触发，键盘任务建议先单任务探针）；早于该日期
+  的"6bf 缺 pyautogui"记录不再成立。6d 与 6bf 两个组合内容不同
+  （见 README 的镜像身份说明）。
 
 ## 与公开实现的关系
 

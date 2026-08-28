@@ -113,7 +113,9 @@ versioned receipt are complete, and the CLI must not present it as live-supporte
 
 ## Quick start from a source checkout
 
-The package supports Python 3.11--3.13. A live OSWorld run additionally requires Linux
+The package supports Python 3.11--3.13. Ubuntu/Debian hosts need the venv component
+first (`sudo apt install python3.12-venv`); without it `python3.12 -m venv` fails on
+ensurepip. A live OSWorld run additionally requires Linux
 x86-64, Docker, writable `/dev/kvm`, sufficient local storage for the VM image, and an
 OpenAI-compatible model service.
 
@@ -123,7 +125,7 @@ cd ParaGUIBench
 python3.12 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -e '.[live,dev,artifact]'
+python -m pip install -e '.[live,methods,dev,artifact]'
 python -m pytest
 python scripts/benchmark/validate_release.py --repo-root .
 python scripts/benchmark/validate_runtime_support.py --repo-root .

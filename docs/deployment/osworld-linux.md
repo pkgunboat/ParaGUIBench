@@ -109,7 +109,7 @@ test ! -e "$VENV_ROOT"
 python3.12 -m venv "$VENV_ROOT"
 . "$VENV_ROOT/bin/activate"
 python -m pip install --upgrade pip
-python -m pip install '.[live,operation,artifact,dev]'
+python -m pip install '.[live,operation,artifact,dev,methods]'
 PYTHONDONTWRITEBYTECODE=1 python -B -m pytest -p no:cacheprovider
 python -B scripts/benchmark/validate_release.py --repo-root .
 python -B scripts/benchmark/validate_runtime_support.py --repo-root .
@@ -127,7 +127,10 @@ python -B scripts/security/scan_repository.py --root .
 
 建议使用 Linux x86-64 主机，并满足以下条件：
 
-- Python 3.11、3.12 或 3.13；参考部署使用 Python 3.12。
+- Python 3.11、3.12 或 3.13；参考部署使用 Python 3.12。Ubuntu/Debian
+  需先安装 venv 组件（`sudo apt install python3.12-venv`），否则
+  `python3.12 -m venv` 因缺 ensurepip 直接失败；无 sudo 权限时可改用
+  自带 ensurepip 的发行版 Python（如 conda base）。
 - Docker daemon 可用，当前用户能运行 `docker`。
 - `/dev/kvm` 存在且当前用户可读写。
 - VM 归档、解压镜像和容器层所需的充足本地磁盘空间。
@@ -142,7 +145,7 @@ cd ParaGUIBench
 python3.12 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -e '.[live,dev,artifact]'
+python -m pip install -e '.[live,methods,dev,artifact]'
 
 python -m pytest
 python scripts/benchmark/validate_release.py --repo-root .

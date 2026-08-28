@@ -10,7 +10,10 @@ ParaGUIBench 0.3 preview 将安装边界分成两层。**Core** 包含 benchmark
 WebMall Checkout/EndToEnd 在该浏览器层上还需要四个已部署商店、WP-CLI
 reader target 和分布式租约 coordinator。
 
-先从公开仓库构建唯一 wheel：
+先从公开仓库构建唯一 wheel。Ubuntu/Debian 需先安装 venv 组件
+（`sudo apt install python3-venv`），否则下文所有 `python3 -m venv` 都会因缺
+ensurepip 失败；无 sudo 权限时可改用自带 ensurepip 的发行版 Python
+（如 conda base）：
 
 ```bash
 git clone https://github.com/pkgunboat/ParaGUIBench.git
@@ -158,12 +161,12 @@ set +x
 `paraguibench` 进程，不创建 checkout 内配置，也不要通过 `env`、
 `printenv` 或 shell tracing 检查值。
 
-贡献者可用同一个 wheel 安装 `live,dev,artifact` extra，并运行全部公开门禁：
+贡献者可用同一个 wheel 安装 `live,dev,artifact,methods` extra，并运行全部公开门禁：
 
 ```bash
 python3 -m venv .venv-dev
 .venv-dev/bin/python -m pip install \
-  "paraguibench[live,dev,artifact] @ file://${WHEEL_PATH}"
+  "paraguibench[live,dev,artifact,methods] @ file://${WHEEL_PATH}"
 .venv-dev/bin/python -m pytest
 .venv-dev/bin/python scripts/benchmark/validate_release.py --repo-root .
 .venv-dev/bin/python scripts/benchmark/validate_runtime_support.py --repo-root .
@@ -171,7 +174,9 @@ python3 -m venv .venv-dev
 ```
 
 `dev` extra 提供 pytest 以及测试套件必需的 `python-docx`、`openpyxl` 导入；
-`artifact` 额外启用文档格式 evaluator 测试，缺省时这些测试会跳过。
+`artifact` 额外启用文档格式 evaluator 测试，缺省时这些测试会跳过；`methods`
+提供原方法 runner 的运行时导入（`psutil`、`docker`、`pandas` 等）——缺省时
+methods 的 1 个 smoke import 测试会失败，且 `methods_runner` 本身无法运行。
 
 公共 CI 会在 Python 3.11、3.12 和 3.13 上重复 wheel-first 安装、CLI、
 测试与三个 validator，但不接收 API key，也不执行真实 GUI E2E。详细依赖

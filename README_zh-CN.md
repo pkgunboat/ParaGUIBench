@@ -96,7 +96,10 @@ runtime support manifest 是两层就绪度的机器可读权威记录。
 
 ## 从源码 checkout 开始
 
-Python 支持范围为 3.11–3.13。真实 OSWorld 运行还需要 Linux x86-64、Docker、当前用户可读写的
+Python 支持范围为 3.11–3.13。Ubuntu/Debian 需先安装 venv 组件
+（`sudo apt install python3.12-venv`），否则 `python3.12 -m venv` 会因缺
+ensurepip 直接失败；无 sudo 权限时可改用自带 ensurepip 的发行版 Python
+（如 conda base）。真实 OSWorld 运行还需要 Linux x86-64、Docker、当前用户可读写的
 `/dev/kvm`、足以容纳 VM 镜像的本地磁盘，以及 OpenAI-compatible 模型服务。
 
 ```bash
@@ -105,7 +108,7 @@ cd ParaGUIBench
 python3.12 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -e '.[live,dev,artifact]'
+python -m pip install -e '.[live,methods,dev,artifact]'
 python -m pytest
 python scripts/benchmark/validate_release.py --repo-root .
 python scripts/benchmark/validate_runtime_support.py --repo-root .

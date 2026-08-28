@@ -18,6 +18,11 @@ and the distributed-lease coordinator described below.
 
 ## Clone and build one wheel
 
+Ubuntu/Debian hosts need the venv component first
+(`sudo apt install python3-venv`); without it every `python3 -m venv` below
+fails on ensurepip. Hosts without sudo can substitute a distribution Python
+that bundles ensurepip (for example a conda base interpreter).
+
 ```bash
 git clone https://github.com/pkgunboat/ParaGUIBench.git
 cd ParaGUIBench
@@ -204,7 +209,7 @@ gates:
 ```bash
 python3 -m venv .venv-dev
 .venv-dev/bin/python -m pip install \
-  "paraguibench[live,dev,artifact] @ file://${WHEEL_PATH}"
+  "paraguibench[live,dev,artifact,methods] @ file://${WHEEL_PATH}"
 
 .venv-dev/bin/python -m pytest
 .venv-dev/bin/python scripts/benchmark/validate_release.py --repo-root .
@@ -214,7 +219,9 @@ python3 -m venv .venv-dev
 
 The `dev` extra carries pytest plus the `python-docx` and `openpyxl` imports the
 test suite requires; `artifact` additionally enables the document-format
-evaluator tests that otherwise skip.
+evaluator tests that otherwise skip; `methods` carries the vendored methods
+runners' runtime imports (`psutil`, `docker`, `pandas`, and friends) — without
+it one methods smoke-import test fails and `methods_runner` itself cannot run.
 
 The public workflow repeats this wheel-first process on Python 3.11, 3.12, and
 3.13. It never receives a model or lease credential and never performs Live
