@@ -15,13 +15,24 @@ EVALUATION_DOC = REPO_ROOT / "docs" / "evaluation" / "protocol.md"
 ARCHITECTURE_DOC = REPO_ROOT / "docs" / "architecture" / "dependency-tree.md"
 
 
+def _conda_only_in_prose(*texts: str) -> None:
+    """conda 只允许作为无 sudo 回退解释器在正文提及，不得进入任何命令块。"""
+
+    for text in texts:
+        for block in re.findall(r"```.*?```", text, flags=re.DOTALL):
+            assert (
+                "conda" not in block.lower()
+            ), f"conda 出现在命令块中，安装路径不得依赖 conda：{block[:120]!r}"
+
+
 def test_install_docs_define_clean_core_and_live_osworld_paths() -> None:
     """功能：确认其他用户可从文档得到两层干净 wheel 安装路径。
 
     输入参数：
         无；读取公开安装入口和安装依赖树。
     输出返回值：
-        无；断言 Python 范围、venv/wheel、验证器、secret 边界和无 conda 依赖。
+        无；断言 Python 范围、venv/wheel、验证器、secret 边界，conda 仅可
+        作为无 sudo 回退在正文提及且不得进入命令块。
     """
 
     install_text = INSTALL_DOC.read_text(encoding="utf-8")
@@ -47,7 +58,7 @@ def test_install_docs_define_clean_core_and_live_osworld_paths() -> None:
         "pytest",
     ):
         assert required_text in combined
-    assert "conda" not in combined.lower()
+    _conda_only_in_prose(install_text, dependency_text)
     assert "base environment" not in combined.lower()
     assert (
         re.search(
@@ -64,7 +75,8 @@ def test_chinese_install_guide_preserves_the_same_security_boundary() -> None:
     输入参数：
         无；读取中文公开指南。
     输出返回值：
-        无；关键命令和安全协议缺失时失败，且不得引入旧环境依赖。
+        无；关键命令和安全协议缺失时失败；conda 仅可作为无 sudo 回退在
+        正文提及且不得进入命令块。
     """
 
     guide = CHINESE_INSTALL_DOC.read_text(encoding="utf-8")
@@ -81,7 +93,7 @@ def test_chinese_install_guide_preserves_the_same_security_boundary() -> None:
         "不执行真实 GUI E2E",
     ):
         assert required_text in guide
-    assert "conda" not in guide.lower()
+    _conda_only_in_prose(guide)
 
 
 def test_install_and_deployment_docs_preserve_evaluator_gold_boundary() -> None:
