@@ -62,5 +62,5 @@ RunStore 只记录 planner/worker 模型 ID、环境变量名、成本上限与�
 计分。所以 `execution=SUCCEEDED` 只表示链路执行完成，不表示答案正确；只有
 `evaluation=PASSED` 与 `score=1.0` 才表示该任务、模型和配置组合在该次
 Attempt 中命中评价协议，仍不能推导整体 benchmark 准确率。
-公开 0.1 不附带历史冒烟运行日志；一次实验 Attempt 的终态也不能把任务晋升为
+历史预览版（公开 0.1）不附带历史冒烟运行日志；一次实验 Attempt 的终态也不能把任务晋升为
 `live_validated`。

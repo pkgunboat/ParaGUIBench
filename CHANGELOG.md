@@ -15,6 +15,59 @@ As of the latest entry, all 233 canonical tasks are locally declared and
 
 ## [Unreleased]
 
+### Fixed
+
+- The OnlyOffice SearchAndWrite split is now stated as 5/5 everywhere: five
+  tasks (`002`, `004`, `006`, `007`, `008`) use the local DocumentServer and
+  the share service, and the other five stay on OSWorld/LibreOffice. Five
+  stale 4/6 statements (EN/zh README, docs index, installation dependency
+  tree, and the `deploy/onlyoffice` README) predated the 0.3 SW-007 routing
+  fix and could cause `007` to fail in batch runs without a provisioned
+  DocumentServer. A sixth stale statement in the architecture dependency
+  tree was caught in final review and fixed with the rest.
+- `benchmark/provenance/README.md` now states the actual FileSearch asset
+  counts: 12 download-only manifests, 11 of them generator-managed pinning
+  the verified MIME type of their 32 files (was 10/9/30).
+- The legacy `deploy/methods-services/onlyoffice` stack no longer dead-ends:
+  `start_document_server.sh` fails fast with clone guidance when the
+  unshipped upstream `Docker-DocumentServer/` directory is missing, its
+  stale helper echoes (`create_empty_docs.py`, `create_document.html`) are
+  removed, the directory README describes the script correctly (docker
+  compose launcher, not "Flask directly"), and the historical Chinese
+  install guide carries a legacy banner pointing to the supported paths.
+- `src/parallel_benchmark/config/README.md` no longer lists the nonexistent
+  `plan_agent_multi_code.py` as an updated file.
+
+### Removed
+
+- 23 dead files with zero functional references (verified by repo-wide
+  reference audit): the one-shot `pipeline_implicit_ppt003_assets.py`
+  migration script, six unused `parallel_benchmark/utils` modules, three
+  unused `prompts` modules, the superseded `plan_agent.py` and
+  `osworld_tools_simple.py`, `multi_code_agent_registry.py`, the
+  `OSWorld_MCP_TOOLS` example sources `os.py`/`google_chrome.py`, four
+  viewer scripts in `dataviewer`, the two legacy `.py` modules under
+  `dataviewer/backup_v1/`, the self-described local
+  manual script `metrics/test_comprehensive_local.py`, and the completed
+  one-shot `pipelines/migrate_legacy.py`. The methods parity manifest
+  shrinks accordingly (919 → 896 locked files); the experiment-orchestration
+  subtree (`run_ablation.py` and its pipelines, now registered in
+  `docs/methods-provenance.md`) is intentionally kept.
+
+### Changed
+
+- The `methods` extra now declares seven third-party packages that kept
+  legacy modules import at module scope (`backoff`, `matplotlib`, `anthropic`,
+  `pydantic`, `scipy`, `omegaconf`, `requests_toolbelt`); previously those
+  imports only worked in the original dev environment.
+- The relocated OSWorld evaluator regression tests
+  (`tests/evaluation/test_osworld_evaluator_regressions.py`, previously
+  uncollected under `src/`) are collected again; the multi-VM sidecar test
+  was patched to stub the pre-download `_remote_file_status` probe added in
+  August.
+- CI installs the `onlyoffice` extra so the share-server contract tests run
+  instead of silently skipping on the missing `flask` import.
+
 ## [1.0] - 2026-09-07
 
 ### Verified

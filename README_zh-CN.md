@@ -200,8 +200,8 @@ gold 私有缓存应位于源码 checkout 外；若误建在仓库内，也会�
 `paraguibench inspect --diagnostics` 只追加固定版本身份和枚举化失败阶段，不输出自由格式 details。
 无外部文件的任务走显式零资产路径；非空 legacy 资产引用在迁移前继续 fail-closed。
 
-SearchAndWrite 中只有 `002`、`004`、`006`、`008` 依赖本机 OnlyOffice
-DocumentServer 与 ParaGUIBench share service；其余 6 项仍走 OSWorld / LibreOffice。
+SearchAndWrite 中只有 `002`、`004`、`006`、`007`、`008` 依赖本机 OnlyOffice
+DocumentServer 与 ParaGUIBench share service；其余 5 项仍走 OSWorld / LibreOffice。
 第一版只承诺单实例实验室部署。单元测试通过不等于真实编辑服务可用，也不等于这些
 任务已经 `live_validated`。部署命令见
 [OnlyOffice 单实例部署](docs/deployment/onlyoffice.md)。

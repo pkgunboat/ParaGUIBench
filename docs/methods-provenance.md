@@ -129,6 +129,12 @@ python -m paraguibench.methods_runner <category> [原 runner 参数...]
 `runpy` 原样执行，不改动原 runner 行为。公开 CLI（`paraguibench run` 等）保留为
 开源发布面；两个方法的权威实现以本目录迁移代码为准。
 
+消融/正式实验编排入口（未被 CI 或公开 CLI 调用，属实验工具面）：
+`python src/pipelines/run_ablation.py --conditions <c> [--mode full|ablation]
+[--pipelines qa webmall webnavigate operation searchwrite]`——直接 import
+五个单条件 Pipeline 类；`master_tool.py`/`master_report.py` 为配套的
+跨 condition 汇总表/报告工具。
+
 ## 运行环境映射（不改代码，只设环境变量）
 
 | 用途 | 环境变量 | 说明 |
@@ -239,3 +245,39 @@ WebMall/WebNavigate 记 `shared_dir_not_writable` 中断），错误信息含
 `stat` 属主与修正指引（chown / 更换 --shared-base-dir / 勿用 sudo）。
 消除 group 目录属主不符时任务中途爆 Errno 13 的晚失败。部署文档
 osworld-linux.md 同步两条纪律。dev 库同文件同改动回填。
+
+## 2026-09-07 死代码清理（1.0 后批次，23 文件删除 + 1 文件移位）
+
+发布库全仓库引用审计后，删除 23 个零功能引用文件（全部仅余 parity
+manifest 哈希锁或零痕迹），parity 清单同步缩减至 896 项：
+
+- `scripts/benchmark/pipeline_implicit_ppt003_assets.py`：一次性资产迁移
+  脚本，全仓库（代码/文档/CI/manifest）零引用。
+- `parallel_benchmark/utils/`：json_logger、plan_view、pyautogui_code_parser、
+  recording_manager、trajectory_exporter、vlm_recoder（均无 importer）。
+- `parallel_benchmark/prompts/`：code_agent_prompts、gui_agent_prompts、
+  plan_agent_prompt（末者唯一 importer 为同批删除的 plan_agent.py）。
+- `parallel_benchmark/parallel_agents/`：plan_agent（已被
+  plan_agent_thought_action 取代）、osworld_tools_simple。
+- `parallel_benchmark/parallel_agents_as_tools/`：multi_code_agent_registry、
+  OSWorld_MCP_TOOLS 示例源 os.py/google_chrome.py（ADD_TOOLS_README 的复制
+  来源说明同步改为指向上游仓库）。`config/README.md` 同步删除不存在的
+  `plan_agent_multi_code.py` 列表项。两处 README 属锁定树内文本，parity
+  哈希随本批次更新。
+- `parallel_benchmark/dataviewer/`：visualizer、osworld_viewer、migrate_to_v2、
+  flow_builder_template、backup_v1/ 的两个遗留 .py（backup_v1 的 json 数据
+  与上层 execution_recorder/record_template
+  及 OSWorld/examples_zh 数据仍活跃，未动）。
+- `eval/test_osworld_evaluator_regressions.py`：真实 pytest 回归（多 VM
+  文件下载、metric 合取），原位置 pytest 不收集——移入
+  `tests/evaluation/` 收编而非删除；移入时补 monkeypatch
+  `_remote_file_status`（该回归未跟上 2026-08 下载前探测加固，
+  补丁后 2 用例全部通过）。
+- `desktop_env/evaluators/metrics/test_comprehensive_local.py`：自述"本地
+  Mac 手工脚本"，mock 依赖链，非 CI 测试。
+- `pipelines/migrate_legacy.py`：旧日志结构→by_task 的一次性迁移，迁移
+  已完成且零引用。
+
+实验编排子树（run_ablation.py、五个单条件 pipeline、condition_scheduler、
+task_scanner、master_table、master_tool、master_report）保留：供后续正式
+实验使用，避免临期重建。

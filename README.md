@@ -195,9 +195,9 @@ variable and process boundary. Do not put any real binding or credential in the
 checkout or logs; see the WebMall deployment guide for the complete variable
 table and commands.
 
-Four SearchAndWrite tasks (`002`, `004`, `006`, `008`) additionally depend on a
-local OnlyOffice DocumentServer plus the ParaGUIBench share service. The other
-six SearchAndWrite tasks stay on OSWorld/LibreOffice. This is a single-instance
+Five SearchAndWrite tasks (`002`, `004`, `006`, `007`, `008`) additionally
+depend on a local OnlyOffice DocumentServer plus the ParaGUIBench share service.
+The other five SearchAndWrite tasks stay on OSWorld/LibreOffice. This is a single-instance
 lab service; passing unit tests does not mean the real editor is up, and it does
 not mark those tasks `live_validated`. See
 [the OnlyOffice deployment guide](docs/deployment/onlyoffice.md).

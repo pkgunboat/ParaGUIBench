@@ -41,10 +41,9 @@ DEERAPI_CONFIG = {
 1. `process/run_plan_agent_thought_action.py`
 2. `process/test_parallel_translate_attention.py`
 3. `parallel_agents/plan_agent_thought_action.py`
-4. `parallel_agents/plan_agent_multi_code.py`
-5. `parallel_agents/gui_agent.py`
-6. `parallel_agents_as_tools/gui_agent_as_tool.py`
-7. `parallel_agents_as_tools/gpt_gui_agent_as_tool.py`
+4. `parallel_agents/gui_agent.py`
+5. `parallel_agents_as_tools/gui_agent_as_tool.py`
+6. `parallel_agents_as_tools/gpt_gui_agent_as_tool.py`
 
 ### 当前 API Key
 

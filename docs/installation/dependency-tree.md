@@ -119,7 +119,7 @@ ParaGUIBench source checkout
     ├── pinned DocumentServer digest
     ├── built share service image [Flask/Gunicorn/requests; no pip at start]
     ├── repo-external state root
-    └── exact 4 SearchAndWrite tasks; the other 6 stay on OSWorld/LibreOffice
+    └── exact 5 SearchAndWrite tasks; the other 5 stay on OSWorld/LibreOffice
 ```
 
 The wheel contains the Python package. Canonical task JSON, release/runtime

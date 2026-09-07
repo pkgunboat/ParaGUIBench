@@ -16,6 +16,9 @@ def test_multi_vm_file_downloads_sidecar(monkeypatch, tmp_path):
         return True
 
     monkeypatch.setattr(osw, "_ssh_download_file", fake_download)
+    # _get_result_file 在下载前会先做 _remote_file_status SSH 探测；
+    # 测试环境没有真实 SSH 服务，统一视为文件存在。
+    monkeypatch.setattr(osw, "_remote_file_status", lambda *_args: osw._REMOTE_FILE_PRESENT)
 
     cfg = {
         "type": "vm_file",

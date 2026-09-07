@@ -48,7 +48,7 @@ framework
 integrations
 ├── OSWorld controller / bounded artifact getter / controlled state setup / evidence contracts
 ├── WebMall manifest / URL registry / WP-CLI evidence / distributed lease / baseline-final session
-├── OnlyOffice share service / 精确 4 项 SearchAndWrite 任务分流 [Flask 仅容器与 onlyoffice extra]
+├── OnlyOffice share service / 精确 5 项 SearchAndWrite 任务分流 [Flask 仅容器与 onlyoffice extra]
 ├── model_endpoint [stdlib URL 约定：公网 HTTPS，回环允许 HTTP]
 └── runstore
 

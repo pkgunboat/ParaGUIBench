@@ -10,7 +10,8 @@
 
 **从源文件中找到工具实现**
 
-例如从 `os.py` 或 `google_chrome.py` 中复制工具函数：
+例如从 OSWorld-MCP 上游仓库复制工具函数（历史示例源 `os.py` / `google_chrome.py`
+已随 1.0 后死代码清理批次移除）：
 
 ```python
 @staticmethod

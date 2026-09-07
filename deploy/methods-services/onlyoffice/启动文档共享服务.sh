@@ -15,6 +15,7 @@ echo ""
 if ! curl -s http://localhost/info/info.json >/dev/null 2>&1; then
     echo "警告: OnlyOffice 服务可能未运行"
     echo "请先启动 OnlyOffice 服务:"
+    echo "  在本目录 clone 上游 ONLYOFFICE/Docker-DocumentServer 后执行:"
     echo "  cd $SCRIPT_DIR/Docker-DocumentServer && docker compose up -d"
     echo ""
     read -p "是否继续？(y/n) " -n 1 -r

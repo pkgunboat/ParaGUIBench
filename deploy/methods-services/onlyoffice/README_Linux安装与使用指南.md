@@ -1,11 +1,19 @@
 # OnlyOffice 文档共享系统（U盘版）Linux 安装与使用指南
 
+> **Legacy 提示（ParaGUIBench 1.0）**：本指南是 methods 验证期的历史部署记录，
+> 路径按当时 dev 库布局书写（`onlyoffice/…` 对应本仓库
+> `deploy/methods-services/onlyoffice/`）。`Docker-DocumentServer/` 是上游
+> [ONLYOFFICE/Docker-DocumentServer](https://github.com/ONLYOFFICE/Docker-DocumentServer)
+> 的 clone，**不随本仓库发布**——如需按本指南操作，请先自行 clone 到本目录。
+> 当前受支持的公开部署路径是 `deploy/onlyoffice/compose.yaml` 与
+> `docs/deployment/methods-services.md`，新部署请优先使用。
+
 本文档面向：你把整个项目目录（例如本仓库 `webmall/onlyoffice`）放在 **U盘** 中，插到一台 **Linux** 设备上，希望在该设备上启动 OnlyOffice DocumentServer + Flask 文档共享服务，并通过浏览器进行上传/编辑/共享/协作。
 
 > 说明：本文以当前仓库内的实现为准：
 > - 文档共享服务：`onlyoffice/document_sharing_server.py`
 > - 文档管理 CLI：`onlyoffice/manage_documents.py`
-> - OnlyOffice DocumentServer：`onlyoffice/Docker-DocumentServer/`（Docker Compose 部署）
+> - OnlyOffice DocumentServer：`onlyoffice/Docker-DocumentServer/`（Docker Compose 部署，需自行 clone 上游仓库，见顶部 Legacy 提示）
 
 ---
 

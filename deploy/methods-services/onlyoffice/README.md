@@ -11,7 +11,8 @@ DocumentServer + Flask 共享层。本目录是原方法验证时使用的服务
 |---|---|
 | `document_sharing_server.py` | Flask 服务，管理任务级共享链接 |
 | `manage_documents.py`        | 文档上传/清理辅助工具 |
-| `start_document_server.sh`   | 直接跑 Flask（不走 docker） |
+| `start_document_server.sh`   | docker compose 启动上游 DocumentServer（`Docker-DocumentServer/` 不随仓库发布，需自行 clone；缺失时脚本会给出指引） |
+| `启动文档共享服务.sh`         | 宿主机原生启动 `document_sharing_server.py`（历史入口，推荐用 `scripts/deployment/start_bench_services.sh`） |
 
 > pipeline 引用的 `onlyoffice_benchmark_utils.py` 已位于
 > `src/stages/`（迁移基线的一部分）；修改本目录服务代码后需

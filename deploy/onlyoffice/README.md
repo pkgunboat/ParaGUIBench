@@ -3,11 +3,12 @@
 本目录只编排 OnlyOffice DocumentServer 与 ParaGUIBench share service。它不包含
 WebMall，也不实现多实例调度。第一版只承诺单实例实验室部署。
 
-只有以下 4 个任务使用本服务：
+只有以下 5 个任务使用本服务：
 
 - `Operation-FileOperate-SearchAndWrite-002`
 - `Operation-FileOperate-SearchAndWrite-004`
 - `Operation-FileOperate-SearchAndWrite-006`
+- `Operation-FileOperate-SearchAndWrite-007`
 - `Operation-FileOperate-SearchAndWrite-008`
 
 其余 SearchAndWrite 任务继续使用 OSWorld / LibreOffice。单元测试通过不等于真实

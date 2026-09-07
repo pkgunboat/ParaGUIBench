@@ -655,4 +655,4 @@ docker ps --filter label=paraguibench.owned=true --format '{{.ID}}'
 
 运行记录与评价结果边界见
 [`docs/evaluation/protocol.md`](../evaluation/protocol.md)。
-公开 0.1 不附带历史冒烟运行日志。
+历史预览版（公开 0.1）不附带历史冒烟运行日志，当前版本口径不变。

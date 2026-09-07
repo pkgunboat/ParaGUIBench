@@ -83,10 +83,10 @@ evaluator are not yet `live_validated`.
 ## Assets and runtime-support boundary
 
 Binary task assets, VM images, model weights, caches, logs, and credentials are
-not part of the canonical task snapshot. Ten FileSearch tasks now have
+not part of the canonical task snapshot. Twelve FileSearch tasks now have
 download-only asset manifests with a fixed repository revision, file sizes, and
-per-file SHA-256 values. Nine generator-managed manifests additionally pin
-the verified MIME type of all 30 files and are reproduced by the offline
+per-file SHA-256 values. Eleven of them are generator-managed, additionally pin
+the verified MIME type of the 32 files they cover, and are reproduced by the offline
 `scripts/benchmark/readonly_asset_manifests.py` generator/check against the
 closed `readonly-file-search-asset-manifest-v1` schema. The upstream Lee dataset
 does not declare a verified license, so these records remain `download_only`
