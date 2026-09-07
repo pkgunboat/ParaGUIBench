@@ -114,7 +114,7 @@ publishes only protocol identifiers, localized labels, support status, and block
 codes. It never exports task instructions, expected answers, profile values, URLs, or
 fixture contents.
 
-当前预览版为答案评价、OSWorld 兼容状态检查、操作规则、WebMall 书签/购物车/结账评价、
+当前版本为答案评价、OSWorld 兼容状态检查、操作规则、WebMall 书签/购物车/结账评价、
 网页导航书签和结构化流水线评价保留版本化协议标识。官网只公开协议标识、本地化标签、支持状态
 和阻塞代码，不导出任务正文、预期答案、profile 值、URL 或 fixture 内容。
 

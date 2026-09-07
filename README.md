@@ -6,19 +6,16 @@ Official project repository for **Beyond Sequential Interaction: Benchmarking Pa
 Execution and Coordination for GUI Agents**.
 
 > [!IMPORTANT]
-> This is a **0.3 preview**. Beyond the 0.2 method migration (GUI-Only and
-> ParaGUI as authoritative implementations, byte-identical and parity-locked),
-> 0.3 hardens the evaluation chain: the repaired Excel-002 initial workbooks,
-> the corrected Excel-005 answer, and the re-extracted Settings-001 gold are
-> published and pinned to an immutable dataset revision; a task-routing defect
-> that broke SearchAndWrite-007 evaluation is fixed; and all five pipelines
-> (QA, WebMall, WebNavigate, Operation, SearchWrite) have live smoke evidence
-> with zero evaluator errors. Full-benchmark validation over the complete task
-> set is still pending and will gate the formal release. The formal
-> `live_validated` promotion chain (runtime-support manifest) is unchanged: no
-> task is marked `live_validated` yet. A published task definition does not
-> imply that its environment, assets, evaluator, and Agent System are
-> executable in this preview.
+> This is **1.0**. Building on the 0.2 method migration (GUI-Only and ParaGUI
+> as authoritative implementations, byte-identical and parity-locked) and the
+> 0.3 evaluation-chain hardening, 1.0 completes full-benchmark validation: all
+> 233 tasks ran end-to-end in a single production batch with zero evaluator
+> errors and zero unavailable ground truth, and third-party deployment of all
+> five pipelines was verified on a clean machine. The dataset is now published
+> under Apache-2.0. The formal `live_validated` promotion chain
+> (runtime-support manifest) is unchanged: no task is marked `live_validated`
+> yet. A published task definition does not imply that its environment,
+> assets, evaluator, and Agent System are validated in a versioned live run.
 
 ## Overview
 

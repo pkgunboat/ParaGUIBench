@@ -4,8 +4,8 @@ All notable changes to this project are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-Pre-1.0 releases are previews: task contracts, evaluator semantics, and CLI
-surfaces may change between minor versions.
+Pre-1.0 releases were previews: task contracts, evaluator semantics, and CLI
+surfaces could change between minor versions.
 
 Two claims are tracked separately throughout this file and must not be conflated:
 a task being **locally runnable** (assets, environment protocol, and evaluator all
@@ -14,6 +14,45 @@ As of the latest entry, all 233 canonical tasks are locally declared and
 `live_validated` is 0.
 
 ## [Unreleased]
+
+## [1.0] - 2026-09-07
+
+### Verified
+
+- Full-benchmark evaluator validation is complete: all 233 canonical tasks ran
+  end-to-end in a single production batch (GUI-only, weak-model probe budget
+  of 30 steps) with zero evaluator errors, zero unavailable ground truth, and
+  zero unrecovered interruptions — 30 PASS / 203 FAIL under that probe budget,
+  establishing evaluator discrimination rather than headline model numbers.
+- Third-party deployment was validated end-to-end on a clean machine
+  (2026-08-28): all five pipelines, one task each, zero evaluator errors. The
+  installation and deployment docs were revised from that run (`python3-venv`
+  prerequisite, the `methods` extra in gated installs, mandatory `--to` for
+  `rewrite_webmall_task_urls.py`).
+
+### Fixed
+
+- The Docker SDK cleanup path leaked one anonymous volume per task
+  (`container.remove()` without `v=True`); on the production host this had
+  accumulated 13,540 leaked volumes before 151 GB was reclaimed. Fixed and
+  verified across a full 233-task run (volume count stayed flat).
+- Shared-directory preparation in the pipeline runners now probes writability
+  at startup: an unwritable shared base directory (wrong owner, read-only
+  mount) fails within seconds with the stat owner and remediation guidance
+  instead of surfacing as a mid-task `Errno 13`.
+- The CI installation-docs contract now permits conda to be mentioned in prose
+  as the no-sudo interpreter fallback while still forbidding conda inside any
+  fenced command block; the earlier blanket ban had broken the install gate
+  once the deployment-tested fallback guidance landed.
+
+### Changed
+
+- The published HF dataset is now licensed Apache-2.0 (license tag, dataset
+  card, LICENSE); the third-party source ledger is finalized with file-level
+  provenance: OSWorld and VeriWeb (both Apache-2.0) contribute 28 + 29 tasks,
+  176 tasks are original.
+- Documentation, website, and packaging metadata now consistently state 1.0,
+  and the project website is live on GitHub Pages.
 
 ## [0.3] - 2026-08-26
 
@@ -148,7 +187,8 @@ As of the latest entry, all 233 canonical tasks are locally declared and
   single-VM smoke evidence exists but carries no versioned run vector, so it is
   retained only as a historical unversioned record.
 
-[Unreleased]: https://github.com/pkgunboat/ParaGUIBench/compare/v0.3...HEAD
+[Unreleased]: https://github.com/pkgunboat/ParaGUIBench/compare/v1.0...HEAD
+[1.0]: https://github.com/pkgunboat/ParaGUIBench/compare/v0.3...v1.0
 [0.3]: https://github.com/pkgunboat/ParaGUIBench/compare/v0.2...v0.3
 [0.2]: https://github.com/pkgunboat/ParaGUIBench/compare/v0.1...v0.2
 [0.1]: https://github.com/pkgunboat/ParaGUIBench/releases/tag/v0.1

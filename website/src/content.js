@@ -46,7 +46,7 @@ export const content = {
       primary: "Get started",
       secondary: "Explore 233 tasks",
       status: {
-        preview: "v0.3 Preview",
+        preview: "v1.0",
         canonical: "canonical tasks",
         localReady: "local components ready (not live-validated)",
         localIncomplete: "local components incomplete",
@@ -55,13 +55,13 @@ export const content = {
       },
       diagram: {
         accessibleLabel:
-          "Current public preview runtime and the adaptive round-based ParaGUI reference agent",
+          "Current public runtime and the adaptive round-based ParaGUI reference agent",
         label: "Execution architecture",
         title: "Runtime status and ParaGUI architecture",
         intro:
           "The public package's historical smoke path and the paper's multi-worker reference agent are shown separately; neither is presented as current versioned runtime support.",
         preview: {
-          heading: "Current public preview",
+          heading: "Current public release",
           status: "Historical · rerun pending",
           task: "Benchmark task",
           runner: "AttemptRunner",
@@ -128,7 +128,7 @@ export const content = {
       categoriesTitle: "Six benchmark categories",
       categoriesNote: "Counts are generated from the public canonical task taxonomy.",
       previewNote:
-        "Public preview: the OSWorld profile and active-tab pure protocols are code-wired, while 15 artifact-state tasks remain blocked; Agent/environment integration, external assets, and versioned live validation remain pending.",
+        "Public release: the OSWorld profile and active-tab pure protocols are code-wired, while 15 artifact-state tasks remain blocked; Agent/environment integration, external assets, and versioned live validation remain pending.",
     },
     architecture: {
       title: "Repository module boundaries",
@@ -258,8 +258,8 @@ paraguibench doctor --repo-root . \\
       gain: "+12.9 pp",
       gainLabel: "over the strongest serial baseline in that study",
       paperNote:
-        "These are manuscript results. The complete experiment suite and reproduction recipe are not yet live-validated in this preview.",
-      ledgerTitle: "Public-preview validation ledger",
+        "These are manuscript results. The complete experiment suite and reproduction recipe are not yet live-validated in this release.",
+      ledgerTitle: "Public validation ledger",
       definitions: "Canonical definitions",
       localReady: "Local components ready (not live-validated)",
       live: "Live-validated tasks",
@@ -267,7 +267,7 @@ paraguibench doctor --repo-root . \\
       checks: [
         ["OSWorld state evaluators", "Profile evidence and active-tab AT→CDP→AT collection are production-wired; live validation is pending"],
         ["Remaining state migration", "15 artifact-state tasks remain blocked"],
-        ["Repository privacy scan", "Passed for the preview checkpoint"],
+        ["Repository privacy scan", "Passed for the 1.0 release"],
         ["Clean Linux deployment", "Historical reference slice retained"],
         ["Versioned end-to-end rerun", "Versioned live validation remains pending for all 233 tasks"],
       ],
@@ -293,7 +293,7 @@ paraguibench doctor --repo-root . \\
     footer: {
       description:
         "An open-source benchmark for parallel GUI-agent execution, coordination, and reproducible evaluation.",
-      preview: "Open-source preview · no analytics · static GitHub Pages",
+      preview: "Open source · no analytics · static GitHub Pages",
       citation: "Citation pending preprint release",
     },
   },
@@ -319,7 +319,7 @@ paraguibench doctor --repo-root . \\
       primary: "开始使用",
       secondary: "浏览 233 个任务",
       status: {
-        preview: "v0.3 预览版",
+        preview: "v1.0",
         canonical: "个 canonical 任务",
         localReady: "个本地组件已闭合任务（非实机验证）",
         localIncomplete: "个本地组件未闭合任务",
@@ -327,13 +327,13 @@ paraguibench doctor --repo-root . \\
         blocked: "个阻塞任务",
       },
       diagram: {
-        accessibleLabel: "当前公开预览版运行链路与自适应轮次式 ParaGUI 参考 Agent",
+        accessibleLabel: "当前公开版运行链路与自适应轮次式 ParaGUI 参考 Agent",
         label: "执行架构",
         title: "运行状态与 ParaGUI 架构",
         intro:
           "本图将公开包的历史冒烟链路与论文多 Worker 参考 Agent 分开展示；两者都不代表当前已完成版本化真实验证。",
         preview: {
-          heading: "当前公开预览版",
+          heading: "当前公开版",
           status: "历史证据 · 待复验",
           task: "基准任务",
           runner: "AttemptRunner",
@@ -400,7 +400,7 @@ paraguibench doctor --repo-root . \\
       categoriesTitle: "六类基准任务",
       categoriesNote: "数量由公开 canonical 任务分类确定性生成。",
       previewNote:
-        "公开预览说明：OSWorld profile 与 active-tab 纯评价协议已完成代码接线，15 个 artifact-state 任务仍处于阻塞；Agent/环境集成、外部资产与版本化真实环境验证仍待执行。",
+        "公开版说明：OSWorld profile 与 active-tab 纯评价协议已完成代码接线，15 个 artifact-state 任务仍处于阻塞；Agent/环境集成、外部资产与版本化真实环境验证仍待执行。",
     },
     architecture: {
       title: "公开仓库模块边界",
@@ -529,8 +529,8 @@ paraguibench doctor --repo-root . \\
       gain: "+12.9 pp",
       gainLabel: "相对该研究中最强串行基线的提升",
       paperNote:
-        "以上为论文实验结果；完整实验套件与复现实验流程尚未在当前预览版中完成真实环境验证。",
-      ledgerTitle: "公开预览版验证台账",
+        "以上为论文实验结果；完整实验套件与复现实验流程尚未在当前版本中完成真实环境验证。",
+      ledgerTitle: "公开验证台账",
       definitions: "Canonical 定义",
       localReady: "本地组件已闭合任务（非实机验证）",
       live: "已真实验证任务",
@@ -538,7 +538,7 @@ paraguibench doctor --repo-root . \\
       checks: [
         ["OSWorld 状态评价器", "Profile 证据与 active-tab AT→CDP→AT 采集已完成生产接线；live 验证待执行"],
         ["剩余状态迁移", "15 个 artifact-state 任务仍处于阻塞"],
-        ["仓库隐私扫描", "当前预览检查点已通过"],
+        ["仓库隐私扫描", "1.0 发布检查点已通过"],
         ["全新 Linux 部署", "保留历史参考切片"],
         ["带版本向量的端到端复验", "233 个任务的版本化真实环境验证仍待执行"],
       ],
@@ -562,7 +562,7 @@ paraguibench doctor --repo-root . \\
     },
     footer: {
       description: "面向 GUI 智能体并行执行、协调与可复现评价的开源基准。",
-      preview: "开源预览版 · 无分析跟踪 · 静态 GitHub Pages",
+      preview: "开源 · 无分析跟踪 · 静态 GitHub Pages",
       citation: "引用信息将在预印本发布后补充",
     },
   },
