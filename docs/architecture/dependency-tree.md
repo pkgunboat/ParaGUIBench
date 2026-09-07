@@ -528,7 +528,7 @@ policy，也不记录请求、响应或凭据。ParaGUI adapter 只能从 runtim
 
 ## 当前模块与实现状态
 
-| 模块 | 当前职责 | Preview 状态 |
+| 模块 | 当前职责 | 状态 |
 |---|---|---|
 | `paraguibench.benchmark` | release task/fixture 摘要校验、环境绑定、Agent allowlist、trusted/agent/audit 投影 | 233 个 canonical task 可加载；WebMall logical URL、guest binding 和 checkout fixture 已完成可移植化 |
 | `paraguibench.framework` | `ExecutionPlan`、`SubtaskSpec`、`SubtaskResult` 和有界 `DAGScheduler` | 单元测试覆盖；不直接创建 VM 或调用模型 |

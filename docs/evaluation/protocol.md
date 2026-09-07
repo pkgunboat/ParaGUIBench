@@ -25,7 +25,7 @@ Only `PASSED` and `FAILED` may carry a numeric score. `ERROR`, `UNAVAILABLE`, an
 只有 `PASSED` 与 `FAILED` 可以携带数值得分。`ERROR`、`UNAVAILABLE` 和
 `NOT_REQUESTED` 不得用 `score=0` 伪装。
 
-## Public-preview support status
+## Public support status
 
 The per-task runtime-support manifest is authoritative for public-package readiness:
 
@@ -107,7 +107,7 @@ versioned-live 门禁阻断。本地合成 fixture 或 host 回放不是晋升�
 
 ## Evaluator families
 
-The preview contains versioned protocol identifiers for answer-based evaluators,
+This release contains versioned protocol identifiers for answer-based evaluators,
 OSWorld-compatible state checks, operation rules, WebMall bookmark/cart/checkout
 evaluation, web-navigation bookmarks, and structured pipeline evaluation. The website
 publishes only protocol identifiers, localized labels, support status, and blocker

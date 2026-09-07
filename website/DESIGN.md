@@ -20,7 +20,7 @@
 
 | Concept decision | Production implementation |
 |---|---|
-| Current preview and paper ParaGUI shown as separate execution states | Responsive semantic HTML/CSS diagram in `RuntimeArchitectureDiagram.jsx`; no raster dependency |
+| Current public release and paper ParaGUI shown as separate execution states | Responsive semantic HTML/CSS diagram in `RuntimeArchitectureDiagram.jsx`; no raster dependency |
 | Generic GUI workers connected to isolated desktops | Browser, desktop apps, task assets, and the shared directory remain environment capabilities/resources |
 | Adaptive round-based ParaGUI | Planner dispatches a batch, receives summaries at a round barrier, updates history, and either starts another round or terminates |
 | Six benchmark categories in a structured legend | Counts generated from the canonical taxonomy and rendered by `BenchmarkOverview.jsx` |

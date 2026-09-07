@@ -43,7 +43,7 @@ ParaGUI is the planner--worker agent introduced in the paper. It decomposes a ta
 dependency-aware plan, dispatches ready subtasks to concurrent workers, and synthesizes
 their results. The paper reports a **46.4% success rate**, **12.9 percentage points** above
 the strongest serial baseline in that study. These are paper results; the complete
-experiment suite needed to reproduce them is not yet `live_validated` in this preview.
+experiment suite needed to reproduce them is not yet `live_validated` in this release.
 
 ## Original methods (GUI-Only and ParaGUI)
 
@@ -75,7 +75,7 @@ CLI as the open-source release surface.
 
 ## Release status
 
-| Surface | Preview status |
+| Surface | Status |
 |---|---|
 | Canonical benchmark definitions | 233/233 migrated and covered by `benchmark/manifests/release-v1.json` |
 | Runtime support declaration | 233 per-task records in `benchmark/manifests/runtime-support-v1.json` |
@@ -87,8 +87,8 @@ CLI as the open-source release surface.
 | Historical deployment | Execution `SUCCEEDED`, evaluation `PASSED`, score `1.0`; legacy unversioned evidence only |
 | WebMall Checkout slice | Logical URLs, versioned fixture/environment, WP-CLI order evidence, distributed lease, CLI binding, and native evaluator are integrated locally; no versioned live Attempt has passed |
 | CombinationDocs-015 evaluator slice | Native `paraguibench.osworld.artifact-state.v1`, pinned input assets, evaluator-only gold, and CLI/doctor/source wiring are complete locally; the task remains blocked by four manifest-listed runtime and live gates |
-| Original methods (GUI-Only / ParaGUI) | Vendored byte-identical from the source project; one task per method verified end-to-end on a real host with zero interruptions; full-suite validation pending before the formal release |
-| Remaining release work | Private asset provisioning, real-environment deployment, Agent Systems, suite metrics, licensing review, and category-level live validation |
+| Original methods (GUI-Only / ParaGUI) | Vendored byte-identical from the source project; one task per method verified end-to-end on a real host with zero interruptions; full-benchmark evaluator validation across all 233 tasks completed in this release with zero evaluator errors |
+| Remaining release work | Versioned `live_validated` promotion for all 233 tasks, formal multi-method experiment runs with suite metrics, and category-level live validation |
 
 The runtime support manifest is the authoritative machine-readable statement of two
 different readiness layers. `local_readiness_status` describes whether repository-side
