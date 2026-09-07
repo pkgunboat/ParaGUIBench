@@ -9,7 +9,8 @@ Execution and Coordination for GUI Agents**.
 > This is **1.0**. Building on the 0.2 method migration (GUI-Only and ParaGUI
 > as authoritative implementations, byte-identical and parity-locked) and the
 > 0.3 evaluation-chain hardening, 1.0 completes full-benchmark validation: all
-> 233 tasks ran end-to-end in a single production batch with zero evaluator
+> 233 tasks ran end-to-end in a single production batch (a weak-model
+> evaluator-validation probe, not headline model numbers) with zero evaluator
 > errors and zero unavailable ground truth, and third-party deployment of all
 > five pipelines was verified on a clean machine. The dataset is now published
 > under Apache-2.0. The formal `live_validated` promotion chain
